@@ -1,10 +1,10 @@
 # PicImageSearch
 整合图片识别api,包括SauceNAO,tracemoe,iqdb,ascii2d等
 ## TODO
-- [] [SauceNAO]
+- [ ] [SauceNAO]
 - [x] [TraceMoe](https://trace.moe/)
-- [] [iqdb]
-- [] [ascii2d]
+- [ ] [iqdb]
+- [ ] [ascii2d]
 ### 安装
 - 此包需要 Python 3.6 或更新版本。
 - `pip install PicImageSearch`
@@ -13,7 +13,7 @@
 
 ### 帮助手册目录
   - SauceNAO
-  - TraceMoe
+  - [TraceMoe](https://github.com/kitUIN/PicImageSearch#tracemoe)
   - iqdb
   - ascii2d
 ### TraceMoe
@@ -24,7 +24,9 @@ from PicImageSearch import TraceMoe
 
 tracemoe = TraceMoe()
 tracemoe.search('https://trace.moe/img/tinted-good.jpg')
+
 #tracemoe.search(网络地址或本地,是否是本地文件(默认否),搜索限制为特定的 Anilist ID(默认无))
+
 print(tracemoe.raw)
 ```
 如果是需要查找的是本地文件,使用以下语句即可
@@ -49,7 +51,7 @@ tracemoe.search(r'C:/kitUIN/img/tinted-good.jpg',True)
 |.limit_ttl        |限制重置之前的时间（秒）|int|
 |.quota            |剩余搜索配额数|int|
 |.quota_ttl        |配额重置之前的时间（秒）|int|
-|                  |                 |     |
+| 以下可作为.raws的值  |                 |     |
 |.From             |匹配场景的开始时间|int|
 |.to               |匹配场景的结束时间|int|
 |.anilist_id       |匹配的[Anilist  ID](https://anilist.co/)|int|
@@ -69,13 +71,18 @@ tracemoe.search(r'C:/kitUIN/img/tinted-good.jpg',True)
 |.synonyms         |备用英文标题|str|
 |.synonyms_chinese |备用中文标题|str|
 |.is_adult         |是否R18|bool|
+
 若是想查看其他搜索返回值可以使用.raws[序号(从0开始)][值(上表)]
 例如`tracemoe.raws[1]['similarity']`查看第2条的相似度
 
 预览图片/视频下载到本地
 ```
 download_image(tracemoe.thumbnail)#下载图片image.png
+
 #download_image(预览图片url)
+
 download_viedo(tracemoe.viedo)#下载视频video.mp4
+
 #download_viedo(预览视频url)
+
 ```
