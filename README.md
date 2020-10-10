@@ -34,7 +34,8 @@ print(tracemoe.raw)
 tracemoe.search(r'C:/kitUIN/img/tinted-good.jpg',True)
 ```
 
-返回值储存在上文`tracemoe`中,详细数据见下表
+返回值储存在上文`tracemoe`  
+详细数据见下表
 |变量              |   内容             |  类型  |
 |----              | ----                   | ----  |
 |.raw              |最匹配项返回结果|dict|
@@ -72,7 +73,7 @@ tracemoe.search(r'C:/kitUIN/img/tinted-good.jpg',True)
 |.synonyms_chinese |备用中文标题|str|
 |.is_adult         |是否R18|bool|
 
-若是想查看其他搜索返回值可以使用.raws[序号(从0开始)][值(上表)]
+若是想查看其他搜索返回值可以使用.raws[序号(从0开始)][值(上表)]  
 例如`tracemoe.raws[1]['similarity']`查看第2条的相似度
 
 预览图片/视频下载到本地
