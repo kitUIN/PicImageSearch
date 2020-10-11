@@ -1,7 +1,4 @@
-#! /usr/bin/env python3
-# coding=utf-8
 import setuptools
-
 requirements = [
     requirement.strip() for requirement in open('requirements.txt','r',encoding='utf-8').readlines()
 ]
@@ -11,7 +8,7 @@ with open("README.md", "r",encoding='utf-8') as fh:
 
 setuptools.setup(
     name="PicImageSearch",
-    version='0.1.0',
+    version="0.5.5",
     author="kitUIN",
     author_email="kulujun@gmail.com",
     description="PicImageSearch APIs for Python 3.x 适用于 Python 3 以图搜源整合API",

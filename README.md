@@ -20,7 +20,7 @@
 #### 如何开始
 如果是需要查找的是网络url
 ```
-from PicImageSearch import TraceMoe
+from pis import TraceMoe
 
 tracemoe = TraceMoe()
 tracemoe.search('https://trace.moe/img/tinted-good.jpg')
@@ -34,8 +34,9 @@ print(tracemoe.raw)
 tracemoe.search(r'C:/kitUIN/img/tinted-good.jpg',True)
 ```
 
-返回值储存在上文`tracemoe`  
-详细数据见下表
+返回值储存在上文的`tracemoe`  
+
+其详细数据见下表
 |变量              |   内容             |  类型  |
 |----              | ----                   | ----  |
 |.raw              |最匹配项返回结果|dict|
