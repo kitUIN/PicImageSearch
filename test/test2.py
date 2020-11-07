@@ -1,6 +1,6 @@
 from loguru import logger
 
-from PicImageSeach.saucenao import SauceNAO
+from PicImageSearch.saucenao import SauceNAO
 
 saucenao = SauceNAO()
 res = saucenao.search(r'C:\Users\kuluj\Pictures\[Nidy-2D-]11670173.jpg')
