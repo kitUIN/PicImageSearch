@@ -1,4 +1,8 @@
+import base64
+import io
+
 import requests
+from PIL import Image
 from loguru import logger
 
 
@@ -19,7 +23,6 @@ class SauceNAONorm:
 
     @staticmethod
     def _get_title(data):
-        # Order is important!
         if 'title' in data:
             return data['title']
         elif 'eng_name' in data:
@@ -71,7 +74,7 @@ class SauceNAONorm:
             return ''
 
     def __repr__(self):
-        return f'<BasicSauce(title={repr(self.title)}, similarity={self.similarity:.2f})>'
+        return f'<NormSauce(title={repr(self.title)}, similarity={self.similarity:.2f})>'
 
 
 class SauceNAOResponse:
@@ -113,8 +116,8 @@ class SauceNAO:
                  api_key: str = None,
                  *,
                  output_type: int = 2,
-                 testmode: int = 1,
-                 numres: int = 10,
+                 testmode: int = 0,
+                 numres: int = 10
                  ) -> None:
         """
         :param api_key:用于SauceNAO的访问密钥
@@ -132,12 +135,26 @@ class SauceNAO:
         params['output_type'] = output_type
         self.params = params
 
+    @staticmethod
+    def _base_64(filename):
+        with open(filename, 'rb') as f:
+            coding = base64.b64encode(f.read())  # 读取文件内容，转换为base64编码
+            # print('本地base64转码~')
+            return coding.decode()
+
+    def _file(self, filename: io.BytesIO):
+        return filename
+
     def search(self, url: str, files=None):
         params = self.params
         if url[:4] == 'http':  # 网络url
             params['url'] = url
         else:  # 文件
-            files = {'file': files}
+            image = Image.open(url)
+            imageData = io.BytesIO()
+            image.save(imageData, format='PNG')
+            files = {'file': ("image.png", imageData.getvalue())}
+            imageData.close()
         resp = requests.post(self.SauceNAOURL, params=params, files=files)
         status_code = resp.status_code
         logger.info(status_code)

@@ -12,7 +12,8 @@ class TraceMoe:
         self.img = ''  # 本地图片base64转码结果
         self.raws = []
 
-    def base_64(self, filename):
+    @staticmethod
+    def _base_64(filename):
         with open(filename, 'rb') as f:
             coding = base64.b64encode(f.read())  # 读取文件内容，转换为base64编码
             # print('本地base64转码~')
@@ -116,7 +117,7 @@ class TraceMoe:
         try:
             if file:  # 是否是本地文件
                 URl = self.Url
-                self.img = self.base_64(url)
+                self.img = self._base_64(url)
                 res = requests.post(URl, json={"image": self.img, "filter": Filter})
                 self.code = res.status_code
                 data = res.json()
