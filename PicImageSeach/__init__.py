@@ -1,4 +1,5 @@
-import TraceMoe
+from .saucenao import SauceNAO
+from .tracemoe import TraceMoe
 
 __author__ = 'kitUIN'
 __license__ = 'Apache-2.0 License'
