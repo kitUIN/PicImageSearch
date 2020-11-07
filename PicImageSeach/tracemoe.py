@@ -91,7 +91,7 @@ class TraceMoe:
                                                                                            tokenthumb)
         return url
 
-    def preview_video(self, mute=True):
+    def preview_video(self, mute=False):
         """
         创建预览视频
         :param mute:预览视频是否静音，True为静音

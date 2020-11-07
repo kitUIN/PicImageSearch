@@ -1,4 +1,3 @@
-import base64
 import io
 
 import requests
@@ -135,28 +134,21 @@ class SauceNAO:
         params['output_type'] = output_type
         self.params = params
 
-    @staticmethod
-    def _base_64(filename):
-        with open(filename, 'rb') as f:
-            coding = base64.b64encode(f.read())  # 读取文件内容，转换为base64编码
-            # print('本地base64转码~')
-            return coding.decode()
-
-    def _file(self, filename: io.BytesIO):
-        return filename
-
     def search(self, url: str, files=None):
-        params = self.params
-        if url[:4] == 'http':  # 网络url
-            params['url'] = url
-        else:  # 文件
-            image = Image.open(url)
-            imageData = io.BytesIO()
-            image.save(imageData, format='PNG')
-            files = {'file': ("image.png", imageData.getvalue())}
-            imageData.close()
-        resp = requests.post(self.SauceNAOURL, params=params, files=files)
-        status_code = resp.status_code
-        logger.info(status_code)
-        data = resp.json()
-        return SauceNAOResponse(data)
+        try:
+            params = self.params
+            if url[:4] == 'http':  # 网络url
+                params['url'] = url
+            else:  # 文件
+                image = Image.open(url)
+                imageData = io.BytesIO()
+                image.save(imageData, format='PNG')
+                files = {'file': ("image.png", imageData.getvalue())}
+                imageData.close()
+            resp = requests.post(self.SauceNAOURL, params=params, files=files)
+            status_code = resp.status_code
+            logger.info(status_code)
+            data = resp.json()
+            return SauceNAOResponse(data)
+        except Exception as e:
+            logger.error(e)
