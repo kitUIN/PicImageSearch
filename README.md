@@ -9,8 +9,6 @@
   - TraceMoe
     - 完善注释
     - 更新成class形式
-  - SauceNAO
-    - 完善所有类型params
   - iqdb
   - ascii2d
 ### 安装
