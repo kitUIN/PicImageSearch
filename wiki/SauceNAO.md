@@ -15,6 +15,7 @@ logger.info(res.raw[0].thumbnail) # https://img1.saucenao.com/res/pixiv/7770/777
 logger.info(res.raw[0].similarity)# 92.22
 logger.info(res.raw[0].title)     # MDR♡
 logger.info(res.raw[0].author)    # CeNanGam
+logger.info(res.raw[0].url)  # https://www.pixiv.net/member_illust.php?mode=medium&illust_id=77702503
 logger.info(res.raw[0].pixiv_id)  # 77702503
 logger.info(res.raw[0].member_id) # 4089680
 ```
@@ -23,29 +24,35 @@ logger.info(res.raw[0].member_id) # 4089680
 ### SauceNAO主类说明
 ```
 saucenao = SauceNAO(
-                 api_key='',        #用于SauceNAO的访问密钥
-                 output_type = 2,   #0=正常(默认) html 1=xml api（未实现） 2=json api
-                 testmode = 1,      #测试模式 0=正常 1=测试
-                 numres = 10        #输出数量 默认10
+                 api_key='',        # (str)用于SauceNAO的访问密钥 默认=None
+                 numres = 5,        # (int)输出数量 默认=5
+                 hide = 1,          # (int)结果隐藏控制,无=0，明确返回值(默认)=1，怀疑返回值=2，全部返回值=3
+                 minsim = 30,       # (int)控制最小相似度 默认=30
+                 output_type = 2,   # (int) 0=正常(默认) html 1=xml api（未实现） 2=json api 默认=2
+                 testmode = 0,      # (int)测试模式 0=正常 1=测试 默认=0
+                 dbmask = None,     # (int)用于选择要启用的特定索引的掩码 默认=None
+                 dbmaski = None,    # (int)用于选择要禁用的特定索引的掩码 默认=None
+                 db = 999,          # (int)搜索特定的索引号或全部索引 默认=999
+                                    # 索引见https://saucenao.com/tools/examples/api/index_details.txt
 )
 ```
 ## 数据返回值列表
-PS：可以去看看**源代码**  
+PS：可以去看看[**源代码**](https://github.com/kitUIN/PicImageSearch/blob/main/PicImageSearch/saucenao.py)   
 以上面的`res`为例  
 |变量              |   内容             |  类型  |
 |----              | ----              | ----  |
 |.origin|原始返回值|dict|
 |.short_remaining|每30秒访问额度|int|
 |.long_remaining |每天访问额度|int|
-|.user_id|待补充|int|
+|.user_id|API|int|
 |.account_type|待补充|int|
 |.short_limit|待补充|str|
 |.long_limit|待补充|str|
-|.status|待补充|int|
-|.results_requested|待补充|int|
+|.status|服务器判断值|int|
+|.results_requested|数据返回值数量|int|
 |.search_depth|搜索所涉及的数据库数量|str|
 |.minimum_similarity|最小相似度|float|
-|.results_returned|待补充|int|
+|.results_returned|数据返回值数量|int|
 |.raw|结果返回值（具体见下表）|list|
 - `res.raw` 存储了所有的返回结果  
 -  例如`res.raw[0]`内存放了第一条搜索结果  
@@ -59,7 +66,7 @@ PS：可以去看看**源代码**
 |.index_id|文件id| int|
 |.index_name|文件名称| str |
 |.title|标题| str |
-|.urls|地址| str |
+|.url|地址| str |
 |.author|作者| str |
 |.pixiv_id|pixiv的id（如果有）|str|
 |.member_id|pixiv的画师id（如果有）|str|
