@@ -115,6 +115,7 @@ class SauceNAO:
                  dbmask: int = None,
                  dbmaski: int = None,
                  db: int = 999,
+                 **requests_kwargs
                  ) -> None:
         """
         :param api_key:(str)用于SauceNAO的访问密钥 (默认=None)
@@ -128,6 +129,7 @@ class SauceNAO:
         :param hide:(int)结果隐藏控制,无=0，明确返回值(默认)=1，怀疑返回值=2，全部返回值=3
         """
         # minsim 控制最小相似度
+        self.requests_kwargs = requests_kwargs
         params = dict()
         if api_key is not None:
             params['api_key'] = api_key
@@ -155,7 +157,7 @@ class SauceNAO:
             image.save(imageData, format='PNG')
             files = {'file': ("image.png", imageData.getvalue())}
             imageData.close()
-        resp = requests.post(self.SauceNAOURL, params=params, files=files)
+        resp = requests.post(self.SauceNAOURL, params=params, files=files,**self.requests_kwargs)
         status_code = resp.status_code
         logger.info(status_code)
         data = resp.json()

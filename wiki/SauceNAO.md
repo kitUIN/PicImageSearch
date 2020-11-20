@@ -3,7 +3,13 @@
 ```
 from loguru import logger
 from PicImageSeach.saucenao import SauceNAO
-saucenao = SauceNAO()
+_REQUESTS_KWARGS = {
+    # 'proxies': {
+    #     'https': 'http://127.0.0.1:10809',
+    # }
+    #如果需要代理
+}
+saucenao = SauceNAO(**_REQUESTS_KWARGS)
 res = saucenao.search('https://cdn.jsdelivr.net/gh/laosepi/setu/pics_original/77702503_p0.jpg')
 #res = saucenao.search(r'C:/kitUIN/img/tinted-good.jpg')搜索本地图片
 logger.info(res.origin)           # 原始数据
