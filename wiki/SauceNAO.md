@@ -40,6 +40,7 @@ saucenao = SauceNAO(
                  dbmaski = None,    # (int)用于选择要禁用的特定索引的掩码 默认=None
                  db = 999,          # (int)搜索特定的索引号或全部索引 默认=999
                                     # 索引见https://saucenao.com/tools/examples/api/index_details.txt
+                 **requests_kwargs  # 代理设置
 )
 ```
 ## 数据返回值列表

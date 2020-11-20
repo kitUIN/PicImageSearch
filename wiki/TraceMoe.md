@@ -72,13 +72,14 @@ logger.info(res.raw[0].is_adult)  # False
 |.title_english    |番剧英文命名|str|
 |.title_romaji     |番剧罗马命名|str|
 |.mal_id           |匹配的[MyAnimelist  ID](https://myanimelist.net/)|int|
-|.synonyms         |备用英文标题|str|
-|.synonyms_chinese |备用中文标题|str|
+|.synonyms         |备用英文标题|list|
+|.synonyms_chinese |备用中文标题|list|
 |.is_adult         |是否R18|bool|
 
 ## 其他用法
 <details>
     <summary>←←预览图片/视频下载到本地(点击展开)</summary>
+    
     ```
     tracemoe.download_image(res.raw[0].thumbnail)
 
@@ -100,11 +101,13 @@ logger.info(res.raw[0].is_adult)  # False
     :param video :缩略图地址 见返回值中的video_thumbnail
     """
     ```
+    
 </details>
 
 ## 数据返回值 实例JSON
 <details>
   <summary>←←数据返回值 实例JSON(有点长)</summary>
+  
   ```
     {
         "RawDocsCount": 5718114,
@@ -308,4 +311,5 @@ logger.info(res.raw[0].is_adult)  # False
         "quota_ttl": 86400
     }
   ```
+
 </details>
