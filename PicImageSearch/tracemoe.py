@@ -79,11 +79,13 @@ class TraceMoeResponse:
 class TraceMoe:
     TraceMoeURL = 'https://trace.moe/api/search'
 
-    def __init__(self, mute=False):
+    def __init__(self, mute=False,**requests_kwargs):
         """
         :param mute: 预览视频是否静音（默认不静音）
+        :param **requests_kwargs:代理设置
         """
         self.mute: bool = mute
+        self.requests_kwargs = requests_kwargs
 
     @staticmethod
     def _base_64(filename):
@@ -123,7 +125,7 @@ class TraceMoe:
             params = dict()
             if url[:4] == 'http':  # 网络url
                 params['url'] = url
-                res = requests.get(self.TraceMoeURL, params=params)
+                res = requests.get(self.TraceMoeURL, params=params,**self.requests_kwargs)
                 if res.status_code == 200:
                     data = res.json()
                     return TraceMoeResponse(data,self.mute)
@@ -131,7 +133,7 @@ class TraceMoe:
                     logger.error(self._errors(res.status_code))
             else:  # 是否是本地文件
                 img = self._base_64(url)
-                res = requests.post(self.TraceMoeURL, json={"image": img, "filter": Filter})
+                res = requests.post(self.TraceMoeURL, json={"image": img, "filter": Filter},**self.requests_kwargs)
                 if res.status_code == 200:
                     data = res.json()
                     return TraceMoeResponse(data,self.mute)
