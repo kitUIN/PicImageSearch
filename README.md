@@ -6,9 +6,6 @@
 - [ ] [iqdb]
 - [ ] [ascii2d]
 ## TODO
-  - TraceMoe
-    - 完善注释
-    - 更新成class形式
   - iqdb
   - ascii2d
 ### 安装

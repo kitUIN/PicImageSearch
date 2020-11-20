@@ -96,13 +96,6 @@ class SauceNAOResponse:
         self.minimum_similarity: float = resp_header['minimum_similarity']
         self.results_returned: int = resp_header['results_returned']
 
-    @staticmethod
-    def _sort(data):
-        if data is None:
-            return []
-        sorts = sorted(data, key=lambda r: float(r['header']['similarity']), reverse=True)
-        return sorts
-
     def __repr__(self):
         return (f'<SauceResponse(count={repr(len(self.raw))}, long_remaining={repr(self.long_remaining)}, '
                 f'short_remaining={repr(self.short_remaining)})>')
@@ -124,14 +117,14 @@ class SauceNAO:
                  db: int = 999,
                  ) -> None:
         """
-        :param api_key:(str)用于SauceNAO的访问密钥 默认=None
+        :param api_key:(str)用于SauceNAO的访问密钥 (默认=None)
         :param output_type:(int) 0=正常(默认) html 1=xml api（未实现） 2=json api 默认=2
-        :param testmode:(int) 测试模式 0=正常 1=测试 默认=0
-        :param numres:(int)输出数量 默认=5
-        :param dbmask:(int)用于选择要启用的特定索引的掩码 默认=None
-        :param dbmaski:(int)用于选择要禁用的特定索引的掩码 默认=None
-        :param db:(int)搜索特定的索引号或全部索引 默认=999，索引见https://saucenao.com/tools/examples/api/index_details.txt
-        :param minsim:(int)控制最小相似度 默认=30
+        :param testmode:(int) 测试模式 0=正常 1=测试 (默认=0)
+        :param numres:(int)输出数量 (默认=5)
+        :param dbmask:(int)用于选择要启用的特定索引的掩码 (默认=None)
+        :param dbmaski:(int)用于选择要禁用的特定索引的掩码 (默认=None)
+        :param db:(int)搜索特定的索引号或全部索引 (默认=999)，索引见https://saucenao.com/tools/examples/api/index_details.txt
+        :param minsim:(int)控制最小相似度 (默认=30)
         :param hide:(int)结果隐藏控制,无=0，明确返回值(默认)=1，怀疑返回值=2，全部返回值=3
         """
         # minsim 控制最小相似度
@@ -148,7 +141,8 @@ class SauceNAO:
         params['hide'] = hide
         params['db'] = db
         params['minsim'] = minsim
-        params['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36 Edg/86.0.622.63'
+        params[
+            'User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36 Edg/86.0.622.63'
         self.params = params
 
     def search(self, url: str, files=None):
