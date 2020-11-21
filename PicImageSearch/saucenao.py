@@ -143,8 +143,7 @@ class SauceNAO:
         params['hide'] = hide
         params['db'] = db
         params['minsim'] = minsim
-        params[
-            'User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36 Edg/86.0.622.63'
+        params['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36 Edg/86.0.622.63'
         self.params = params
 
     def search(self, url: str, files=None):
@@ -162,3 +161,10 @@ class SauceNAO:
         logger.info(status_code)
         data = resp.json()
         return SauceNAOResponse(data)
+
+    @staticmethod
+    def download_thumbnail(thumbnail, filename='thumbnail.png'):
+        with requests.get(thumbnail, stream=True) as resp:
+            with open(filename, 'wb') as fd:
+                for chunk in resp.iter_content():
+                    fd.write(chunk)
