@@ -55,11 +55,11 @@ class TraceMoeNorm:
 
 
 class TraceMoeResponse:
-    def __init__(self, resp,mute):
+    def __init__(self, resp, mute):
         self.raw: list = []
         resp_docs = resp['docs']
         for i in resp_docs:
-            self.raw.append(TraceMoeNorm(i,mute=mute))
+            self.raw.append(TraceMoeNorm(i, mute=mute))
         self.origin: dict = resp
         self.RawDocsCount: int = resp['RawDocsCount']  # 搜索的帧总数
         self.RawDocsSearchTime: int = resp['RawDocsSearchTime']  # 从数据库检索帧所用的时间
@@ -79,7 +79,7 @@ class TraceMoeResponse:
 class TraceMoe:
     TraceMoeURL = 'https://trace.moe/api/search'
 
-    def __init__(self, mute=False,**requests_kwargs):
+    def __init__(self, mute=False, **requests_kwargs):
         """
         :param mute: 预览视频是否静音（默认不静音）
         :param **requests_kwargs:代理设置
@@ -125,18 +125,18 @@ class TraceMoe:
             params = dict()
             if url[:4] == 'http':  # 网络url
                 params['url'] = url
-                res = requests.get(self.TraceMoeURL, params=params,verify=False,**self.requests_kwargs)
+                res = requests.get(self.TraceMoeURL, params=params, verify=False, **self.requests_kwargs)
                 if res.status_code == 200:
                     data = res.json()
-                    return TraceMoeResponse(data,self.mute)
+                    return TraceMoeResponse(data, self.mute)
                 else:
                     logger.error(self._errors(res.status_code))
             else:  # 是否是本地文件
                 img = self._base_64(url)
-                res = requests.post(self.TraceMoeURL, json={"image": img, "filter": Filter},**self.requests_kwargs)
+                res = requests.post(self.TraceMoeURL, json={"image": img, "filter": Filter}, **self.requests_kwargs)
                 if res.status_code == 200:
                     data = res.json()
-                    return TraceMoeResponse(data,self.mute)
+                    return TraceMoeResponse(data, self.mute)
                 else:
                     logger.error(self._errors(res.status_code))
         except Exception as e:

@@ -1,8 +1,5 @@
-import io
-
 import requests
 import urllib3
-from PIL import Image
 from loguru import logger
 from requests_toolbelt import MultipartEncoder
 
@@ -161,7 +158,8 @@ class SauceNAO:
             )
             headers = {'Content-Type': m.content_type}
         urllib3.disable_warnings()
-        resp = requests.post(self.SauceNAOURL, headers=headers,data=m,params=params,verify=False,**self.requests_kwargs)
+        resp = requests.post(self.SauceNAOURL, headers=headers, data=m, params=params, verify=False,
+                             **self.requests_kwargs)
         status_code = resp.status_code
         logger.info(status_code)
         data = resp.json()
