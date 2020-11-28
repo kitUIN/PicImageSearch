@@ -1,5 +1,6 @@
 from .saucenao import SauceNAO
 from .tracemoe import TraceMoe
+from .ascii2d import Ascii2D
 
 __author__ = 'kitUIN'
 __license__ = 'Apache-2.0 License'

@@ -146,10 +146,11 @@ class SauceNAO:
         params['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36 Edg/86.0.622.63'
         self.params = params
 
-    def search(self, url: str, files=None):
+    def search(self, url: str):
         params = self.params
         if url[:4] == 'http':  # 网络url
             params['url'] = url
+            files = None
         else:  # 文件
             image = Image.open(url)
             imageData = io.BytesIO()

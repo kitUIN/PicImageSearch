@@ -4,4 +4,4 @@
 - [x] [SauceNAO-搜图引擎](https://github.com/kitUIN/PicImageSearch/wiki/SauceNAO)
 - [x] [TraceMoe-搜图引擎](https://github.com/kitUIN/PicImageSearch/wiki/TraceMoe)
 - [ ] [iqdb]
-- [ ] [ascii2d]
+- [x] [Ascii2D-搜图引擎](https://github.com/kitUIN/PicImageSearch/wiki/Ascii2D)

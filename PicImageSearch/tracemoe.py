@@ -112,7 +112,7 @@ class TraceMoe:
             response = '服务器错误 或者 你传错了图片格式。'
             return response
         else:
-            response = '未知错误,请联系开发者或者TraceMoe'
+            response = '未知错误,请联系开发者'
             return response
 
     def search(self, url, Filter=0):

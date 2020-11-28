@@ -1,7 +1,7 @@
 # TraceMoe
 ## 如何开始
-如果是需要查找的是网络url
 ```
+(测试文件在这里https://github.com/kitUIN/PicImageSearch/tree/main/test/test1.py)
 from loguru import logger
 from PicImageSearch.tracemoe import TraceMoe
 _REQUESTS_KWARGS = {

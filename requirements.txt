@@ -2,3 +2,6 @@ requests==2.23.0
 setuptools~=50.3.0
 loguru~=0.5.3
 Pillow~=7.2.0
+BeautifulSoup4~=4.9.3
+PicImageSearch~=0.6.6
+urllib3~=1.25.11
