@@ -4,6 +4,7 @@ from PicImageSearch import Ascii2D
 
 ascii2d = Ascii2D()
 res = ascii2d.search('https://ascii2d.net/thumbnail/b/4/a/e/b4ae7762f6d247e04bba6b925ce5f6d1.jpg')
+#res = ascii2d.search(r'C:/kitUIN/img/tinted-good.jpg')  # 搜索本地图片
 logger.info(res.origin)  # 原始数据
 logger.info(res.raw)  #
 logger.info(res.raw[1])  # <NormAscii2D(title=['2020.08.30'], authors=['hews__'],mark=['twitter'])>

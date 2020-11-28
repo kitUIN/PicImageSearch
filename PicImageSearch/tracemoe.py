@@ -125,7 +125,7 @@ class TraceMoe:
             params = dict()
             if url[:4] == 'http':  # 网络url
                 params['url'] = url
-                res = requests.get(self.TraceMoeURL, params=params,**self.requests_kwargs)
+                res = requests.get(self.TraceMoeURL, params=params,verify=False,**self.requests_kwargs)
                 if res.status_code == 200:
                     data = res.json()
                     return TraceMoeResponse(data,self.mute)

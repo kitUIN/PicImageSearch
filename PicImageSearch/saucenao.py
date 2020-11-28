@@ -1,8 +1,10 @@
 import io
 
 import requests
+import urllib3
 from PIL import Image
 from loguru import logger
+from requests_toolbelt import MultipartEncoder
 
 
 class SauceNAONorm:
@@ -143,21 +145,23 @@ class SauceNAO:
         params['hide'] = hide
         params['db'] = db
         params['minsim'] = minsim
-        params['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36 Edg/86.0.622.63'
         self.params = params
 
     def search(self, url: str):
         params = self.params
+        headers = {}
+        m = None
         if url[:4] == 'http':  # 网络url
             params['url'] = url
-            files = None
         else:  # 文件
-            image = Image.open(url)
-            imageData = io.BytesIO()
-            image.save(imageData, format='PNG')
-            files = {'file': ("image.png", imageData.getvalue())}
-            imageData.close()
-        resp = requests.post(self.SauceNAOURL, params=params, files=files,**self.requests_kwargs)
+            m = MultipartEncoder(
+                fields={
+                    'file': ('filename', open(url, 'rb'), "type=multipart/form-data")
+                }
+            )
+            headers = {'Content-Type': m.content_type}
+        urllib3.disable_warnings()
+        resp = requests.post(self.SauceNAOURL, headers=headers,data=m,params=params,verify=False,**self.requests_kwargs)
         status_code = resp.status_code
         logger.info(status_code)
         data = resp.json()

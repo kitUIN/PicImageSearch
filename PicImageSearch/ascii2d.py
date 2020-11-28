@@ -41,12 +41,15 @@ class Ascii2DNorm:
         for x in data:
             if x == '\n':
                 continue
-            origin = x.find_all('a')
-            all_urls['urls'].append(origin[0]['href'])
-            all_urls['titles'].append(origin[0].string)
-            all_urls['authors_urls'].append(origin[1]['href'])
-            all_urls['authors'].append(origin[1].string)
-            all_urls['mark'].append(x.small.string)
+            try:
+                origin = x.find_all('a')
+                all_urls['urls'].append(origin[0]['href'])
+                all_urls['titles'].append(origin[0].string)
+                all_urls['authors_urls'].append(origin[1]['href'])
+                all_urls['authors'].append(origin[1].string)
+                all_urls['mark'].append(x.small.string)
+            except:
+                pass
         return all_urls
 
     def __repr__(self):
@@ -68,7 +71,6 @@ class Ascii2DResponse:
 
 
 class Ascii2D:
-    ASCII2DFILES = 'https://ascii2d.net/search/url/'
     ASCII2DURL = 'https://ascii2d.net/search/multi'
 
     def __init__(self, **requests_kwargs):
@@ -94,23 +96,17 @@ class Ascii2D:
                     'uri': url
                 }
             )
-            headers = {'Content-Type': m.content_type}
-            urllib3.disable_warnings()
-            res = requests.post(self.ASCII2DURL, headers=headers, data=m, verify=False, **self.requests_kwargs)
-            if res.status_code == 200:
-                return self._slice(res.text)
-            else:
-                logger.error(self._errors(res.status_code))
         else:  # 是否是本地文件
             m = MultipartEncoder(
                 fields={
                     'file': ('filename', open(url, 'rb'), "type=multipart/form-data")
                 }
             )
-            headers = {'Content-Type': m.content_type}
-            urllib3.disable_warnings()
-            res = requests.post(self.ASCII2DFILES, headers=headers, data=m, verify=False, **self.requests_kwargs)
-            if res.status_code == 200:
-                return self._slice(res.text)
-            else:
-                logger.error(self._errors(res.status_code))
+        headers = {'Content-Type': m.content_type}
+        urllib3.disable_warnings()
+        res = requests.post(self.ASCII2DURL, headers=headers, data=m, verify=False, **self.requests_kwargs)
+        if res.status_code == 200:
+            return self._slice(res.text)
+        else:
+            logger.error(res.status_code)
+            logger.error(self._errors(res.status_code))
