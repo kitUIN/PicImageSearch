@@ -5,10 +5,12 @@
 ## 支持
 - [x] [SauceNAO](https://saucenao.com/)
 - [x] [TraceMoe](https://trace.moe/)
-- [ ] [iqdb](http://www.iqdb.org/)
+- [x] [iqdb](http://www.iqdb.org/)
 - [x] [ascii2d](https://ascii2d.net/)
 ## TODO
-  - iqdb
+  - 百度识图
+  - 谷歌识图
+  - 异步优化
 ### 安装
 - 此包需要 Python 3.6 或更新版本。
 - `pip install PicImageSearch`
