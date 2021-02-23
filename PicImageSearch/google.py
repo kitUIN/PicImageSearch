@@ -17,7 +17,7 @@ class GoogleNorm:
     def _arrange(self, data):
         get_data = self._getdata(data)
         self.titles = get_data['titles']
-        self.urls = get_data['url']
+        self.urls = get_data['urls']
         self.thumbnail = get_data['thumbnail']
 
     @staticmethod
@@ -28,8 +28,7 @@ class GoogleNorm:
         data = {
             'thumbnail': [],
             'titles': [],
-            'url': [],
-            'description': []
+            'urls': [],
         }
 
         for x in datas:
@@ -37,7 +36,7 @@ class GoogleNorm:
                 origin = x.find_all('span')
                 data['titles'].append(origin[0].string)
                 url = x.find_all('a')
-                data['url'].append(url[0]['href'])
+                data['urls'].append(url[0]['href'])
                 dsc = regex.search(url[3]['href'])
                 if re.findall('translate', dsc.group(1)):
                     dsc = regex.search(url[4]['href'])
@@ -93,16 +92,18 @@ class Google:
             params['image_url'] = urlimage_encd
             response = requests.get(
                 self.GOOGLEURL, allow_redirects=False, params=params, headers=self.header, **self.requests_kwargs)
+            fetchUrl = self.REGEX.findall(response.text)
+            url_clean = list(filter(bool, fetchUrl))
+            data = url_clean[2]
         else:
             params['encoded_image'] = url
             multipart = {'encoded_image': (
                 url, open(url, 'rb')), 'image_content': ''}
             response = requests.post(
-                self.GOOGLEURL, files=multipart, allow_redirects=False, headers=self.header, **self.requests_kwargs)
+                f"{self.GOOGLEURL}/upload", files=multipart, allow_redirects=False, headers=self.header, **self.requests_kwargs)
+            data = response.headers['Location']
         if response.status_code == 302:
-            fetchUrl = self.REGEX.findall(response.text)
-            url_clean = list(filter(bool, fetchUrl))
-            data = requests.get(url_clean[2], headers=self.header)
-            return self._slice(data.text)
+            resp = requests.get(data, headers=self.header)
+            return self._slice(resp.text)
         else:
             logger.error(response.status_code)
