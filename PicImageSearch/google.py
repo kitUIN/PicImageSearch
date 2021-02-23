@@ -103,7 +103,6 @@ class Google:
             fetchUrl = self.REGEX.findall(response.text)
             url_clean = list(filter(bool, fetchUrl))
             data = requests.get(url_clean[2], headers=self.header)
-            print("go")
             return self._slice(data.text)
         else:
             logger.error(response.status_code)
