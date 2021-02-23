@@ -10,14 +10,14 @@ class GoogleNorm:
 
     def __init__(self, data):
         self.thumbnail: list = list()
-        self.title: list = list()
-        self.url: list = list()
+        self.titles: list = list()
+        self.urls: list = list()
         self._arrange(data)
 
     def _arrange(self, data):
         get_data = self._getdata(data)
-        self.title = get_data['titles']
-        self.url = get_data['url']
+        self.titles = get_data['titles']
+        self.urls = get_data['url']
         self.thumbnail = get_data['thumbnail']
 
     @staticmethod
@@ -51,7 +51,7 @@ class GoogleNorm:
         return data
 
     def __repr__(self):
-        return f'<NormGoogle(title={repr(self.title)}, urls={self.url}, thumbnail={self.thumbnail})>'
+        return f'<NormGoogle(title={repr(self.titles)}, urls={self.urls}, thumbnail={self.thumbnail})>'
 
 
 class GoogleResponse:
