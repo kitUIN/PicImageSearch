@@ -55,6 +55,8 @@ class GoogleNorm:
                     thumbnail = regex.search(data[a]['href']).group(1)
                 elif re.findall('/imgres', data[a]['href']):
                     thumbnail = f"{GOOGLEURL}{data[a]['href']}"
+                else:
+                    thumbnail = "No directable url"
         except:
             thumbnail = "No directable url"
 
@@ -101,16 +103,14 @@ class Google:
             urlimage_encd = quote(url, safe='')
             params['image_url'] = urlimage_encd
             response = requests.get(
-                self.GOOGLEURL, allow_redirects=False, params=params, headers=self.header, **self.requests_kwargs)
+                self.GOOGLEURL, params=params, headers=self.header, **self.requests_kwargs)
         else:
             params['encoded_image'] = url
             multipart = {'encoded_image': (
                 url, open(url, 'rb')), 'image_content': ''}
             response = requests.post(
-                f"{self.GOOGLEURL}/upload", files=multipart, allow_redirects=False, headers=self.header, **self.requests_kwargs)
-        if response.status_code == 302:
-            data = response.headers['Location']
-            resp = requests.get(data, headers=self.header, params=params, **self.requests_kwargs, allow_redirects=True)
-            return self._slice(resp.text)
+                f"{self.GOOGLEURL}/upload", files=multipart, headers=self.header, **self.requests_kwargs)
+        if response.status_code == 200:
+            return self._slice(response.text)
         else:
             logger.error(response.status_code)

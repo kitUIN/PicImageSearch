@@ -9,7 +9,7 @@ with open("README.md", "r", encoding='utf-8') as fh:
 
 setuptools.setup(
     name="PicImageSearch",
-    version="0.8.1",
+    version="0.8.2",
     author="kitUIN",
     author_email="kulujun@gmail.com",
     description="PicImageSearch APIs for Python 3.x 适用于 Python 3 以图搜源整合API",
