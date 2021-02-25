@@ -55,8 +55,6 @@ class GoogleNorm:
                     thumbnail = regex.search(data[a]['href']).group(1)
                 elif re.findall('/imgres', data[a]['href']):
                     thumbnail = f"{GOOGLEURL}{data[a]['href']}"
-                else:
-                    thumbnail = "No directable url"
         except:
             thumbnail = "No directable url"
 
