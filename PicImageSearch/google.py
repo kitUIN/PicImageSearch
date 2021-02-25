@@ -43,6 +43,7 @@ class GoogleNorm:
 
     @staticmethod
     def _gethumbnail(data):
+        GOOGLEURL = "https://www.google.com/"
         regex = re.compile(
             r"((http(s)?(\:\/\/))+(www\.)?([\w\-\.\/])*(\.[a-zA-Z]{2,3}\/?))[^\s\b\n|]*[^.,;:\?\!\@\^\$ -]")
         
@@ -52,6 +53,8 @@ class GoogleNorm:
             for a in range(2, 5):
                 if re.findall('jpg|png', regex.search(data[a]['href']).group(1)):
                     thumbnail = regex.search(data[a]['href']).group(1)
+                elif re.findall('/imgres', data[a]['href']):
+                    thumbnail = f"{GOOGLEURL}{data[a]['href']}"
         except:
             thumbnail = "No directable url"
 
@@ -76,7 +79,7 @@ class GoogleResponse:
 
 
 class Google:
-    GOOGLEURL = 'http://www.google.com/searchbyimage'
+    GOOGLEURL = 'https://www.google.com/searchbyimage'
 
     def __init__(self, **request_kwargs):
         params = dict()
