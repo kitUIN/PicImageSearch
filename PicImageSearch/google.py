@@ -20,10 +20,7 @@ class GoogleNorm:
         self.urls = get_data['urls']
         self.thumbnail = get_data['thumbnail']
 
-    @staticmethod
-    def _getdata(datas):
-        regex = re.compile(
-            r"((http(s)?(\:\/\/))+(www\.)?([\w\-\.\/])*(\.[a-zA-Z]{2,3}\/?))[^\s\b\n|]*[^.,;:\?\!\@\^\$ -]")
+    def _getdata(self, datas):
 
         data = {
             'thumbnail': [],
@@ -37,17 +34,28 @@ class GoogleNorm:
                 data['titles'].append(origin[0].string)
                 url = x.find_all('a')
                 data['urls'].append(url[0]['href'])
-                dsc = regex.search(url[3]['href'])
-                if re.findall('translate', dsc.group(1)):
-                    dsc = regex.search(url[4]['href'])
-                if re.findall('jpg|png', dsc.group(1)):
-                    data['thumbnail'].append(dsc.group(1))
-                else:
-                    data['thumbnail'].append(None)
+                img = self._gethumbnail(url)
+                data['thumbnail'].append(img)
             except:
                 pass
 
         return data
+
+    @staticmethod
+    def _gethumbnail(data):
+        regex = re.compile(
+            r"((http(s)?(\:\/\/))+(www\.)?([\w\-\.\/])*(\.[a-zA-Z]{2,3}\/?))[^\s\b\n|]*[^.,;:\?\!\@\^\$ -]")
+        
+        thumbnail = ""
+
+        try:
+            for a in range(2, 5):
+                if re.findall('jpg|png', regex.search(data[a]['href']).group(1)):
+                    thumbnail = regex.search(data[a]['href']).group(1)
+        except:
+            thumbnail = "No directable url"
+
+        return thumbnail
 
     def __repr__(self):
         return f'<NormGoogle(title={repr(self.titles)}, urls={self.urls}, thumbnail={self.thumbnail})>'
@@ -69,7 +77,6 @@ class GoogleResponse:
 
 class Google:
     GOOGLEURL = 'http://www.google.com/searchbyimage'
-    REGEX = re.compile(r'"(.*?)"')
 
     def __init__(self, **request_kwargs):
         params = dict()
@@ -92,18 +99,15 @@ class Google:
             params['image_url'] = urlimage_encd
             response = requests.get(
                 self.GOOGLEURL, allow_redirects=False, params=params, headers=self.header, **self.requests_kwargs)
-            fetchUrl = self.REGEX.findall(response.text)
-            url_clean = list(filter(bool, fetchUrl))
-            data = url_clean[2]
         else:
             params['encoded_image'] = url
             multipart = {'encoded_image': (
                 url, open(url, 'rb')), 'image_content': ''}
             response = requests.post(
                 f"{self.GOOGLEURL}/upload", files=multipart, allow_redirects=False, headers=self.header, **self.requests_kwargs)
-            data = response.headers['Location']
         if response.status_code == 302:
-            resp = requests.get(data, headers=self.header)
+            data = response.headers['Location']
+            resp = requests.get(data, headers=self.header, params=params, **self.requests_kwargs, allow_redirects=True)
             return self._slice(resp.text)
         else:
             logger.error(response.status_code)
