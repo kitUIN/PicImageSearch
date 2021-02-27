@@ -86,4 +86,22 @@ class Iqdb:
             logger.error(e)
 
     def search_3d(self, url):
-        pass
+        try:
+            if url[:4] == 'http':  # 网络url
+                datas = {
+                    "url": url
+                }
+                res = requests.post(self.url_3d, data=datas, **self.requests_kwargs)
+            else:  # 是否是本地文件
+                m = MultipartEncoder(
+                    fields={
+                        'file': ('filename', open(url, 'rb'), "type=multipart/form-data")
+                    }
+                )
+                headers = {'Content-Type': m.content_type}
+                urllib3.disable_warnings()
+                res = requests.post(self.url_3d, headers=headers, **self.requests_kwargs)
+            if res.status_code == 200:
+                return IqdbResponse(res.content)
+        except Exception as e:
+            logger.error(e)
