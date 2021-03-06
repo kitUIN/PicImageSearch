@@ -1,7 +1,0 @@
-# PicImageSearch
-整合图片识别api,包括SauceNAO,tracemoe,iqdb,ascii2d等
-## 开始
-- [x] [SauceNAO-搜图引擎](https://github.com/kitUIN/PicImageSearch/wiki/SauceNAO)
-- [x] [TraceMoe-搜图引擎](https://github.com/kitUIN/PicImageSearch/wiki/TraceMoe)
-- [x] [Iqdb-搜图引擎](https://github.com/kitUIN/PicImageSearch/wiki/Iqdb)
-- [x] [Ascii2D-搜图引擎](https://github.com/kitUIN/PicImageSearch/wiki/Ascii2D)

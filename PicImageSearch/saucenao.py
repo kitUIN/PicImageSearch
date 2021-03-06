@@ -19,6 +19,12 @@ class SauceNAONorm:
         self.pixiv_id: str = self._get_pixiv_id(result_data)
         self.member_id: str = self._get_member_id(result_data)
 
+    def download_thumbnail(self, filename='thumbnail.png'):  # 缩略图生成
+        with requests.get(self.thumbnail, stream=True) as resp:
+            with open(filename, 'wb') as fd:
+                for chunk in resp.iter_content():
+                    fd.write(chunk)
+
     @staticmethod
     def _get_title(data):
         if 'title' in data:
@@ -151,11 +157,7 @@ class SauceNAO:
         if url[:4] == 'http':  # 网络url
             params['url'] = url
         else:  # 文件
-            m = MultipartEncoder(
-                fields={
-                    'file': ('filename', open(url, 'rb'), "type=multipart/form-data")
-                }
-            )
+            m = MultipartEncoder(fields={'file': ('filename', open(url, 'rb'), "type=multipart/form-data")})
             headers = {'Content-Type': m.content_type}
         urllib3.disable_warnings()
         resp = requests.post(self.SauceNAOURL, headers=headers, data=m, params=params, verify=False,
@@ -164,10 +166,3 @@ class SauceNAO:
         logger.info(status_code)
         data = resp.json()
         return SauceNAOResponse(data)
-
-    @staticmethod
-    def download_thumbnail(thumbnail, filename='thumbnail.png'):
-        with requests.get(thumbnail, stream=True) as resp:
-            with open(filename, 'wb') as fd:
-                for chunk in resp.iter_content():
-                    fd.write(chunk)

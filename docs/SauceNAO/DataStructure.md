@@ -1,37 +1,9 @@
 # SauceNAO
-## 如何开始
-```
-(测试文件在这里https://github.com/kitUIN/PicImageSearch/tree/main/test/test2.py)
-from loguru import logger
-from PicImageSeach.saucenao import SauceNAO
-_REQUESTS_KWARGS = {
-    # 'proxies': {
-    #     'https': 'http://127.0.0.1:10809',
-    # }
-    #如果需要代理
-}
-saucenao = SauceNAO(**_REQUESTS_KWARGS)
-res = saucenao.search('https://cdn.jsdelivr.net/gh/laosepi/setu/pics_original/77702503_p0.jpg')
-#res = saucenao.search(r'C:/kitUIN/img/tinted-good.jpg')搜索本地图片
-logger.info(res.origin)           # 原始数据
-logger.info(res.raw)              #
-logger.info(res.raw[0])           #
-logger.info(res.long_remaining)   # 99
-logger.info(res.short_remaining)  # 3
-logger.info(res.raw[0].thumbnail) # https://img1.saucenao.com/res/pixiv/7770/77702503_p0_master1200.jpg?auth=pJmiu8qNI1z2fLBAlAsx7A&exp=1604748473
-logger.info(res.raw[0].similarity)# 92.22
-logger.info(res.raw[0].title)     # MDR♡
-logger.info(res.raw[0].author)    # CeNanGam
-logger.info(res.raw[0].url)  # https://www.pixiv.net/member_illust.php?mode=medium&illust_id=77702503
-logger.info(res.raw[0].pixiv_id)  # 77702503
-logger.info(res.raw[0].member_id) # 4089680
-```
-输出数据类型详下面的表格  
 
-### SauceNAO主类说明
-```
+## SauceNAO主类说明
+```python
 saucenao = SauceNAO(
-                 api_key='',        # (str)用于SauceNAO的访问密钥 默认=None
+                 api_key='',        # (str)(必须)用于SauceNAO的访问密钥 默认=None 
                  numres = 5,        # (int)输出数量 默认=5
                  hide = 1,          # (int)结果隐藏控制,无=0，明确返回值(默认)=1，怀疑返回值=2，全部返回值=3
                  minsim = 30,       # (int)控制最小相似度 默认=30
@@ -42,47 +14,67 @@ saucenao = SauceNAO(
                  db = 999,          # (int)搜索特定的索引号或全部索引 默认=999
                                     # 索引见https://saucenao.com/tools/examples/api/index_details.txt
                  **requests_kwargs  # 代理设置
-)
+            )
 ```
 ## 数据返回值列表
-PS：可以去看看[**源代码**](https://github.com/kitUIN/PicImageSearch/blob/main/PicImageSearch/saucenao.py)   
-以上面的`res`为例  
-|变量              |   内容             |  类型  |
-|----              | ----              | ----  |
-|.origin|原始返回值|dict|
-|.short_remaining|每30秒访问额度|int|
-|.long_remaining |每天访问额度|int|
-|.user_id|API|int|
-|.account_type|待补充|int|
-|.short_limit|待补充|str|
-|.long_limit|待补充|str|
-|.status|服务器判断值|int|
-|.results_requested|数据返回值数量|int|
-|.search_depth|搜索所涉及的数据库数量|str|
-|.minimum_similarity|最小相似度|float|
-|.results_returned|数据返回值数量|int|
-|.raw|结果返回值（具体见下表）|list|
-- `res.raw` 存储了所有的返回结果  
--  例如`res.raw[0]`内存放了第一条搜索结果  
--  以下列表以`res.raw[0]`为例
+!!! note "情境"
+    假设我们的代码为
+    ```python
+    from PicImageSeach import SauceNAO
+
+    saucenao = SauceNAO(api_key='输入你的api key',**_REQUESTS_KWARGS)
+    res = saucenao.search('https://cdn.jsdelivr.net/gh/laosepi/setu/pics_original/77702503_p0.jpg')
+    ```
+
+!!! info 
+    - 代理方法见快速开始
+    - 数据结构也可以查阅[**源代码**](https://github.com/kitUIN/PicImageSearch/blob/main/PicImageSearch/saucenao.py)   
+
+那么以上面的`res`为例
+
+|变量                    |   内容            |  类型  |
+|----                   | ----              | ----  |
+|`res.origin`                |原始返回值          |dict|
+|`res.short_remaining`       |每30秒访问额度      |int|
+|`res.long_remaining`        |每天访问额度        |int|
+|`res.user_id`               |API               |int|
+|`res.account_type`          |待补充             |int|
+|`res.short_limit`           |待补充             |str|
+|`res.long_limit`            |待补充            |str|
+|`res.status`                |服务器判断值         |int|
+|`res.results_requested`     |数据返回值数量        |int|
+|`res.search_depth`         |搜索所涉及的数据库数量|str|
+|`res.minimum_similarity`    |最小相似度          |float|
+|`res.results_returned`      |数据返回值数量        |int|
+|`res.raw`                   |结果返回值（具体见下表）|list|
+
+
+!!! tip
+    - `res.raw` 存储了所有的返回结果  
+    -  例如`res.raw[0]`内存放了第一条搜索结果  
+
+以下列表以`res.raw[0]`为例
+
 
 |变量              |   内容             |  类型  |
 |----              | ----              | ----  |
-|.raw|原始值|dict|
-|.similarity|相似度| float|
-|.thumbnail|缩略图地址| str|
-|.index_id|文件id| int|
-|.index_name|文件名称| str |
-|.title|标题| str |
-|.url|地址| str |
-|.author|作者| str |
-|.pixiv_id|pixiv的id（如果有）|str|
-|.member_id|pixiv的画师id（如果有）|str|
+|`res.raw[0].raw`|原始值|dict|
+|`res.raw[0].similarity`|相似度| float|
+|`res.raw[0].thumbnail`|缩略图地址| str|
+|`res.raw[0].index_id`|文件id| int|
+|`res.raw[0].index_name`|文件名称| str |
+|`res.raw[0].title`|标题| str |
+|`res.raw[0].url`|地址| str |
+|`res.raw[0].author`|作者| str |
+|`res.raw[0].pixiv_id`|pixiv的id（如果有）|str|
+|`res.raw[0].member_id`|pixiv的画师id（如果有）|str|
+
+
 ## 数据返回值 实例JSON
 <details>
   <summary>←←数据返回值 实例JSON(有点长)</summary>
   
-  ```
+```json
 {
   "header": {
     "user_id": 0,

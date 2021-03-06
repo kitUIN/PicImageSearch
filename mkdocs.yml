@@ -1,0 +1,74 @@
+site_name: PicImageSearch - kitUIN/PicImageSearch
+
+repo_name: kitUIN/PicImageSearch
+repo_url: https://github.com/kitUIN/PicImageSearch
+
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    primary: green
+    scheme: slate
+    accent: green
+  language: zh
+
+nav:
+  - 开始: index.md
+  - SauceNAO:
+      - 快速开始: SauceNAO/Home.md
+      - 数据结构: SauceNAO/DataStructure.md
+      - 示例: SauceNAO/Demo.md
+  - Ascii2D:
+      - 快速开始: Ascii2D/Home.md
+      - 数据结构: Ascii2D/DataStructure.md
+      - 示例: Ascii2D/Demo.md
+  - Iqdb:
+      - 快速开始: Iqdb/Home.md
+      - 数据结构: Iqdb/DataStructure.md
+      - 示例: Iqdb/Demo.md
+  - TraceMoe:
+      - 快速开始: TraceMoe/Home.md
+      - 数据结构: TraceMoe/DataStructure.md
+      - 示例: TraceMoe/Demo.md
+  - Google:
+      - 快速开始: Google/Home.md
+      - 数据结构: Google/DataStructure.md
+      - 示例: Google/Demo.md
+
+markdown_extensions:
+  - toc:
+      permalink: ⚓︎
+  - admonition
+  - codehilite:
+      guess_lang: false
+      linenums: false
+  - footnotes
+  - meta
+  - def_list
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist
+  - pymdownx.tabbed
+  - pymdownx.tilde
+plugins:
+  - git-revision-date
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/kitUIN
+      name: 开花者✿

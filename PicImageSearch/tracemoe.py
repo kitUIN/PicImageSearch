@@ -44,11 +44,32 @@ class TraceMoeNorm:
         :return: 预览视频url地址
         """
         url = "https://media.trace.moe/video/" \
-              "{}/{}?t={}&token={}".format(self.anilist_id, parse.quote(self.filename), self.at,
-                                           self.tokenthumb)
+              f"{self.anilist_id}/{parse.quote(self.filename)}?t={self.at}&token={self.tokenthumb}"
         if mute:
             url = url + '&mute'
         return url
+
+    @staticmethod
+    def download_image(self, filename='image.png'):
+        """
+        下载缩略图
+        :param filename: 重命名文件
+        """
+        with requests.get(self.thumbnail, stream=True) as resp:
+            with open(filename, 'wb') as fd:
+                for chunk in resp.iter_content():
+                    fd.write(chunk)
+
+
+    def download_video(self, filename='video.mp4'):
+        """
+        下载预览视频
+        :param filename: 重命名文件
+        """
+        with requests.get(self.video_thumbnail, stream=True) as resp:
+            with open(filename, 'wb') as fd:
+                for chunk in resp.iter_content():
+                    fd.write(chunk)
 
     def __repr__(self):
         return f'<NormTraceMoe(title={repr(self.title_chinese)}, similarity={self.similarity:.2f})>'
@@ -142,26 +163,3 @@ class TraceMoe:
         except Exception as e:
             logger.info(e)
 
-    @staticmethod
-    def download_image(thumbnail, filename='image.png'):
-        """
-        下载缩略图
-        :param filename: 重命名文件
-        :param thumbnail:缩略图地址 见返回值中的thumbnail
-        """
-        with requests.get(thumbnail, stream=True) as resp:
-            with open(filename, 'wb') as fd:
-                for chunk in resp.iter_content():
-                    fd.write(chunk)
-
-    @staticmethod
-    def download_video(video, filename='video.mp4'):
-        """
-        下载预览视频
-        :param filename: 重命名文件
-        :param video :缩略图地址 见返回值中的video_thumbnail
-        """
-        with requests.get(video, stream=True) as resp:
-            with open(filename, 'wb') as fd:
-                for chunk in resp.iter_content():
-                    fd.write(chunk)

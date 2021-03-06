@@ -1,53 +1,57 @@
 # Ascii2D
-## 如何开始
-```
-(测试文件在这里https://github.com/kitUIN/PicImageSearch/tree/main/test/test3.py)
-from loguru import logger
-from PicImageSearch import Ascii2D
 
-ascii2d = Ascii2D()
-res = ascii2d.search('https://ascii2d.net/thumbnail/b/4/a/e/b4ae7762f6d247e04bba6b925ce5f6d1.jpg')
-#res = ascii2d.search(r'C:/kitUIN/img/tinted-good.jpg')搜索本地图片
-logger.info(res.origin)  # 原始数据
-logger.info(res.raw)  #
-logger.info(res.raw[1])  # <NormAscii2D(title=['2020.08.30'], authors=['hews__'],mark=['twitter'])>
-logger.info(res.raw[1].thumbnail[0])  # https://ascii2d.net/thumbnail/2/c/5/e/2c5e6a18fbba730a65cef0549e3c5768.jpg
-logger.info(res.raw[1].titles[0])  # 2020.08.30
-logger.info(res.raw[1].authors[0])  # hews__
-logger.info(res.raw[1].urls[0])  # https://twitter.com/hews__/status/1299728221005643776
-logger.info(res.raw[1].detail)  # 2570x4096 JPEG 1087.9KB
-```
 ### Ascii2D主类说明
-```
-    ascii2d = Ascii2D(
-                **requests_kwargs  # 代理设置
+```python
+ascii2d = Ascii2D(
+            **requests_kwargs  # 代理设置
     )
 ```
 ## 数据返回值列表
-PS：可以去看看[**源代码**](https://github.com/kitUIN/PicImageSearch/blob/main/PicImageSearch/ascii2d.py)   
-以上面的`res`为例  
-|变量              |   内容             |  类型  |
-|----              | ----              | ----  |
-|.origin|原始返回值|list|
-|.raw|结果返回值（具体见下表）|list|
-- `res.raw` 存储了所有的返回结果  
--  例如`res.raw[0]`内存放了第一条搜索结果  
--  以下列表以`res.raw[1]`为例
-    (不建议使用`res.raw[0]`，因为其内容可能是空的)
+!!! note "情境"
+    假设我们的代码为
+    ```python
+    from PicImageSearch import Ascii2D
+
+    ascii2d = Ascii2D()
+    res = ascii2d.search('https://ascii2d.net/thumbnail/b/4/a/e/b4ae7762f6d247e04bba6b925ce5f6d1.jpg')
+    ```
+!!! info 
+    - 代理方法见快速开始
+    - 数据结构也可以查阅[**源代码**](https://github.com/kitUIN/PicImageSearch/blob/main/PicImageSearch/ascii2d.py)   
+
+那么以上面的`res`为例
 
 |变量              |   内容             |  类型  |
 |----              | ----              | ----  |
-|.raw|原始值|list|
-|.thumbnail|缩略图地址| list|
-|.titles|标题| list |
-|.urls|地址| list |
-|.authors|作者| list |
-|.detail|原图长宽，类型，大小|str|
+|`res.origin`|原始返回值|list|
+|`res.raw`|结果返回值（具体见下表）|list|
+
+!!! tip
+    - `res.raw` 存储了所有的返回结果  
+    -  例如`res.raw[1]`内存放了第一条搜索结果
+
+!!! help
+    - 不建议使用`res.raw[0]`，因为其内容可能是空的
+    - 建议从`res.raw[1]`开始使用
+
+以下列表以`res.raw[1]`为例
+
+
+|变量              |   内容             |  类型  |
+|----              | ----              | ----  |
+|`res.raw[1].raw`|原始值|list|
+|`res.raw[1].thumbnail`|缩略图地址| list|
+|`res.raw[1].titles`|标题| list |
+|`res.raw[1].urls`|地址| list |
+|`res.raw[1].authors`|作者| list |
+|`res.raw[1].detail`|原图长宽，类型，大小|str|
+
+
 ## 数据返回值 实例HTML
 <details>
-  <summary>←←数据返回值 实例JSON(有点长)</summary>
+  <summary>←←数据返回值 实例html(有点长)</summary>
   
-  ```
+```html
 <!DOCTYPE html>
 <html lang='ja'>
 <head>
@@ -923,5 +927,5 @@ pixiv
 </body>
 </html>
 
-  ```
+```
 </details>

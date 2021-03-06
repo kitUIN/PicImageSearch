@@ -1,5 +1,3 @@
-#! /usr/bin/env python3
-# coding=utf-8
 from loguru import logger
 
 from PicImageSearch.saucenao import SauceNAO
@@ -10,10 +8,9 @@ _REQUESTS_KWARGS = {
     # }
     # 如果需要代理
 }
-saucenao = SauceNAO(api_key='54a8d90c583d3b66b6dd3d7e9001a39b588cd842', testmode=1, **_REQUESTS_KWARGS)
-#res = saucenao.search('https://ascii2d.net/thumbnail/b/4/a/e/b4ae7762f6d247e04bba6b925ce5f6d1.jpg')
-res = saucenao.search(r'C:/kitUIN/img/tinted-good.jpg')#搜索本地图片
-# saucenao.download_thumbnail(res.raw[0].thumbnail) 下载缩略图
+saucenao = SauceNAO(api_key='54a8d90c583d3b66b6dd3d7e9001a39b588cd842')
+res = saucenao.search('https://pixiv.cat/77702503-1.jpg')
+#res = saucenao.search(r'C:/kitUIN/img/tinted-good.jpg') #搜索本地图片
 logger.info(res.origin)  # 原始数据
 logger.info(res.raw)  #
 logger.info(res.raw[0])  #
