@@ -1,0 +1,742 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.4">
+    
+    
+      
+        <title>示例 - PicImageSearch - kitUIN/PicImageSearch</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.77f3fd56.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#4cae4f">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent="green">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#demo" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="PicImageSearch - kitUIN/PicImageSearch" class="md-header__button md-logo" aria-label="PicImageSearch - kitUIN/PicImageSearch">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PicImageSearch - kitUIN/PicImageSearch
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              示例
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/kitUIN/PicImageSearch/" title="前往 GitHub 仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kitUIN/PicImageSearch
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="PicImageSearch - kitUIN/PicImageSearch" class="md-nav__button md-logo" aria-label="PicImageSearch - kitUIN/PicImageSearch">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    PicImageSearch - kitUIN/PicImageSearch
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/kitUIN/PicImageSearch/" title="前往 GitHub 仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kitUIN/PicImageSearch
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        开始
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        SauceNAO
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="SauceNAO" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          SauceNAO
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SauceNAO/Home/" class="md-nav__link">
+        快速开始
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SauceNAO/DataStructure/" class="md-nav__link">
+        数据结构
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SauceNAO/Demo/" class="md-nav__link">
+        示例
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        Ascii2D
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Ascii2D" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Ascii2D
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Ascii2D/Home/" class="md-nav__link">
+        快速开始
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Ascii2D/DataStructure/" class="md-nav__link">
+        数据结构
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Ascii2D/Demo/" class="md-nav__link">
+        示例
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Iqdb
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Iqdb" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Iqdb
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Iqdb/Home/" class="md-nav__link">
+        快速开始
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Iqdb/DataStructure/" class="md-nav__link">
+        数据结构
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Iqdb/Demo/" class="md-nav__link">
+        示例
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        TraceMoe
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="TraceMoe" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          TraceMoe
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TraceMoe/Home/" class="md-nav__link">
+        快速开始
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TraceMoe/DataStructure/" class="md-nav__link">
+        数据结构
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TraceMoe/Demo/" class="md-nav__link">
+        示例
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
+      
+      <label class="md-nav__link" for="__nav_6">
+        Google
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Google" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Google
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Home/" class="md-nav__link">
+        快速开始
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DataStructure/" class="md-nav__link">
+        数据结构
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          示例
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        示例
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    示例
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    示例
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/kitUIN/PicImageSearch/edit/master/docs/Google/Demo.md" title="编辑此页" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="demo">Demo<a class="headerlink" href="#demo" title="Permanent link">⚓︎</a></h1>
+<h2 id="_1">示例<a class="headerlink" href="#_1" title="Permanent link">⚓︎</a></h2>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+
+<span class="kn">from</span> <span class="nn">PicImageSearch</span> <span class="kn">import</span> <span class="n">Google</span>
+
+<span class="n">google</span> <span class="o">=</span> <span class="n">Google</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">google</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s2">&quot;https://media.discordapp.net/attachments/783138508038471701/813452582948306974/hl-18-1-900x1280.png?width=314&amp;height=447&quot;</span><span class="p">)</span>
+<span class="c1">#res = google.search(r&#39;C:/kitUIN/img/tinted-good.jpg&#39;)  # Search Image URL or path</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>  <span class="c1"># Original Data</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="fm">__str__</span><span class="p">())</span>  <span class="c1"># Raw Data</span>
+<span class="c1"># Should start from index 2, because from there is matching image</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># &lt;NormGoogle(title=[&quot;The Strongest Dull Prince&#39;s Secret Battle for the Throne ...&quot;], urls=[&#39;https://kiryuu.co/the-strongest-dull-princes-secret-battle-for-the-throne-chapter-3-bahasa-indonesia/&#39;], thumbnail=[&#39;No directable url&#39;])&gt;</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">thumbnail</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># No directable url</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">titles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># The Strongest Dull Prince&#39;s Secret Battle for the Throne ...</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">urls</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># https://kiryuu.co/the-strongest-dull-princes-secret-battle-for-the-throne-chapter-3-bahasa-indonesia/</span>
+</code></pre></div>
+</td></tr></table>
+<div class="admonition info">
+<p class="admonition-title">信息</p>
+<p>文件位于<a href="https://github.com/kitUIN/PicImageSearch/tree/main/test/test5.py">test5.py</a> </p>
+</div>
+<div class="admonition help">
+<p class="admonition-title">Help</p>
+<ul>
+<li>不建议使用<code>res.raw[0]``res.raw[1]</code>，因为其内容可能是空的</li>
+<li>建议从<code>res.raw[2]</code>开始使用</li>
+</ul>
+</div>
+<div class="admonition success">
+<p class="admonition-title">Success</p>
+<p>程序输出,部分过长数据已省略
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="m">2021</span>-03-06 <span class="m">19</span>:54:45.528 <span class="p">|</span> INFO     <span class="p">|</span> __main__:&lt;module&gt;:8 - <span class="o">[</span>&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;g&quot;</span>&gt;&lt;h2 <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;Uo8X3b&quot;</span>&gt;Web results&lt;/h2&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;tF2Cxc&quot;</span> data-hveid<span class="o">=</span><span class="s2">&quot;CAMQAA&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFSgAMAB6BAgDEAA&quot;</span>&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;yuRUbf&quot;</span>&gt;&lt;a data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjAAegQIAxAD&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://www.novelupdates.com/series/the-strongest-dull-princes-secret-battle-for-the-throne/comment-page-2/&quot;</span> <span class="nv">onmousedown</span><span class="o">=</span><span class="s2">&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;AOvVaw0v0vIjczJlexrVqpxZHsNk&#39;,&#39;&#39;,&#39;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjAAegQIAxAD&#39;,&#39;&#39;,&#39;&#39;,event)&quot;</span>&gt;&lt;br/&gt;&lt;h3 <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;LC20lb DKV0Md&quot;</span>&gt;&lt;span&gt;The Strongest Dull Prince<span class="s1">&#39;s Secret Battle for the Throne ...&lt;/span&gt;&lt;/h3&gt;&lt;div class=&quot;TbwUpd NJjxre&quot;&gt;&lt;cite class=&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;&gt;www.novelupdates.com&lt;span class=&quot;dyjrff qzEoUe&quot;&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;series › comment-page-2&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;/a&gt;&lt;div class=&quot;B6fmyf&quot;&gt;&lt;div class=&quot;TbwUpd&quot;&gt;&lt;cite class=&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;&gt;www.novelupdates.com&lt;span class=&quot;dyjrff qzEoUe&quot;&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;series › comment-page-2&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;div class=&quot;eFM0qc&quot;&gt;&lt;span&gt;&lt;div class=&quot;action-menu&quot; jscontroller=&quot;hiU8Ie&quot;&gt;&lt;a aria-expanded=&quot;false&quot; aria-haspopup=&quot;true&quot; aria-label=&quot;Result options&quot; class=&quot;GHDvEf&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ7B0wAHoECAMQBg&quot; href=&quot;#&quot; id=&quot;am-b0&quot; jsaction=&quot;PZcoEd;keydown:wU6FVd;keypress:uWmNaf&quot; role=&quot;button&quot;&gt;&lt;span class=&quot;mn-dwn-arw&quot;&gt;&lt;/span&gt;&lt;/a&gt;&lt;ol class=&quot;action-menu-panel&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQqR8wAHoECAMQBw&quot; jsaction=&quot;keydown:Xiq7wd;mouseover:pKPowd;mouseout:O9bKS&quot; role=&quot;menu&quot; tabindex=&quot;-1&quot;&gt;&lt;li class=&quot;action-menu-item&quot; role=&quot;menuitem&quot;&gt;&lt;a class=&quot;fl&quot; href=&quot;https://webcache.googleusercontent.com/search?q=cache:91KWTRcP810J:https://www.novelupdates.com/series/the-strongest-dull-princes-secret-battle-for-the-throne/comment-page-2/+&amp;amp;cd=1&amp;amp;hl=en&amp;amp;ct=clnk&amp;amp;gl=ph&quot; onmousedown=&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;</span>AOvVaw1T0-3WjwnGsW9DVqm4zY9k<span class="s1">&#39;,&#39;&#39;,&#39;</span>2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQIDAAegQIAxAI<span class="s1">&#39;,&#39;&#39;,&#39;&#39;,event)&quot;&gt;&lt;span&gt;Cached&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;IsZvec&quot;&gt;&lt;div&gt;&lt;span class=&quot;aCOpRe&quot;&gt;&lt;span&gt;The seventh &lt;em&gt;prince&lt;/em&gt;, Arnold Lakes Adler. The young man who was inferior to his younger twin brother in every way, the &lt;em&gt;dull prince&lt;/em&gt;. Incompetent and lethargic ...&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;, &lt;div class=&quot;g&quot;&gt;&lt;div class=&quot;tF2Cxc&quot; data-hveid=&quot;CAEQAA&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFSgAMAF6BAgBEAA&quot;&gt;&lt;div class=&quot;yuRUbf&quot;&gt;&lt;a data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjABegQIARAD&quot; href=&quot;https://www.manga-raw.club/manga/the-strongest-dull-princes-secret-battle-for-the-throne/&quot; onmousedown=&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;</span>AOvVaw3GWiw1eyzqO4BeN6WENPH7<span class="s1">&#39;,&#39;&#39;,&#39;</span>2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjABegQIARAD<span class="s1">&#39;,&#39;&#39;,&#39;&#39;,event)&quot;&gt;&lt;br/&gt;&lt;h3 class=&quot;LC20lb DKV0Md&quot;&gt;&lt;span&gt;【Latest Chapters】Manga - The Strongest Dull Prince&#39;</span>s ...&lt;/span&gt;&lt;/h3&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;TbwUpd NJjxre&quot;</span>&gt;&lt;cite <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;</span>&gt;www.manga-raw.club&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;dyjrff qzEoUe&quot;</span>&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;manga › the-strongest-dull-pri...&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;/a&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;B6fmyf&quot;</span>&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;TbwUpd&quot;</span>&gt;&lt;cite <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;</span>&gt;www.manga-raw.club&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;dyjrff qzEoUe&quot;</span>&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;manga › the-strongest-dull-pri...&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;eFM0qc&quot;</span>&gt;&lt;span&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;action-menu&quot;</span> <span class="nv">jscontroller</span><span class="o">=</span><span class="s2">&quot;hiU8Ie&quot;</span>&gt;&lt;a aria-expanded<span class="o">=</span><span class="s2">&quot;false&quot;</span> aria-haspopup<span class="o">=</span><span class="s2">&quot;true&quot;</span> aria-label<span class="o">=</span><span class="s2">&quot;Result options&quot;</span> <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;GHDvEf&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ7B0wAXoECAEQBg&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;#&quot;</span> <span class="nv">id</span><span class="o">=</span><span class="s2">&quot;am-b1&quot;</span> <span class="nv">jsaction</span><span class="o">=</span><span class="s2">&quot;PZcoEd;keydown:wU6FVd;keypress:uWmNaf&quot;</span> <span class="nv">role</span><span class="o">=</span><span class="s2">&quot;button&quot;</span>&gt;&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;mn-dwn-arw&quot;</span>&gt;&lt;/span&gt;&lt;/a&gt;&lt;ol <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;action-menu-panel&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQqR8wAXoECAEQBw&quot;</span> <span class="nv">jsaction</span><span class="o">=</span><span class="s2">&quot;keydown:Xiq7wd;mouseover:pKPowd;mouseout:O9bKS&quot;</span> <span class="nv">role</span><span class="o">=</span><span class="s2">&quot;menu&quot;</span> <span class="nv">tabindex</span><span class="o">=</span><span class="s2">&quot;-1&quot;</span>&gt;&lt;li <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;action-menu-item&quot;</span> <span class="nv">role</span><span class="o">=</span><span class="s2">&quot;menuitem&quot;</span>&gt;&lt;a <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;fl&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://webcache.googleusercontent.com/search?q=cache:mCsq3i_dxt4J:https://www.manga-raw.club/manga/the-strongest-dull-princes-secret-battle-for-the-throne/+&amp;amp;cd=2&amp;amp;hl=en&amp;amp;ct=clnk&amp;amp;gl=ph&quot;</span> <span class="nv">onmousedown</span><span class="o">=</span><span class="s2">&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;AOvVaw0cAFM1zBCnOxhOTQcdZu1B&#39;,&#39;&#39;,&#39;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQIDABegQIARAI&#39;,&#39;&#39;,&#39;&#39;,event)&quot;</span>&gt;&lt;span&gt;Cached&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;IsZvec&quot;</span>&gt;&lt;div&gt;&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;aCOpRe&quot;</span>&gt;&lt;span&gt;The &lt;em&gt;Strongest Dull Prince<span class="s1">&#39;s Secret Battle&lt;/em&gt; for the Throne is a Manga (En/Raw), Ecchi series written by Tamba This Comic is About. The Adresia empire on the ...&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;, &lt;div class=&quot;g&quot;&gt;&lt;h2 class=&quot;Uo8X3b&quot;&gt;Web results&lt;/h2&gt;&lt;div class=&quot;tF2Cxc&quot; data-hveid=&quot;CAQQAA&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFSgAMCh6BAgEEAA&quot;&gt;&lt;div class=&quot;yuRUbf&quot;&gt;&lt;a data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjAoegQIBBAD&quot; href=&quot;https://rawdevart.com/comic/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/&quot; onmousedown=&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;</span>AOvVaw1AZSj54tL1cUl3L4wGoHA3<span class="s1">&#39;,&#39;&#39;,&#39;</span>2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjAoegQIBBAD<span class="s1">&#39;,&#39;&#39;,&#39;&#39;,event)&quot;&gt;&lt;br/&gt;&lt;h3 class=&quot;LC20lb DKV0Md&quot;&gt;&lt;span&gt;Chapter 3 | The Strongest Dull Prince&#39;</span>s Secret Battle <span class="k">for</span> the ...&lt;/span&gt;&lt;/h3&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;TbwUpd NJjxre&quot;</span>&gt;&lt;cite <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;</span>&gt;rawdevart.com&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;dyjrff qzEoUe&quot;</span>&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;comic › chapter-3&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;/a&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;B6fmyf&quot;</span>&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;TbwUpd&quot;</span>&gt;&lt;cite <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;</span>&gt;rawdevart.com&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;dyjrff qzEoUe&quot;</span>&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;comic › chapter-3&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;eFM0qc&quot;</span>&gt;&lt;span&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;action-menu&quot;</span> <span class="nv">jscontroller</span><span class="o">=</span><span class="s2">&quot;hiU8Ie&quot;</span>&gt;&lt;a aria-expanded<span class="o">=</span><span class="s2">&quot;false&quot;</span> aria-haspopup<span class="o">=</span><span class="s2">&quot;true&quot;</span> aria-label<span class="o">=</span><span class="s2">&quot;Result options&quot;</span> <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;GHDvEf&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ7B0wKHoECAQQBg&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;#&quot;</span> <span class="nv">id</span><span class="o">=</span><span class="s2">&quot;am-b40&quot;</span> <span class="nv">jsaction</span><span class="o">=</span><span class="s2">&quot;PZcoEd;keydown:wU6FVd;keypress:uWmNaf&quot;</span> <span class="nv">role</span><span class="o">=</span><span class="s2">&quot;button&quot;</span>&gt;&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;mn-dwn-arw&quot;</span>&gt;&lt;/span&gt;&lt;/a&gt;&lt;ol <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;action-menu-panel&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQqR8wKHoECAQQBw&quot;</span> <span class="nv">jsaction</span><span class="o">=</span><span class="s2">&quot;keydown:Xiq7wd;mouseover:pKPowd;mouseout:O9bKS&quot;</span> <span class="nv">role</span><span class="o">=</span><span class="s2">&quot;menu&quot;</span> <span class="nv">tabindex</span><span class="o">=</span><span class="s2">&quot;-1&quot;</span>&gt;&lt;li <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;action-menu-item&quot;</span> <span class="nv">role</span><span class="o">=</span><span class="s2">&quot;menuitem&quot;</span>&gt;&lt;a <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;fl&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://webcache.googleusercontent.com/search?q=cache:_BPLqXefYS8J:https://rawdevart.com/comic/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/+&amp;amp;cd=41&amp;amp;hl=en&amp;amp;ct=clnk&amp;amp;gl=ph&quot;</span> <span class="nv">onmousedown</span><span class="o">=</span><span class="s2">&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;AOvVaw1tQpfteua2J4gmi3J5ctZ1&#39;,&#39;&#39;,&#39;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQIDAoegQIBBAI&#39;,&#39;&#39;,&#39;&#39;,event)&quot;</span>&gt;&lt;span&gt;Cached&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;IsZvec&quot;</span>&gt;&lt;div&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;N3nEGc&quot;</span>&gt;&lt;a <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;rGhul IHSDrd&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ8g0wKHoECAQQCQ&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;/imgres?imgurl=https://image.rawdevart.com/comic/the-strongest-dull-princes-secret-battle-for-the-throne/chapters/3/016.jpg&amp;amp;imgrefurl=https://rawdevart.com/comic/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/&amp;amp;h=2133&amp;amp;w=1500&amp;amp;tbnid=RPatkDoaRtSUqM&amp;amp;tbnh=268&amp;amp;tbnw=188&amp;amp;usg=AI4_-kQ1xQndHWxkMN3KLF3pfPXN-xhRnA&amp;amp;vet=1&amp;amp;docid=_BPLqXefYS8gCM&amp;amp;itg=1&quot;</span> <span class="nv">onmousedown</span><span class="o">=</span><span class="s2">&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;AOvVaw3OqcoiHn-Qws_F0YjBjFSM&#39;,&#39;&#39;,&#39;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ8g0wKHoECAQQCQ&#39;,&#39;&#39;,&#39;&#39;,event)&quot;</span> <span class="nv">style</span><span class="o">=</span><span class="s2">&quot;height:87px;width:61px&quot;</span>&gt;&lt;g-img <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;PcHvNb BA0A6c&quot;</span> <span class="nv">style</span><span class="o">=</span><span class="s2">&quot;height:87px;width:61px;position:relative&quot;</span>&gt;&lt;img <span class="nv">alt</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;rISBZc M4dUYb&quot;</span> data-deferred<span class="o">=</span><span class="s2">&quot;1&quot;</span> <span class="nv">height</span><span class="o">=</span><span class="s2">&quot;87&quot;</span> <span class="nv">id</span><span class="o">=</span><span class="s2">&quot;dimg_14&quot;</span> <span class="nv">src</span><span class="o">=</span><span class="s2">&quot;data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==&quot;</span> <span class="nv">width</span><span class="o">=</span><span class="s2">&quot;61&quot;</span>/&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;fWhgmd&quot;</span>&gt;&lt;/div&gt;&lt;/g-img&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;div <span class="nv">style</span><span class="o">=</span><span class="s2">&quot;margin-left:70px&quot;</span>&gt;&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;aCOpRe&quot;</span>&gt;&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;f&quot;</span>&gt;1500 × <span class="m">2133</span> — &lt;/span&gt;&lt;span&gt;The Adresia empire on the Vogel continent. There is a &lt;em&gt;battle&lt;/em&gt; over the throne of such an empire that possesses powerful military and vast territory. With the...&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div <span class="nv">style</span><span class="o">=</span><span class="s2">&quot;clear:left&quot;</span>&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;, &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;g&quot;</span>&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;tF2Cxc&quot;</span> data-hveid<span class="o">=</span><span class="s2">&quot;CAYQAA&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFSgAMCl6BAgGEAA&quot;</span>&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;yuRUbf&quot;</span>&gt;&lt;a data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjApegQIBhAD&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://aminoapps.com/c/editing-designing/page/blog/profile-edit-set-strongest-dull-prince/lnmk_k5fQueqpXBGeG2w5bLKvVvXjb8lg6&quot;</span> <span class="nv">onmousedown</span><span class="o">=</span><span class="s2">&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;AOvVaw10y8tE4yrc-AtiYoP6IpMn&#39;,&#39;&#39;,&#39;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjApegQIBhAD&#39;,&#39;&#39;,&#39;&#39;,event)&quot;</span>&gt;&lt;br/&gt;&lt;h3 <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;LC20lb DKV0Md&quot;</span>&gt;&lt;span&gt;Profile Edit Set <span class="p">|</span> Strongest Dull Prince <span class="p">|</span> Editing <span class="p">&amp;</span>amp<span class="p">;</span> Designing ...&lt;/span&gt;&lt;/h3&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;TbwUpd NJjxre&quot;</span>&gt;&lt;cite <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;</span>&gt;aminoapps.com&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;dyjrff qzEoUe&quot;</span>&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;editing-designing › page › blog › pr...&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;/a&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;B6fmyf&quot;</span>&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;TbwUpd&quot;</span>&gt;&lt;cite <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;</span>&gt;aminoapps.com&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;dyjrff qzEoUe&quot;</span>&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;editing-designing › page › blog › pr...&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;eFM0qc&quot;</span>&gt;&lt;span&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;action-menu&quot;</span> <span class="nv">jscontroller</span><span class="o">=</span><span class="s2">&quot;hiU8Ie&quot;</span>&gt;&lt;a aria-expanded<span class="o">=</span><span class="s2">&quot;false&quot;</span> aria-haspopup<span class="o">=</span><span class="s2">&quot;true&quot;</span> aria-label<span class="o">=</span><span class="s2">&quot;Result options&quot;</span> <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;GHDvEf&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ7B0wKXoECAYQBg&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;#&quot;</span> <span class="nv">id</span><span class="o">=</span><span class="s2">&quot;am-b41&quot;</span> <span class="nv">jsaction</span><span class="o">=</span><span class="s2">&quot;PZcoEd;keydown:wU6FVd;keypress:uWmNaf&quot;</span> <span class="nv">role</span><span class="o">=</span><span class="s2">&quot;button&quot;</span>&gt;&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;mn-dwn-arw&quot;</span>&gt;&lt;/span&gt;&lt;/a&gt;&lt;ol <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;action-menu-panel&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQqR8wKXoECAYQBw&quot;</span> <span class="nv">jsaction</span><span class="o">=</span><span class="s2">&quot;keydown:Xiq7wd;mouseover:pKPowd;mouseout:O9bKS&quot;</span> <span class="nv">role</span><span class="o">=</span><span class="s2">&quot;menu&quot;</span> <span class="nv">tabindex</span><span class="o">=</span><span class="s2">&quot;-1&quot;</span>&gt;&lt;li <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;action-menu-item&quot;</span> <span class="nv">role</span><span class="o">=</span><span class="s2">&quot;menuitem&quot;</span>&gt;&lt;a <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;fl&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://webcache.googleusercontent.com/search?q=cache:X1ZeaVgb-HQJ:https://aminoapps.com/c/editing-designing/page/blog/profile-edit-set-strongest-dull-prince/lnmk_k5fQueqpXBGeG2w5bLKvVvXjb8lg6+&amp;amp;cd=42&amp;amp;hl=en&amp;amp;ct=clnk&amp;amp;gl=ph&quot;</span> <span class="nv">onmousedown</span><span class="o">=</span><span class="s2">&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;AOvVaw3jQn8fjj-9pH01MfJ1b_q7&#39;,&#39;&#39;,&#39;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQIDApegQIBhAI&#39;,&#39;&#39;,&#39;&#39;,event)&quot;</span>&gt;&lt;span&gt;Cached&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;IsZvec&quot;</span>&gt;&lt;div&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;N3nEGc&quot;</span>&gt;&lt;a <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;rGhul IHSDrd&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ8g0wKXoECAYQCQ&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;/imgres?imgurl=https://pa1.narvii.com/7798/0ae81ea89fddde7766580186fe143ea3eb44a919r1-585-700_hq.gif&amp;amp;imgrefurl=https://aminoapps.com/c/editing-designing/page/blog/profile-edit-set-strongest-dull-prince/lnmk_k5fQueqpXBGeG2w5bLKvVvXjb8lg6&amp;amp;h=640&amp;amp;w=535&amp;amp;tbnid=8dbNoI3L_LxMAM&amp;amp;tbnh=246&amp;amp;tbnw=205&amp;amp;usg=AI4_-kRWsCM8m8kowUPcOMUYXZLR9TTlYQ&amp;amp;vet=1&amp;amp;docid=X1ZeaVgb-HSgUM&amp;amp;itg=1&quot;</span> <span class="nv">onmousedown</span><span class="o">=</span><span class="s2">&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;AOvVaw3b4I-KFoCG4Bu1cR3fmdZq&#39;,&#39;&#39;,&#39;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ8g0wKXoECAYQCQ&#39;,&#39;&#39;,&#39;&#39;,event)&quot;</span> <span class="nv">style</span><span class="o">=</span><span class="s2">&quot;height:73px;width:61px&quot;</span>&gt;&lt;g-img <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;PcHvNb BA0A6c&quot;</span> <span class="nv">style</span><span class="o">=</span><span class="s2">&quot;height:73px;width:61px;position:relative&quot;</span>&gt;&lt;img <span class="nv">alt</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;rISBZc M4dUYb&quot;</span> data-deferred<span class="o">=</span><span class="s2">&quot;1&quot;</span> <span class="nv">height</span><span class="o">=</span><span class="s2">&quot;73&quot;</span> <span class="nv">id</span><span class="o">=</span><span class="s2">&quot;dimg_20&quot;</span> <span class="nv">src</span><span class="o">=</span><span class="s2">&quot;data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==&quot;</span> <span class="nv">width</span><span class="o">=</span><span class="s2">&quot;61&quot;</span>/&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;fWhgmd&quot;</span>&gt;&lt;/div&gt;&lt;/g-img&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;div <span class="nv">style</span><span class="o">=</span><span class="s2">&quot;margin-left:70px&quot;</span>&gt;&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;aCOpRe&quot;</span>&gt;&lt;span <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;f&quot;</span>&gt;535 × <span class="m">640</span> · <span class="m">7</span> Jan <span class="m">2021</span> — &lt;/span&gt;&lt;span&gt;Strongest Dull Prince, it<span class="s1">&#39;s full title being “The &lt;em&gt;Strongest Dull Prince&#39;</span>s Secret Battle&lt;/em&gt; <span class="k">for</span> the Throne” is a Japanese web novel where the main ...&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div <span class="nv">style</span><span class="o">=</span><span class="s2">&quot;clear:left&quot;</span>&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;, &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;g&quot;</span>&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;tF2Cxc&quot;</span> data-hveid<span class="o">=</span><span class="s2">&quot;CAIQAA&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFSgAMCp6BAgCEAA&quot;</span>&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;yuRUbf&quot;</span>&gt;&lt;a data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjAqegQIAhAD&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://www.mangaread.org/manga/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/&quot;</span> <span class="nv">onmousedown</span><span class="o">=</span><span class="s2">&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;AOvVaw3oJ2BJRgb8VTrrNEJQ1OJk&#39;,&#39;&#39;,&#39;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjAqegQIAhAD&#39;,&#39;&#39;,&#39;&#39;,event)&quot;</span>&gt;&lt;br/&gt;&lt;h3 <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;LC20lb DKV0Md&quot;</span>&gt;&lt;span&gt;Read Manga The Strongest Dull Prince<span class="s1">&#39;S Secret Battle For ...&lt;/span&gt;&lt;/h3&gt;&lt;div class=&quot;TbwUpd NJjxre&quot;&gt;&lt;cite class=&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;&gt;www.mangaread.org&lt;span class=&quot;dyjrff qzEoUe&quot;&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;manga › chapter-3&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;/a&gt;&lt;div class=&quot;B6fmyf&quot;&gt;&lt;div class=&quot;TbwUpd&quot;&gt;&lt;cite class=&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;&gt;www.mangaread.org&lt;span class=&quot;dyjrff qzEoUe&quot;&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;manga › chapter-3&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;div class=&quot;eFM0qc&quot;&gt;&lt;span&gt;&lt;div class=&quot;action-menu&quot; jscontroller=&quot;hiU8Ie&quot;&gt;&lt;a aria-expanded=&quot;false&quot; aria-haspopup=&quot;true&quot; aria-label=&quot;Result options&quot; class=&quot;GHDvEf&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ7B0wKnoECAIQBg&quot; href=&quot;#&quot; id=&quot;am-b42&quot; jsaction=&quot;PZcoEd;keydown:wU6FVd;keypress:uWmNaf&quot; role=&quot;button&quot;&gt;&lt;span class=&quot;mn-dwn-arw&quot;&gt;&lt;/span&gt;&lt;/a&gt;&lt;ol class=&quot;action-menu-panel&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQqR8wKnoECAIQBw&quot; jsaction=&quot;keydown:Xiq7wd;mouseover:pKPowd;mouseout:O9bKS&quot; role=&quot;menu&quot; tabindex=&quot;-1&quot;&gt;&lt;li class=&quot;action-menu-item&quot; role=&quot;menuitem&quot;&gt;&lt;a class=&quot;fl&quot; href=&quot;https://webcache.googleusercontent.com/search?q=cache:62Fq8yNkZ7EJ:https://www.mangaread.org/manga/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/+&amp;amp;cd=43&amp;amp;hl=en&amp;amp;ct=clnk&amp;amp;gl=ph&quot; onmousedown=&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;</span>AOvVaw2eTsrAzxnDarTTHfDAhvak<span class="s1">&#39;,&#39;&#39;,&#39;</span>2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQIDAqegQIAhAI<span class="s1">&#39;,&#39;&#39;,&#39;&#39;,event)&quot;&gt;&lt;span&gt;Cached&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;IsZvec&quot;&gt;&lt;div&gt;&lt;div class=&quot;N3nEGc&quot;&gt;&lt;a class=&quot;rGhul IHSDrd&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ8g0wKnoECAIQCQ&quot; href=&quot;/imgres?imgurl=https://www.mangaread.org/wp-content/uploads/WP-manga/data/manga_5f0542483200d/8bc1684ed0becd93a5b74268758b312a/18.jpeg&amp;amp;imgrefurl=https://www.mangaread.org/manga/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/&amp;amp;h=1300&amp;amp;w=914&amp;amp;tbnid=5a3lNPjP6j0TaM&amp;amp;tbnh=268&amp;amp;tbnw=188&amp;amp;usg=AI4_-kQ2I9x9yRVPzhb1l3H3ftIDR0wNng&amp;amp;vet=1&amp;amp;docid=62Fq8yNkZ7HERM&amp;amp;itg=1&quot; onmousedown=&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;</span>AOvVaw3mupdDYpm2drR2S5-67zwA<span class="s1">&#39;,&#39;&#39;,&#39;</span>2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ8g0wKnoECAIQCQ<span class="s1">&#39;,&#39;&#39;,&#39;&#39;,event)&quot; style=&quot;height:87px;width:61px&quot;&gt;&lt;g-img class=&quot;PcHvNb BA0A6c&quot; style=&quot;height:87px;width:61px;position:relative&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;rISBZc M4dUYb&quot; data-deferred=&quot;1&quot; height=&quot;87&quot; id=&quot;dimg_13&quot; src=&quot;data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==&quot; width=&quot;61&quot;/&gt;&lt;div class=&quot;fWhgmd&quot;&gt;&lt;/div&gt;&lt;/g-img&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin-left:70px&quot;&gt;&lt;span class=&quot;aCOpRe&quot;&gt;&lt;span class=&quot;f&quot;&gt;914 × 1300 — &lt;/span&gt;&lt;span&gt;Read The &lt;em&gt;Strongest Dull Prince&#39;</span>S Secret Battle&lt;/em&gt; For The Throne - Chapter <span class="m">3</span> - A brief description of the <span class="s2">&quot;The &lt;em&gt;Strongest Dull Prince&#39;S Secret Battle&lt;/em&gt; For The Throne&quot;</span>&lt;wbr/&gt; ...&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div <span class="nv">style</span><span class="o">=</span><span class="s2">&quot;clear:left&quot;</span>&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;, &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;g&quot;</span>&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;tF2Cxc&quot;</span> data-hveid<span class="o">=</span><span class="s2">&quot;CAUQAA&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFSgAMCt6BAgFEAA&quot;</span>&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;yuRUbf&quot;</span>&gt;&lt;a data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjAregQIBRAD&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://mangceh.com/manga/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/&quot;</span> <span class="nv">onmousedown</span><span class="o">=</span><span class="s2">&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;AOvVaw34M06iin8TDElcKEal-tTK&#39;,&#39;&#39;,&#39;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjAregQIBRAD&#39;,&#39;&#39;,&#39;&#39;,event)&quot;</span>&gt;&lt;br/&gt;&lt;h3 <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;LC20lb DKV0Md&quot;</span>&gt;&lt;span&gt;The Strongest Dull Prince<span class="s1">&#39;s Secret Battle for the Throne ...&lt;/span&gt;&lt;/h3&gt;&lt;div class=&quot;TbwUpd NJjxre&quot;&gt;&lt;cite class=&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;&gt;mangceh.com&lt;span class=&quot;dyjrff qzEoUe&quot;&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;manga › chapter-3&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;/a&gt;&lt;div class=&quot;B6fmyf&quot;&gt;&lt;div class=&quot;TbwUpd&quot;&gt;&lt;cite class=&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;&gt;mangceh.com&lt;span class=&quot;dyjrff qzEoUe&quot;&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;manga › chapter-3&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;div class=&quot;eFM0qc&quot;&gt;&lt;span&gt;&lt;div class=&quot;action-menu&quot; jscontroller=&quot;hiU8Ie&quot;&gt;&lt;a aria-expanded=&quot;false&quot; aria-haspopup=&quot;true&quot; aria-label=&quot;Result options&quot; class=&quot;GHDvEf&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ7B0wK3oECAUQBg&quot; href=&quot;#&quot; id=&quot;am-b43&quot; jsaction=&quot;PZcoEd;keydown:wU6FVd;keypress:uWmNaf&quot; role=&quot;button&quot;&gt;&lt;span class=&quot;mn-dwn-arw&quot;&gt;&lt;/span&gt;&lt;/a&gt;&lt;ol class=&quot;action-menu-panel&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQqR8wK3oECAUQBw&quot; jsaction=&quot;keydown:Xiq7wd;mouseover:pKPowd;mouseout:O9bKS&quot; role=&quot;menu&quot; tabindex=&quot;-1&quot;&gt;&lt;li class=&quot;action-menu-item&quot; role=&quot;menuitem&quot;&gt;&lt;a class=&quot;fl&quot; href=&quot;https://webcache.googleusercontent.com/search?q=cache:-5pIsOFWtbQJ:https://mangceh.com/manga/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/+&amp;amp;cd=44&amp;amp;hl=en&amp;amp;ct=clnk&amp;amp;gl=ph&quot; onmousedown=&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;</span>AOvVaw2C7A1ao4zSkV9UTxv_WmW7<span class="s1">&#39;,&#39;&#39;,&#39;</span>2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQIDAregQIBRAI<span class="s1">&#39;,&#39;&#39;,&#39;&#39;,event)&quot;&gt;&lt;span&gt;Cached&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;IsZvec&quot;&gt;&lt;div&gt;&lt;div class=&quot;N3nEGc&quot;&gt;&lt;a class=&quot;rGhul IHSDrd&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ8g0wK3oECAUQCQ&quot; href=&quot;/imgres?imgurl=https://i0.wp.com/yuucdn.com/wp-content/uploads/T/The%2520Strongest%2520Dull%2520Prince%25E2%2580%2599s%2520Secret%2520Battle%2520for%2520the%2520Throne/Chapter%252003/017%2520copy.jpg&amp;amp;imgrefurl=https://mangceh.com/manga/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/&amp;amp;h=1300&amp;amp;w=914&amp;amp;tbnid=2s0d59Vfa0l4PM&amp;amp;tbnh=268&amp;amp;tbnw=188&amp;amp;usg=AI4_-kQfR5kVTYpqmti1nr0DmY8ih9Z1mQ&amp;amp;vet=1&amp;amp;docid=-5pIsOFWtbTmyM&amp;amp;itg=1&quot; onmousedown=&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;</span>AOvVaw05Q6OSzAJtgYtvASuhypbc<span class="s1">&#39;,&#39;&#39;,&#39;</span>2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ8g0wK3oECAUQCQ<span class="s1">&#39;,&#39;&#39;,&#39;&#39;,event)&quot; style=&quot;height:87px;width:61px&quot;&gt;&lt;g-img class=&quot;PcHvNb BA0A6c&quot; style=&quot;height:87px;width:61px;position:relative&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;rISBZc M4dUYb&quot; data-deferred=&quot;1&quot; height=&quot;87&quot; id=&quot;dimg_15&quot; src=&quot;data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==&quot; width=&quot;61&quot;/&gt;&lt;div class=&quot;fWhgmd&quot;&gt;&lt;/div&gt;&lt;/g-img&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin-left:70px&quot;&gt;&lt;span class=&quot;aCOpRe&quot;&gt;&lt;span class=&quot;f&quot;&gt;914 × 1300 — &lt;/span&gt;&lt;span&gt;The &lt;em&gt;Strongest Dull Prince&#39;</span>s Secret Battle&lt;/em&gt; <span class="k">for</span> the Throne. Chapter <span class="m">3</span>.&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div <span class="nv">style</span><span class="o">=</span><span class="s2">&quot;clear:left&quot;</span>&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;, &lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;g&quot;</span>&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;tF2Cxc&quot;</span> data-hveid<span class="o">=</span><span class="s2">&quot;CAcQAA&quot;</span> data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFSgAMCx6BAgHEAA&quot;</span>&gt;&lt;div <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;yuRUbf&quot;</span>&gt;&lt;a data-ved<span class="o">=</span><span class="s2">&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjAsegQIBxAD&quot;</span> <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://aminoapps.com/c/editing-designing/page/blog/if-you-dont-know-who-this-is-leave/7DZJ_JphPua2PjYd2XB2mBEBzL6pLMJlql&quot;</span> <span class="nv">onmousedown</span><span class="o">=</span><span class="s2">&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;AOvVaw29Ix7HsA4WUMy_Ex5_GqX3&#39;,&#39;&#39;,&#39;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQFjAsegQIBxAD&#39;,&#39;&#39;,&#39;&#39;,event)&quot;</span>&gt;&lt;br/&gt;&lt;h3 <span class="nv">class</span><span class="o">=</span><span class="s2">&quot;LC20lb DKV0Md&quot;</span>&gt;&lt;span&gt;If you don<span class="s1">&#39;t know who this is leave | Editing &amp;amp; Designing Amino&lt;/span&gt;&lt;/h3&gt;&lt;div class=&quot;TbwUpd NJjxre&quot;&gt;&lt;cite class=&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;&gt;aminoapps.com&lt;span class=&quot;dyjrff qzEoUe&quot;&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;editing-designing › page › blog › if-...&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;/a&gt;&lt;div class=&quot;B6fmyf&quot;&gt;&lt;div class=&quot;TbwUpd&quot;&gt;&lt;cite class=&quot;iUh30 Zu0yb qLRx3b tjvcx&quot;&gt;aminoapps.com&lt;span class=&quot;dyjrff qzEoUe&quot;&gt;&lt;span&gt; › &lt;/span&gt;&lt;span&gt;editing-designing › page › blog › if-...&lt;/span&gt;&lt;/span&gt;&lt;/cite&gt;&lt;/div&gt;&lt;div class=&quot;eFM0qc&quot;&gt;&lt;span&gt;&lt;div class=&quot;action-menu&quot; jscontroller=&quot;hiU8Ie&quot;&gt;&lt;a aria-expanded=&quot;false&quot; aria-haspopup=&quot;true&quot; aria-label=&quot;Result options&quot; class=&quot;GHDvEf&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ7B0wLHoECAcQBg&quot; href=&quot;#&quot; id=&quot;am-b44&quot; jsaction=&quot;PZcoEd;keydown:wU6FVd;keypress:uWmNaf&quot; role=&quot;button&quot;&gt;&lt;span class=&quot;mn-dwn-arw&quot;&gt;&lt;/span&gt;&lt;/a&gt;&lt;ol class=&quot;action-menu-panel&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQqR8wLHoECAcQBw&quot; jsaction=&quot;keydown:Xiq7wd;mouseover:pKPowd;mouseout:O9bKS&quot; role=&quot;menu&quot; tabindex=&quot;-1&quot;&gt;&lt;li class=&quot;action-menu-item&quot; role=&quot;menuitem&quot;&gt;&lt;a class=&quot;fl&quot; href=&quot;https://webcache.googleusercontent.com/search?q=cache:V8PXggqBBJgJ:https://aminoapps.com/c/editing-designing/page/blog/if-you-dont-know-who-this-is-leave/7DZJ_JphPua2PjYd2XB2mBEBzL6pLMJlql+&amp;amp;cd=45&amp;amp;hl=en&amp;amp;ct=clnk&amp;amp;gl=ph&quot; onmousedown=&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;</span>AOvVaw3rg9PsQ-WyZhOvwWcdVodL<span class="s1">&#39;,&#39;&#39;,&#39;</span>2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQIDAsegQIBxAI<span class="s1">&#39;,&#39;&#39;,&#39;&#39;,event)&quot;&gt;&lt;span&gt;Cached&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;IsZvec&quot;&gt;&lt;div&gt;&lt;div class=&quot;N3nEGc&quot;&gt;&lt;a class=&quot;rGhul IHSDrd&quot; data-ved=&quot;2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ8g0wLHoECAcQCQ&quot; href=&quot;/imgres?imgurl=https://pa1.narvii.com/7798/0ae81ea89fddde7766580186fe143ea3eb44a919r1-585-700_hq.gif&amp;amp;imgrefurl=https://aminoapps.com/c/editing-designing/page/blog/if-you-dont-know-who-this-is-leave/7DZJ_JphPua2PjYd2XB2mBEBzL6pLMJlql&amp;amp;h=640&amp;amp;w=535&amp;amp;tbnid=8dbNoI3L_LxMAM&amp;amp;tbnh=246&amp;amp;tbnw=205&amp;amp;usg=AI4_-kRTfGYEDKsFaLhqCatjbuwCZMqNkQ&amp;amp;vet=1&amp;amp;docid=V8PXggqBBJiPWM&amp;amp;itg=1&quot; onmousedown=&quot;return rwt(this,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;&#39;,&#39;</span>AOvVaw0hHoscopVBBs5g3Lggj4pr<span class="s1">&#39;,&#39;&#39;,&#39;</span>2ahUKEwiSrY_vzZvvAhXN-GEKHTfuA7cQ8g0wLHoECAcQCQ<span class="s1">&#39;,&#39;&#39;,&#39;&#39;,event)&quot; style=&quot;height:73px;width:61px&quot;&gt;&lt;g-img class=&quot;PcHvNb BA0A6c&quot; style=&quot;height:73px;width:61px;position:relative&quot;&gt;&lt;img alt=&quot;&quot; class=&quot;rISBZc M4dUYb&quot; data-deferred=&quot;1&quot; height=&quot;73&quot; id=&quot;dimg_22&quot; src=&quot;data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==&quot; width=&quot;61&quot;/&gt;&lt;div class=&quot;fWhgmd&quot;&gt;&lt;/div&gt;&lt;/g-img&gt;&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin-left:70px&quot;&gt;&lt;span class=&quot;aCOpRe&quot;&gt;&lt;span class=&quot;f&quot;&gt;535 × 640 · 23 Sep 2017 — &lt;/span&gt;&lt;span&gt;Profile Edit Set | &lt;em&gt;Strongest Dull Prince&lt;/em&gt; · user uploaded image. 63. 31. Featured post. 17 Days of Winter Challenge ☃ · user uploaded image.&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;clear:left&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;]</span>
+<span class="s1">2021-03-06 19:54:45.537 | INFO     | __main__:&lt;module&gt;:9 - [&lt;NormGoogle(title=[&quot;The Strongest Dull Prince&#39;</span>s Secret Battle <span class="k">for</span> the Throne ...<span class="s2">&quot;], urls=[&#39;https://www.novelupdates.com/series/the-strongest-dull-princes-secret-battle-for-the-throne/comment-page-2/&#39;], thumbnail=[&#39;No directable url&#39;])&gt;, &lt;NormGoogle(title=[&quot;</span>【Latest Chapters】Manga - The Strongest Dull Prince<span class="s1">&#39;s ...&quot;], urls=[&#39;</span>https://www.manga-raw.club/manga/the-strongest-dull-princes-secret-battle-for-the-throne/<span class="s1">&#39;], thumbnail=[&#39;</span>No directable url<span class="s1">&#39;])&gt;, &lt;NormGoogle(title=[&quot;Chapter 3 | The Strongest Dull Prince&#39;</span>s Secret Battle <span class="k">for</span> the ...<span class="s2">&quot;], urls=[&#39;https://rawdevart.com/comic/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/&#39;], thumbnail=[&#39;No directable url&#39;])&gt;, &lt;NormGoogle(title=[&#39;Profile Edit Set | Strongest Dull Prince | Editing &amp; Designing ...&#39;], urls=[&#39;https://aminoapps.com/c/editing-designing/page/blog/profile-edit-set-strongest-dull-prince/lnmk_k5fQueqpXBGeG2w5bLKvVvXjb8lg6&#39;], thumbnail=[&#39;No directable url&#39;])&gt;, &lt;NormGoogle(title=[&quot;</span>Read Manga The Strongest Dull Prince<span class="s1">&#39;S Secret Battle For ...&quot;], urls=[&#39;</span>https://www.mangaread.org/manga/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/<span class="s1">&#39;], thumbnail=[&#39;</span>No directable url<span class="s1">&#39;])&gt;, &lt;NormGoogle(title=[&quot;The Strongest Dull Prince&#39;</span>s Secret Battle <span class="k">for</span> the Throne ...<span class="s2">&quot;], urls=[&#39;https://mangceh.com/manga/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/&#39;], thumbnail=[&#39;No directable url&#39;])&gt;, &lt;NormGoogle(title=[&quot;</span>If you don<span class="s1">&#39;t know who this is leave | Editing &amp; Designing Amino&quot;], urls=[&#39;</span>https://aminoapps.com/c/editing-designing/page/blog/if-you-dont-know-who-this-is-leave/7DZJ_JphPua2PjYd2XB2mBEBzL6pLMJlql<span class="s1">&#39;], thumbnail=[&#39;</span>No directable url<span class="s1">&#39;])&gt;]</span>
+<span class="s1">2021-03-06 19:54:45.538 | INFO     | __main__:&lt;module&gt;:11 - &lt;NormGoogle(title=[&quot;Chapter 3 | The Strongest Dull Prince&#39;</span>s Secret Battle <span class="k">for</span> the ...<span class="s2">&quot;], urls=[&#39;https://rawdevart.com/comic/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/&#39;], thumbnail=[&#39;No directable url&#39;])&gt;</span>
+<span class="s2">2021-03-06 19:54:45.538 | INFO     | __main__:&lt;module&gt;:12 - No directable url</span>
+<span class="s2">2021-03-06 19:54:45.538 | INFO     | __main__:&lt;module&gt;:13 - Chapter 3 | The Strongest Dull Prince&#39;s Secret Battle for the ...</span>
+<span class="s2">2021-03-06 19:54:45.538 | INFO     | __main__:&lt;module&gt;:14 - https://rawdevart.com/comic/the-strongest-dull-princes-secret-battle-for-the-throne/chapter-3/</span>
+</code></pre></div>
+</td></tr></table></p>
+</div>
+                
+                  
+                    
+
+<hr>
+<div class="md-source-date">
+  <small>
+    
+      最后更新: 2021-03-06
+    
+  </small>
+</div>
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../DataStructure/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              数据结构
+            </div>
+          </div>
+        </a>
+      
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+      <a href="https://github.com/kitUIN" target="_blank" rel="noopener" title="开花者✿" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "\u590d\u5236", "clipboard.copied": "\u5df2\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\uff0c\\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.9b151c6a.min.js"></script>
+      
+    
+  </body>
+</html>

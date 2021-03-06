@@ -1,0 +1,775 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.4">
+    
+    
+      
+        <title>示例 - PicImageSearch - kitUIN/PicImageSearch</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.77f3fd56.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#4cae4f">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent="green">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#demo" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="PicImageSearch - kitUIN/PicImageSearch" class="md-header__button md-logo" aria-label="PicImageSearch - kitUIN/PicImageSearch">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PicImageSearch - kitUIN/PicImageSearch
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              示例
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/kitUIN/PicImageSearch/" title="前往 GitHub 仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kitUIN/PicImageSearch
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="PicImageSearch - kitUIN/PicImageSearch" class="md-nav__button md-logo" aria-label="PicImageSearch - kitUIN/PicImageSearch">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    PicImageSearch - kitUIN/PicImageSearch
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/kitUIN/PicImageSearch/" title="前往 GitHub 仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kitUIN/PicImageSearch
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        开始
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      <label class="md-nav__link" for="__nav_2">
+        SauceNAO
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="SauceNAO" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          SauceNAO
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SauceNAO/Home/" class="md-nav__link">
+        快速开始
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SauceNAO/DataStructure/" class="md-nav__link">
+        数据结构
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../SauceNAO/Demo/" class="md-nav__link">
+        示例
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        Ascii2D
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Ascii2D" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Ascii2D
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Ascii2D/Home/" class="md-nav__link">
+        快速开始
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Ascii2D/DataStructure/" class="md-nav__link">
+        数据结构
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Ascii2D/Demo/" class="md-nav__link">
+        示例
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Iqdb
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Iqdb" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Iqdb
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Iqdb/Home/" class="md-nav__link">
+        快速开始
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Iqdb/DataStructure/" class="md-nav__link">
+        数据结构
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Iqdb/Demo/" class="md-nav__link">
+        示例
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+      
+      <label class="md-nav__link" for="__nav_5">
+        TraceMoe
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="TraceMoe" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          TraceMoe
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Home/" class="md-nav__link">
+        快速开始
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DataStructure/" class="md-nav__link">
+        数据结构
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          示例
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        示例
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    示例
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        Google
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Google" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Google
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Google/Home/" class="md-nav__link">
+        快速开始
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Google/DataStructure/" class="md-nav__link">
+        数据结构
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Google/Demo/" class="md-nav__link">
+        示例
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    示例
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/kitUIN/PicImageSearch/edit/master/docs/TraceMoe/Demo.md" title="编辑此页" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <h1 id="demo">Demo<a class="headerlink" href="#demo" title="Permanent link">⚓︎</a></h1>
+<h2 id="_1">示例<a class="headerlink" href="#_1" title="Permanent link">⚓︎</a></h2>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">PicImageSearch</span> <span class="kn">import</span> <span class="n">TraceMoe</span>
+<span class="n">_REQUESTS_KWARGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># &#39;proxies&#39;: {</span>
+    <span class="c1">#     &#39;https&#39;: &#39;http://127.0.0.1:10809&#39;,</span>
+    <span class="c1"># }</span>
+    <span class="c1">#如果需要代理</span>
+<span class="p">}</span>
+<span class="n">tracemoe</span> <span class="o">=</span> <span class="n">TraceMoe</span><span class="p">(</span><span class="o">**</span><span class="n">_REQUESTS_KWARGS</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">tracemoe</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;https://trace.moe/img/tinted-good.jpg&#39;</span><span class="p">)</span>
+<span class="c1">#res = tracemoe.search(r&#39;C:/kitUIN/img/tinted-good.jpg&#39;)搜索本地图片</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>  <span class="c1"># 原始数据{&#39;RawDocsCount&#39;: 5718114, &#39;RawDocsSearchTime&#39;: 15530, &#39;ReRankSearchTime&#39;: 1167, &#39;CacheHit&#39;: False, &#39;trial&#39;: 1, &#39;docs&#39;: [{&#39;from&#39;: 1173.83, &#39;to&#39;: 1174.67, &#39;anilist_id&#39;: 11887, &#39;at&#39;: 1174.5, &#39;season&#39;: &#39;2012-07&#39;, &#39;anime&#39;: &#39;心連·情結&#39;, &#39;filename&#39;: &#39;[ANK-Raws&amp;NatsuYuki] Kokoro Connect - 05 (BDrip 1280x720 x264 AAC).mp4&#39;, &#39;episode&#39;: 5, &#39;tokenthumb&#39;: &#39;I7RtV-BVFDjvgwgPpUwFKw&#39;, &#39;similarity&#39;: 0.9685373563005802, &#39;title&#39;: &#39;ココロコネクト&#39;, &#39;title_native&#39;: &#39;ココロコネクト&#39;, &#39;title_chinese&#39;: &#39;心連·情結&#39;, &#39;title_english&#39;: &#39;Kokoro Connect&#39;, &#39;title_romaji&#39;: &#39;Kokoro Connect&#39;, &#39;mal_id&#39;: 11887, &#39;synonyms&#39;: [&#39;Kokoroco&#39;], &#39;synonyms_chinese&#39;: [&#39;戀愛隨意鏈&#39;, &#39;戀愛隨意連結&#39;, &#39;心靈鏈環&#39;, &#39;心靈接觸&#39;, &#39;心與心的連結&#39;], &#39;is_adult&#39;: False}, {&#39;from&#39;: 504.17, &#39;to&#39;: 505.33, &#39;anilist_id&#39;: 849, &#39;at&#39;: 505.17, &#39;season&#39;: &#39;2006-04&#39;, &#39;anime&#39;: &#39;涼宮春日的憂鬱&#39;, &#39;filename&#39;: &#39;[philosophy-raws][The Melancholy of Haruhi Suzumiya(2006)][12][BDRIP][x264 AAC][1920X1080].mp4&#39;, &#39;episode&#39;: 12, &#39;tokenthumb&#39;: &#39;WKps5xJjEWzVufWEBrS0wQ&#39;, &#39;similarity&#39;: 0.819383329990597, &#39;title&#39;: &#39;涼宮ハルヒの憂鬱&#39;, &#39;title_native&#39;: &#39;涼宮ハルヒの憂鬱&#39;, &#39;title_chinese&#39;: &#39;涼宮春日的憂鬱&#39;, &#39;title_english&#39;: &#39;The Melancholy of Haruhi Suzumiya&#39;, &#39;title_romaji&#39;: &#39;Suzumiya Haruhi no Yuuutsu&#39;, &#39;mal_id&#39;: 849, &#39;synonyms&#39;: [], &#39;synonyms_chinese&#39;: [], &#39;is_adult&#39;: False}, {&#39;from&#39;: 505.5, &#39;to&#39;: 506, &#39;anilist_id&#39;: 4382, &#39;at&#39;: 505.5, &#39;season&#39;: &#39;2009-04&#39;, &#39;anime&#39;: &#39;涼宮春日的憂鬱&#39;, &#39;filename&#39;: &#39;[CASO][Suzumiya_Haruhi_no_Yuuutsu][BDrip][26][BIG5][1280x720][x264_AAC].mp4&#39;, &#39;episode&#39;: 26, &#39;tokenthumb&#39;: &#39;fG-kt2NMVPcNECN2hyfCiw&#39;, &#39;similarity&#39;: 0.8162108726224474, &#39;title&#39;: &#39;涼宮ハルヒの憂鬱&#39;, &#39;title_native&#39;: &#39;涼宮ハルヒの憂鬱&#39;, &#39;title_chinese&#39;: &#39;涼宮春日的憂鬱 2009&#39;, &#39;title_english&#39;: &#39;The Melancholy of Haruhi Suzumiya (2009)&#39;, &#39;title_romaji&#39;: &#39;Suzumiya Haruhi no Yuuutsu (2009)&#39;, &#39;mal_id&#39;: 4382, &#39;synonyms&#39;: [], &#39;synonyms_chinese&#39;: [], &#39;is_adult&#39;: False}, {&#39;from&#39;: 683.5, &#39;to&#39;: 684.75, &#39;anilist_id&#39;: 21085, &#39;at&#39;: 683.5, &#39;season&#39;: &#39;2015-04&#39;, &#39;anime&#39;: &#39;鑽石王牌 第二季&#39;, &#39;filename&#39;: &#39;[異域字幕組][鑽石王牌第二季][Ace of Diamond S2][18_93][1280x720][繁體].mp4&#39;, &#39;episode&#39;: 18, &#39;tokenthumb&#39;: &#39;IPw8p_4vzsfDaV5QPhF6Gg&#39;, &#39;similarity&#39;: 0.8151590465496535, &#39;title&#39;: &#39;ダイヤのA～Second Season～&#39;, &#39;title_native&#39;: &#39;ダイヤのA～Second Season～&#39;, &#39;title_chinese&#39;: &#39;鑽石王牌 第二季&#39;, &#39;title_english&#39;: &#39;Ace of the Diamond Second Season&#39;, &#39;title_romaji&#39;: &#39;Diamond no Ace: Second Season&#39;, &#39;mal_id&#39;: 30230, &#39;synonyms&#39;: [&#39;Daiya no Ace 2&#39;], &#39;synonyms_chinese&#39;: [], &#39;is_adult&#39;: False}, {&#39;from&#39;: 287.67, &#39;to&#39;: 287.67, &#39;anilist_id&#39;: 854, &#39;at&#39;: 287.67, &#39;season&#39;: &#39;2006-04&#39;, &#39;anime&#39;: &#39;Soul Link&#39;, &#39;filename&#39;: &#39;[HKG][Soul.Link][DVDrip][03][x264_AAC][864x480][30fps].mp4&#39;, &#39;episode&#39;: 3, &#39;tokenthumb&#39;: &#39;sFVpsOy02O2r9Jch3CQpXA&#39;, &#39;similarity&#39;: 0.8112364293603003, &#39;title&#39;: &#39;Soul Link&#39;, &#39;title_native&#39;: &#39;Soul Link&#39;, &#39;title_chinese&#39;: &#39;Soul Link&#39;, &#39;title_english&#39;: &#39;Soul Link&#39;, &#39;title_romaji&#39;: &#39;Soul Link&#39;, &#39;mal_id&#39;: 854, &#39;synonyms&#39;: [], &#39;synonyms_chinese&#39;: [], &#39;is_adult&#39;: False}, {&#39;from&#39;: 232.42, &#39;to&#39;: 232.42, &#39;anilist_id&#39;: 21237, &#39;at&#39;: 232.42, &#39;season&#39;: &#39;2015-10&#39;, &#39;anime&#39;: &#39;神之見習者秘密的心靈蛋&#39;, &#39;filename&#39;: &#39;(アニメ) かみさまみならい ヒミツのここたま 第02話.mp4&#39;, &#39;episode&#39;: 2, &#39;tokenthumb&#39;: &#39;zPhpsyIfuQG31RVedQ7Mcw&#39;, &#39;similarity&#39;: 0.8110595635963628, &#39;title&#39;: &#39;かみさまみならい ヒミツのここたま&#39;, &#39;title_native&#39;: &#39;かみさまみならい ヒミツのここたま&#39;, &#39;title_chinese&#39;: &#39;神之見習者秘密的心靈蛋&#39;, &#39;title_english&#39;: &#39;Kamisama Minarai: Himitsu no Cocotama&#39;, &#39;title_romaji&#39;: &#39;Kamisama Minarai: Himitsu no Cocotama&#39;, &#39;mal_id&#39;: 31044, &#39;synonyms&#39;: [], &#39;synonyms_chinese&#39;: [&#39;見習神仙秘密的心靈&#39;, &#39;見習神仙精靈&#39;], &#39;is_adult&#39;: False}, {&#39;from&#39;: 814.42, &#39;to&#39;: 814.42, &#39;anilist_id&#39;: 18411, &#39;at&#39;: 814.42, &#39;season&#39;: &#39;2013-10&#39;, &#39;anime&#39;: &#39;銀狐&#39;, &#39;filename&#39;: &#39;[DMG][Gingitsune][09][720P][BIG5].mp4&#39;, &#39;episode&#39;: 9, &#39;tokenthumb&#39;: &#39;PXOTyZYpFvPqsTT-CoLmQQ&#39;, &#39;similarity&#39;: 0.8104846724963615, &#39;title&#39;: &#39;ぎんぎつね&#39;, &#39;title_native&#39;: &#39;ぎんぎつね&#39;, &#39;title_chinese&#39;: &#39;銀狐&#39;, &#39;title_english&#39;: &#39;Gingitsune: Messenger Fox of the Gods&#39;, &#39;title_romaji&#39;: &#39;Gingitsune&#39;, &#39;mal_id&#39;: 18411, &#39;synonyms&#39;: [&#39;Silver Fox&#39;], &#39;synonyms_chinese&#39;: [], &#39;is_adult&#39;: False}, {&#39;from&#39;: 710.33, &#39;to&#39;: 710.33, &#39;anilist_id&#39;: 1482, &#39;at&#39;: 710.33, &#39;season&#39;: &#39;2006-10&#39;, &#39;anime&#39;: &#39;驅魔少年&#39;, &#39;filename&#39;: &#39;[MapleSnow][D.Gray-man][029][Jpn_Big5][X264_AAC].mp4&#39;, &#39;episode&#39;: 29, &#39;tokenthumb&#39;: &#39;2FbPqrT7_vbQZQuplQfp7Q&#39;, &#39;similarity&#39;: 0.8095463898281274, &#39;title&#39;: &#39;ディー・グレイマン&#39;, &#39;title_native&#39;: &#39;ディー・グレイマン&#39;, &#39;title_chinese&#39;: &#39;驅魔少年&#39;, &#39;title_english&#39;: &#39;D.Gray-man&#39;, &#39;title_romaji&#39;: &#39;D.Gray-man&#39;, &#39;mal_id&#39;: 1482, &#39;synonyms&#39;: [&#39;D. Gray-man&#39;, &#39;D. Grey-man&#39;], &#39;synonyms_chinese&#39;: [&#39;D·格雷少年&#39;], &#39;is_adult&#39;: False}], &#39;limit&#39;: 9, &#39;limit_ttl&#39;: 60, &#39;quota&#39;: 150, &#39;quota_ttl&#39;: 86400}</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">)</span>  <span class="c1"># [&lt;NormTraceMoe(title=&#39;心連·情結&#39;, similarity=0.97)&gt;, &lt;NormTraceMoe(title=&#39;涼宮春日的憂鬱&#39;, similarity=0.82)&gt;, &lt;NormTraceMoe(title=&#39;涼宮春日的憂鬱 2009&#39;, similarity=0.82)&gt;, &lt;NormTraceMoe(title=&#39;鑽石王牌 第二季&#39;, similarity=0.82)&gt;, &lt;NormTraceMoe(title=&#39;Soul Link&#39;, similarity=0.81)&gt;, &lt;NormTraceMoe(title=&#39;神之見習者秘密的心靈蛋&#39;, similarity=0.81)&gt;, &lt;NormTraceMoe(title=&#39;銀狐&#39;, similarity=0.81)&gt;, &lt;NormTraceMoe(title=&#39;驅魔少年&#39;, similarity=0.81)&gt;]</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># &lt;NormTraceMoe(title=&#39;心連·情結&#39;, similarity=0.97)&gt;</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">RawDocsCount</span><span class="p">)</span>  <span class="c1"># 5718114</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">RawDocsSearchTime</span><span class="p">)</span>  <span class="c1"># 15530</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">ReRankSearchTime</span><span class="p">)</span>  <span class="c1"># 1167</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">trial</span><span class="p">)</span>  <span class="c1"># 1</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">thumbnail</span><span class="p">)</span>  <span class="c1"># https://trace.moe/thumbnail.php?anilist_id=11887&amp;file=%5BANK-Raws%26NatsuYuki%5D%20Kokoro%20Connect%20-%2005%20%28BDrip%201280x720%20x264%20AAC%29.mp4&amp;t=1174.5&amp;token=I7RtV-BVFDjvgwgPpUwFKw</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">video_thumbnail</span><span class="p">)</span>  <span class="c1"># https://media.trace.moe/video/11887/%5BANK-Raws%26NatsuYuki%5D%20Kokoro%20Connect%20-%2005%20%28BDrip%201280x720%20x264%20AAC%29.mp4?t=1174.5&amp;token=I7RtV-BVFDjvgwgPpUwFKw</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">similarity</span><span class="p">)</span>  <span class="c1"># 0.9685373563005802</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">From</span><span class="p">)</span>  <span class="c1"># 1173.83</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">To</span><span class="p">)</span>  <span class="c1"># 1174.67</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">)</span>  <span class="c1"># 1174.5</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">anilist_id</span><span class="p">)</span>  <span class="c1"># 11887</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">season</span><span class="p">)</span>  <span class="c1"># 2012-07</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">anime</span><span class="p">)</span>  <span class="c1"># 心連·情結</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>  <span class="c1"># ココロコネクト</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title_native</span><span class="p">)</span>  <span class="c1"># ココロコネクト</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title_chinese</span><span class="p">)</span>  <span class="c1"># 心連·情結</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title_english</span><span class="p">)</span>  <span class="c1"># Kokoro Connect</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">raw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_adult</span><span class="p">)</span>  <span class="c1"># False</span>
+</code></pre></div>
+</td></tr></table>
+<div class="admonition info">
+<p class="admonition-title">信息</p>
+<p>文件位于<a href="https://github.com/kitUIN/PicImageSearch/tree/main/test/test1.py">test1.py</a> </p>
+</div>
+<div class="admonition success">
+<p class="admonition-title">Success</p>
+<p>程序输出,部分过长数据已省略
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code>
+</code></pre></div>
+</td></tr></table></p>
+</div>
+                
+                  
+                    
+
+<hr>
+<div class="md-source-date">
+  <small>
+    
+      最后更新: 2021-03-06
+    
+  </small>
+</div>
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        <a href="../DataStructure/" class="md-footer__link md-footer__link--prev" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              数据结构
+            </div>
+          </div>
+        </a>
+      
+      
+        <a href="../../Google/Home/" class="md-footer__link md-footer__link--next" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              快速开始
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+  <div class="md-footer-social">
+    
+      
+      
+      <a href="https://github.com/kitUIN" target="_blank" rel="noopener" title="开花者✿" class="md-footer-social__link">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+      </a>
+    
+  </div>
+
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "\u590d\u5236", "clipboard.copied": "\u5df2\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\uff0c\\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.9b151c6a.min.js"></script>
+      
+    
+  </body>
+</html>
