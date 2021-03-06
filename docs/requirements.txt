@@ -1,2 +1,3 @@
 mkdocs-material
 markdown-include
+mkdocs-git-revision-date-plugin
