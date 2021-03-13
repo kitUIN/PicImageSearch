@@ -26,7 +26,7 @@ logger.info(res.raw[0].title)      # Rating: q Score: 8 Tags: bikini_top fate/gr
 
 !!! success
     程序输出,部分过长数据已省略
-    ```bash
+    ```shell
     2021-03-06 19:11:29.157 | INFO     | __main__:<module>:12 - Best match
     2021-03-06 19:11:29.158 | INFO     | __main__:<module>:13 - https://yande.re/post/show/681461
     2021-03-06 19:11:29.158 | INFO     | __main__:<module>:14 - http://www.iqdb.org/moe.imouto/2/8/b/28beb871b6b162196cd1e4957a2ce5f5.jpg

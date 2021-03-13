@@ -8,7 +8,7 @@ baidu = BaiDu(**requests_kwargs)  # 代理设置
 !!! note "情境"
     假设我们的代码为
     ```python
-    from PicImageSearch import Google
+    from PicImageSearch import BaiDu
 
     baidu = BaiDu()
     res = baidu.search('https://i0.hdslb.com/bfs/article/e756dd0a8375a4c30cc0ee3a51c8067157486135.jpg@1524w_856h.webp')
@@ -56,7 +56,7 @@ baidu = BaiDu(**requests_kwargs)  # 代理设置
 
 === "res.similar"
     
-    以下列表以`res.raw[0]`为例
+    以下列表以`res.similar[0]`为例
     
     |变量              |   内容             |  类型  |
     |----              | ----              | ----  |

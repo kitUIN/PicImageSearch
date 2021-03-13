@@ -43,7 +43,7 @@ google = Google()
     ```
 === "本地图片"
     ```python
-    res = google.search("https://media.discordapp.net/attachments/783138508038471701/813452582948306974/hl-18-1-900x1280.png?width=314&height=447")
+    res = google.search(r'C:/kitUIN/img/tinted-good.jpg')
     ```
 
 !!! help "关于返回结果"

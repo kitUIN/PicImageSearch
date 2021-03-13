@@ -40,7 +40,7 @@ baidu = BaiDu()
     ```
 === "本地图片"
     ```python
-    res = baidu.search("https://media.discordapp.net/attachments/783138508038471701/813452582948306974/hl-18-1-900x1280.png?width=314&height=447")
+    res = baidu.search(r'C:/kitUIN/img/tinted-good.jpg')
     ```
 
 
