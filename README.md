@@ -1,7 +1,7 @@
 # PicImageSearch
 整合图片识别api,用于以图搜源(以图搜图，以图搜番)，支持SauceNAO,tracemoe,iqdb,ascii2d,google等
 ### 帮助手册目录
-  详见[文档](http://us2.frp.cool:12351/)
+  详见[文档](https://kituin.github.io/PicImageSearch/)
 ## 支持
 - [x] [SauceNAO](https://saucenao.com/)
 - [x] [TraceMoe](https://trace.moe/)
