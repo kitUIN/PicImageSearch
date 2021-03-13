@@ -44,9 +44,7 @@ saucenao = SauceNAO(api_key='输入你的api key',**_REQUESTS_KWARGS)
     ```python
     res = saucenao.search(r'C:/kitUIN/img/tinted-good.jpg')
     ```
-## 异步用法
-!!! todo
-    - 暂未完成
+
 
 ## 下载缩略图
 - 此为附加功能:material-file-download:

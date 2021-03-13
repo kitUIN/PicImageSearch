@@ -1,6 +1,6 @@
-site_name: PicImageSearch - 聚合以图搜图api
+site_name: PicImageSearch - 整合图片识别api
 
-repo_name: PicImageSearch - 聚合以图搜图api
+repo_name: 整合图片识别api
 repo_url: https://github.com/kitUIN/PicImageSearch
 
 theme:
@@ -35,6 +35,10 @@ nav:
       - 快速开始: Google/Home.md
       - 数据结构: Google/DataStructure.md
       - 示例: Google/Demo.md
+  - BaiDu:
+      - 快速开始: BaiDu/Home.md
+      - 数据结构: BaiDu/DataStructure.md
+      - 示例: BaiDu/Demo.md
 
 markdown_extensions:
   - toc:

@@ -39,7 +39,7 @@ google = Google()
 ```
 === "网络图片"
     ```python
-    res = ascii2d.search('https://pixiv.cat/77702503-1.jpg')
+    res = google.search('https://pixiv.cat/77702503-1.jpg')
     ```
 === "本地图片"
     ```python
@@ -50,7 +50,5 @@ google = Google()
     - 不建议使用`res.raw[0]``res.raw[1]`，因为其内容可能是空的
     - 建议从`res.raw[2]`开始使用  
 
-## 异步用法
-!!! todo
-    - 暂未完成
+
 

@@ -43,9 +43,6 @@ tracemoe = TraceMoe()
     res = tracemoe.search(r'C:/kitUIN/img/tinted-good.jpg')
     ```
 
-## 异步用法
-!!! todo
-    - 暂未完成
 ## 下载缩略图
 - 此为附加功能:material-file-download:
 ```python
