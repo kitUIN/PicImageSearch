@@ -71,7 +71,6 @@ class Ascii2DResponse:
 
 
 class Ascii2D:
-    ASCII2DURL = 'https://ascii2d.net/search/multi'
 
     def __init__(self, **requests_kwargs):
         self.requests_kwargs = requests_kwargs
@@ -91,12 +90,14 @@ class Ascii2D:
 
     def search(self, url):
         if url[:4] == 'http':  # 网络url
+            ASCII2DURL = 'https://ascii2d.net/search/uri'
             m = MultipartEncoder(
                 fields={
                     'uri': url
                 }
             )
         else:  # 是否是本地文件
+            ASCII2DURL = 'https://ascii2d.net/search/file'
             m = MultipartEncoder(
                 fields={
                     'file': ('filename', open(url, 'rb'), "type=multipart/form-data")
@@ -104,7 +105,7 @@ class Ascii2D:
             )
         headers = {'Content-Type': m.content_type}
         urllib3.disable_warnings()
-        res = requests.post(self.ASCII2DURL, headers=headers, data=m, verify=False, **self.requests_kwargs)
+        res = requests.post(ASCII2DURL, headers=headers, data=m, verify=False, **self.requests_kwargs)
         if res.status_code == 200:
             return self._slice(res.text)
         else:
