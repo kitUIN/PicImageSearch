@@ -5,7 +5,7 @@ from .iqdb import Iqdb
 from .google import Google
 from .baidu import BaiDu
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 __author__ = 'kitUIN'
 __license__ = 'MIT License'
 __contributors__ = ['kitUIN', 'lleans']
