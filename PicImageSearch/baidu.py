@@ -3,8 +3,6 @@ import re
 
 import requests
 import urllib3
-from bs4 import BeautifulSoup
-from loguru import logger
 from requests import Response
 from requests_toolbelt import MultipartEncoder
 
