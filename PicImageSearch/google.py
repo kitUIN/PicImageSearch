@@ -30,7 +30,7 @@ class GoogleNorm:
 
         for x in datas:
             try:
-                origin = x.find_all('span')
+                origin = x.find_all('h3')
                 data['titles'].append(origin[0].string)
                 url = x.find_all('a')
                 data['urls'].append(url[0]['href'])
