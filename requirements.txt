@@ -9,4 +9,3 @@ requests-toolbelt==0.9.1
 soupsieve==2.2
 urllib3==1.25.11
 win32-setctime==1.0.3
-re
