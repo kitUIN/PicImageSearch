@@ -101,6 +101,37 @@ class TraceMoeResponse:
 
 
 class TraceMoe:
+    """
+        TraceMoe
+        -----------
+        Reverse image from https://trace.moe\n
+        Return Attributes
+        -----------
+        • .origin = Raw data from scrapper\n
+        • .raw = Simplified data from scrapper\n
+        • .raw[0] = First index of simplified data that was found\n
+        • .raw[0].title = First index of title that was found\n
+        • .raw[0].title_english = First index of english title that was found\n
+        • .raw[0].title_chinese = First index of chinese title that was found\n
+        • .raw[0].video_thumbnail = First index of url video that was found\n
+        • .raw[0].thumbnail = First index of url image that was found\n
+        • .raw[0].similarity = First index of similarity video that was found\n
+        • .raw[0].From = First index of Starting time of the matching scene that was found\n
+        • .raw[0].To = First index of Ending time of the matching scene that was found\n
+        • .raw[0].at = First index of Exact time of the matching scene that was found\n
+        • .raw[0].anilist_id = First index of The matching AniList ID that was found\n
+        • .raw[0].season = First index of Season that was found\n
+        • .raw[0].anime = First index of Anime name that was found\n
+        • .raw.RawDocsCount = Total number of frames searched\n
+        • .raw.RawDocsSearchTime = Time taken to retrieve the frames from database (sum of all cores)\n
+        • .raw.ReRankSearchTime = Time taken to compare the frames (sum of all cores)\n
+        • .trial = Time taken to compare the frames (sum of all cores)
+        Params Keys
+        -----------
+        :param url: network address or local
+        :param Filter: The search is restricted to a specific Anilist ID (default none)
+        further documentation visit https://soruly.github.io/trace.moe/#/
+        """
     TraceMoeURL = 'https://trace.moe/api/search'
 
     def __init__(self, session=None, *, lib='asyncio', loop=None, mute=False, **requests_kwargs):
@@ -163,37 +194,6 @@ class TraceMoe:
             return "Unknown error, please report to the project maintainer"
 
     async def search(self, url, Filter=0):
-        """
-        TraceMoe
-        -----------
-        Reverse image from https://trace.moe\n
-        Return Attributes
-        -----------
-        • .origin = Raw data from scrapper\n
-        • .raw = Simplified data from scrapper\n
-        • .raw[0] = First index of simplified data that was found\n
-        • .raw[0].title = First index of title that was found\n
-        • .raw[0].title_english = First index of english title that was found\n
-        • .raw[0].title_chinese = First index of chinese title that was found\n
-        • .raw[0].video_thumbnail = First index of url video that was found\n
-        • .raw[0].thumbnail = First index of url image that was found\n
-        • .raw[0].similarity = First index of similarity video that was found\n
-        • .raw[0].From = First index of Starting time of the matching scene that was found\n
-        • .raw[0].To = First index of Ending time of the matching scene that was found\n
-        • .raw[0].at = First index of Exact time of the matching scene that was found\n
-        • .raw[0].anilist_id = First index of The matching AniList ID that was found\n
-        • .raw[0].season = First index of Season that was found\n
-        • .raw[0].anime = First index of Anime name that was found\n
-        • .raw.RawDocsCount = Total number of frames searched\n
-        • .raw.RawDocsSearchTime = Time taken to retrieve the frames from database (sum of all cores)\n
-        • .raw.ReRankSearchTime = Time taken to compare the frames (sum of all cores)\n
-        • .trial = Time taken to compare the frames (sum of all cores)
-        Params Keys
-        -----------
-        :param url: network address or local
-        :param Filter: The search is restricted to a specific Anilist ID (default none)
-        further documentation visit https://soruly.github.io/trace.moe/#/
-        """
         try:
             params = dict()
             if url[:4] == 'http':  # 网络url
