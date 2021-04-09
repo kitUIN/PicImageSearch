@@ -11,20 +11,23 @@ class TraceMoeNorm:
         self.origin: dict = data
         self.From: int = data['from']  # 匹配场景的开始时间
         self.To: int = data['to']  # 匹配场景的结束时间
-        self.anilist_id: int = data['anilist_id']  # 匹配的Anilist ID见https://anilist.co/
+        # 匹配的Anilist ID见https://anilist.co/
+        self.anilist_id: int = data['anilist_id']
         self.at: int = data['at']  # 匹配场景的确切时间
         self.season: str = data['season']  # 发布时间
         self.anime: str = data['anime']  # 番剧名字
         self.filename: str = data['filename']  # 找到匹配项的文件名
         self.episode: int = data['episode']  # 估计的匹配的番剧的集数
         self.tokenthumb: str = data['tokenthumb']  # 用于生成预览的token
-        self.similarity: float = float("{:.2f}".format(data['similarity'] * 100))  # 相似度，相似性低于 87% 的搜索结果可能是不正确的结果
+        self.similarity: float = float("{:.2f}".format(
+            data['similarity'] * 100))  # 相似度，相似性低于 87% 的搜索结果可能是不正确的结果
         self.title: str = data['title']  # 番剧名字
         self.title_native: str = data['title_native']  # 番剧世界命名
         self.title_chinese: str = data['title_chinese']  # 番剧中文命名
         self.title_english: str = data['title_english']  # 番剧英文命名
         self.title_romaji: str = data['title_romaji']  # 番剧罗马命名
-        self.mal_id: int = data['mal_id']  # 匹配的MyAnimelist ID见https://myanimelist.net/
+        # 匹配的MyAnimelist ID见https://myanimelist.net/
+        self.mal_id: int = data['mal_id']
         self.synonyms: list = data['synonyms']  # 备用英文标题
         self.synonyms_chinese: list = data['synonyms_chinese']  # 备用中文标题
         self.is_adult: bool = data['is_adult']  # 是否R18
@@ -61,7 +64,6 @@ class TraceMoeNorm:
                 for chunk in resp.iter_content():
                     fd.write(chunk)
 
-
     def download_video(self, filename='video.mp4'):
         """
         下载预览视频
@@ -73,7 +75,7 @@ class TraceMoeNorm:
                     fd.write(chunk)
 
     def __repr__(self):
-        return f'<NormTraceMoe(title={repr(self.title_chinese)}, similarity={self.similarity:.2f})>'
+        return f'<NormTraceMoe(title={repr(self.title_native)}, similarity={self.similarity})>'
 
 
 class TraceMoeResponse:
@@ -134,7 +136,6 @@ class TraceMoe:
                 "To use PicImageSearch in curio/trio mode, it requires `asks` module.")
         return asks.Session()
 
-
     @staticmethod
     def _base_64(filename):
         with open(filename, 'rb') as f:
@@ -144,30 +145,54 @@ class TraceMoe:
 
     @staticmethod
     def _errors(code):
-        if code == 413:
-            response = '图片体积太大。'
-            return response
+        if code == 404:
+            return "Source down"
+        elif code == 302:
+            return "Moved temporarily, or blocked by captcha"
+        elif code == 413 or code == 430:
+            return "image too large"
         elif code == 400:
-            response = '你没上传图片？'
-            return response
+            return "Did you have upload the image ?, or wrong request syntax"
         elif code == 403:
-            response = 'token无效。'
-            return response
+            return "Forbidden,or token unvalid"
         elif code == 429:
-            response = '请求太快了，缓一缓吧。'
-            return response
+            return "Too many request"
         elif code == 500 or code == 503:
-            response = '服务器错误 或者 你传错了图片格式。'
-            return response
+            return "Server error, or wrong picture format"
         else:
-            response = '未知错误,请联系开发者'
-            return response
+            return "Unknown error, please report to the project maintainer"
 
     async def search(self, url, Filter=0):
         """
-        搜索
-        :param url:网络地址或本地
-        :param Filter: 搜索限制为特定的 Anilist ID(默认无)
+        TraceMoe
+        -----------
+        Reverse image from https://trace.moe\n
+        Return Attributes
+        -----------
+        • .origin = Raw data from scrapper\n
+        • .raw = Simplified data from scrapper\n
+        • .raw[0] = First index of simplified data that was found\n
+        • .raw[0].title = First index of title that was found\n
+        • .raw[0].title_english = First index of english title that was found\n
+        • .raw[0].title_chinese = First index of chinese title that was found\n
+        • .raw[0].video_thumbnail = First index of url video that was found\n
+        • .raw[0].thumbnail = First index of url image that was found\n
+        • .raw[0].similarity = First index of similarity video that was found\n
+        • .raw[0].From = First index of Starting time of the matching scene that was found\n
+        • .raw[0].To = First index of Ending time of the matching scene that was found\n
+        • .raw[0].at = First index of Exact time of the matching scene that was found\n
+        • .raw[0].anilist_id = First index of The matching AniList ID that was found\n
+        • .raw[0].season = First index of Season that was found\n
+        • .raw[0].anime = First index of Anime name that was found\n
+        • .raw.RawDocsCount = Total number of frames searched\n
+        • .raw.RawDocsSearchTime = Time taken to retrieve the frames from database (sum of all cores)\n
+        • .raw.ReRankSearchTime = Time taken to compare the frames (sum of all cores)\n
+        • .trial = Time taken to compare the frames (sum of all cores)
+        Params Keys
+        -----------
+        :param url: network address or local
+        :param Filter: The search is restricted to a specific Anilist ID (default none)
+        further documentation visit https://soruly.github.io/trace.moe/#/
         """
         try:
             params = dict()
@@ -189,4 +214,3 @@ class TraceMoe:
                     logger.error(self._errors(res.status_code))
         except Exception as e:
             logger.info(e)
-

@@ -8,11 +8,10 @@ from typing import Union
 
 
 class GoogleNorm:
-
     def __init__(self, data):
-        self.thumbnail: str
-        self.title: str
-        self.url: str
+        self.thumbnail = ""
+        self.title = ""
+        self.url = ""
         self._arrange(data)
 
     def _arrange(self, data):
@@ -24,9 +23,9 @@ class GoogleNorm:
     def _getdata(self, datas):
 
         data = {
-            'thumbnail': str,
-            'title': str,
-            'url': str,
+            'thumbnail': "",
+            'title': "",
+            'url': "",
         }
 
         for x in datas:
@@ -80,6 +79,22 @@ class GoogleResponse:
 
 
 class Google:
+    """
+    Google
+    -----------
+    Reverse image from https://www.google.com\n
+
+    Return Attributes
+    -----------
+    • .origin = Raw data from scrapper\n
+    • .raw = Simplified data from scrapper\n
+    • .raw[2] = Second index of simplified data that was found <Should start from index 2, because from there is matching image>\n
+    • .raw[2].title = First index of title that was found\n
+    • .raw[2].url = First index of url source that was found\n
+    • .raw[2].thumbnail = First index of url image that was found
+    """
+
+    __slots__ = ('url', '**aiohttp request_kwargs')
     GOOGLEURL = 'https://www.google.com/searchbyimage'
 
     def __init__(self, session=None, *, lib='asyncio', loop=None, **request_kwargs):
@@ -114,29 +129,51 @@ class Google:
         return asks.Session()
 
     @staticmethod
+    def _errors(code):
+        if code == 404:
+            return "Source down"
+        elif code == 302:
+            return "Moved temporarily, or blocked by captcha"
+        elif code == 413 or code == 430:
+            return "image too large"
+        elif code == 400:
+            return "Did you have upload the image ?, or wrong request syntax"
+        elif code == 403:
+            return "Forbidden,or token unvalid"
+        elif code == 429:
+            return "Too many request"
+        elif code == 500 or code == 503:
+            return "Server error, or wrong picture format"
+        else:
+            return "Unknown error, please report to the project maintainer"
+
+    @staticmethod
     def _slice(res):
         soup = BeautifulSoup(res, 'html.parser', from_encoding='utf-8')
         resp = soup.find_all(class_='g')
         return GoogleResponse(resp)
 
     async def search(self, url):
-        if url[:4] == 'http':
-            params = {
-                'image_url': quote(url, safe='')
-            }
-            response = await self.session.get(
-                self.GOOGLEURL, params=params, headers=self.header, **self.requests_kwargs)
-        else:
-            m = FormData()
-            m.add_field(
-                'encoded_image',
-                open(url, 'rb'), 
-                content_type="multipart/form-data"
-            )
-            response = await self.session.post(
-                f"{self.GOOGLEURL}/upload", data=m, headers=self.header, **self.requests_kwargs)
-        if response.status == 200:
-            resp = await response.text()
-            return self._slice(resp)
-        else:
-            logger.error(response.status_code)
+        try:
+            if url[:4] == 'http':
+                params = {
+                    'image_url': quote(url, safe='')
+                }
+                response = await self.session.get(
+                    self.GOOGLEURL, params=params, headers=self.header, **self.requests_kwargs)
+            else:
+                m = FormData()
+                m.add_field(
+                    'encoded_image',
+                    open(url, 'rb'), 
+                    content_type="multipart/form-data"
+                )
+                response = await self.session.post(
+                    f"{self.GOOGLEURL}/upload", data=m, headers=self.header, **self.requests_kwargs)
+            if response.status == 200:
+                resp = await response.text()
+                return self._slice(resp)
+            else:
+                logger.error(self._errors(response.status))
+        except Exception as e:
+            logger.error(e)

@@ -11,13 +11,12 @@ class Ascii2DNorm:
     URL = 'https://ascii2d.net'
 
     def __init__(self, data):
-        self.thumbnail: str
+        self.thumbnail = ""
         self.detail: str = data[3].small.string
-        self.title: str
-        self.authors: str
-        self.authors_urls: str
-        self.url: str
-        self.marks: str
+        self.title = ""
+        self.authors = ""
+        self.url = ""
+        self.marks = ""
         self._arrange(data)
 
     def _arrange(self, data):
@@ -27,17 +26,16 @@ class Ascii2DNorm:
         self.url = urls['url']
         self.title = urls['title']
         self.authors = urls['authors']
-        self.authors_urls = urls['authors_urls']
         self.marks = urls['mark']
 
     @staticmethod
     def _geturls(data):
         all_urls = {
-            'url': str,
-            'title': str,
-            'authors_urls': str,
-            'authors': str,
-            'mark': str
+            'url': "",
+            'title': "",
+            'authors_urls': "",
+            'authors': "",
+            'mark': ""
         }
 
         for x in data:
@@ -57,7 +55,6 @@ class Ascii2DNorm:
     def __repr__(self):
         return f'<NormAscii2D(title={repr(self.title)}, authors={self.authors}, mark={self.marks})>'
 
-
 class Ascii2DResponse:
 
     def __init__(self, resp):
@@ -73,6 +70,24 @@ class Ascii2DResponse:
 
 
 class Ascii2D:
+    """
+    Ascii2D
+    -----------
+    Reverse image from https://ascii2d.net\n
+
+    Return Attributes
+    -----------
+    • .origin = Raw data from scrapper\n
+    • .raw = Simplified data from scrapper\n
+    • .raw[0] = First index of simplified data that was found\n
+    • .raw[0].title = First index of title that was found\n
+    • .raw[0].url = First index of url source that was found\n
+    • .raw[0].authors = First index of authors that was found\n
+    • .raw[0].thumbnail = First index of url image that was found\n
+    • .raw[0].detail = First index of details image that was found
+    """
+
+    __slots__ = ('url', '**aiohttp request_kwargs')
 
     def __init__(self, session=None, *, lib='asyncio', loop=None, **requests_kwargs):
         self.requests_kwargs = requests_kwargs
@@ -101,7 +116,7 @@ class Ascii2D:
             raise ImportError(
                 "To use PicImageSearch in curio/trio mode, it requires `asks` module.")
         return asks.Session()
-
+    
     @staticmethod
     def _slice(res):
         soup = BeautifulSoup(res, 'html.parser', from_encoding='utf-8')
@@ -110,28 +125,42 @@ class Ascii2D:
 
     @staticmethod
     def _errors(code):
-        if code == '500':
-            return '服务器错误'
+        if code == 404:
+            return "Source down"
+        elif code == 302:
+            return "Moved temporarily, or blocked by captcha"
+        elif code == 413 or code == 430:
+            return "image too large"
+        elif code == 400:
+            return "Did you have upload the image ?, or wrong request syntax"
+        elif code == 403:
+            return "Forbidden,or token unvalid"
+        elif code == 429:
+            return "Too many request"
+        elif code == 500 or code == 503:
+            return "Server error, or wrong picture format"
         else:
-            return '未知错误，请汇报给项目维护者'
+            return "Unknown error, please report to the project maintainer"
 
     async def search(self, url):
-        m = FormData()
-        if url[:4] == 'http':  # 网络url
-            ASCII2DURL = 'https://ascii2d.net/search/uri'
-            m.add_field('uri', url)
-        else:  # 是否是本地文件
-            ASCII2DURL = 'https://ascii2d.net/search/file'
-            m.add_field(
-                'file', 
-                open(url, 'rb'),
-                content_type="multipart/form-data"
-            )
-        urllib3.disable_warnings()
-        response = await self.session.post(ASCII2DURL, data=m, ssl=False, **self.requests_kwargs)
-        if response.status == 200:
-            resp = await response.text()
-            return self._slice(resp)
-        else:
-            logger.error(response.status)
-            logger.error(self._errors(response.status))
+        try:
+            m = FormData()
+            if url[:4] == 'http':  # 网络url
+                ASCII2DURL = 'https://ascii2d.net/search/uri'
+                m.add_field('uri', url)
+            else:  # 是否是本地文件
+                ASCII2DURL = 'https://ascii2d.net/search/file'
+                m.add_field(
+                    'file', 
+                    open(url, 'rb'),
+                    content_type="multipart/form-data"
+                )
+            urllib3.disable_warnings()
+            response = await self.session.post(ASCII2DURL, data=m, ssl=False, **self.requests_kwargs)
+            if response.status == 200:
+                resp = await response.text()
+                return self._slice(resp)
+            else:
+                logger.error(self._errors(response.status))
+        except Exception as e:
+            logger.error(e)

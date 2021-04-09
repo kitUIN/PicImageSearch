@@ -5,8 +5,7 @@ from loguru import logger
 from typing import Union
 from aiohttp.formdata import FormData
 
-
-class SauceNAONorm:
+class SauceNaoNorm:
     def __init__(self, data):
         result_header = data['header']
         result_data = data['data']
@@ -80,7 +79,7 @@ class SauceNAONorm:
             return ''
 
     def __repr__(self):
-        return f'<NormSauce(title={repr(self.title)}, similarity={self.similarity:.2f})>'
+        return f'<NormSauceNao(title={repr(self.title)}, similarity={self.similarity:.2f})>'
 
 
 class SauceNAOResponse:
@@ -89,7 +88,7 @@ class SauceNAOResponse:
         resp_header = resp['header']
         resp_results = resp['results']
         for i in resp_results:
-            self.raw.append(SauceNAONorm(i))
+            self.raw.append(SauceNaoNorm(i))
         self.origin: dict = resp
         self.short_remaining: int = resp_header['short_remaining']  # 每30秒访问额度
         self.long_remaining: int = resp_header['long_remaining']  # 每天访问额度
@@ -127,16 +126,37 @@ class SauceNAO:
                  **requests_kwargs
                  ) -> None:
         """
-        :param api_key:(str)用于SauceNAO的访问密钥 (默认=None)
-        :param output_type:(int) 0=正常(默认) html 1=xml api（未实现） 2=json api 默认=2
-        :param testmode:(int) 测试模式 0=正常 1=测试 (默认=0)
-        :param numres:(int)输出数量 (默认=5)
-        :param dbmask:(int)用于选择要启用的特定索引的掩码 (默认=None)
-        :param dbmaski:(int)用于选择要禁用的特定索引的掩码 (默认=None)
-        :param db:(int)搜索特定的索引号或全部索引 (默认=999)，索引见https://saucenao.com/tools/examples/api/index_details.txt
-        :param minsim:(int)控制最小相似度 (默认=30)
-        :param hide:(int)结果隐藏控制,无=0，明确返回值(默认)=1，怀疑返回值=2，全部返回值=3
+        SauceNao
+        -----------
+        Reverse image from https://saucenao.com\n
+        Return Attributes
+        -----------
+        • .origin = Raw data from scrapper\n
+        • .raw = Simplified data from scrapper\n
+        • .raw[0] = First index of simplified data that was found\n
+        • .raw[0].title = First index of title that was found\n
+        • .raw[0].url = First index of url source that was found\n
+        • .raw[0].thumbnail = First index of url image that was found\n
+        • .raw[0].similarity = First index of similarity image that was found\n
+        • .raw[0].author = First index of author image that was found\n
+        • .raw[0].pixiv_id = First index of pixiv id that was found\n
+        • .raw[0].member_id = First index of memeber id that was found\n
+        • .long_remaining = Available limmits API in a day <day limit>\n
+        • .short_remaining = Available limmits API in a day <day limit>\n
+        Params Keys
+        -----------
+        :param api_key: (str) Access key for SauceNAO (default=None)
+        :param output_type:(int) 0=normal (default) html 1=xml api (not implemented) 2=json api default=2
+        :param testmode:(int) Test mode 0=normal 1=test (default=0)
+        :param numres:(int) output number (default=5)
+        :param dbmask:(int) The mask used to select the specific index to be enabled (default=None)
+        :param dbmaski:(int) is used to select the mask of the specific index to be disabled (default=None)
+        :param db:(int)Search for a specific index number or all indexes (default=999), see https://saucenao.com/tools/examples/api/index_details.txt
+        :param minsim:(int)Control the minimum similarity (default=30)
+        :param hide:(int) result hiding control, none=0, clear return value (default)=1, suspect return value=2, all return value=3
         """
+
+        __slots__ = ('url', '**aiohttp request_kwargs')
         # minsim 控制最小相似度
         self.requests_kwargs = requests_kwargs
         params = {
@@ -180,22 +200,46 @@ class SauceNAO:
                 "To use PicImageSearch in curio/trio mode, it requires `asks` module.")
         return asks.Session()
 
+    @staticmethod
+    def _errors(code):
+        if code == 404:
+            return "Source down"
+        elif code == 302:
+            return "Moved temporarily, or blocked by captcha"
+        elif code == 413 or code == 430:
+            return "image too large"
+        elif code == 400:
+            return "Did you have upload the image ?, or wrong request syntax"
+        elif code == 403:
+            return "Forbidden,or token unvalid"
+        elif code == 429:
+            return "Too many request"
+        elif code == 500 or code == 503:
+            return "Server error, or wrong picture format"
+        else:
+            return "Unknown error, please report to the project maintainer"
+
     async def search(self, url: str):
-        params = self.params
-        # headers = {}
-        m = FormData()
-        if url[:4] == 'http':  # 网络url
-            params['url'] = url
-        else:  # 文件
-            m.add_field(
-                'file',
-                open(url, 'rb'),
-                content_type="multipart/form-data"
-            )
-        urllib3.disable_warnings()
-        resp = await self.session.post(self.SauceNAOURL, data=m, params=params, ssl=False,
-                             **self.requests_kwargs)
-        status_code = resp.status
-        logger.info(status_code)
-        data = await resp.json()
-        return SauceNAOResponse(data)
+        try:
+            params = self.params
+            # headers = {}
+            m = FormData()
+            if url[:4] == 'http':  # 网络url
+                params['url'] = url
+            else:  # 文件
+                m.add_field(
+                    'file',
+                    open(url, 'rb'),
+                    content_type="multipart/form-data"
+                )
+            urllib3.disable_warnings()
+            resp = await self.session.post(self.SauceNAOURL, data=m, params=params, ssl=False,
+                                **self.requests_kwargs)
+            if resp.status == 200:
+                data = await resp.json()
+                return SauceNAOResponse(data)
+            else:
+                logger.error(self._errors(resp.status))
+        except Exception as a:
+            logger.info(a)
+        
