@@ -94,7 +94,6 @@ class Google:
     • .raw[2].thumbnail = First index of url image that was found
     """
 
-    __slots__ = ('url', '**aiohttp request_kwargs')
     GOOGLEURL = 'https://www.google.com/searchbyimage'
 
     def __init__(self, session=None, *, lib='asyncio', loop=None, **request_kwargs):

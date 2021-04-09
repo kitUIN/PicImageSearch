@@ -80,8 +80,6 @@ class Iqdb:
     • .raw[0].size = First index detail of image size that was found
     """
 
-    __slots__ = ('url', '**aiohttp request_kwargs')
-
     def __init__(self, session=None, *, lib='asyncio', loop=None, **requests_kwargs):
         self.url = 'http://www.iqdb.org/'
         self.url_3d = 'http://3d.iqdb.org/'

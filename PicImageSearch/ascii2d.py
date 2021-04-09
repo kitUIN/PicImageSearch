@@ -87,8 +87,6 @@ class Ascii2D:
     • .raw[0].detail = First index of details image that was found
     """
 
-    __slots__ = ('url', '**aiohttp request_kwargs')
-
     def __init__(self, session=None, *, lib='asyncio', loop=None, **requests_kwargs):
         self.requests_kwargs = requests_kwargs
 

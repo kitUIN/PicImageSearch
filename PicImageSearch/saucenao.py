@@ -156,7 +156,6 @@ class SauceNAO:
         :param hide:(int) result hiding control, none=0, clear return value (default)=1, suspect return value=2, all return value=3
         """
 
-        __slots__ = ('url', '**aiohttp request_kwargs')
         # minsim 控制最小相似度
         self.requests_kwargs = requests_kwargs
         params = {
