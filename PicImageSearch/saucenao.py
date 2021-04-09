@@ -1,7 +1,9 @@
 import requests
 import urllib3
+
 from loguru import logger
-from requests_toolbelt import MultipartEncoder
+from typing import Union
+from aiohttp.formdata import FormData
 
 
 class SauceNAONorm:
@@ -109,10 +111,9 @@ class SauceNAOResponse:
 class SauceNAO:
     SauceNAOURL = 'https://saucenao.com/search.php'
 
-    def __init__(self,
+    def __init__(self, 
                  api_key: str = None,
-                 *,
-                 numres: int = 5,
+                 *, numres: int = 5,
                  hide: int = 1,
                  minsim: int = 30,
                  output_type: int = 2,
@@ -120,6 +121,9 @@ class SauceNAO:
                  dbmask: int = None,
                  dbmaski: int = None,
                  db: int = 999,
+                 session=None,
+                 lib='asyncio',
+                 loop=None,
                  **requests_kwargs
                  ) -> None:
         """
@@ -135,34 +139,63 @@ class SauceNAO:
         """
         # minsim 控制最小相似度
         self.requests_kwargs = requests_kwargs
-        params = dict()
+        params = {
+            'testmode': testmode,
+            'numres': numres,
+            'output_type': output_type,
+            'hide': hide,
+            'db': db,
+            'minsim': minsim
+        }
         if api_key is not None:
             params['api_key'] = api_key
         if dbmask is not None:
             params['dbmask'] = dbmask
         if dbmaski is not None:
             params['dbmaski'] = dbmaski
-        params['testmode'] = testmode
-        params['numres'] = numres
-        params['output_type'] = output_type
-        params['hide'] = hide
-        params['db'] = db
-        params['minsim'] = minsim
         self.params = params
 
-    def search(self, url: str):
+        if lib not in ('asyncio', 'multio'):
+            raise ValueError(
+                f"lib must be of type `str` and be either `asyncio` or `multio`, not '{lib if isinstance(lib, str) else lib.__class__.__name__}'")
+        self._lib = lib
+        if lib == 'asyncio':
+            import asyncio
+            loop = loop or asyncio.get_event_loop()
+        self.session = session or self._make_session(lib, loop)
+
+    @staticmethod
+    def _make_session(lib, loop=None) -> Union['aiohttp.ClientSession', 'asks.Session']:
+        if lib == 'asyncio':
+            try:
+                import aiohttp
+            except ImportError:
+                raise ImportError(
+                    "To use PicImageSearch in asyncio mode, it requires `aiohttp` module.")
+            return aiohttp.ClientSession(loop=loop)
+        try:
+            import asks
+        except ImportError:
+            raise ImportError(
+                "To use PicImageSearch in curio/trio mode, it requires `asks` module.")
+        return asks.Session()
+
+    async def search(self, url: str):
         params = self.params
-        headers = {}
-        m = None
+        # headers = {}
+        m = FormData()
         if url[:4] == 'http':  # 网络url
             params['url'] = url
         else:  # 文件
-            m = MultipartEncoder(fields={'file': ('filename', open(url, 'rb'), "type=multipart/form-data")})
-            headers = {'Content-Type': m.content_type}
+            m.add_field(
+                'file',
+                open(url, 'rb'),
+                content_type="multipart/form-data"
+            )
         urllib3.disable_warnings()
-        resp = requests.post(self.SauceNAOURL, headers=headers, data=m, params=params, verify=False,
+        resp = await self.session.post(self.SauceNAOURL, data=m, params=params, ssl=False,
                              **self.requests_kwargs)
-        status_code = resp.status_code
+        status_code = resp.status
         logger.info(status_code)
-        data = resp.json()
+        data = await resp.json()
         return SauceNAOResponse(data)

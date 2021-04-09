@@ -1,8 +1,9 @@
-import requests
 import urllib3
+
 from loguru import logger
 from requests_toolbelt import MultipartEncoder
 from bs4 import BeautifulSoup
+from typing import Union
 
 
 class IqdbNorm:
@@ -59,18 +60,43 @@ class IqdbResponse:
 
 class Iqdb:
 
-    def __init__(self, **requests_kwargs):
+    def __init__(self, session=None, *, lib='asyncio', loop=None, **requests_kwargs):
         self.url = 'http://www.iqdb.org/'
         self.url_3d = 'http://3d.iqdb.org/'
         self.requests_kwargs = requests_kwargs
 
-    def search(self, url):
+        if lib not in ('asyncio', 'multio'):
+            raise ValueError(
+                f"lib must be of type `str` and be either `asyncio` or `multio`, not '{lib if isinstance(lib, str) else lib.__class__.__name__}'")
+        self._lib = lib
+        if lib == 'asyncio':
+            import asyncio
+            loop = loop or asyncio.get_event_loop()
+        self.session = session or self._make_session(lib, loop)
+
+    @staticmethod
+    def _make_session(lib, loop=None) -> Union['aiohttp.ClientSession', 'asks.Session']:
+        if lib == 'asyncio':
+            try:
+                import aiohttp
+            except ImportError:
+                raise ImportError(
+                    "To use PicImageSearch in asyncio mode, it requires `aiohttp` module.")
+            return aiohttp.ClientSession(loop=loop)
+        try:
+            import asks
+        except ImportError:
+            raise ImportError(
+                "To use PicImageSearch in curio/trio mode, it requires `asks` module.")
+        return asks.Session()
+
+    async def search(self, url):
         try:
             if url[:4] == 'http':  # 网络url
                 datas = {
                     "url": url
                 }
-                res = requests.post(self.url, data=datas, **self.requests_kwargs)
+                res = await self.session.post(self.url, data=datas, **self.requests_kwargs)
             else:  # 是否是本地文件
                 m = MultipartEncoder(
                     fields={
@@ -79,19 +105,20 @@ class Iqdb:
                 )
                 headers = {'Content-Type': m.content_type}
                 urllib3.disable_warnings()
-                res = requests.post(self.url, headers=headers, **self.requests_kwargs)
-            if res.status_code == 200:
-                return IqdbResponse(res.content)
+                res = await  self.session.post(self.url, headers=headers, **self.requests_kwargs)
+            if res.status == 200:
+                resp = await res.text()
+                return IqdbResponse(resp)
         except Exception as e:
             logger.error(e)
 
-    def search_3d(self, url):
+    async def search(self, url):
         try:
             if url[:4] == 'http':  # 网络url
                 datas = {
                     "url": url
                 }
-                res = requests.post(self.url_3d, data=datas, **self.requests_kwargs)
+                res = await self.session.post(self.url_3d, data=datas, **self.requests_kwargs)
             else:  # 是否是本地文件
                 m = MultipartEncoder(
                     fields={
@@ -100,8 +127,9 @@ class Iqdb:
                 )
                 headers = {'Content-Type': m.content_type}
                 urllib3.disable_warnings()
-                res = requests.post(self.url_3d, headers=headers, **self.requests_kwargs)
-            if res.status_code == 200:
-                return IqdbResponse(res.content)
+                res = await  self.session.post(self.url_3d, headers=headers, **self.requests_kwargs)
+            if res.status == 200:
+                resp = await res.text()
+                return IqdbResponse(resp)
         except Exception as e:
             logger.error(e)

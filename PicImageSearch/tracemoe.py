@@ -1,5 +1,6 @@
 import base64
 from urllib import parse
+from typing import Union
 
 import requests
 from loguru import logger
@@ -17,7 +18,7 @@ class TraceMoeNorm:
         self.filename: str = data['filename']  # 找到匹配项的文件名
         self.episode: int = data['episode']  # 估计的匹配的番剧的集数
         self.tokenthumb: str = data['tokenthumb']  # 用于生成预览的token
-        self.similarity: float = float(data['similarity'])  # 相似度，相似性低于 87% 的搜索结果可能是不正确的结果
+        self.similarity: float = float("{:.2f}".format(data['similarity'] * 100))  # 相似度，相似性低于 87% 的搜索结果可能是不正确的结果
         self.title: str = data['title']  # 番剧名字
         self.title_native: str = data['title_native']  # 番剧世界命名
         self.title_chinese: str = data['title_chinese']  # 番剧中文命名
@@ -100,13 +101,39 @@ class TraceMoeResponse:
 class TraceMoe:
     TraceMoeURL = 'https://trace.moe/api/search'
 
-    def __init__(self, mute=False, **requests_kwargs):
+    def __init__(self, session=None, *, lib='asyncio', loop=None, mute=False, **requests_kwargs):
         """
         :param mute: 预览视频是否静音（默认不静音）
         :param **requests_kwargs:代理设置
         """
         self.mute: bool = mute
         self.requests_kwargs = requests_kwargs
+
+        if lib not in ('asyncio', 'multio'):
+            raise ValueError(
+                f"lib must be of type `str` and be either `asyncio` or `multio`, not '{lib if isinstance(lib, str) else lib.__class__.__name__}'")
+        self._lib = lib
+        if lib == 'asyncio':
+            import asyncio
+            loop = loop or asyncio.get_event_loop()
+        self.session = session or self._make_session(lib, loop)
+
+    @staticmethod
+    def _make_session(lib, loop=None) -> Union['aiohttp.ClientSession', 'asks.Session']:
+        if lib == 'asyncio':
+            try:
+                import aiohttp
+            except ImportError:
+                raise ImportError(
+                    "To use PicImageSearch in asyncio mode, it requires `aiohttp` module.")
+            return aiohttp.ClientSession(loop=loop)
+        try:
+            import asks
+        except ImportError:
+            raise ImportError(
+                "To use PicImageSearch in curio/trio mode, it requires `asks` module.")
+        return asks.Session()
+
 
     @staticmethod
     def _base_64(filename):
@@ -136,7 +163,7 @@ class TraceMoe:
             response = '未知错误,请联系开发者'
             return response
 
-    def search(self, url, Filter=0):
+    async def search(self, url, Filter=0):
         """
         搜索
         :param url:网络地址或本地
@@ -146,17 +173,17 @@ class TraceMoe:
             params = dict()
             if url[:4] == 'http':  # 网络url
                 params['url'] = url
-                res = requests.get(self.TraceMoeURL, params=params, verify=False, **self.requests_kwargs)
-                if res.status_code == 200:
-                    data = res.json()
+                res = await self.session.get(self.TraceMoeURL, params=params, ssl=False, **self.requests_kwargs)
+                if res.status == 200:
+                    data = await res.json()
                     return TraceMoeResponse(data, self.mute)
                 else:
                     logger.error(self._errors(res.status_code))
             else:  # 是否是本地文件
                 img = self._base_64(url)
-                res = requests.post(self.TraceMoeURL, json={"image": img, "filter": Filter}, **self.requests_kwargs)
-                if res.status_code == 200:
-                    data = res.json()
+                res = await self.session.post(self.TraceMoeURL, json={"image": img, "filter": Filter}, **self.requests_kwargs)
+                if res.status == 200:
+                    data = await res.json()
                     return TraceMoeResponse(data, self.mute)
                 else:
                     logger.error(self._errors(res.status_code))
