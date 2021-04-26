@@ -303,8 +303,7 @@ class Search:
                     content_type="multipart/form-data"
                 )
             # urllib3.disable_warnings()
-            resp = await self.session.post(SAUCENAO, data=m, params=params, ssl=False,
-                                           **self.requests_kwargs)
+            resp = await self.session.post(SAUCENAO, data=m, params=params, ssl=False, **requests_kwargs)
             if resp.status == 200:
                 data = await resp.json()
                 return SauceNAOResponse(data)
