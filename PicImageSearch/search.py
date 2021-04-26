@@ -1,8 +1,12 @@
-import base64
-
-from typing import Union
+# Install
+import aiohttp
 from loguru import logger
 from requests_toolbelt import MultipartEncoder
+from aiohttp.formdata import FormData
+
+# System
+import base64
+from typing import Union
 from urllib.parse import quote
 from PicImageSearch.response import Ascii2DResponse, GoogleResponse, IqdbResponse, SauceNAOResponse, TraceMoeResponse
 
@@ -19,16 +23,7 @@ class Search:
         if lib == 'asyncio':
             import asyncio
             loop = loop or asyncio.get_event_loop()
-        self.session = session or self._make_session(lib, loop)
-
-    @staticmethod
-    def _make_session(lib, loop=None) -> Union['aiohttp.ClientSession']:
-        try:
-            import aiohttp
-        except ImportError:
-            raise ImportError(
-                "To use PicImageSearch in asyncio mode, it requires `aiohttp` module.")
-        return aiohttp.ClientSession(loop=loop)
+        self.session = session or aiohttp.ClientSession(loop=loop)
 
     @staticmethod
     def _base_64(filename):
@@ -74,7 +69,6 @@ class Search:
     • .raw[0].detail = First index of details image that was found
     """
         try:
-            from aiohttp.formdata import FormData
             m = FormData()
             if url[:4] == 'http':  # 网络url
                 ASCII2DURL = 'https://ascii2d.net/search/uri'
@@ -127,7 +121,6 @@ class Search:
                 response = await self.session.get(
                     GOOGLEURL, params=params, headers=self.header, **requests_kwargs)
             else:
-                from aiohttp.formdata import FormData
                 m = FormData()
                 m.add_field(
                     'encoded_image',
@@ -292,7 +285,6 @@ class Search:
 
         try:
             # headers = {}
-            from aiohttp.formdata import FormData
             m = FormData()
             if url[:4] == 'http':  # 网络url
                 params['url'] = url

@@ -1,3 +1,6 @@
+aiohttp==3.7.4.post0
+async-timeout==3.0.1
+attrs==20.3.0
 beautifulsoup4==4.9.3
 bs4==0.0.1
 certifi==2020.12.5
@@ -5,9 +8,11 @@ chardet==4.0.0
 colorama==0.4.4
 idna==2.10
 loguru==0.5.3
+multidict==5.1.0
 requests==2.25.1
 requests-toolbelt==0.9.1
 soupsieve==2.2.1
+typing-extensions==3.7.4.3
 urllib3==1.26.4
 win32-setctime==1.0.3
 wincertstore==0.2
