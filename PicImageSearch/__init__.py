@@ -1,9 +1,6 @@
-from .saucenao import SauceNAO
-from .tracemoe import TraceMoe
-from .ascii2d import Ascii2D
-from .iqdb import Iqdb
-from .google import Google
-from .baidu import BaiDu
+from PicImageSearch.search import Search
+from PicImageSearch.response import Ascii2DResponse, BaiDuResponse, GoogleResponse, IqdbResponse, SauceNAOResponse, TraceMoeResponse
+from PicImageSearch.norm import Ascii2DNorm, BaiDuNorm, GoogleNorm, IqdbNorm, SauceNaoNorm, TraceMoeNorm
 
 __author__ = 'kitUIN'
 __license__ = 'MIT License'
