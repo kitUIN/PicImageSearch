@@ -313,11 +313,43 @@ class Search:
             logger.info(a)
 
     async def tracemoe(self, url, Filter=0, **requests_kwargs):
+        """
+        TraceMoe
+        -----------
+        Reverse image from https://trace.moe\n
+        Return Attributes
+        -----------
+        • .origin = Raw data from scrapper\n
+        • .raw = Simplified data from scrapper\n
+        • .raw[0] = First index of simplified data that was found\n
+        • .raw[0].title = First index of title that was found\n
+        • .raw[0].title_english = First index of english title that was found\n
+        • .raw[0].title_chinese = First index of chinese title that was found\n
+        • .raw[0].video_thumbnail = First index of url video that was found\n
+        • .raw[0].thumbnail = First index of url image that was found\n
+        • .raw[0].similarity = First index of similarity video that was found\n
+        • .raw[0].From = First index of Starting time of the matching scene that was found\n
+        • .raw[0].To = First index of Ending time of the matching scene that was found\n
+        • .raw[0].at = First index of Exact time of the matching scene that was found\n
+        • .raw[0].anilist_id = First index of The matching AniList ID that was found\n
+        • .raw[0].season = First index of Season that was found\n
+        • .raw[0].anime = First index of Anime name that was found\n
+        • .raw.RawDocsCount = Total number of frames searched\n
+        • .raw.RawDocsSearchTime = Time taken to retrieve the frames from database (sum of all cores)\n
+        • .raw.ReRankSearchTime = Time taken to compare the frames (sum of all cores)\n
+        • .trial = Time taken to compare the frames (sum of all cores)
+        Params Keys
+        -----------
+        :param url: network address or local
+        :param Filter: The search is restricted to a specific Anilist ID (default none)
+        further documentation visit https://soruly.github.io/trace.moe/#/
+        """
+        TRACEMOE = 'https://trace.moe/api/search'
         try:
             params = dict()
             if url[:4] == 'http':  # 网络url
                 params['url'] = url
-                res = await self.session.get(self.TraceMoeURL, params=params, ssl=False, **requests_kwargs)
+                res = await self.session.get(TRACEMOE, params=params, ssl=False, **requests_kwargs)
                 if res.status == 200:
                     data = await res.json()
                     return TraceMoeResponse(data, self.mute)
@@ -325,7 +357,7 @@ class Search:
                     logger.error(self._errors(res.status_code))
             else:  # 是否是本地文件
                 img = self._base_64(url)
-                res = await self.session.post(self.TraceMoeURL, json={"image": img, "filter": Filter}, **requests_kwargs)
+                res = await self.session.post(TRACEMOE, json={"image": img, "filter": Filter}, **requests_kwargs)
                 if res.status == 200:
                     data = await res.json()
                     return TraceMoeResponse(data, self.mute)
