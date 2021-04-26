@@ -78,7 +78,7 @@ class SauceNAONorm:
             return ''
 
     def __repr__(self):
-        return f'<NormSauce(title={repr(self.title)}, similarity={self.similarity:.2f})>'
+        return f'<NormSauceNAO(title={repr(self.title)}, similarity={self.similarity:.2f})>'
 
 
 class SauceNAOResponse:
@@ -102,7 +102,7 @@ class SauceNAOResponse:
         self.results_returned: int = resp_header['results_returned']
 
     def __repr__(self):
-        return (f'<SauceResponse(count={repr(len(self.raw))}, long_remaining={repr(self.long_remaining)}, '
+        return (f'<SauceNAOResponse(count={repr(len(self.raw))}, long_remaining={repr(self.long_remaining)}, '
                 f'short_remaining={repr(self.short_remaining)})>')
 
 
@@ -123,46 +123,105 @@ class SauceNAO:
                  **requests_kwargs
                  ) -> None:
         """
-        :param api_key:(str)用于SauceNAO的访问密钥 (默认=None)
-        :param output_type:(int) 0=正常(默认) html 1=xml api（未实现） 2=json api 默认=2
-        :param testmode:(int) 测试模式 0=正常 1=测试 (默认=0)
-        :param numres:(int)输出数量 (默认=5)
-        :param dbmask:(int)用于选择要启用的特定索引的掩码 (默认=None)
-        :param dbmaski:(int)用于选择要禁用的特定索引的掩码 (默认=None)
-        :param db:(int)搜索特定的索引号或全部索引 (默认=999)，索引见https://saucenao.com/tools/examples/api/index_details.txt
-        :param minsim:(int)控制最小相似度 (默认=30)
-        :param hide:(int)结果隐藏控制,无=0，明确返回值(默认)=1，怀疑返回值=2，全部返回值=3
+        SauceNAO
+        -----------
+        Reverse image from https://saucenao.com\n
+
+
+        Params Keys
+        -----------
+        :param api_key: (str) Access key for SauceNAO (default=None)
+        :param output_type:(int) 0=normal (default) html 1=xml api (not implemented) 2=json api default=2
+        :param testmode:(int) Test mode 0=normal 1=test (default=0)
+        :param numres:(int) output number (default=5)
+        :param dbmask:(int) The mask used to select the specific index to be enabled (default=None)
+        :param dbmaski:(int) is used to select the mask of the specific index to be disabled (default=None)
+        :param db:(int)Search for a specific index number or all indexes (default=999), see https://saucenao.com/tools/examples/api/index_details.txt
+        :param minsim:(int)Control the minimum similarity (default=30)
+        :param hide:(int) result hiding control, none=0, clear return value (default)=1, suspect return value=2, all return value=3
         """
         # minsim 控制最小相似度
         self.requests_kwargs = requests_kwargs
-        params = dict()
+        params = {
+            'testmode': testmode,
+            'numres': numres,
+            'output_type': output_type,
+            'hide': hide,
+            'db': db,
+            'minsim': minsim
+        }
         if api_key is not None:
             params['api_key'] = api_key
         if dbmask is not None:
             params['dbmask'] = dbmask
         if dbmaski is not None:
             params['dbmaski'] = dbmaski
-        params['testmode'] = testmode
-        params['numres'] = numres
-        params['output_type'] = output_type
-        params['hide'] = hide
-        params['db'] = db
-        params['minsim'] = minsim
         self.params = params
 
+    @staticmethod
+    def _errors(code):
+        if code == 404:
+            return "Source down"
+        elif code == 302:
+            return "Moved temporarily, or blocked by captcha"
+        elif code == 413 or code == 430:
+            return "image too large"
+        elif code == 400:
+            return "Did you have upload the image ?, or wrong request syntax"
+        elif code == 403:
+            return "Forbidden,or token unvalid"
+        elif code == 429:
+            return "Too many request"
+        elif code == 500 or code == 503:
+            return "Server error, or wrong picture format"
+        else:
+            return "Unknown error, please report to the project maintainer"
+
     def search(self, url: str):
-        params = self.params
-        headers = {}
-        m = None
-        if url[:4] == 'http':  # 网络url
-            params['url'] = url
-        else:  # 文件
-            m = MultipartEncoder(fields={'file': ('filename', open(url, 'rb'), "type=multipart/form-data")})
-            headers = {'Content-Type': m.content_type}
-        urllib3.disable_warnings()
-        resp = requests.post(self.SauceNAOURL, headers=headers, data=m, params=params, verify=False,
-                             **self.requests_kwargs)
-        status_code = resp.status_code
-        logger.info(status_code)
-        data = resp.json()
-        return SauceNAOResponse(data)
+        """
+        SauceNAO
+        -----------
+        Reverse image from https://saucenao.com\n
+
+
+        Return Attributes
+        -----------
+        • .origin = Raw data from scrapper\n
+        • .raw = Simplified data from scrapper\n
+        • .raw[0] = First index of simplified data that was found\n
+        • .raw[0].title = First index of title that was found\n
+        • .raw[0].url = First index of url source that was found\n
+        • .raw[0].thumbnail = First index of url image that was found\n
+        • .raw[0].similarity = First index of similarity image that was found\n
+        • .raw[0].author = First index of author image that was found\n
+        • .raw[0].pixiv_id = First index of pixiv id that was found\n
+        • .raw[0].member_id = First index of memeber id that was found\n
+        • .long_remaining = Available limmits API in a day <day limit>\n
+        • .short_remaining = Available limmits API in a day <day limit>\n
+
+
+        Params Keys
+        -----------
+        :param url: network address or local
+        
+        further documentation visit https://saucenao.com/user.php?page=search-api
+        """
+        try:
+            params = self.params
+            headers = {}
+            m = None
+            if url[:4] == 'http':  # 网络url
+                params['url'] = url
+            else:  # 文件
+                m = MultipartEncoder(fields={'file': ('filename', open(url, 'rb'), "type=multipart/form-data")})
+                headers = {'Content-Type': m.content_type}
+            urllib3.disable_warnings()
+            resp = requests.post(self.SauceNAOURL, headers=headers, data=m, params=params, verify=False,
+                                **self.requests_kwargs)
+            if resp.status_code == 200:
+                data = resp.json()
+                return SauceNAOResponse(data)
+            else:
+                logger.error(self._errors(resp.status_code))
+        except Exception as e:
+            logger.info(e)
