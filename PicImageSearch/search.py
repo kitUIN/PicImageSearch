@@ -312,7 +312,7 @@ class Search:
         except Exception as a:
             logger.info(a)
 
-    async def tracemoe(self, url, Filter=0, **requests_kwargs):
+    async def tracemoe(self, url, Filter=0, mute=False, **requests_kwargs):
         """
         TraceMoe
         -----------
@@ -342,6 +342,7 @@ class Search:
         -----------
         :param url: network address or local
         :param Filter: The search is restricted to a specific Anilist ID (default none)
+        :param mute: Mute search results video (default False)
         further documentation visit https://soruly.github.io/trace.moe/#/
         """
         TRACEMOE = 'https://trace.moe/api/search'
@@ -352,7 +353,7 @@ class Search:
                 res = await self.session.get(TRACEMOE, params=params, ssl=False, **requests_kwargs)
                 if res.status == 200:
                     data = await res.json()
-                    return TraceMoeResponse(data, self.mute)
+                    return TraceMoeResponse(data, mute)
                 else:
                     logger.error(self._errors(res.status_code))
             else:  # 是否是本地文件
@@ -360,7 +361,7 @@ class Search:
                 res = await self.session.post(TRACEMOE, json={"image": img, "filter": Filter}, **requests_kwargs)
                 if res.status == 200:
                     data = await res.json()
-                    return TraceMoeResponse(data, self.mute)
+                    return TraceMoeResponse(data, mute)
                 else:
                     logger.error(self._errors(res.status_code))
         except Exception as e:
