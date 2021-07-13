@@ -1,11 +1,6 @@
-import base64
-import pathlib
-import urllib
-from typing import Optional
-from urllib import parse
-
 import requests
 from loguru import logger
+from pathlib import Path
 
 
 class TraceMoeAnilist:
@@ -38,7 +33,7 @@ class TraceMoeNorm:
         if size in ['l', 's', 'm']:  # 大小设置
             self.video += '&size=' + size
             self.image += '&size=' + size
-        if mute:
+        if mute:  # 视频静音设置
             self.video += '&mute'
 
         # ---------------过时版本-----------------------
@@ -75,36 +70,48 @@ class TraceMoeNorm:
     #            url = url + '&mute'
     #     return url
 
-    def download_image(self, filename='image.png', path=''):
+    def download_image(self, filename='image.png', path: Path = Path.cwd()) -> Path:
         """
         下载缩略图
+
+        :param path: 本地地址(默认当前目录)
         :param filename: 重命名文件
+        :return: 文件路径
         """
         with requests.get(self.image, stream=True) as resp:
-            with open(filename, 'wb') as fd:
+            endpoint = path.joinpath(filename)
+            with open(endpoint, 'wb') as fd:
+                for chunk in resp.iter_content():
+                    fd.write(chunk)
+        return endpoint
+
+    def download_video(self, filename='video.mp4', path: Path = Path.cwd()) -> Path:
+        """
+
+        下载预览视频
+
+        :param path: 本地地址(默认当前目录)
+        :param filename: 重命名文件
+        :return: 文件路径
+        """
+        with requests.get(self.video, stream=True) as resp:
+            endpoint = path.joinpath(filename)
+            with open(endpoint, 'wb') as fd:
                 for chunk in resp.iter_content():
                     fd.write(chunk)
 
-    def download_video(self, filename='video.mp4', path=''):
-        """
-        下载预览视频
-        :param filename: 重命名文件
-        """
-        with requests.get(self.video, stream=True) as resp:
-            with open(filename, 'wb') as fd:
-                for chunk in resp.iter_content():
-                    fd.write(chunk)
+        return endpoint
 
     def __repr__(self):
         return f'<NormTraceMoe(filename={repr(self.filename)}, similarity={self.similarity:.2f})>'
 
 
 class TraceMoeResponse:
-    def __init__(self, resp, mute):
+    def __init__(self, resp, mute, size):
         self.raw: list = []
         resp_docs = resp['result']
         for i in resp_docs:
-            self.raw.append(TraceMoeNorm(i, mute=mute))
+            self.raw.append(TraceMoeNorm(i, mute=mute, size=size))
         self.count: int = len(self.raw)
         self.origin: dict = resp
         self.frameCount: int = resp['frameCount']  # 搜索的帧总数
@@ -120,26 +127,42 @@ class TraceMoeResponse:
         # self.quota_ttl: int = resp['quota_ttl']  # 配额重置之前的时间（秒）
 
     def __repr__(self):
-        return f'<TraceMoeResponse(count={repr(len(self.raw))}, RawDocsCount={repr(self.RawDocsCount)}'
+        return f'<TraceMoeResponse(count={repr(len(self.raw))}, frameCount={repr(self.frameCount)}'
+
+
+class TraceMoeMe:
+    def __init__(self, data):
+        self.id: str = data["id"]  # IP 地址（访客）或电子邮件地址（用户）
+        self.priority: int = data["priority"]  # 优先级
+        self.concurrency: int = data["concurrency"]  # 搜索请求数量
+        self.quota: int = data["quota"]  # 本月的搜索配额
+        self.quotaUsed: int = data["quotaUsed"]  # 本月已经使用的搜索配额
+
+    def __repr__(self):
+        return f'<TraceMoeMe(id={repr(len(self.id))}, quota={repr(self.quota)})>'
 
 
 class TraceMoe:
     TraceMoeURL = 'https://api.trace.moe/search'
+    MeURL = 'https://api.trace.moe/me'
 
-    def __init__(self, mute=False, **requests_kwargs):
-        """
+    def __init__(self, mute=False, size=None, **requests_kwargs):
+        """主类
+
+        :param size: 预览 视频/图像 大小(可填:s/m/l)(小/中/大)
         :param mute: 预览视频是否静音（默认不静音）
-        :param **requests_kwargs:代理设置
+        :param requests_kwargs:代理设置
         """
+        self.size: str = size
         self.mute: bool = mute
         self.requests_kwargs = requests_kwargs
 
-    @staticmethod
-    def _base_64(filename):
-        with open(filename, 'rb') as f:
-            coding = base64.b64encode(f.read())  # 读取文件内容，转换为base64编码
-            # print('本地base64转码~')
-            return coding.decode()
+    # @staticmethod
+    # def _base_64(filename):
+    #     with open(filename, 'rb') as f:
+    #         coding = base64.b64encode(f.read())  # 读取文件内容，转换为base64编码
+    #         # print('本地base64转码~')
+    #         return coding.decode()
 
     @staticmethod
     def _errors(code):
@@ -162,19 +185,31 @@ class TraceMoe:
             response = '未知错误,请联系开发者'
             return response
 
-    def search(self, url, anilistID=None, anilistInfo=True, cutBorders=True):
-        """
-        搜索
+    def me(self, key=None):  # 获取自己的信息
+        try:
+            params = None
+            if key:
+                params = {'key': key}
+            res = requests.get(self.MeURL, params=params, verify=False, **self.requests_kwargs)
+            if res.status_code == 200:
+                data = res.json()
+                return TraceMoeMe(data)
+            else:
+                logger.error(res.status_code)
+        except Exception as e:
+            logger.info(e)
 
-        :param url:网络地址(http或https链接)或本地(本地图片路径)
-        When using video / gif, only the 1st frame would be extracted for searching.
+    def search(self, url, key=None, anilistID=None, anilistInfo=True, cutBorders=True):
+        """识别图片
+
+        :param key: API密钥 https://soruly.github.io/trace.moe-api/#/limits?id=api-search-quota-and-limits
+        :param url: 网络地址(http或https链接)或本地(本地图片路径)  When using video / gif, only the 1st frame would be extracted for searching.
         :param anilistID: 搜索限制为特定的 Anilist ID(默认无)
         :param anilistInfo: 详细信息(默认开启)
         :param cutBorders: 切割黑边框(默认开启)
-
-        :return TraceMoeResponse
         """
         try:
+            headers = None
             params = dict()
             if anilistID:
                 params['anilistID'] = anilistID
@@ -182,22 +217,23 @@ class TraceMoe:
                 params['cutBorders'] = None
             if anilistInfo:
                 params['anilistInfo'] = None
+            if headers:
+                headers = {"x-trace-key": key}
             if url[:4] == 'http':  # 网络url
                 params['url'] = url
-                logger.info(params)
-                res = requests.get(self.TraceMoeURL, params=params, verify=False, **self.requests_kwargs)
+                res = requests.get(self.TraceMoeURL, headers=headers, params=params, verify=False,
+                                   **self.requests_kwargs)
                 if res.status_code == 200:
                     data = res.json()
-                    logger.info(data)
-                    return TraceMoeResponse(data, self.mute)
+                    return TraceMoeResponse(data, self.mute, self.size)
                 else:
                     logger.error(self._errors(res.status_code))
             else:  # 是否是本地文件
-                res = requests.post(self.TraceMoeURL, files={"image": open(url, "rb")}, **self.requests_kwargs)
+                res = requests.post(self.TraceMoeURL, headers=headers,
+                                    files={"image": open(url, "rb")}, **self.requests_kwargs)
                 if res.status_code == 200:
                     data = res.json()
-                    logger.info(data)
-                    return TraceMoeResponse(data, self.mute)
+                    return TraceMoeResponse(data, self.mute, self.size)
                 else:
                     logger.error(self._errors(res.status_code))
         except Exception as e:
