@@ -1,9 +1,9 @@
 from loguru import logger
 from PicImageSearch.tracemoe import TraceMoe
 
-tracemoe = TraceMoe(mute=False)
-# res = tracemoe.search('https://trace.moe/img/tinted-good.jpg')# 搜索网络图片
-res = tracemoe.search(r'C:/Users/kulujun/Pictures/1.png')  # 搜索本地图片
+tracemoe = TraceMoe(mute=False,size=None)
+res = tracemoe.search('https://trace.moe/img/tinted-good.jpg')# 搜索网络图片
+# res = tracemoe.search(r'C:/Users/kulujun/Pictures/1.png')  # 搜索本地图片
 logger.info(res.origin)
 logger.info(res.raw)
 logger.info(res.raw[0])
@@ -16,9 +16,7 @@ logger.info(res.raw[0].To)
 logger.info(res.raw[0].similarity)
 logger.info(res.raw[0].video)
 logger.info(res.raw[0].image)
-logger.info(res.raw[0].download_image())
-logger.info(res.raw[0].download_video())
-logger.info(tracemoe.me())
+
 # ---------------过时版本-----------------------
 # logger.info(res.origin)
 # logger.info(res.raw)  # [<NormTraceMoe(title='心連·情結', similarity=0.97)>, <NormTraceMoe(title='涼宮春日的憂鬱', similarity=0.82)>, <NormTraceMoe(title='涼宮春日的憂鬱 2009', similarity=0.82)>, <NormTraceMoe(title='鑽石王牌 第二季', similarity=0.82)>, <NormTraceMoe(title='Soul Link', similarity=0.81)>, <NormTraceMoe(title='神之見習者秘密的心靈蛋', similarity=0.81)>, <NormTraceMoe(title='銀狐', similarity=0.81)>, <NormTraceMoe(title='驅魔少年', similarity=0.81)>]

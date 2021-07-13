@@ -1,6 +1,7 @@
 import requests
 from loguru import logger
 from pathlib import Path
+from urllib import parse
 
 
 class TraceMoeAnilist:
@@ -10,6 +11,9 @@ class TraceMoeAnilist:
         self.title: dict = data['title']  # 番剧名字
         self.synonyms: list = data['synonyms']  # 备用英文标题
         self.isAdult: bool = data['isAdult']  # 是否R18
+
+    def setChinese(self, data):
+        self.title = data
 
     def __repr__(self):
         return f'(<id={repr(self.id)}, idMal={repr(self.idMal)}, title={repr(self.title)},' \
@@ -21,6 +25,7 @@ class TraceMoeNorm:
         self.origin: dict = data
         if type(data['anilist']) == dict:
             self.anilist = TraceMoeAnilist(data['anilist'])
+            self.anilist.setChinese(self.animeTitle(data['anilist']['id']))
         else:
             self.anilist: int = data['anilist']  # 匹配的Anilist ID见https://anilist.co/
         self.filename: str = data['filename']  # 找到匹配项的文件名
@@ -101,6 +106,32 @@ class TraceMoeNorm:
                     fd.write(chunk)
 
         return endpoint
+
+    def animeTitle(self, anilistID):
+        # Here we define our query as a multi-line string
+        query = '''
+        query ($id: Int) { # Define which variables will be used in the query (id)
+          Media (id: $id, type: ANIME) { # Insert our variables into the query arguments (id) (type: ANIME is hard-coded in the query)
+            id
+            title {
+              romaji
+              english
+              native
+            }
+          }
+        }
+        '''
+
+        # Define our query variables and values that will be used in the query request
+        variables = {
+            'id': anilistID
+        }
+
+        url = 'https://trace.moe/anilist/'
+
+        # Make the HTTP Api request
+        response = requests.post(url, json={'query': query, 'variables': variables})
+        return response.json()['data']['Media']['title']
 
     def __repr__(self):
         return f'<NormTraceMoe(filename={repr(self.filename)}, similarity={self.similarity:.2f})>'
@@ -199,6 +230,27 @@ class TraceMoe:
         except Exception as e:
             logger.info(e)
 
+    def _firstIf(self, param):
+        if param != "":
+            param += "&"
+        return param
+
+    def setParams(self, url, anilistID, anilistInfo, cutBorders):
+        params = ""
+        if anilistInfo:
+            params = self._firstIf(params)
+            params += "anilistInfo"
+        if cutBorders:
+            params = self._firstIf(params)
+            params += "cutBorders"
+        if anilistID:
+            params = self._firstIf(params)
+            params += f"anilistID={str(anilistID)}"
+        if url:
+            params = self._firstIf(params)
+            params += f"url={parse.quote_plus(url)}"
+        return params
+
     def search(self, url, key=None, anilistID=None, anilistInfo=True, cutBorders=True):
         """识别图片
 
@@ -210,17 +262,10 @@ class TraceMoe:
         """
         try:
             headers = None
-            params = dict()
-            if anilistID:
-                params['anilistID'] = anilistID
-            if cutBorders:
-                params['cutBorders'] = None
-            if anilistInfo:
-                params['anilistInfo'] = None
             if headers:
                 headers = {"x-trace-key": key}
             if url[:4] == 'http':  # 网络url
-                params['url'] = url
+                params = self.setParams(url, anilistID, anilistInfo, cutBorders)
                 res = requests.get(self.TraceMoeURL, headers=headers, params=params, verify=False,
                                    **self.requests_kwargs)
                 if res.status_code == 200:
@@ -229,7 +274,8 @@ class TraceMoe:
                 else:
                     logger.error(self._errors(res.status_code))
             else:  # 是否是本地文件
-                res = requests.post(self.TraceMoeURL, headers=headers,
+                params = self.setParams(None, anilistID, anilistInfo, cutBorders)
+                res = requests.post(self.TraceMoeURL, headers=headers, params=params,
                                     files={"image": open(url, "rb")}, **self.requests_kwargs)
                 if res.status_code == 200:
                     data = res.json()
