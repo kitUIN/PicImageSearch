@@ -9,11 +9,17 @@ class TraceMoeAnilist:
         self.id: int = data['id']  # 匹配的Anilist ID见https://anilist.co/
         self.idMal: int = data['idMal']  # 匹配的MyAnimelist ID见https://myanimelist.net/
         self.title: dict = data['title']  # 番剧名字
+        self.title_native: str = data['title']['native']  # 番剧国际命名
+        self.title_english: str = data['title']['english']  # 番剧英文命名
+        self.title_romaji: str = data['title']['romaji']  # 番剧罗马命名
+        self.title_chinese: str = 'NULL'  # 番剧中文命名
         self.synonyms: list = data['synonyms']  # 备用英文标题
         self.isAdult: bool = data['isAdult']  # 是否R18
 
     def setChinese(self, data):
         self.title = data
+        if 'chinese' in data.keys():
+            self.title_chinese: str = data['chinese']  # 番剧中文命名
 
     def __repr__(self):
         return f'(<id={repr(self.id)}, idMal={repr(self.idMal)}, title={repr(self.title)},' \
@@ -21,11 +27,34 @@ class TraceMoeAnilist:
 
 
 class TraceMoeNorm:
-    def __init__(self, data, mute=False, size=None):
+    def __init__(self, data, chineseTitle=True, mute=False, size=None):
+        """
+
+        :param data: 数据
+        :param chineseTitle: 中文番剧名称显示
+        :param mute: 预览视频静音
+        :param size: 视频与图片大小(s/m/l)
+        """
         self.origin: dict = data
+        self.idMal: int = 0
+        self.title: dict = {}
+        self.title_native: str = 'NULL'
+        self.title_english: str = 'NULL'
+        self.title_romaji: str = 'NULL'
+        self.title_chinese: str = 'NULL'
+        self.synonyms: list = []
+        self.isAdult: bool = False
         if type(data['anilist']) == dict:
-            self.anilist = TraceMoeAnilist(data['anilist'])
-            self.anilist.setChinese(self.animeTitle(data['anilist']['id']))
+            self.anilist: int = data['anilist']['id']  # 匹配的Anilist ID见https://anilist.co/
+            self.idMal: int = data['anilist']['idMal']  # 匹配的MyAnimelist ID见https://myanimelist.net/
+            self.title: dict = data['anilist']['title']  # 番剧名字
+            self.title_native: str = data['anilist']['title']['native']  # 番剧国际命名
+            self.title_english: str = data['anilist']['title']['english']  # 番剧英文命名
+            self.title_romaji: str = data['anilist']['title']['romaji']  # 番剧罗马命名
+            self.synonyms: list = data['anilist']['synonyms']  # 备用英文标题
+            self.isAdult: bool = data['anilist']['isAdult']  # 是否R18
+            if chineseTitle:
+                self.title_chinese: str = self._getChineseTitle()  # 番剧中文命名
         else:
             self.anilist: int = data['anilist']  # 匹配的Anilist ID见https://anilist.co/
         self.filename: str = data['filename']  # 找到匹配项的文件名
@@ -107,8 +136,16 @@ class TraceMoeNorm:
 
         return endpoint
 
-    def animeTitle(self, anilistID):
-        # Here we define our query as a multi-line string
+    def _getChineseTitle(self):
+        return self.animeTitle(self.origin['anilist']['id'])['data']['Media']['title']['chinese']
+
+    @staticmethod
+    def animeTitle(anilistID: int) -> dict:
+        """获取中文标题
+
+        :param anilistID: id
+        :return: dict
+        """
         query = '''
         query ($id: Int) { # Define which variables will be used in the query (id)
           Media (id: $id, type: ANIME) { # Insert our variables into the query arguments (id) (type: ANIME is hard-coded in the query)
@@ -131,20 +168,20 @@ class TraceMoeNorm:
 
         # Make the HTTP Api request
         response = requests.post(url, json={'query': query, 'variables': variables})
-        return response.json()['data']['Media']['title']
+        return response.json()
 
     def __repr__(self):
         return f'<NormTraceMoe(filename={repr(self.filename)}, similarity={self.similarity:.2f})>'
 
 
 class TraceMoeResponse:
-    def __init__(self, resp, mute, size):
+    def __init__(self, resp, chineseTitle, mute, size):
+        self.origin: dict = resp
         self.raw: list = []
         resp_docs = resp['result']
         for i in resp_docs:
-            self.raw.append(TraceMoeNorm(i, mute=mute, size=size))
+            self.raw.append(TraceMoeNorm(i, chineseTitle=chineseTitle, mute=mute, size=size))
         self.count: int = len(self.raw)
-        self.origin: dict = resp
         self.frameCount: int = resp['frameCount']  # 搜索的帧总数
         self.error: str = resp['error']  # 错误报告
         # ---------------过时版本-----------------------
@@ -251,13 +288,14 @@ class TraceMoe:
             params += f"url={parse.quote_plus(url)}"
         return params
 
-    def search(self, url, key=None, anilistID=None, anilistInfo=True, cutBorders=True):
+    def search(self, url, key=None, anilistID=None, chineseTitle=True, anilistInfo=True, cutBorders=True):
         """识别图片
 
         :param key: API密钥 https://soruly.github.io/trace.moe-api/#/limits?id=api-search-quota-and-limits
         :param url: 网络地址(http或https链接)或本地(本地图片路径)  When using video / gif, only the 1st frame would be extracted for searching.
         :param anilistID: 搜索限制为特定的 Anilist ID(默认无)
         :param anilistInfo: 详细信息(默认开启)
+        :param chineseTitle: 中文番剧标题
         :param cutBorders: 切割黑边框(默认开启)
         """
         try:
@@ -270,7 +308,7 @@ class TraceMoe:
                                    **self.requests_kwargs)
                 if res.status_code == 200:
                     data = res.json()
-                    return TraceMoeResponse(data, self.mute, self.size)
+                    return TraceMoeResponse(data, chineseTitle, self.mute, self.size)
                 else:
                     logger.error(self._errors(res.status_code))
             else:  # 是否是本地文件
@@ -279,7 +317,7 @@ class TraceMoe:
                                     files={"image": open(url, "rb")}, **self.requests_kwargs)
                 if res.status_code == 200:
                     data = res.json()
-                    return TraceMoeResponse(data, self.mute, self.size)
+                    return TraceMoeResponse(data, chineseTitle, self.mute, self.size)
                 else:
                     logger.error(self._errors(res.status_code))
         except Exception as e:
