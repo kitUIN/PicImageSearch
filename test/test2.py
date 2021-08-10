@@ -1,6 +1,6 @@
 from loguru import logger
 
-from PicImageSearch.saucenao import SauceNAO
+from PicImageSearch import SauceNAO
 
 _REQUESTS_KWARGS = {
     # 'proxies': {

@@ -3,9 +3,14 @@ import urllib3
 from bs4 import BeautifulSoup
 from loguru import logger
 from requests_toolbelt import MultipartEncoder
-from .Utils import Ascii2DResponse
 
-class Ascii2D:
+from .network import HandOver
+from PicImageSearch.Utils import Ascii2DResponse
+
+
+
+
+class AsyncAscii2D(HandOver):
     """
     Ascii2D
     -----------
@@ -18,6 +23,7 @@ class Ascii2D:
     """
 
     def __init__(self, **requests_kwargs):
+        super().__init__(**requests_kwargs)
         self.requests_kwargs = requests_kwargs
 
     @staticmethod
@@ -45,7 +51,7 @@ class Ascii2D:
         else:
             return "Unknown error, please report to the project maintainer"
 
-    def search(self, url):
+    async def search(self, url):
         """
         Ascii2D
         -----------
@@ -66,21 +72,11 @@ class Ascii2D:
         try:
             if url[:4] == 'http':  # 网络url
                 ASCII2DURL = 'https://ascii2d.net/search/uri'
-                m = MultipartEncoder(
-                    fields={
-                        'uri': url
-                    }
-                )
+                res = await self.post(ASCII2DURL, _data={"uri": url})
             else:  # 是否是本地文件
                 ASCII2DURL = 'https://ascii2d.net/search/file'
-                m = MultipartEncoder(
-                    fields={
-                        'file': ('filename', open(url, 'rb'), "type=multipart/form-data")
-                    }
-                )
-            headers = {'Content-Type': m.content_type}
-            urllib3.disable_warnings()
-            res = requests.post(ASCII2DURL, headers=headers, data=m, verify=False, **self.requests_kwargs)
+                res = await self.post(ASCII2DURL, _files={"file": open(url, 'rb')})
+
             if res.status_code == 200:
                 return self._slice(res.text)
             else:

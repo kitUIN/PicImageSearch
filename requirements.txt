@@ -1,11 +1,6 @@
 beautifulsoup4==4.9.3
-certifi==2020.12.5
-chardet==3.0.4
-colorama==0.4.4
-idna==2.10
 loguru==0.5.3
 requests==2.23.0
 requests-toolbelt==0.9.1
-soupsieve==2.2
-urllib3==1.25.11
-win32-setctime==1.0.3
+aiofiles~=0.7.0
+httpx~=0.17.1

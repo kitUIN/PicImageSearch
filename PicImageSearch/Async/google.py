@@ -1,10 +1,12 @@
-import requests
 from bs4 import BeautifulSoup
 from loguru import logger
-from urllib.parse import quote
-from PicImageSearch.Utils import GoogleResponse
 
-class Google:
+from .network import HandOver
+from PicImageSearch.Utils import GoogleResponse
+from urllib.parse import quote
+
+
+class AsyncGoogle(HandOver):
     """
     Google
     -----------
@@ -17,7 +19,9 @@ class Google:
     """
 
     GOOGLEURL = 'https://www.google.com/searchbyimage'
+
     def __init__(self, **request_kwargs):
+        super().__init__(**request_kwargs)
         params = dict()
         self.params = params
         self.header = {
@@ -46,11 +50,11 @@ class Google:
 
     @staticmethod
     def _slice(res):
-        soup = BeautifulSoup(res, 'html.parser', from_encoding='utf-8')
+        soup = BeautifulSoup(res, 'html.parser')
         resp = soup.find_all(class_='g')
         return GoogleResponse(resp)
 
-    def search(self, url):
+    async def search(self, url):
         """
         Google
         -----------
@@ -71,13 +75,13 @@ class Google:
             if url[:4] == 'http':
                 urlimage_encd = quote(url, safe='')
                 params['image_url'] = urlimage_encd
-                response = requests.get(
-                    self.GOOGLEURL, params=params, headers=self.header, **self.requests_kwargs)
+                response = await self.get(
+                    self.GOOGLEURL, _params=params, _headers=self.header)
             else:
                 multipart = {'encoded_image': (
                     url, open(url, 'rb'))}
-                response = requests.post(
-                    f"{self.GOOGLEURL}/upload", files=multipart, headers=self.header, **self.requests_kwargs)
+                response = await self.post(
+                    f"{self.GOOGLEURL}/upload", _files=multipart, _headers=self.header)
             if response.status_code == 200:
                 return self._slice(response.text)
             else:

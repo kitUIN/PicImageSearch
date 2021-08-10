@@ -1,26 +1,15 @@
-import requests
-import urllib3
 from loguru import logger
 from requests_toolbelt import MultipartEncoder
-from .Utils import SauceNAOResponse
+
+from .network import HandOver
+from PicImageSearch.Utils import SauceNAOResponse
 
 
-class SauceNAO:
+class AsyncSauceNAO(HandOver):
     SauceNAOURL = 'https://saucenao.com/search.php'
 
-    def __init__(self,
-                 api_key: str = None,
-                 *,
-                 numres: int = 5,
-                 hide: int = 1,
-                 minsim: int = 30,
-                 output_type: int = 2,
-                 testmode: int = 0,
-                 dbmask: int = None,
-                 dbmaski: int = None,
-                 db: int = 999,
-                 **requests_kwargs
-                 ) -> None:
+    def __init__(self, api_key: str = None, *, numres: int = 5, hide: int = 1, minsim: int = 30, output_type: int = 2,
+                 testmode: int = 0, dbmask: int = None, dbmaski: int = None, db: int = 999, **requests_kwargs) -> None:
         """
         SauceNAO
         -----------
@@ -29,6 +18,7 @@ class SauceNAO:
 
         Params Keys
         -----------
+
         :param api_key: (str) Access key for SauceNAO (default=None)
         :param output_type:(int) 0=normal (default) html 1=xml api (not implemented) 2=json api default=2
         :param testmode:(int) Test mode 0=normal 1=test (default=0)
@@ -40,6 +30,7 @@ class SauceNAO:
         :param hide:(int) result hiding control, none=0, clear return value (default)=1, suspect return value=2, all return value=3
         """
         # minsim 控制最小相似度
+        super().__init__(**requests_kwargs)
         self.requests_kwargs = requests_kwargs
         params = {
             'testmode': testmode,
@@ -76,7 +67,7 @@ class SauceNAO:
         else:
             return "Unknown error, please report to the project maintainer"
 
-    def search(self, url: str):
+    async def search(self, url: str):
         """
         SauceNAO
         -----------
@@ -102,21 +93,19 @@ class SauceNAO:
         Params Keys
         -----------
         :param url: network address or local
-        
+
         further documentation visit https://saucenao.com/user.php?page=search-api
         """
         try:
             params = self.params
-            headers = {}
+            headers = dict()
             m = None
             if url[:4] == 'http':  # 网络url
                 params['url'] = url
             else:  # 文件
                 m = MultipartEncoder(fields={'file': ('filename', open(url, 'rb'), "type=multipart/form-data")})
                 headers = {'Content-Type': m.content_type}
-            urllib3.disable_warnings()
-            resp = requests.post(self.SauceNAOURL, headers=headers, data=m, params=params, verify=False,
-                                **self.requests_kwargs)
+            resp = await self.post(self.SauceNAOURL, _headers=headers, _data=m, _params=params)
             if resp.status_code == 200:
                 data = resp.json()
                 return SauceNAOResponse(data)
