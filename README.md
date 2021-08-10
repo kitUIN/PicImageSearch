@@ -14,6 +14,7 @@
 - [x] [Ascii2D](https://ascii2d.net/)
 - [x] [Google谷歌识图](https://www.google.com/imghp)
 - [x] [BaiDu百度识图](https://graph.baidu.com/) 
+- [x] 异步
 ### 安装
 - 此包需要 Python 3.6 或更新版本。
 - `pip install PicImageSearch`
