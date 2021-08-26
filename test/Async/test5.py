@@ -9,7 +9,7 @@ async def main():
     async with NetWork(proxy='http://127.0.0.1:10809') as client:
         google = AsyncGoogle(client=client)
         res = await google.search("https://media.discordapp.net/attachments/783138508038471701/813452582948306974/hl-18-1-900x1280.png?width=314&height=447")
-        # res = google.search(r'C:/kitUIN/img/tinted-good.jpg')  # Search Image URL or path
+        # res = await google.search(r'C:/kitUIN/img/tinted-good.jpg')  # Search Image URL or path
         logger.info(res.origin)  # Original Data
         logger.info(res.raw.__str__())  # Raw Data
         # Should start from index 2, because from there is matching image

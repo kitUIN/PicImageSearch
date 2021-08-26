@@ -9,7 +9,7 @@ async def main():
     async with NetWork(proxy='http://127.0.0.1:10809') as client:
         saucenao = AsyncSauceNAO(api_key='54a8d90c583d3b66b6dd3d7e9001a39b588cd842', client=client)
         res = await saucenao.search('https://pixiv.cat/77702503-1.jpg')
-        # res = saucenao.search(r'C:/kitUIN/img/tinted-good.jpg') #搜索本地图片
+        # res = await saucenao.search(r'C:\Users\kulujun\Pictures\90139691_p0.png') #搜索本地图片
         logger.info(res.origin)  # 原始数据
         logger.info(res.raw)  #
         logger.info(res.raw[0])  #

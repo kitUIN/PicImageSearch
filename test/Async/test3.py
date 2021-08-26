@@ -9,7 +9,7 @@ async def main():
     async with NetWork() as client:
         ascii2d = AsyncAscii2D(client=client)
         res = await ascii2d.search('https://pixiv.cat/77702503-1.jpg')
-        # res = ascii2d.search(r'C:/kitUIN/img/tinted-good.jpg')  # 搜索本地图片
+        # res = await ascii2d.search(r'C:/kitUIN/img/tinted-good.jpg')  # 搜索本地图片
         logger.info(res.origin)  # 原始数据
         logger.info(res.raw)  #
         logger.info(res.raw[1])  # <NormAscii2D(title=['2020.08.30'], authors=['hews__'],mark=['twitter'])>

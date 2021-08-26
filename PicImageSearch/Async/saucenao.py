@@ -102,10 +102,10 @@ class AsyncSauceNAO(HandOver):
             m = None
             if url[:4] == 'http':  # 网络url
                 params['url'] = url
+                resp = await self.post(self.SauceNAOURL, _headers=headers, _data=m, _params=params)
             else:  # 文件
-                m = MultipartEncoder(fields={'file': ('filename', open(url, 'rb'), "type=multipart/form-data")})
-                headers = {'Content-Type': m.content_type}
-            resp = await self.post(self.SauceNAOURL, _headers=headers, _data=m, _params=params)
+                resp = await self.post(self.SauceNAOURL, _headers=headers, _params=params,
+                                       _files={'file': open(url, 'rb')})
             if resp.status_code == 200:
                 data = resp.json()
                 return SauceNAOResponse(data)
