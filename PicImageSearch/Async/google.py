@@ -49,10 +49,17 @@ class AsyncGoogle(HandOver):
             return "Unknown error, please report to the project maintainer"
 
     @staticmethod
-    def _slice(res):
-        soup = BeautifulSoup(res, 'html.parser')
+    def _slice(res, index):
+        soup = BeautifulSoup(res, 'html.parser', from_encoding='utf-8')
         resp = soup.find_all(class_='g')
-        return GoogleResponse(resp)
+        pages = soup.find_all("td")
+        return GoogleResponse(resp, pages[1:], index)
+
+    async def goto_page(self, url, index):
+        response = await self.get(
+            url, _headers=self.header)
+        if response.status_code == 200:
+            return self._slice(response.text, index)
 
     async def search(self, url):
         """
@@ -83,7 +90,7 @@ class AsyncGoogle(HandOver):
                 response = await self.post(
                     f"{self.GOOGLEURL}/upload", _files=multipart, _headers=self.header)
             if response.status_code == 200:
-                return self._slice(response.text)
+                return self._slice(response.text, 1)
             else:
                 logger.error(self._errors(response.status_code))
         except Exception as e:

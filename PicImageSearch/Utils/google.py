@@ -60,14 +60,22 @@ class GoogleNorm:
 
 class GoogleResponse:
 
-    def __init__(self, resp):
+    def __init__(self, resp, pages, index):
         self.origin: list = resp
         self.raw: list = list()
+        self.index: int = index
+        self.page: int = len(pages)
+        self.pages: list = pages
 
         for ele in self.origin:
             detail = ele.contents
             self.raw.append(GoogleNorm(detail))
 
+    def get_page_url(self, index):
+        if self.index != index:
+            url = "https://www.google.com" + self.pages[index - 1].a['href']
+            print(url)
+            return url
+
     def __repr__(self):
         return f'<GoogleResponse(count{repr(len(self.origin))})>'
-

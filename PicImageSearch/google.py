@@ -4,6 +4,7 @@ from loguru import logger
 from urllib.parse import quote
 from PicImageSearch.Utils import GoogleResponse
 
+
 class Google:
     """
     Google
@@ -17,6 +18,7 @@ class Google:
     """
 
     GOOGLEURL = 'https://www.google.com/searchbyimage'
+
     def __init__(self, **request_kwargs):
         params = dict()
         self.params = params
@@ -45,10 +47,16 @@ class Google:
             return "Unknown error, please report to the project maintainer"
 
     @staticmethod
-    def _slice(res):
+    def _slice(res, index):
         soup = BeautifulSoup(res, 'html.parser', from_encoding='utf-8')
         resp = soup.find_all(class_='g')
-        return GoogleResponse(resp)
+        pages = soup.find_all("td")
+        return GoogleResponse(resp, pages[1:], index)
+
+    def goto_page(self, url, index):
+        response = requests.get(url, headers=self.header, **self.requests_kwargs)
+        if response.status_code == 200:
+            return self._slice(response.text, index)
 
     def search(self, url):
         """
@@ -79,7 +87,7 @@ class Google:
                 response = requests.post(
                     f"{self.GOOGLEURL}/upload", files=multipart, headers=self.header, **self.requests_kwargs)
             if response.status_code == 200:
-                return self._slice(response.text)
+                return self._slice(response.text, 1)
             else:
                 logger.error(self._errors(response.status_code))
         except Exception as e:
