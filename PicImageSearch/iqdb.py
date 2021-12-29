@@ -17,6 +17,7 @@ class Iqdb:
     -----------
     :param **requests_kwargs: proxy settings
     """
+
     def __init__(self, **requests_kwargs):
         self.url = 'http://www.iqdb.org/'
         self.url_3d = 'http://3d.iqdb.org/'
@@ -52,12 +53,19 @@ class Iqdb:
         -----------
         • .origin = Raw data from scrapper\n
         • .raw = Simplified data from scrapper\n
+        • .saucenao = eg.  https://saucenao.com/search.php?db=999&dbmaski=32768&url=https://iqdb.org/thu/thu_ccb14a40.jpg
+        • .ascii2d = eg.  https://ascii2d.net/search/url/https://iqdb.org/thu/thu_ccb14a40.jpg
+        • .tineye = eg.  https://tineye.com/search?url=https://iqdb.org/thu/thu_ccb14a40.jpg
+        • .google = eg.   https://www.google.com/searchbyimage?image_url=https://iqdb.org/thu/thu_ccb14a40.jpg&safe=off
+        • .more = other (low similarity) Simplified data from scrapper\n
         • .raw[0].content = First index of content <Index 0 `Best match` or Index 1 etc `Additional match`>\n
-        • .raw[0].title = First index of title that was found\n
+        • .raw[0].source = First index of source website that was found\n
+        • .raw[0].other_source = other index of source website that was found\n
         • .raw[0].url = First index of url source that was found\n
         • .raw[0].thumbnail = First index of url image that was found\n
         • .raw[0].similarity = First index of similarity image that was found\n
         • .raw[0].size = First index detail of image size that was found
+
         """
         try:
             if url[:4] == 'http':  # 网络url
@@ -75,6 +83,7 @@ class Iqdb:
                 urllib3.disable_warnings()
                 res = requests.post(self.url, headers=headers, **self.requests_kwargs)
             if res.status_code == 200:
+                # logger.info(res.text)
                 return IqdbResponse(res.content)
             else:
                 logger.error(self._errors(res.status_code))

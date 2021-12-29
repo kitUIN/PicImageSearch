@@ -2,13 +2,13 @@ from loguru import logger
 from PicImageSearch import Iqdb
 
 _REQUESTS_KWARGS = {
-    # 'proxies': {
-    #     'https': 'http://127.0.0.1:10809',
-    # }
+     'proxies': {
+         'https': 'http://127.0.0.1:8888',
+     }
     # 如果需要代理
 }
 iqdb = Iqdb()
-res = iqdb.search(r'https://pixiv.cat/77702503-1.jpg')
+res = iqdb.search_3d('http://3d.iqdb.org/3dbooru/2/8/6/2865ab9c1d9fe8860892945e79435219.jpg')
 
 # logger.info(res.origin)
 # logger.info(res.raw)
@@ -19,12 +19,6 @@ logger.info("相似度:            " + res.raw[0].similarity)
 logger.info("图片大小:          " + res.raw[0].size)
 logger.info("图片来源:          " + res.raw[0].source)
 logger.info("其他图片来源:      " + str(res.raw[0].other_source))
-logger.info("SauceNAO搜图链接:  " + res.saucenao)
-logger.info("Ascii2d搜图链接:   " + res.ascii2d)
-logger.info("TinEye搜图链接:    " + res.tineye)
-logger.info("Google搜图链接:    " + res.google)
-logger.info("相似度低的结果:    " + res.more)
-#  列表中存放了相似度低的结果
-
+logger.info("相似度低的结果:    " + str(res.more))
 
 

@@ -6,6 +6,7 @@ from requests_toolbelt import MultipartEncoder
 from .Utils import Ascii2DResponse
 import hashlib
 
+
 class Ascii2D:
     """
     Ascii2D
@@ -19,9 +20,10 @@ class Ascii2D:
     :param bovw: use ascii2d bovw search,boolean, default True
     """
 
-    def __init__(self,bovw=True, **requests_kwargs):
+    def __init__(self, bovw=True, **requests_kwargs):
         self.requests_kwargs = requests_kwargs
         self.bovw = bovw
+
     @staticmethod
     def _slice(res):
         soup = BeautifulSoup(res, 'html.parser', from_encoding='utf-8')
@@ -85,15 +87,15 @@ class Ascii2D:
             res = requests.post(ASCII2DURL, headers=headers, data=m, verify=False, **self.requests_kwargs)
 
             if self.bovw and res.status_code == 200:
-                #如果启用bovw选项，第一次请求是向服务器提交文件
+                # 如果启用bovw选项，第一次请求是向服务器提交文件
                 if url[:4] == 'http':
-                    res = requests.get(url,**self.requests_kwargs)
+                    res = requests.get(url, **self.requests_kwargs)
                     md5hash = hashlib.md5(res.content).hexdigest()
-                    res = requests.get(f'https://ascii2d.net/search/bovw/{md5hash}',**self.requests_kwargs)
+                    res = requests.get(f'https://ascii2d.net/search/bovw/{md5hash}', **self.requests_kwargs)
                 else:
                     with open(url, 'rb') as f:
                         md5hash = hashlib.md5(f.read()).hexdigest()
-                    res = requests.get(f'https://ascii2d.net/search/bovw/{md5hash}',**self.requests_kwargs)
+                    res = requests.get(f'https://ascii2d.net/search/bovw/{md5hash}', **self.requests_kwargs)
             else:
                 logger.error(res.status_code)
                 logger.error(self._errors(res.status_code))
