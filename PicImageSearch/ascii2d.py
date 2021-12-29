@@ -87,7 +87,7 @@ class Ascii2D:
             if self.bovw and res.status_code == 200:
                 #如果启用bovw选项，第一次请求是向服务器提交文件
                 if url[:4] == 'http':
-                    res = requests.get(url)
+                    res = requests.get(url,**self.requests_kwargs)
                     md5hash = hashlib.md5(res.content).hexdigest()
                     res = requests.get(f'https://ascii2d.net/search/bovw/{md5hash}',**self.requests_kwargs)
                 else:
