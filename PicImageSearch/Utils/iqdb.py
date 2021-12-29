@@ -14,7 +14,7 @@ class IqdbNorm:
         self.content: str = "None"
         self.url: str = "None"
         self.source: str = "None"
-        self.other_source: dict = {}
+        self.other_source: list = list()
         self.thumbnail: str = "None"
         self.size: str = "None"
         self.similarity: str = "None"
@@ -26,7 +26,7 @@ class IqdbNorm:
             self.content = data.tr.th.string
             if self.content == "No relevant matches":
                 return
-            #logger.info(self.content)
+            # logger.info(self.content)
             tbody = data.tr.next_sibling
         else:
             tbody = data.tr
@@ -35,9 +35,10 @@ class IqdbNorm:
         tbody = tbody.next_sibling
         source = [stt for stt in tbody.td.strings]
         if len(source) > 1:
-            self.other_source = {"source": source[1],
-                                 "url": tbody.td.a['href'] if tbody.td.a['href'][:4] == "http" else "https:" +
-                                                                                                    tbody.td.a['href']}
+            self.other_source.append({"source": source[1],
+                                      "url": tbody.td.a['href'] if tbody.td.a['href'][:4] == "http" else "https:" +
+                                                                                                         tbody.td.a[
+                                                                                                             'href']})
         tbody = tbody.next_sibling
         self.size = tbody.td.string
         similarity_raw = REGEXIQ.search(tbody.next_sibling.td.string)

@@ -23,8 +23,7 @@ logger.info("SauceNAO搜图链接:  " + res.saucenao)
 logger.info("Ascii2d搜图链接:   " + res.ascii2d)
 logger.info("TinEye搜图链接:    " + res.tineye)
 logger.info("Google搜图链接:    " + res.google)
-logger.info("相似度低的结果:    " + res.more)
-#  列表中存放了相似度低的结果
+logger.info("相似度低的结果:    " + str(res.more))
 
 
 
