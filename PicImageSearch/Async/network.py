@@ -69,11 +69,11 @@ class HandOver(object):
 
     async def get(self, _url, _headers=None, _params=None):
         async with ClientManager(self.session, self.env, self.proxy) as session:
-            res = await session.get(_url, headers=_headers,params=_params)
+            res = await session.get(_url, headers=_headers, params=_params)
             await asyncio.sleep(0)
             return res
 
-    async def post(self, _url, _headers=None, _params=None, _data=None, _json=None,_files=None):
+    async def post(self, _url, _headers=None, _params=None, _data=None, _json=None, _files=None):
         async with ClientManager(self.session, self.env, self.proxy) as session:
             if _json:
                 res = await session.post(_url, headers=_headers, params=_params, json=_json)
