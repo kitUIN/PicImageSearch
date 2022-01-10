@@ -3,4 +3,6 @@ loguru==0.5.3
 requests==2.23.0
 requests-toolbelt==0.9.1
 aiofiles~=0.7.0
-httpx~=0.17.1
+httpx~=0.18.2
+pathlib~=1.0.1
+cloudscraper~=1.2.58

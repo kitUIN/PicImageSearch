@@ -1,5 +1,6 @@
 import requests
 import urllib3
+import cloudscraper
 from bs4 import BeautifulSoup
 from loguru import logger
 from requests_toolbelt import MultipartEncoder
@@ -16,11 +17,17 @@ class Ascii2D:
 
     Params Keys
     -----------
-    :param **requests_kwargs: proxy settings
-    :param bovw: use ascii2d bovw search,boolean, default True
+    **requests_kwargs:   proxy settings.\n
+    bovw(boolean):   use ascii2d bovw search\n
+    default True (you can make it False to shorten the time
     """
 
     def __init__(self, bovw=True, **requests_kwargs):
+        """
+
+        :param **requests_kwargs: proxy settings
+        :param bovw: use ascii2d bovw search,boolean, default True (you can make it False to shorten the time
+        """
         self.requests_kwargs = requests_kwargs
         self.bovw = bovw
 
@@ -67,6 +74,10 @@ class Ascii2D:
         • .raw[0].thumbnail = First index of url image that was found\n
         • .raw[0].detail = First index of details image that was found
         """
+        scraper = cloudscraper.create_scraper({'browser': 'chrome',
+                                               'platform': 'windows',
+                                               'mobile': False
+                                               })
         try:
             if url[:4] == 'http':  # 网络url
                 ASCII2DURL = 'https://ascii2d.net/search/uri'
@@ -84,19 +95,19 @@ class Ascii2D:
                 )
             headers = {'Content-Type': m.content_type}
             urllib3.disable_warnings()
-            res = requests.post(ASCII2DURL, headers=headers, data=m, verify=False, **self.requests_kwargs)
-
+            res = scraper.post(ASCII2DURL, headers=headers, data=m, **self.requests_kwargs)
+            #logger.info(res.text)
             if self.bovw and res.status_code == 200:
                 # 如果启用bovw选项，第一次请求是向服务器提交文件
                 if url[:4] == 'http':
-                    res = requests.get(url, **self.requests_kwargs)
+                    res = scraper.get(url, **self.requests_kwargs)
                     md5hash = hashlib.md5(res.content).hexdigest()
-                    res = requests.get(f'https://ascii2d.net/search/bovw/{md5hash}', **self.requests_kwargs)
+                    res = scraper.get(f'https://ascii2d.net/search/bovw/{md5hash}', **self.requests_kwargs)
                 else:
                     with open(url, 'rb') as f:
                         md5hash = hashlib.md5(f.read()).hexdigest()
-                    res = requests.get(f'https://ascii2d.net/search/bovw/{md5hash}', **self.requests_kwargs)
-            else:
+                    res = scraper.get(f'https://ascii2d.net/search/bovw/{md5hash}', **self.requests_kwargs)
+            elif res.status_code != 200:
                 logger.error(res.status_code)
                 logger.error(self._errors(res.status_code))
 
