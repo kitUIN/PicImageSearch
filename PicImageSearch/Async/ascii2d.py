@@ -8,8 +8,6 @@ from .network import HandOver
 from PicImageSearch.Utils import Ascii2DResponse
 
 
-
-
 class AsyncAscii2D(HandOver):
     """
     Ascii2D
@@ -27,7 +25,7 @@ class AsyncAscii2D(HandOver):
         self.requests_kwargs = requests_kwargs
 
     @staticmethod
-    def _slice(res):
+    def _slice(res) -> Ascii2DResponse:
         soup = BeautifulSoup(res, 'html.parser', from_encoding='utf-8')
         resp = soup.find_all(class_='row item-box')
         return Ascii2DResponse(resp)
@@ -51,7 +49,7 @@ class AsyncAscii2D(HandOver):
         else:
             return "Unknown error, please report to the project maintainer"
 
-    async def search(self, url):
+    async def search(self, url) -> Ascii2DResponse:
         """
         Ascii2D
         -----------

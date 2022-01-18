@@ -56,7 +56,7 @@ class Ascii2D:
         else:
             return "Unknown error, please report to the project maintainer"
 
-    def search(self, url):
+    def search(self, url) -> Ascii2DResponse:
         """
         Ascii2D
         -----------

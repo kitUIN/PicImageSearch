@@ -4,6 +4,8 @@ from PicImageSearch.tracemoe import TraceMoe
 tracemoe = TraceMoe(mute=False,size=None)
 res = tracemoe.search('https://trace.moe/img/tinted-good.jpg')# 搜索网络图片
 # res = tracemoe.search(r'C:/Users/kulujun/Pictures/1.png')  # 搜索本地图片
+
+
 logger.info(res.origin)
 logger.info(res.raw)
 logger.info(res.raw[0])

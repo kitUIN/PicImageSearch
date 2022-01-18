@@ -76,7 +76,7 @@ class SauceNAO:
         else:
             return "Unknown error, please report to the project maintainer"
 
-    def search(self, url: str):
+    def search(self, url: str) -> SauceNAOResponse:
         """
         SauceNAO
         -----------
@@ -116,7 +116,7 @@ class SauceNAO:
                 headers = {'Content-Type': m.content_type}
             urllib3.disable_warnings()
             resp = requests.post(self.SauceNAOURL, headers=headers, data=m, params=params, verify=False,
-                                **self.requests_kwargs)
+                                 **self.requests_kwargs)
             if resp.status_code == 200:
                 data = resp.json()
                 return SauceNAOResponse(data)

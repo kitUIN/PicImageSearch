@@ -49,7 +49,7 @@ class AsyncGoogle(HandOver):
             return "Unknown error, please report to the project maintainer"
 
     @staticmethod
-    def _slice(res, index):
+    def _slice(res, index) -> GoogleResponse:
         soup = BeautifulSoup(res, 'html.parser', from_encoding='utf-8')
         resp = soup.find_all(class_='g')
         pages = soup.find_all("td")
@@ -61,7 +61,7 @@ class AsyncGoogle(HandOver):
         if response.status_code == 200:
             return self._slice(response.text, index)
 
-    async def search(self, url):
+    async def search(self, url) -> GoogleResponse:
         """
         Google
         -----------

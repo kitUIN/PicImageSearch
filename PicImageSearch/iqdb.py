@@ -42,7 +42,7 @@ class Iqdb:
         else:
             return "Unknown error, please report to the project maintainer"
 
-    def search(self, url):
+    def search(self, url)-> IqdbResponse:
         """
         Iqdb
         -----------
@@ -90,7 +90,7 @@ class Iqdb:
         except Exception as e:
             logger.error(e)
 
-    def search_3d(self, url):
+    def search_3d(self, url) -> IqdbResponse:
         """
         Iqdb 3D
         -----------

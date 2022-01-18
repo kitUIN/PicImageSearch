@@ -1,13 +1,22 @@
+from typing import List
+
+
 class Ascii2DNorm:
     URL = 'https://ascii2d.net'
 
     def __init__(self, data):
-        self.thumbnail = ""
+        self.thumbnail: str = ""
+        """缩略图地址"""
         self.detail: str = data[3].small.string
-        self.title = ""
-        self.authors = ""
-        self.url = ""
-        self.marks = ""
+        """原图长宽，类型，大小"""
+        self.title: str = ""
+        """标题"""
+        self.authors: str = ""
+        """作者"""
+        self.url: str = ""
+        """url地址"""
+        self.marks: str = ""
+
         self._arrange(data)
 
     def _arrange(self, data):
@@ -51,8 +60,9 @@ class Ascii2DResponse:
 
     def __init__(self, resp):
         self.origin: list = resp
-        self.raw: list = list()
-
+        """原始返回值"""
+        self.raw: List[Ascii2DNorm] = list()
+        """结果返回值"""
         for ele in self.origin:
             detail = ele.contents
             self.raw.append(Ascii2DNorm(detail))

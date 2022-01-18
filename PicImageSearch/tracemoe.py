@@ -1,3 +1,4 @@
+from typing import List, Optional
 import requests
 from loguru import logger
 from pathlib import Path
@@ -6,15 +7,24 @@ from urllib import parse
 
 class TraceMoeAnilist:
     def __init__(self, data):
-        self.id: int = data['id']  # 匹配的Anilist ID见https://anilist.co/
-        self.idMal: int = data['idMal']  # 匹配的MyAnimelist ID见https://myanimelist.net/
-        self.title: dict = data['title']  # 番剧名字
-        self.title_native: str = data['title']['native']  # 番剧国际命名
-        self.title_english: str = data['title']['english']  # 番剧英文命名
-        self.title_romaji: str = data['title']['romaji']  # 番剧罗马命名
-        self.title_chinese: str = 'NULL'  # 番剧中文命名
-        self.synonyms: list = data['synonyms']  # 备用英文标题
-        self.isAdult: bool = data['isAdult']  # 是否R18
+        self.id: int = data['id']
+        """匹配的Anilist ID见https://anilist.co/"""
+        self.idMal: int = data['idMal']
+        """匹配的MyAnimelist ID见https://myanimelist.net/"""
+        self.title: dict = data['title']
+        """番剧名字"""
+        self.title_native: str = data['title']['native']
+        """番剧国际命名"""
+        self.title_english: str = data['title']['english']
+        """番剧英文命名"""
+        self.title_romaji: str = data['title']['romaji']
+        """番剧罗马命名"""
+        self.title_chinese: str = 'NULL'
+        """番剧中文命名"""
+        self.synonyms: list = data['synonyms']
+        """备用英文标题"""
+        self.isAdult: bool = data['isAdult']
+        """是否R18"""
 
     def setChinese(self, data):
         self.title = data
@@ -36,16 +46,27 @@ class TraceMoeNorm:
         :param size: 视频与图片大小(s/m/l)
         """
         self.origin: dict = data
+        """原始数据"""
         self.idMal: int = 0
+        """匹配的MyAnimelist ID见https://myanimelist.net/"""
         self.title: dict = {}
+        """剧名字"""
         self.title_native: str = 'NULL'
+        """番剧国际命名"""
         self.title_english: str = 'NULL'
+        """剧英文命名"""
         self.title_romaji: str = 'NULL'
+        """番剧罗马命名"""
         self.title_chinese: str = 'NULL'
+        """番剧中文命名"""
+        self.anilist: Optional[int] = None
+        """匹配的Anilist ID见https://anilist.co/"""
         self.synonyms: list = []
+        """备用英文标题"""
         self.isAdult: bool = False
+        """是否R18"""
         if type(data['anilist']) == dict:
-            self.anilist: int = data['anilist']['id']  # 匹配的Anilist ID见https://anilist.co/
+            self.anilist = data['anilist']['id']  # 匹配的Anilist ID见https://anilist.co/
             self.idMal: int = data['anilist']['idMal']  # 匹配的MyAnimelist ID见https://myanimelist.net/
             self.title: dict = data['anilist']['title']  # 番剧名字
             self.title_native: str = data['anilist']['title']['native']  # 番剧国际命名
@@ -56,14 +77,21 @@ class TraceMoeNorm:
             if chineseTitle:
                 self.title_chinese: str = self._getChineseTitle()  # 番剧中文命名
         else:
-            self.anilist: int = data['anilist']  # 匹配的Anilist ID见https://anilist.co/
-        self.filename: str = data['filename']  # 找到匹配项的文件名
-        self.episode: int = data['episode']  # 估计的匹配的番剧的集数
-        self.From: int = data['from']  # 匹配场景的开始时间
-        self.To: int = data['to']  # 匹配场景的结束时间
-        self.similarity: float = float(data['similarity'])  # 相似度，相似性低于 87% 的搜索结果可能是不正确的结果
-        self.video: str = data['video']  # 预览视频
-        self.image: str = data['image']  # 预览图像
+            self.anilist = data['anilist']  # 匹配的Anilist ID见https://anilist.co/
+        self.filename: str = data['filename']
+        """找到匹配项的文件名"""
+        self.episode: int = data['episode']
+        """估计的匹配的番剧的集数"""
+        self.From: int = data['from']
+        """匹配场景的开始时间"""
+        self.To: int = data['to']
+        """匹配场景的结束时间"""
+        self.similarity: float = float(data['similarity'])
+        """相似度，相似性低于 87% 的搜索结果可能是不正确的结果"""
+        self.video: str = data['video']
+        """预览视频"""
+        self.image: str = data['image']
+        """预览图像"""
         if size in ['l', 's', 'm']:  # 大小设置
             self.video += '&size=' + size
             self.image += '&size=' + size
@@ -177,13 +205,18 @@ class TraceMoeNorm:
 class TraceMoeResponse:
     def __init__(self, resp, chineseTitle, mute, size):
         self.origin: dict = resp
-        self.raw: list = []
+        """原始数据"""
+        self.raw: List[TraceMoeNorm] = list()
+        """结果返回值"""
         resp_docs = resp['result']
         for i in resp_docs:
             self.raw.append(TraceMoeNorm(i, chineseTitle=chineseTitle, mute=mute, size=size))
         self.count: int = len(self.raw)
-        self.frameCount: int = resp['frameCount']  # 搜索的帧总数
-        self.error: str = resp['error']  # 错误报告
+        """搜索结果数量"""
+        self.frameCount: int = resp['frameCount']
+        """搜索的帧总数"""
+        self.error: str = resp['error']
+        """错误报告"""
         # ---------------过时版本-----------------------
         # self.RawDocsSearchTime: int = resp['RawDocsSearchTime']  # 从数据库检索帧所用的时间
         # self.ReRankSearchTime: int = resp['ReRankSearchTime']  # 比较帧所用的时间
@@ -253,7 +286,7 @@ class TraceMoe:
             response = '未知错误,请联系开发者'
             return response
 
-    def me(self, key=None):  # 获取自己的信息
+    def me(self, key=None)->TraceMoeMe:  # 获取自己的信息
         try:
             params = None
             if key:
@@ -288,7 +321,8 @@ class TraceMoe:
             params += f"url={parse.quote_plus(url)}"
         return params
 
-    def search(self, url, key=None, anilistID=None, chineseTitle=True, anilistInfo=True, cutBorders=True):
+    def search(self, url, key=None, anilistID=None,
+               chineseTitle=True, anilistInfo=True, cutBorders=True)->TraceMoeResponse:
         """识别图片
 
         :param key: API密钥 https://soruly.github.io/trace.moe-api/#/limits?id=api-search-quota-and-limits

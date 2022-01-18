@@ -1,11 +1,15 @@
 import re
+from typing import List
 
 
 class GoogleNorm:
     def __init__(self, data):
-        self.thumbnail = ""
-        self.title = ""
-        self.url = ""
+        self.thumbnail: str = ""
+        """缩略图地址"""
+        self.title: str = ""
+        """标题"""
+        self.url: str = ""
+        """url地址"""
         self._arrange(data)
 
     def _arrange(self, data):
@@ -62,10 +66,15 @@ class GoogleResponse:
 
     def __init__(self, resp, pages, index):
         self.origin: list = resp
-        self.raw: list = list()
+        """原始返回值"""
+        self.raw: List[GoogleNorm] = list()
+        """结果返回值"""
         self.index: int = index
+        """当前页"""
         self.page: int = len(pages)
+        """总页数"""
         self.pages: list = pages
+        """页面源"""
 
         for ele in self.origin:
             detail = ele.contents

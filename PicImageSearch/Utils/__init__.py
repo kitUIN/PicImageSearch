@@ -1,5 +1,5 @@
-from .saucenao import SauceNAOResponse
-from .ascii2d import Ascii2DResponse
-from .iqdb import IqdbResponse
-from .google import GoogleResponse
-from .baidu import BaiDuResponse
+from .saucenao import SauceNAOResponse, SauceNAONorm
+from .ascii2d import Ascii2DResponse, Ascii2DNorm
+from .iqdb import IqdbResponse, IqdbNorm
+from .google import GoogleResponse, GoogleNorm
+from .baidu import BaiDuResponse, BaiDuNorm

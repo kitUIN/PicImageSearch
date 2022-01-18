@@ -1,3 +1,5 @@
+from typing import Coroutine, Any
+
 from loguru import logger
 from requests_toolbelt import MultipartEncoder
 
@@ -67,7 +69,7 @@ class AsyncSauceNAO(HandOver):
         else:
             return "Unknown error, please report to the project maintainer"
 
-    async def search(self, url: str):
+    async def search(self, url: str) -> SauceNAOResponse:
         """
         SauceNAO
         -----------

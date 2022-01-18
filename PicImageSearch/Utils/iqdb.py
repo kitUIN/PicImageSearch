@@ -1,5 +1,5 @@
 import re
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag, NavigableString
@@ -11,13 +11,21 @@ class IqdbNorm:
 
     def __init__(self, data: Tag, isnot_more: bool = True):
         self.isnot_more: bool = isnot_more
+        """"""
         self.content: str = "None"
+        """备注"""
         self.url: str = "None"
+        """url地址"""
         self.source: str = "None"
+        """来源平台名称"""
         self.other_source: list = list()
+        """其他来源"""
         self.thumbnail: str = "None"
+        """缩略图地址"""
         self.size: str = "None"
+        """原图长宽大小"""
         self.similarity: str = "None"
+        """	相似值"""
         self._arrange(data.table)
 
     def _arrange(self, data: Tag):
@@ -53,13 +61,20 @@ class IqdbNorm:
 class IqdbResponse:
     def __init__(self, resp: bytes):
         self.origin: bytes = resp
+        """原始返回值"""
         # logger.info(type(self.origin))
-        self.raw: list = list()
-        self.more: list = list()
+        self.raw: List[IqdbNorm] = list()
+        """结果返回值"""
+        self.more: List[IqdbNorm] = list()
+        """更多结果返回值(低相似度)"""
         self.saucenao: str = "None"
+        """SauceNao搜索链接"""
         self.ascii2d: str = "None"
+        """Ascii2d搜索链接"""
         self.google: str = "None"
+        """Google搜索链接"""
         self.tineye: str = "None"
+        """TinEye搜索链接"""
         self._slice(resp)
 
     def _slice(self, data: bytes) -> None:

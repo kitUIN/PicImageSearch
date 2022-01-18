@@ -41,7 +41,7 @@ class AsyncIqdb(HandOver):
         else:
             return "Unknown error, please report to the project maintainer"
 
-    async def search(self, url):
+    async def search(self, url) -> IqdbResponse:
         """
         Iqdb
         -----------
@@ -84,7 +84,7 @@ class AsyncIqdb(HandOver):
         except Exception as e:
             logger.error(e)
 
-    async def search_3d(self, url):
+    async def search_3d(self, url) -> IqdbResponse:
         """
         Iqdb 3D
         -----------

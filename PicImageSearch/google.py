@@ -58,7 +58,7 @@ class Google:
         if response.status_code == 200:
             return self._slice(response.text, index)
 
-    def search(self, url):
+    def search(self, url) -> GoogleResponse:
         """
         Google
         -----------
