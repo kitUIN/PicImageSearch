@@ -6,7 +6,7 @@ from PicImageSearch import NetWork, AsyncTraceMoe
 
 
 async def main():
-    async with NetWork() as client:
+    async with NetWork(proxy='http://127.0.0.1:8888') as client:
         tracemoe = AsyncTraceMoe(mute=False, size=None, client=client)
         res = await tracemoe.search('https://trace.moe/img/tinted-good.jpg')  # 搜索网络图片
         # res = await tracemoe.search(r'C:/Users/kulujun/Pictures/1.png')  # 搜索本地图片

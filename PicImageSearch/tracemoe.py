@@ -306,19 +306,15 @@ class TraceMoe:
         return param
 
     def setParams(self, url, anilistID, anilistInfo, cutBorders):
-        params = ""
+        params = {}
         if anilistInfo:
-            params = self._firstIf(params)
-            params += "anilistInfo"
+            params["anilistInfo"] = True
         if cutBorders:
-            params = self._firstIf(params)
-            params += "cutBorders"
+            params["cutBorders"] = True
         if anilistID:
-            params = self._firstIf(params)
-            params += f"anilistID={str(anilistID)}"
+            params["anilistID"] = anilistID
         if url:
-            params = self._firstIf(params)
-            params += f"url={parse.quote_plus(url)}"
+            params["url"] = url
         return params
 
     def search(self, url, key=None, anilistID=None,

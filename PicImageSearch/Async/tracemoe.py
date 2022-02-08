@@ -307,19 +307,15 @@ class AsyncTraceMoe(HandOver):
         return param
 
     def setParams(self, url, anilistID, anilistInfo, cutBorders):
-        params = ""
+        params = {}
         if anilistInfo:
-            params = self._firstIf(params)
-            params += "anilistInfo"
+            params["anilistInfo"] = True
         if cutBorders:
-            params = self._firstIf(params)
-            params += "cutBorders"
+            params["cutBorders"] = True
         if anilistID:
-            params = self._firstIf(params)
-            params += f"anilistID={str(anilistID)}"
+            params["anilistID"] = anilistID
         if url:
-            params = self._firstIf(params)
-            params += f"url={parse.quote_plus(url)}"
+            params["url"] = url
         return params
 
     async def search(self, url, key=None, anilistID=None, chineseTitle=True,
@@ -340,7 +336,6 @@ class AsyncTraceMoe(HandOver):
             if url[:4] == 'http':  # 网络url
                 params = self.setParams(url, anilistID, anilistInfo, cutBorders)
                 res = await self.get(self.TraceMoeURL, _headers=headers, _params=params)
-
             else:  # 是否是本地文件
                 params = self.setParams(None, anilistID, anilistInfo, cutBorders)
                 res = await self.post(self.TraceMoeURL, _headers=headers, _params=params,

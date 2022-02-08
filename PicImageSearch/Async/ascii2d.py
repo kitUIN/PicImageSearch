@@ -26,7 +26,7 @@ class AsyncAscii2D(HandOver):
 
     @staticmethod
     def _slice(res) -> Ascii2DResponse:
-        soup = BeautifulSoup(res, 'html.parser', from_encoding='utf-8')
+        soup = BeautifulSoup(res, 'html.parser')
         resp = soup.find_all(class_='row item-box')
         return Ascii2DResponse(resp)
 

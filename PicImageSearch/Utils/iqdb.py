@@ -78,7 +78,7 @@ class IqdbResponse:
         self._slice(resp)
 
     def _slice(self, data: bytes) -> None:
-        soup: BeautifulSoup = BeautifulSoup(data, "html.parser", from_encoding='utf-8')
+        soup: BeautifulSoup = BeautifulSoup(data, "html.parser")
 
         pages = soup.find(attrs={"class": "pages"})
         for i in pages:
