@@ -1,11 +1,8 @@
-import requests
-import urllib3
 import cloudscraper
 from bs4 import BeautifulSoup
 from loguru import logger
 from requests_toolbelt import MultipartEncoder
-from .Utils import Ascii2DResponse
-import hashlib
+from .Utils import Ascii2DResponse, get_error_message
 
 
 class Ascii2D:
@@ -17,44 +14,19 @@ class Ascii2D:
 
     Params Keys
     -----------
-    **requests_kwargs:   proxy settings.\n
-    bovw(boolean):   use ascii2d bovw search\n
-    default True (you can make it False to shorten the time
+    :param **requests_kwargs:   proxy settings.\n
+    :param bovw(boolean):   use ascii2d bovw search, default False \n
     """
 
-    def __init__(self, bovw=True, **requests_kwargs):
-        """
-
-        :param **requests_kwargs: proxy settings
-        :param bovw: use ascii2d bovw search,boolean, default True (you can make it False to shorten the time
-        """
+    def __init__(self, bovw=False, **requests_kwargs):
         self.requests_kwargs = requests_kwargs
         self.bovw = bovw
 
     @staticmethod
-    def _slice(res):
+    def _slice(res) -> Ascii2DResponse:
         soup = BeautifulSoup(res, 'html.parser')
         resp = soup.find_all(class_='row item-box')
         return Ascii2DResponse(resp)
-
-    @staticmethod
-    def _errors(code):
-        if code == 404:
-            return "Source down"
-        elif code == 302:
-            return "Moved temporarily, or blocked by captcha"
-        elif code == 413 or code == 430:
-            return "image too large"
-        elif code == 400:
-            return "Did you have upload the image ?, or wrong request syntax"
-        elif code == 403:
-            return "Forbidden,or token unvalid"
-        elif code == 429:
-            return "Too many request"
-        elif code == 500 or code == 503:
-            return "Server error, or wrong picture format"
-        else:
-            return "Unknown error, please report to the project maintainer"
 
     def search(self, url) -> Ascii2DResponse:
         """
@@ -80,41 +52,33 @@ class Ascii2D:
                                                })
         try:
             if url[:4] == 'http':  # 网络url
-                ASCII2DURL = 'https://ascii2d.net/search/uri'
+                ascii2d_url = 'https://ascii2d.net/search/uri'
                 m = MultipartEncoder(
                     fields={
                         'uri': url
                     }
                 )
             else:  # 是否是本地文件
-                ASCII2DURL = 'https://ascii2d.net/search/file'
+                ascii2d_url = 'https://ascii2d.net/search/file'
                 m = MultipartEncoder(
                     fields={
                         'file': ('filename', open(url, 'rb'), "type=multipart/form-data")
                     }
                 )
             headers = {'Content-Type': m.content_type}
-            urllib3.disable_warnings()
-            res = scraper.post(ASCII2DURL, headers=headers, data=m, **self.requests_kwargs)
-            #logger.info(res.text)
-            if self.bovw and res.status_code == 200:
-                # 如果启用bovw选项，第一次请求是向服务器提交文件
-                if url[:4] == 'http':
-                    res = scraper.get(url, **self.requests_kwargs)
-                    md5hash = hashlib.md5(res.content).hexdigest()
-                    res = scraper.get(f'https://ascii2d.net/search/bovw/{md5hash}', **self.requests_kwargs)
-                else:
-                    with open(url, 'rb') as f:
-                        md5hash = hashlib.md5(f.read()).hexdigest()
-                    res = scraper.get(f'https://ascii2d.net/search/bovw/{md5hash}', **self.requests_kwargs)
-            elif res.status_code != 200:
+            res = scraper.post(ascii2d_url, headers=headers, data=m, **self.requests_kwargs)
+            if res.status_code == 200:
+                if self.bovw:
+                    # 如果启用bovw选项，第一次请求是向服务器提交文件
+                    res = scraper.get(res.url.replace('/color/', '/bovw/'), **self.requests_kwargs)
+            else:
                 logger.error(res.status_code)
-                logger.error(self._errors(res.status_code))
+                logger.error(get_error_message(res.status_code))
 
             if res.status_code == 200:
                 return self._slice(res.text)
             else:
                 logger.error(res.status_code)
-                logger.error(self._errors(res.status_code))
+                logger.error(get_error_message(res.status_code))
         except Exception as e:
             logger.error(e)

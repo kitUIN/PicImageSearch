@@ -2,7 +2,7 @@ from typing import List, Optional
 import requests
 from loguru import logger
 from pathlib import Path
-from urllib import parse
+from .Utils import get_error_message
 
 
 class TraceMoeAnilist:
@@ -265,28 +265,7 @@ class TraceMoe:
     #         # print('本地base64转码~')
     #         return coding.decode()
 
-    @staticmethod
-    def _errors(code):
-        if code == 413:
-            response = '图片体积太大。'
-            return response
-        elif code == 400:
-            response = '你没上传图片？'
-            return response
-        elif code == 403:
-            response = 'token无效。'
-            return response
-        elif code == 429:
-            response = '请求太快了，缓一缓吧。'
-            return response
-        elif code == 500 or code == 503:
-            response = '服务器错误 或者 你传错了图片格式。'
-            return response
-        else:
-            response = '未知错误,请联系开发者'
-            return response
-
-    def me(self, key=None)->TraceMoeMe:  # 获取自己的信息
+    def me(self, key=None) -> TraceMoeMe:  # 获取自己的信息
         try:
             params = None
             if key:
@@ -300,12 +279,14 @@ class TraceMoe:
         except Exception as e:
             logger.info(e)
 
-    def _firstIf(self, param):
+    @staticmethod
+    def _firstIf(param):
         if param != "":
             param += "&"
         return param
 
-    def setParams(self, url, anilistID, anilistInfo, cutBorders):
+    @staticmethod
+    def setParams(url, anilistID, anilistInfo, cutBorders):
         params = {}
         if anilistInfo:
             params["anilistInfo"] = True
@@ -318,7 +299,7 @@ class TraceMoe:
         return params
 
     def search(self, url, key=None, anilistID=None,
-               chineseTitle=True, anilistInfo=True, cutBorders=True)->TraceMoeResponse:
+               chineseTitle=True, anilistInfo=True, cutBorders=True) -> TraceMoeResponse:
         """识别图片
 
         :param key: API密钥 https://soruly.github.io/trace.moe-api/#/limits?id=api-search-quota-and-limits
@@ -340,7 +321,7 @@ class TraceMoe:
                     data = res.json()
                     return TraceMoeResponse(data, chineseTitle, self.mute, self.size)
                 else:
-                    logger.error(self._errors(res.status_code))
+                    logger.error(get_error_message(res.status_code))
             else:  # 是否是本地文件
                 params = self.setParams(None, anilistID, anilistInfo, cutBorders)
                 res = requests.post(self.TraceMoeURL, headers=headers, params=params,
@@ -349,6 +330,6 @@ class TraceMoe:
                     data = res.json()
                     return TraceMoeResponse(data, chineseTitle, self.mute, self.size)
                 else:
-                    logger.error(self._errors(res.status_code))
+                    logger.error(get_error_message(res.status_code))
         except Exception as e:
             logger.info(e)

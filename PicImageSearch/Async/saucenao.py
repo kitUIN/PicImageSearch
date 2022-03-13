@@ -1,14 +1,12 @@
-from typing import Coroutine, Any
-
 from loguru import logger
-from requests_toolbelt import MultipartEncoder
 
 from .network import HandOver
 from PicImageSearch.Utils import SauceNAOResponse
 
+from ..Utils import get_error_message
+
 
 class AsyncSauceNAO(HandOver):
-    SauceNAOURL = 'https://saucenao.com/search.php'
 
     def __init__(self, api_key: str = None, *, numres: int = 5, hide: int = 1, minsim: int = 30, output_type: int = 2,
                  testmode: int = 0, dbmask: int = None, dbmaski: int = None, db: int = 999, **requests_kwargs) -> None:
@@ -33,6 +31,7 @@ class AsyncSauceNAO(HandOver):
         """
         # minsim 控制最小相似度
         super().__init__(**requests_kwargs)
+        self.url = 'https://saucenao.com/search.php'
         self.requests_kwargs = requests_kwargs
         params = {
             'testmode': testmode,
@@ -49,25 +48,6 @@ class AsyncSauceNAO(HandOver):
         if dbmaski is not None:
             params['dbmaski'] = dbmaski
         self.params = params
-
-    @staticmethod
-    def _errors(code):
-        if code == 404:
-            return "Source down"
-        elif code == 302:
-            return "Moved temporarily, or blocked by captcha"
-        elif code == 413 or code == 430:
-            return "image too large"
-        elif code == 400:
-            return "Did you have upload the image ?, or wrong request syntax"
-        elif code == 403:
-            return "Forbidden,or token unvalid"
-        elif code == 429:
-            return "Too many request"
-        elif code == 500 or code == 503:
-            return "Server error, or wrong picture format"
-        else:
-            return "Unknown error, please report to the project maintainer"
 
     async def search(self, url: str) -> SauceNAOResponse:
         """
@@ -104,14 +84,14 @@ class AsyncSauceNAO(HandOver):
             m = None
             if url[:4] == 'http':  # 网络url
                 params['url'] = url
-                resp = await self.post(self.SauceNAOURL, _headers=headers, _data=m, _params=params)
+                resp = await self.post(self.url, _headers=headers, _data=m, _params=params)
             else:  # 文件
-                resp = await self.post(self.SauceNAOURL, _headers=headers, _params=params,
+                resp = await self.post(self.url, _headers=headers, _params=params,
                                        _files={'file': open(url, 'rb')})
             if resp.status_code == 200:
                 data = resp.json()
                 return SauceNAOResponse(data)
             else:
-                logger.error(self._errors(resp.status_code))
+                logger.error(get_error_message(resp.status_code))
         except Exception as e:
             logger.info(e)

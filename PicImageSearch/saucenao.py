@@ -1,12 +1,10 @@
 import requests
-import urllib3
 from loguru import logger
 from requests_toolbelt import MultipartEncoder
-from .Utils import SauceNAOResponse
+from .Utils import SauceNAOResponse, get_error_message
 
 
 class SauceNAO:
-    SauceNAOURL = 'https://saucenao.com/search.php'
 
     def __init__(self,
                  api_key: str = None,
@@ -40,6 +38,7 @@ class SauceNAO:
         :param hide:(int) result hiding control, none=0, clear return value (default)=1, suspect return value=2, all return value=3
         """
         # minsim 控制最小相似度
+        self.url = 'https://saucenao.com/search.php'
         self.requests_kwargs = requests_kwargs
         params = {
             'testmode': testmode,
@@ -56,25 +55,6 @@ class SauceNAO:
         if dbmaski is not None:
             params['dbmaski'] = dbmaski
         self.params = params
-
-    @staticmethod
-    def _errors(code):
-        if code == 404:
-            return "Source down"
-        elif code == 302:
-            return "Moved temporarily, or blocked by captcha"
-        elif code == 413 or code == 430:
-            return "image too large"
-        elif code == 400:
-            return "Did you have upload the image ?, or wrong request syntax"
-        elif code == 403:
-            return "Forbidden,or token unvalid"
-        elif code == 429:
-            return "Too many request"
-        elif code == 500 or code == 503:
-            return "Server error, or wrong picture format"
-        else:
-            return "Unknown error, please report to the project maintainer"
 
     def search(self, url: str) -> SauceNAOResponse:
         """
@@ -114,13 +94,12 @@ class SauceNAO:
             else:  # 文件
                 m = MultipartEncoder(fields={'file': ('filename', open(url, 'rb'), "type=multipart/form-data")})
                 headers = {'Content-Type': m.content_type}
-            urllib3.disable_warnings()
-            resp = requests.post(self.SauceNAOURL, headers=headers, data=m, params=params, verify=False,
+            resp = requests.post(self.url, headers=headers, data=m, params=params, verify=False,
                                  **self.requests_kwargs)
             if resp.status_code == 200:
                 data = resp.json()
                 return SauceNAOResponse(data)
             else:
-                logger.error(self._errors(resp.status_code))
+                logger.error(get_error_message(resp.status_code))
         except Exception as e:
             logger.info(e)

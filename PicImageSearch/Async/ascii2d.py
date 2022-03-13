@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from loguru import logger
 
 from .network import HandOver
-from PicImageSearch.Utils import Ascii2DResponse
+from ..Utils import Ascii2DResponse, get_error_message
 
 
 class AsyncAscii2D(HandOver):
@@ -28,25 +28,6 @@ class AsyncAscii2D(HandOver):
         soup = BeautifulSoup(res, 'html.parser')
         resp = soup.find_all(class_='row item-box')
         return Ascii2DResponse(resp)
-
-    @staticmethod
-    def _errors(code):
-        if code == 404:
-            return "Source down"
-        elif code == 302:
-            return "Moved temporarily, or blocked by captcha"
-        elif code == 413 or code == 430:
-            return "image too large"
-        elif code == 400:
-            return "Did you have upload the image ?, or wrong request syntax"
-        elif code == 403:
-            return "Forbidden,or token unvalid"
-        elif code == 429:
-            return "Too many request"
-        elif code == 500 or code == 503:
-            return "Server error, or wrong picture format"
-        else:
-            return "Unknown error, please report to the project maintainer"
 
     async def search(self, url) -> Ascii2DResponse:
         """
@@ -80,12 +61,12 @@ class AsyncAscii2D(HandOver):
                     res = await self.get(str(res.url).replace('/color/', '/bovw/'))
             else:
                 logger.error(res.status_code)
-                logger.error(self._errors(res.status_code))
+                logger.error(get_error_message(res.status_code))
 
             if res.status_code == 200:
                 return self._slice(res.text)
             else:
                 logger.error(res.status_code)
-                logger.error(self._errors(res.status_code))
+                logger.error(get_error_message(res.status_code))
         except Exception as e:
             logger.error(e)

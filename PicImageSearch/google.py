@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from loguru import logger
 from urllib.parse import quote
 from PicImageSearch.Utils import GoogleResponse
+from .Utils import get_error_message
 
 
 class Google:
@@ -17,34 +18,14 @@ class Google:
     :param **requests_kwargs: proxy settings
     """
 
-    GOOGLEURL = 'https://www.google.com/searchbyimage'
-
     def __init__(self, **request_kwargs):
         params = dict()
+        self.url = 'https://www.google.com/searchbyimage'
         self.params = params
         self.header = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0',
         }
         self.requests_kwargs = request_kwargs
-
-    @staticmethod
-    def _errors(code):
-        if code == 404:
-            return "Source down"
-        elif code == 302:
-            return "Moved temporarily, or blocked by captcha"
-        elif code == 413 or code == 430:
-            return "image too large"
-        elif code == 400:
-            return "Did you have upload the image ?, or wrong request syntax"
-        elif code == 403:
-            return "Forbidden,or token unvalid"
-        elif code == 429:
-            return "Too many request"
-        elif code == 500 or code == 503:
-            return "Server error, or wrong picture format"
-        else:
-            return "Unknown error, please report to the project maintainer"
 
     @staticmethod
     def _slice(res, index):
@@ -77,18 +58,18 @@ class Google:
         try:
             params = self.params
             if url[:4] == 'http':
-                urlimage_encd = quote(url, safe='')
-                params['image_url'] = urlimage_encd
+                encoded_image_url = quote(url, safe='')
+                params['image_url'] = encoded_image_url
                 response = requests.get(
-                    self.GOOGLEURL, params=params, headers=self.header, **self.requests_kwargs)
+                    self.url, params=params, headers=self.header, **self.requests_kwargs)
             else:
                 multipart = {'encoded_image': (
                     url, open(url, 'rb'))}
                 response = requests.post(
-                    f"{self.GOOGLEURL}/upload", files=multipart, headers=self.header, **self.requests_kwargs)
+                    f"{self.url}/upload", files=multipart, headers=self.header, **self.requests_kwargs)
             if response.status_code == 200:
                 return self._slice(response.text, 1)
             else:
-                logger.error(self._errors(response.status_code))
+                logger.error(get_error_message(response.status_code))
         except Exception as e:
             logger.error(e)
