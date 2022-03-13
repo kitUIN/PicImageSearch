@@ -1,8 +1,5 @@
-import requests
-import urllib3
 from bs4 import BeautifulSoup
 from loguru import logger
-from requests_toolbelt import MultipartEncoder
 
 from .network import HandOver
 from PicImageSearch.Utils import Ascii2DResponse
@@ -17,12 +14,14 @@ class AsyncAscii2D(HandOver):
 
     Params Keys
     -----------
-    :param **requests_kwargs: proxy settings
+    :param **requests_kwargs:   proxy settings.\n
+    :param bovw(boolean):   use ascii2d bovw search, default False \n
     """
 
-    def __init__(self, **requests_kwargs):
+    def __init__(self, bovw=False, **requests_kwargs):
         super().__init__(**requests_kwargs)
         self.requests_kwargs = requests_kwargs
+        self.bovw = bovw
 
     @staticmethod
     def _slice(res) -> Ascii2DResponse:
@@ -69,11 +68,19 @@ class AsyncAscii2D(HandOver):
         """
         try:
             if url[:4] == 'http':  # 网络url
-                ASCII2DURL = 'https://ascii2d.net/search/uri'
-                res = await self.post(ASCII2DURL, _data={"uri": url})
+                ascii2d_url = 'https://ascii2d.net/search/uri'
+                res = await self.post(ascii2d_url, _data={"uri": url})
             else:  # 是否是本地文件
-                ASCII2DURL = 'https://ascii2d.net/search/file'
-                res = await self.post(ASCII2DURL, _files={"file": open(url, 'rb')})
+                ascii2d_url = 'https://ascii2d.net/search/file'
+                res = await self.post(ascii2d_url, _files={"file": open(url, 'rb')})
+
+            if res.status_code == 200:
+                if self.bovw:
+                    # 如果启用bovw选项，第一次请求是向服务器提交文件
+                    res = await self.get(str(res.url).replace('/color/', '/bovw/'))
+            else:
+                logger.error(res.status_code)
+                logger.error(self._errors(res.status_code))
 
             if res.status_code == 200:
                 return self._slice(res.text)
