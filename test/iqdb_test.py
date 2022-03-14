@@ -8,7 +8,7 @@ _REQUESTS_KWARGS = {
     # 如果需要代理
 }
 iqdb = Iqdb()
-res = iqdb.search(r'https://pixiv.cat/77702503-1.jpg')
+res = iqdb.search(r"https://pixiv.cat/77702503-1.jpg")
 
 # logger.info(res.origin)
 # logger.info(res.raw)
@@ -24,6 +24,3 @@ logger.info("Ascii2d搜图链接:   " + res.ascii2d)
 logger.info("TinEye搜图链接:    " + res.tineye)
 logger.info("Google搜图链接:    " + res.google)
 logger.info("相似度低的结果:    " + str(res.more))
-
-
-

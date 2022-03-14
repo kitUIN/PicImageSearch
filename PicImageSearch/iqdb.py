@@ -2,8 +2,8 @@ import requests
 from loguru import logger
 from requests_toolbelt import MultipartEncoder
 
-from .Utils.iqdb import IqdbResponse
 from .Utils import get_error_message
+from .Utils.iqdb import IqdbResponse
 
 
 class Iqdb:
@@ -19,8 +19,8 @@ class Iqdb:
     """
 
     def __init__(self, **requests_kwargs):
-        self.url = 'https://www.iqdb.org/'
-        self.url_3d = 'https://3d.iqdb.org/'
+        self.url = "https://www.iqdb.org/"
+        self.url_3d = "https://3d.iqdb.org/"
         self.requests_kwargs = requests_kwargs
 
     def search(self, url) -> IqdbResponse:
@@ -49,18 +49,20 @@ class Iqdb:
 
         """
         try:
-            if url[:4] == 'http':  # 网络url
-                datas = {
-                    "url": url
-                }
+            if url[:4] == "http":  # 网络url
+                datas = {"url": url}
                 res = requests.post(self.url, data=datas, **self.requests_kwargs)
             else:  # 是否是本地文件
                 m = MultipartEncoder(
                     fields={
-                        'file': ('filename', open(url, 'rb'), "type=multipart/form-data")
+                        "file": (
+                            "filename",
+                            open(url, "rb"),
+                            "type=multipart/form-data",
+                        )
                     }
                 )
-                headers = {'Content-Type': m.content_type}
+                headers = {"Content-Type": m.content_type}
                 res = requests.post(self.url, headers=headers, **self.requests_kwargs)
             if res.status_code == 200:
                 # logger.info(res.text)
@@ -75,7 +77,7 @@ class Iqdb:
         Iqdb 3D
         -----------
         Reverse image from https://3d.iqdb.org\n
-        
+
 
         Return Attributes
         -----------
@@ -89,19 +91,23 @@ class Iqdb:
         • .raw[0].size = First index detail of image size that was found
         """
         try:
-            if url[:4] == 'http':  # 网络url
-                datas = {
-                    "url": url
-                }
+            if url[:4] == "http":  # 网络url
+                datas = {"url": url}
                 res = requests.post(self.url_3d, data=datas, **self.requests_kwargs)
             else:  # 是否是本地文件
                 m = MultipartEncoder(
                     fields={
-                        'file': ('filename', open(url, 'rb'), "type=multipart/form-data")
+                        "file": (
+                            "filename",
+                            open(url, "rb"),
+                            "type=multipart/form-data",
+                        )
                     }
                 )
-                headers = {'Content-Type': m.content_type}
-                res = requests.post(self.url_3d, headers=headers, **self.requests_kwargs)
+                headers = {"Content-Type": m.content_type}
+                res = requests.post(
+                    self.url_3d, headers=headers, **self.requests_kwargs
+                )
             if res.status_code == 200:
                 return IqdbResponse(res.content)
             else:
