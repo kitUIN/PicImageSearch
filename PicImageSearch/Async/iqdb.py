@@ -1,7 +1,8 @@
 from loguru import logger
-from .network import HandOver
 from PicImageSearch.Utils.iqdb import IqdbResponse
+
 from ..Utils import get_error_message
+from .network import HandOver
 
 
 class AsyncIqdb(HandOver):
@@ -19,8 +20,8 @@ class AsyncIqdb(HandOver):
     def __init__(self, **requests_kwargs):
         super().__init__(**requests_kwargs)
         self.requests_kwargs = requests_kwargs
-        self.url = 'https://www.iqdb.org/'
-        self.url_3d = 'https://3d.iqdb.org/'
+        self.url = "https://www.iqdb.org/"
+        self.url_3d = "https://3d.iqdb.org/"
 
     async def search(self, url) -> IqdbResponse:
         """
@@ -49,14 +50,11 @@ class AsyncIqdb(HandOver):
         """
         try:
 
-            if url[:4] == 'http':  # 网络url
-                datas = {
-                    "url": url
-                }
+            if url[:4] == "http":  # 网络url
+                datas = {"url": url}
                 res = await self.post(self.url, _data=datas)
             else:  # 是否是本地文件
-                res = await self.post(self.url,
-                                      _files={'file': open(url, 'rb')})
+                res = await self.post(self.url, _files={"file": open(url, "rb")})
             if res.status_code == 200:
                 # logger.info(res.text)
                 return IqdbResponse(res.content)
@@ -84,14 +82,11 @@ class AsyncIqdb(HandOver):
         • .raw[0].size = First index detail of image size that was found
         """
         try:
-            if url[:4] == 'http':  # 网络url
-                datas = {
-                    "url": url
-                }
+            if url[:4] == "http":  # 网络url
+                datas = {"url": url}
                 res = await self.post(self.url_3d, _data=datas)
             else:  # 是否是本地文件
-                res = await self.post(self.url_3d,
-                                      _files={'file': open(url, 'rb')})
+                res = await self.post(self.url_3d, _files={"file": open(url, "rb")})
             if res.status_code == 200:
                 return IqdbResponse(res.content)
             else:

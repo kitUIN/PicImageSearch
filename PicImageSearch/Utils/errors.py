@@ -8,7 +8,7 @@ def get_error_message(code: int) -> str:
     elif code == 400:
         return "Did you have upload the image ?, or wrong request syntax"
     elif code == 403:
-        return "Forbidden,or token unvalid"
+        return "Forbidden,or token invalid"
     elif code == 429:
         return "Too many request"
     elif code == 500 or code == 503:

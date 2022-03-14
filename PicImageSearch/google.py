@@ -1,8 +1,10 @@
+from urllib.parse import quote
+
 import requests
 from bs4 import BeautifulSoup
 from loguru import logger
-from urllib.parse import quote
 from PicImageSearch.Utils import GoogleResponse
+
 from .Utils import get_error_message
 
 
@@ -20,17 +22,17 @@ class Google:
 
     def __init__(self, **request_kwargs):
         params = dict()
-        self.url = 'https://www.google.com/searchbyimage'
+        self.url = "https://www.google.com/searchbyimage"
         self.params = params
         self.header = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0',
+            "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0",
         }
         self.requests_kwargs = request_kwargs
 
     @staticmethod
     def _slice(res, index):
-        soup = BeautifulSoup(res, 'html.parser')
-        resp = soup.find_all(class_='g')
+        soup = BeautifulSoup(res, "html.parser")
+        resp = soup.find_all(class_="g")
         pages = soup.find_all("td")
         return GoogleResponse(resp, pages[1:], index)
 
@@ -57,16 +59,20 @@ class Google:
         """
         try:
             params = self.params
-            if url[:4] == 'http':
-                encoded_image_url = quote(url, safe='')
-                params['image_url'] = encoded_image_url
+            if url[:4] == "http":
+                encoded_image_url = quote(url, safe="")
+                params["image_url"] = encoded_image_url
                 response = requests.get(
-                    self.url, params=params, headers=self.header, **self.requests_kwargs)
+                    self.url, params=params, headers=self.header, **self.requests_kwargs
+                )
             else:
-                multipart = {'encoded_image': (
-                    url, open(url, 'rb'))}
+                multipart = {"encoded_image": (url, open(url, "rb"))}
                 response = requests.post(
-                    f"{self.url}/upload", files=multipart, headers=self.header, **self.requests_kwargs)
+                    f"{self.url}/upload",
+                    files=multipart,
+                    headers=self.header,
+                    **self.requests_kwargs,
+                )
             if response.status_code == 200:
                 return self._slice(response.text, 1)
             else:

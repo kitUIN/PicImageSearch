@@ -1,13 +1,12 @@
 import re
-from typing import Optional, Dict, List
+from typing import List
 
 from bs4 import BeautifulSoup
-from bs4.element import Tag, NavigableString
-from loguru import logger
+from bs4.element import NavigableString, Tag
 
 
 class IqdbNorm:
-    _URL = 'http://www.iqdb.org'
+    iqdb_url = "https://www.iqdb.org"
 
     def __init__(self, data: Tag, isnot_more: bool = True):
         self.isnot_more: bool = isnot_more
@@ -29,7 +28,7 @@ class IqdbNorm:
         self._arrange(data.table)
 
     def _arrange(self, data: Tag):
-        REGEXIQ = re.compile("[0-9]+")
+        regex_iq = re.compile("[0-9]+")
         if self.isnot_more:
             self.content = data.tr.th.string
             if self.content == "No relevant matches":
@@ -38,24 +37,32 @@ class IqdbNorm:
             tbody = data.tr.next_sibling
         else:
             tbody = data.tr
-        self.url = tbody.td.a['href'] if tbody.td.a['href'][:4] == "http" else "https:" + tbody.td.a['href']
-        self.thumbnail = self._URL + tbody.td.a.img['src']
+        self.url = (
+            tbody.td.a["href"]
+            if tbody.td.a["href"][:4] == "http"
+            else "https:" + tbody.td.a["href"]
+        )
+        self.thumbnail = self.iqdb_url + tbody.td.a.img["src"]
         tbody = tbody.next_sibling
         source = [stt for stt in tbody.td.strings]
         if len(source) > 1:
-            self.other_source.append({"source": source[1],
-                                      "url": tbody.td.a['href'] if tbody.td.a['href'][:4] == "http" else "https:" +
-                                                                                                         tbody.td.a[
-                                                                                                             'href']})
+            self.other_source.append(
+                {
+                    "source": source[1],
+                    "url": tbody.td.a["href"]
+                    if tbody.td.a["href"][:4] == "http"
+                    else "https:" + tbody.td.a["href"],
+                }
+            )
         tbody = tbody.next_sibling
         self.size = tbody.td.string
-        similarity_raw = REGEXIQ.search(tbody.next_sibling.td.string)
+        similarity_raw = regex_iq.search(tbody.next_sibling.td.string)
         if similarity_raw:
             self.similarity = similarity_raw.group(0) + "%"
         self.source = source[0]
 
     def __repr__(self):
-        return f'<NormIqdb(content={repr(self.content)}, title={repr(self.source)}, similarity={repr(self.similarity)}>'
+        return f"<NormIqdb(content={repr(self.content)}, title={repr(self.source)}, similarity={repr(self.similarity)}>"
 
 
 class IqdbResponse:
@@ -82,7 +89,7 @@ class IqdbResponse:
 
         pages = soup.find(attrs={"class": "pages"})
         for i in pages:
-            if i == '\n' or str(i) == '<br/>' or 'Your image' in str(i):
+            if i == "\n" or str(i) == "<br/>" or "Your image" in str(i):
                 continue
             # logger.info(i)
             self.raw.append(IqdbNorm(i))
@@ -110,4 +117,4 @@ class IqdbResponse:
                     self.tineye = "https:" + j["href"]
 
     def __repr__(self):
-        return f'<IqdbResponse(count={repr(len(self.raw))})>'
+        return f"<IqdbResponse(count={repr(len(self.raw))})>"

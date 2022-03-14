@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
 from loguru import logger
 
-from .network import HandOver
 from ..Utils import Ascii2DResponse, get_error_message
+from .network import HandOver
 
 
 class AsyncAscii2D(HandOver):
@@ -25,8 +25,8 @@ class AsyncAscii2D(HandOver):
 
     @staticmethod
     def _slice(res) -> Ascii2DResponse:
-        soup = BeautifulSoup(res, 'html.parser')
-        resp = soup.find_all(class_='row item-box')
+        soup = BeautifulSoup(res, "html.parser")
+        resp = soup.find_all(class_="row item-box")
         return Ascii2DResponse(resp)
 
     async def search(self, url) -> Ascii2DResponse:
@@ -48,17 +48,17 @@ class AsyncAscii2D(HandOver):
         • .raw[0].detail = First index of details image that was found
         """
         try:
-            if url[:4] == 'http':  # 网络url
-                ascii2d_url = 'https://ascii2d.net/search/uri'
+            if url[:4] == "http":  # 网络url
+                ascii2d_url = "https://ascii2d.net/search/uri"
                 res = await self.post(ascii2d_url, _data={"uri": url})
             else:  # 是否是本地文件
-                ascii2d_url = 'https://ascii2d.net/search/file'
-                res = await self.post(ascii2d_url, _files={"file": open(url, 'rb')})
+                ascii2d_url = "https://ascii2d.net/search/file"
+                res = await self.post(ascii2d_url, _files={"file": open(url, "rb")})
 
             if res.status_code == 200:
                 if self.bovw:
                     # 如果启用bovw选项，第一次请求是向服务器提交文件
-                    res = await self.get(str(res.url).replace('/color/', '/bovw/'))
+                    res = await self.get(str(res.url).replace("/color/", "/bovw/"))
             else:
                 logger.error(res.status_code)
                 logger.error(get_error_message(res.status_code))

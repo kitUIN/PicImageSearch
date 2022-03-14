@@ -1,8 +1,7 @@
 import asyncio
 
 from loguru import logger
-
-from PicImageSearch import NetWork, AsyncIqdb
+from PicImageSearch import AsyncIqdb, NetWork
 
 
 async def main():
@@ -24,7 +23,6 @@ async def main():
         logger.info("Google搜图链接:    " + res.google)
         logger.info("相似度低的结果:    " + str(res.more))
 
+
 loop = asyncio.new_event_loop()
 loop.run_until_complete(main())
-
-

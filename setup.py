@@ -1,13 +1,16 @@
 import setuptools
 
-requirements = [requirement.strip() for requirement in open('requirements.txt', 'r', encoding='utf-8').readlines()]
+requirements = [
+    requirement.strip()
+    for requirement in open("requirements.txt", "r", encoding="utf-8").readlines()
+]
 
-with open("README.md", "r", encoding='utf-8') as fh:
+with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="PicImageSearch",
-    version='2.2.7',
+    version="2.2.7",
     author="kitUIN",
     author_email="kulujun@gmail.com",
     description="PicImageSearch APIs for Python 3.x 适用于 Python 3 以图搜源整合API",
@@ -19,6 +22,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-    ], install_requires=requirements,
-    python_requires='>=3.6',
+    ],
+    install_requires=requirements,
+    python_requires=">=3.6",
 )

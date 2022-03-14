@@ -1,24 +1,25 @@
 import requests
 from loguru import logger
 from requests_toolbelt import MultipartEncoder
+
 from .Utils import SauceNAOResponse, get_error_message
 
 
 class SauceNAO:
-
-    def __init__(self,
-                 api_key: str = None,
-                 *,
-                 numres: int = 5,
-                 hide: int = 1,
-                 minsim: int = 30,
-                 output_type: int = 2,
-                 testmode: int = 0,
-                 dbmask: int = None,
-                 dbmaski: int = None,
-                 db: int = 999,
-                 **requests_kwargs
-                 ) -> None:
+    def __init__(
+        self,
+        api_key: str = None,
+        *,
+        numres: int = 5,
+        hide: int = 1,
+        minsim: int = 30,
+        output_type: int = 2,
+        testmode: int = 0,
+        dbmask: int = None,
+        dbmaski: int = None,
+        db: int = 999,
+        **requests_kwargs
+    ) -> None:
         """
         SauceNAO
         -----------
@@ -38,22 +39,22 @@ class SauceNAO:
         :param hide:(int) result hiding control, none=0, clear return value (default)=1, suspect return value=2, all return value=3
         """
         # minsim 控制最小相似度
-        self.url = 'https://saucenao.com/search.php'
+        self.url = "https://saucenao.com/search.php"
         self.requests_kwargs = requests_kwargs
         params = {
-            'testmode': testmode,
-            'numres': numres,
-            'output_type': output_type,
-            'hide': hide,
-            'db': db,
-            'minsim': minsim
+            "testmode": testmode,
+            "numres": numres,
+            "output_type": output_type,
+            "hide": hide,
+            "db": db,
+            "minsim": minsim,
         }
         if api_key is not None:
-            params['api_key'] = api_key
+            params["api_key"] = api_key
         if dbmask is not None:
-            params['dbmask'] = dbmask
+            params["dbmask"] = dbmask
         if dbmaski is not None:
-            params['dbmaski'] = dbmaski
+            params["dbmaski"] = dbmaski
         self.params = params
 
     def search(self, url: str) -> SauceNAOResponse:
@@ -82,20 +83,34 @@ class SauceNAO:
         Params Keys
         -----------
         :param url: network address or local
-        
+
         further documentation visit https://saucenao.com/user.php?page=search-api
         """
         try:
             params = self.params
             headers = {}
             m = None
-            if url[:4] == 'http':  # 网络url
-                params['url'] = url
+            if url[:4] == "http":  # 网络url
+                params["url"] = url
             else:  # 文件
-                m = MultipartEncoder(fields={'file': ('filename', open(url, 'rb'), "type=multipart/form-data")})
-                headers = {'Content-Type': m.content_type}
-            resp = requests.post(self.url, headers=headers, data=m, params=params, verify=False,
-                                 **self.requests_kwargs)
+                m = MultipartEncoder(
+                    fields={
+                        "file": (
+                            "filename",
+                            open(url, "rb"),
+                            "type=multipart/form-data",
+                        )
+                    }
+                )
+                headers = {"Content-Type": m.content_type}
+            resp = requests.post(
+                self.url,
+                headers=headers,
+                data=m,
+                params=params,
+                verify=False,
+                **self.requests_kwargs
+            )
             if resp.status_code == 200:
                 data = resp.json()
                 return SauceNAOResponse(data)

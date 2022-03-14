@@ -6,7 +6,15 @@ import httpx
 
 
 class NetWork:
-    def __init__(self, limit=30, max_connections=100, timeout=20, env=False, internal=False, proxy=None):
+    def __init__(
+        self,
+        limit=30,
+        max_connections=100,
+        timeout=20,
+        env=False,
+        internal=False,
+        proxy=None,
+    ):
         """
 
         :param limit:
@@ -22,8 +30,10 @@ class NetWork:
             verify=False,
             timeout=httpx.Timeout(timeout, connect=60),
             proxies=self.proxy,
-            limits=httpx.Limits(max_keepalive_connections=limit, max_connections=max_connections),
-            trust_env=env
+            limits=httpx.Limits(
+                max_keepalive_connections=limit, max_connections=max_connections
+            ),
+            trust_env=env,
         )
 
     def start(self):
@@ -55,9 +65,8 @@ class ClientManager:
             return self.session
 
     async def __aexit__(self, exception_type, exception_value, traceback):
-        if isinstance(self.session, NetWork):
-            if self.session.internal:
-                await self.session.close()
+        if isinstance(self.session, NetWork) and self.session.internal:
+            await self.session.close()
 
 
 class HandOver(object):
@@ -73,25 +82,33 @@ class HandOver(object):
             await asyncio.sleep(0)
             return res
 
-    async def post(self, _url, _headers=None, _params=None, _data=None, _json=None, _files=None):
+    async def post(
+        self, _url, _headers=None, _params=None, _data=None, _json=None, _files=None
+    ):
         async with ClientManager(self.session, self.env, self.proxy) as session:
             if _json:
-                res = await session.post(_url, headers=_headers, params=_params, json=_json)
+                res = await session.post(
+                    _url, headers=_headers, params=_params, json=_json
+                )
             elif _files:
-                res = await session.post(_url, headers=_headers, params=_params, files=_files)
+                res = await session.post(
+                    _url, headers=_headers, params=_params, files=_files
+                )
             else:
-                res = await session.post(_url, headers=_headers, params=_params, data=_data)
+                res = await session.post(
+                    _url, headers=_headers, params=_params, data=_data
+                )
             await asyncio.sleep(0)
             return res
 
-    async def downloader(self, url='', path=None, filename=''):  # 下载器
+    async def downloader(self, url="", path=None, filename=""):  # 下载器
         async with ClientManager(self.session, self.env, self.proxy) as session:
             async with session.stream("GET", url=url) as r:
                 if path:
                     file = Path(path).joinpath(filename)
                 else:
                     file = Path().cwd().joinpath(filename)
-                async with aiofiles.open(file, 'wb') as out_file:
+                async with aiofiles.open(file, "wb") as out_file:
                     async for chunk in r.aiter_bytes():
                         await out_file.write(chunk)
                 return file

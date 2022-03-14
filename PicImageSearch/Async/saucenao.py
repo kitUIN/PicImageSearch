@@ -1,15 +1,25 @@
 from loguru import logger
-
-from .network import HandOver
 from PicImageSearch.Utils import SauceNAOResponse
 
 from ..Utils import get_error_message
+from .network import HandOver
 
 
 class AsyncSauceNAO(HandOver):
-
-    def __init__(self, api_key: str = None, *, numres: int = 5, hide: int = 1, minsim: int = 30, output_type: int = 2,
-                 testmode: int = 0, dbmask: int = None, dbmaski: int = None, db: int = 999, **requests_kwargs) -> None:
+    def __init__(
+        self,
+        api_key: str = None,
+        *,
+        numres: int = 5,
+        hide: int = 1,
+        minsim: int = 30,
+        output_type: int = 2,
+        testmode: int = 0,
+        dbmask: int = None,
+        dbmaski: int = None,
+        db: int = 999,
+        **requests_kwargs
+    ) -> None:
         """
         SauceNAO
         -----------
@@ -18,7 +28,6 @@ class AsyncSauceNAO(HandOver):
 
         Params Keys
         -----------
-
         :param api_key: (str) Access key for SauceNAO (default=None)
         :param output_type:(int) 0=normal (default) html 1=xml api (not implemented) 2=json api default=2
         :param testmode:(int) Test mode 0=normal 1=test (default=0)
@@ -31,22 +40,22 @@ class AsyncSauceNAO(HandOver):
         """
         # minsim 控制最小相似度
         super().__init__(**requests_kwargs)
-        self.url = 'https://saucenao.com/search.php'
+        self.url = "https://saucenao.com/search.php"
         self.requests_kwargs = requests_kwargs
         params = {
-            'testmode': testmode,
-            'numres': numres,
-            'output_type': output_type,
-            'hide': hide,
-            'db': db,
-            'minsim': minsim
+            "testmode": testmode,
+            "numres": numres,
+            "output_type": output_type,
+            "hide": hide,
+            "db": db,
+            "minsim": minsim,
         }
         if api_key is not None:
-            params['api_key'] = api_key
+            params["api_key"] = api_key
         if dbmask is not None:
-            params['dbmask'] = dbmask
+            params["dbmask"] = dbmask
         if dbmaski is not None:
-            params['dbmaski'] = dbmaski
+            params["dbmaski"] = dbmaski
         self.params = params
 
     async def search(self, url: str) -> SauceNAOResponse:
@@ -82,12 +91,18 @@ class AsyncSauceNAO(HandOver):
             params = self.params
             headers = dict()
             m = None
-            if url[:4] == 'http':  # 网络url
-                params['url'] = url
-                resp = await self.post(self.url, _headers=headers, _data=m, _params=params)
+            if url[:4] == "http":  # 网络url
+                params["url"] = url
+                resp = await self.post(
+                    self.url, _headers=headers, _data=m, _params=params
+                )
             else:  # 文件
-                resp = await self.post(self.url, _headers=headers, _params=params,
-                                       _files={'file': open(url, 'rb')})
+                resp = await self.post(
+                    self.url,
+                    _headers=headers,
+                    _params=params,
+                    _files={"file": open(url, "rb")},
+                )
             if resp.status_code == 200:
                 data = resp.json()
                 return SauceNAOResponse(data)
