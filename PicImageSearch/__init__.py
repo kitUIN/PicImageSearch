@@ -8,5 +8,5 @@ from .Async import *
 
 __author__ = 'kitUIN'
 __license__ = 'MIT License'
-__contributors__ = ['kitUIN', 'lleans',"chinoll"]
+__contributors__ = ['kitUIN', 'lleans',"chinoll","NekoAria"]
 __email__ = 'kulujun@gmail.com'
