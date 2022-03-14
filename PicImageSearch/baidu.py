@@ -1,15 +1,13 @@
 import time
 import requests
-import urllib3
 from requests_toolbelt import MultipartEncoder
 from PicImageSearch.Utils import BaiDuResponse
 
 
-
 class BaiDu:
-    BaiDuUpLoadURL = 'https://graph.baidu.com/upload'
 
     def __init__(self, **requests_kwargs):
+        self.url = 'https://graph.baidu.com/upload'
         self.requests_kwargs = requests_kwargs
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36 Edg/89.0.774.45'
@@ -39,8 +37,7 @@ class BaiDu:
             })
             headers = {'Content-Type': m.content_type,
                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36 Edg/89.0.774.45'}
-        urllib3.disable_warnings()
-        res = requests.post(self.BaiDuUpLoadURL, headers=headers, params=params, data=m, verify=False,
+        res = requests.post(self.url, headers=headers, params=params, data=m, verify=False,
                             **self.requests_kwargs)  # 上传文件
 
         url = res.json()['data']['url']

@@ -1,11 +1,8 @@
-import requests
-import urllib3
 from bs4 import BeautifulSoup
 from loguru import logger
-from requests_toolbelt import MultipartEncoder
 
 from .network import HandOver
-from PicImageSearch.Utils import Ascii2DResponse
+from ..Utils import Ascii2DResponse, get_error_message
 
 
 class AsyncAscii2D(HandOver):
@@ -17,37 +14,20 @@ class AsyncAscii2D(HandOver):
 
     Params Keys
     -----------
-    :param **requests_kwargs: proxy settings
+    :param **requests_kwargs:   proxy settings.\n
+    :param bovw(boolean):   use ascii2d bovw search, default False \n
     """
 
-    def __init__(self, **requests_kwargs):
+    def __init__(self, bovw=False, **requests_kwargs):
         super().__init__(**requests_kwargs)
         self.requests_kwargs = requests_kwargs
+        self.bovw = bovw
 
     @staticmethod
     def _slice(res) -> Ascii2DResponse:
         soup = BeautifulSoup(res, 'html.parser')
         resp = soup.find_all(class_='row item-box')
         return Ascii2DResponse(resp)
-
-    @staticmethod
-    def _errors(code):
-        if code == 404:
-            return "Source down"
-        elif code == 302:
-            return "Moved temporarily, or blocked by captcha"
-        elif code == 413 or code == 430:
-            return "image too large"
-        elif code == 400:
-            return "Did you have upload the image ?, or wrong request syntax"
-        elif code == 403:
-            return "Forbidden,or token unvalid"
-        elif code == 429:
-            return "Too many request"
-        elif code == 500 or code == 503:
-            return "Server error, or wrong picture format"
-        else:
-            return "Unknown error, please report to the project maintainer"
 
     async def search(self, url) -> Ascii2DResponse:
         """
@@ -69,16 +49,24 @@ class AsyncAscii2D(HandOver):
         """
         try:
             if url[:4] == 'http':  # 网络url
-                ASCII2DURL = 'https://ascii2d.net/search/uri'
-                res = await self.post(ASCII2DURL, _data={"uri": url})
+                ascii2d_url = 'https://ascii2d.net/search/uri'
+                res = await self.post(ascii2d_url, _data={"uri": url})
             else:  # 是否是本地文件
-                ASCII2DURL = 'https://ascii2d.net/search/file'
-                res = await self.post(ASCII2DURL, _files={"file": open(url, 'rb')})
+                ascii2d_url = 'https://ascii2d.net/search/file'
+                res = await self.post(ascii2d_url, _files={"file": open(url, 'rb')})
+
+            if res.status_code == 200:
+                if self.bovw:
+                    # 如果启用bovw选项，第一次请求是向服务器提交文件
+                    res = await self.get(str(res.url).replace('/color/', '/bovw/'))
+            else:
+                logger.error(res.status_code)
+                logger.error(get_error_message(res.status_code))
 
             if res.status_code == 200:
                 return self._slice(res.text)
             else:
                 logger.error(res.status_code)
-                logger.error(self._errors(res.status_code))
+                logger.error(get_error_message(res.status_code))
         except Exception as e:
             logger.error(e)
