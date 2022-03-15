@@ -63,7 +63,7 @@ class Iqdb:
                     }
                 )
                 headers = {"Content-Type": m.content_type}
-                res = requests.post(self.url, headers=headers, **self.requests_kwargs)
+                res = requests.post(self.url, headers=headers, data=m, **self.requests_kwargs)
             if res.status_code == 200:
                 # logger.info(res.text)
                 return IqdbResponse(res.content)
@@ -106,7 +106,7 @@ class Iqdb:
                 )
                 headers = {"Content-Type": m.content_type}
                 res = requests.post(
-                    self.url_3d, headers=headers, **self.requests_kwargs
+                    self.url_3d, headers=headers, data=m, **self.requests_kwargs
                 )
             if res.status_code == 200:
                 return IqdbResponse(res.content)
