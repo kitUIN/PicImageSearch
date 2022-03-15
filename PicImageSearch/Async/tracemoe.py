@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List, Optional
 
-import requests
+import httpx
 from loguru import logger
 
 from ..Utils import get_error_message
@@ -199,7 +199,7 @@ class AsyncTraceMoeNorm(HandOver):
 
         url = "https://trace.moe/anilist/"
 
-        response = requests.post(url, json={"query": query, "variables": variables})
+        response = httpx.post(url, json={"query": query, "variables": variables})
         return response.json()
 
     def __repr__(self):
@@ -207,13 +207,13 @@ class AsyncTraceMoeNorm(HandOver):
 
 
 class TraceMoeResponse:
-    def __init__(self, resp, chinese_title, mute, size, **requests_kwargs):
+    def __init__(self, res, chinese_title, mute, size, **requests_kwargs):
         self.requests_kwargs = requests_kwargs
-        self.origin: dict = resp
+        self.origin: dict = res
         """原始数据"""
         self.raw: List[AsyncTraceMoeNorm] = list()
         """结果返回值"""
-        resp_docs = resp["result"]
+        resp_docs = res["result"]
         for i in resp_docs:
             self.raw.append(
                 AsyncTraceMoeNorm(
@@ -226,19 +226,19 @@ class TraceMoeResponse:
             )
         self.count: int = len(self.raw)
         """搜索结果数量"""
-        self.frameCount: int = resp["frameCount"]
+        self.frameCount: int = res["frameCount"]
         """搜索的帧总数"""
-        self.error: str = resp["error"]
+        self.error: str = res["error"]
         """错误报告"""
         # ---------------过时版本-----------------------
-        # self.RawDocsSearchTime: int = resp['RawDocsSearchTime']  # 从数据库检索帧所用的时间
-        # self.ReRankSearchTime: int = resp['ReRankSearchTime']  # 比较帧所用的时间
-        # self.CacheHit: bool = resp['CacheHit']  # 是否缓存搜索结果
-        # self.trial: int = resp['trial']  # 搜索时间
-        # self.limit: int = resp['limit']  # 剩余搜索限制数
-        # self.limit_ttl: int = resp['limit_ttl']  # 限制重置之前的时间（秒）
-        # self.quota: int = resp['quota']  # 剩余搜索配额数
-        # self.quota_ttl: int = resp['quota_ttl']  # 配额重置之前的时间（秒）
+        # self.RawDocsSearchTime: int = res['RawDocsSearchTime']  # 从数据库检索帧所用的时间
+        # self.ReRankSearchTime: int = res['ReRankSearchTime']  # 比较帧所用的时间
+        # self.CacheHit: bool = res['CacheHit']  # 是否缓存搜索结果
+        # self.trial: int = res['trial']  # 搜索时间
+        # self.limit: int = res['limit']  # 剩余搜索限制数
+        # self.limit_ttl: int = res['limit_ttl']  # 限制重置之前的时间（秒）
+        # self.quota: int = res['quota']  # 剩余搜索配额数
+        # self.quota_ttl: int = res['quota_ttl']  # 配额重置之前的时间（秒）
 
     def __repr__(self):
         return f"<TraceMoeResponse(count={repr(len(self.raw))}, frameCount={repr(self.frameCount)}"

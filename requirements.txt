@@ -1,8 +1,5 @@
-beautifulsoup4==4.9.3
-loguru==0.5.3
-requests==2.23.0
-requests-toolbelt==0.9.1
-aiofiles~=0.7.0
-httpx~=0.18.2
+aiofiles~=0.8.0
+beautifulsoup4~=4.10.0
+httpx~=0.22.0
+loguru~=0.6.0
 pathlib~=1.0.1
-cloudscraper~=1.2.58

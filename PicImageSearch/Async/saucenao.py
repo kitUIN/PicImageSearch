@@ -90,23 +90,20 @@ class AsyncSauceNAO(HandOver):
         try:
             params = self.params
             headers = dict()
-            m = None
             if url[:4] == "http":  # 网络url
                 params["url"] = url
-                resp = await self.post(
-                    self.url, _headers=headers, _data=m, _params=params
-                )
+                res = await self.post(self.url, _headers=headers, _params=params)
             else:  # 文件
-                resp = await self.post(
+                res = await self.post(
                     self.url,
                     _headers=headers,
                     _params=params,
                     _files={"file": open(url, "rb")},
                 )
-            if resp.status_code == 200:
-                data = resp.json()
+            if res.status_code == 200:
+                data = res.json()
                 return SauceNAOResponse(data)
             else:
-                logger.error(get_error_message(resp.status_code))
+                logger.error(get_error_message(res.status_code))
         except Exception as e:
             logger.info(e)

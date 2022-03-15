@@ -10,7 +10,7 @@
 ## 支持
 - [x] [SauceNAO](https://saucenao.com/)
 - [x] [TraceMoe](https://trace.moe/) (6月30日更新新的api)
-- [x] [Iqdb](http://www.iqdb.org/)
+- [x] [Iqdb](http://iqdb.org/)
 - [x] [Ascii2D](https://ascii2d.net/)
 - [x] [Google谷歌识图](https://www.google.com/imghp)  
 - [ ] ~~BaiDu百度识图~~无法使用  

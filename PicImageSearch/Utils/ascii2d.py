@@ -57,8 +57,8 @@ class Ascii2DNorm:
 
 
 class Ascii2DResponse:
-    def __init__(self, resp):
-        self.origin: list = resp
+    def __init__(self, res):
+        self.origin: list = res
         """原始返回值"""
         self.raw: List[Ascii2DNorm] = list()
         """结果返回值"""

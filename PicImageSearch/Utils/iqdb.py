@@ -6,7 +6,7 @@ from bs4.element import NavigableString, Tag
 
 
 class IqdbNorm:
-    iqdb_url = "https://www.iqdb.org"
+    iqdb_url = "https://iqdb.org"
 
     def __init__(self, data: Tag, isnot_more: bool = True):
         self.isnot_more: bool = isnot_more
@@ -66,8 +66,8 @@ class IqdbNorm:
 
 
 class IqdbResponse:
-    def __init__(self, resp: bytes):
-        self.origin: bytes = resp
+    def __init__(self, res: bytes):
+        self.origin: bytes = res
         """原始返回值"""
         # logger.info(type(self.origin))
         self.raw: List[IqdbNorm] = list()
@@ -82,7 +82,7 @@ class IqdbResponse:
         """Google搜索链接"""
         self.tineye: str = "None"
         """TinEye搜索链接"""
-        self._slice(resp)
+        self._slice(res)
 
     def _slice(self, data: bytes) -> None:
         soup: BeautifulSoup = BeautifulSoup(data, "html.parser")

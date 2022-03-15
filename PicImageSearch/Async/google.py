@@ -33,9 +33,9 @@ class AsyncGoogle(HandOver):
     @staticmethod
     def _slice(res, index) -> GoogleResponse:
         soup = BeautifulSoup(res, "html.parser")
-        resp = soup.find_all(class_="g")
+        res = soup.find_all(class_="g")
         pages = soup.find_all("td")
-        return GoogleResponse(resp, pages[1:], index)
+        return GoogleResponse(res, pages[1:], index)
 
     async def goto_page(self, url, index):
         response = await self.get(url, _headers=self.header)

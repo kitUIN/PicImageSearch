@@ -1,6 +1,6 @@
 from urllib.parse import quote
 
-import requests
+import httpx
 from bs4 import BeautifulSoup
 from loguru import logger
 from PicImageSearch.Utils import GoogleResponse
@@ -32,12 +32,12 @@ class Google:
     @staticmethod
     def _slice(res, index):
         soup = BeautifulSoup(res, "html.parser")
-        resp = soup.find_all(class_="g")
+        res = soup.find_all(class_="g")
         pages = soup.find_all("td")
-        return GoogleResponse(resp, pages[1:], index)
+        return GoogleResponse(res, pages[1:], index)
 
     def goto_page(self, url, index):
-        response = requests.get(url, headers=self.header, **self.requests_kwargs)
+        response = httpx.get(url, headers=self.header, **self.requests_kwargs)
         if response.status_code == 200:
             return self._slice(response.text, index)
 
@@ -62,12 +62,12 @@ class Google:
             if url[:4] == "http":
                 encoded_image_url = quote(url, safe="")
                 params["image_url"] = encoded_image_url
-                response = requests.get(
+                response = httpx.get(
                     self.url, params=params, headers=self.header, **self.requests_kwargs
                 )
             else:
                 multipart = {"encoded_image": (url, open(url, "rb"))}
-                response = requests.post(
+                response = httpx.post(
                     f"{self.url}/upload",
                     files=multipart,
                     headers=self.header,

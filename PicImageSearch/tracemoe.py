@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List, Optional
 
-import requests
+import httpx
 from loguru import logger
 
 from .Utils import get_error_message
@@ -146,10 +146,10 @@ class TraceMoeNorm:
         :param filename: 重命名文件
         :return: 文件路径
         """
-        with requests.get(self.image, stream=True) as resp:
+        with httpx.stream("GET", self.image) as res:
             endpoint = path.joinpath(filename)
             with open(endpoint, "wb") as fd:
-                for chunk in resp.iter_content():
+                for chunk in res.iter_bytes():
                     fd.write(chunk)
         return endpoint
 
@@ -162,10 +162,10 @@ class TraceMoeNorm:
         :param filename: 重命名文件
         :return: 文件路径
         """
-        with requests.get(self.video, stream=True) as resp:
+        with httpx.stream("GET", self.video) as res:
             endpoint = path.joinpath(filename)
             with open(endpoint, "wb") as fd:
-                for chunk in resp.iter_content():
+                for chunk in res.iter_bytes():
                     fd.write(chunk)
 
         return endpoint
@@ -201,7 +201,7 @@ class TraceMoeNorm:
         url = "https://trace.moe/anilist/"
 
         # Make the HTTP Api request
-        response = requests.post(url, json={"query": query, "variables": variables})
+        response = httpx.post(url, json={"query": query, "variables": variables})
         return response.json()
 
     def __repr__(self):
@@ -209,31 +209,31 @@ class TraceMoeNorm:
 
 
 class TraceMoeResponse:
-    def __init__(self, resp, chinese_title, mute, size):
-        self.origin: dict = resp
+    def __init__(self, res, chinese_title, mute, size):
+        self.origin: dict = res
         """原始数据"""
         self.raw: List[TraceMoeNorm] = list()
         """结果返回值"""
-        resp_docs = resp["result"]
+        resp_docs = res["result"]
         for i in resp_docs:
             self.raw.append(
                 TraceMoeNorm(i, chinese_title=chinese_title, mute=mute, size=size)
             )
         self.count: int = len(self.raw)
         """搜索结果数量"""
-        self.frameCount: int = resp["frameCount"]
+        self.frameCount: int = res["frameCount"]
         """搜索的帧总数"""
-        self.error: str = resp["error"]
+        self.error: str = res["error"]
         """错误报告"""
         # ---------------过时版本-----------------------
-        # self.RawDocsSearchTime: int = resp['RawDocsSearchTime']  # 从数据库检索帧所用的时间
-        # self.ReRankSearchTime: int = resp['ReRankSearchTime']  # 比较帧所用的时间
-        # self.CacheHit: bool = resp['CacheHit']  # 是否缓存搜索结果
-        # self.trial: int = resp['trial']  # 搜索时间
-        # self.limit: int = resp['limit']  # 剩余搜索限制数
-        # self.limit_ttl: int = resp['limit_ttl']  # 限制重置之前的时间（秒）
-        # self.quota: int = resp['quota']  # 剩余搜索配额数
-        # self.quota_ttl: int = resp['quota_ttl']  # 配额重置之前的时间（秒）
+        # self.RawDocsSearchTime: int = res['RawDocsSearchTime']  # 从数据库检索帧所用的时间
+        # self.ReRankSearchTime: int = res['ReRankSearchTime']  # 比较帧所用的时间
+        # self.CacheHit: bool = res['CacheHit']  # 是否缓存搜索结果
+        # self.trial: int = res['trial']  # 搜索时间
+        # self.limit: int = res['limit']  # 剩余搜索限制数
+        # self.limit_ttl: int = res['limit_ttl']  # 限制重置之前的时间（秒）
+        # self.quota: int = res['quota']  # 剩余搜索配额数
+        # self.quota_ttl: int = res['quota_ttl']  # 配额重置之前的时间（秒）
 
     def __repr__(self):
         return f"<TraceMoeResponse(count={repr(len(self.raw))}, frameCount={repr(self.frameCount)}"
@@ -252,8 +252,8 @@ class TraceMoeMe:
 
 
 class TraceMoe:
-    TraceMoeURL = "https://api.trace.moe/search"
-    MeURL = "https://api.trace.moe/me"
+    search_url = "https://api.trace.moe/search"
+    me_url = "https://api.trace.moe/me"
 
     def __init__(self, mute=False, size=None, **requests_kwargs):
         """主类
@@ -278,9 +278,7 @@ class TraceMoe:
             params = None
             if key:
                 params = {"key": key}
-            res = requests.get(
-                self.MeURL, params=params, verify=False, **self.requests_kwargs
-            )
+            res = httpx.get(self.me_url, params=params, **self.requests_kwargs)
             if res.status_code == 200:
                 data = res.json()
                 return TraceMoeMe(data)
@@ -332,8 +330,8 @@ class TraceMoe:
                 headers = {"x-trace-key": key}
             if url[:4] == "http":  # 网络url
                 params = self.set_params(url, anilist_id, anilist_info, cut_borders)
-                res = requests.get(
-                    self.TraceMoeURL,
+                res = httpx.get(
+                    self.search_url,
                     headers=headers,
                     params=params,
                     verify=False,
@@ -346,8 +344,8 @@ class TraceMoe:
                     logger.error(get_error_message(res.status_code))
             else:  # 是否是本地文件
                 params = self.set_params(None, anilist_id, anilist_info, cut_borders)
-                res = requests.post(
-                    self.TraceMoeURL,
+                res = httpx.post(
+                    self.search_url,
                     headers=headers,
                     params=params,
                     files={"image": open(url, "rb")},

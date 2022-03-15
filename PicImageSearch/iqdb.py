@@ -1,6 +1,5 @@
-import requests
+import httpx
 from loguru import logger
-from requests_toolbelt import MultipartEncoder
 
 from .Utils import get_error_message
 from .Utils.iqdb import IqdbResponse
@@ -10,7 +9,7 @@ class Iqdb:
     """
     Iqdb and Iqdb 3d
     -----------
-    Reverse image from https://www.iqdb.org\n
+    Reverse image from https://iqdb.org\n
 
 
     Params Keys
@@ -19,7 +18,7 @@ class Iqdb:
     """
 
     def __init__(self, **requests_kwargs):
-        self.url = "https://www.iqdb.org/"
+        self.url = "https://iqdb.org/"
         self.url_3d = "https://3d.iqdb.org/"
         self.requests_kwargs = requests_kwargs
 
@@ -27,7 +26,7 @@ class Iqdb:
         """
         Iqdb
         -----------
-        Reverse image from https://www.iqdb.org\n
+        Reverse image from https://iqdb.org\n
 
 
         Return Attributes
@@ -50,20 +49,11 @@ class Iqdb:
         """
         try:
             if url[:4] == "http":  # 网络url
-                datas = {"url": url}
-                res = requests.post(self.url, data=datas, **self.requests_kwargs)
+                data = {"url": url}
+                res = httpx.post(self.url, data=data, **self.requests_kwargs)
             else:  # 是否是本地文件
-                m = MultipartEncoder(
-                    fields={
-                        "file": (
-                            "filename",
-                            open(url, "rb"),
-                            "type=multipart/form-data",
-                        )
-                    }
-                )
-                headers = {"Content-Type": m.content_type}
-                res = requests.post(self.url, headers=headers, **self.requests_kwargs)
+                files = {"file": open(url, "rb")}
+                res = httpx.post(self.url, files=files, **self.requests_kwargs)
             if res.status_code == 200:
                 # logger.info(res.text)
                 return IqdbResponse(res.content)
@@ -92,22 +82,11 @@ class Iqdb:
         """
         try:
             if url[:4] == "http":  # 网络url
-                datas = {"url": url}
-                res = requests.post(self.url_3d, data=datas, **self.requests_kwargs)
+                data = {"url": url}
+                res = httpx.post(self.url_3d, data=data, **self.requests_kwargs)
             else:  # 是否是本地文件
-                m = MultipartEncoder(
-                    fields={
-                        "file": (
-                            "filename",
-                            open(url, "rb"),
-                            "type=multipart/form-data",
-                        )
-                    }
-                )
-                headers = {"Content-Type": m.content_type}
-                res = requests.post(
-                    self.url_3d, headers=headers, **self.requests_kwargs
-                )
+                files = {"file": open(url, "rb")}
+                res = httpx.post(self.url_3d, files=files, **self.requests_kwargs)
             if res.status_code == 200:
                 return IqdbResponse(res.content)
             else:
