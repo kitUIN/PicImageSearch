@@ -1,6 +1,5 @@
-import requests
+import httpx
 from loguru import logger
-from requests_toolbelt import MultipartEncoder
 
 from .Utils import SauceNAOResponse, get_error_message
 
@@ -88,33 +87,19 @@ class SauceNAO:
         """
         try:
             params = self.params
-            headers = {}
-            m = None
+            files = None
             if url[:4] == "http":  # 网络url
                 params["url"] = url
-            else:  # 文件
-                m = MultipartEncoder(
-                    fields={
-                        "file": (
-                            "filename",
-                            open(url, "rb"),
-                            "type=multipart/form-data",
-                        )
-                    }
-                )
-                headers = {"Content-Type": m.content_type}
-            resp = requests.post(
-                self.url,
-                headers=headers,
-                data=m,
-                params=params,
-                verify=False,
-                **self.requests_kwargs
+            else:
+                # 上传文件
+                files = {"file": open(url, "rb")}
+            res = httpx.post(
+                self.url, params=params, files=files, **self.requests_kwargs
             )
-            if resp.status_code == 200:
-                data = resp.json()
+            if res.status_code == 200:
+                data = res.json()
                 return SauceNAOResponse(data)
             else:
-                logger.error(get_error_message(resp.status_code))
+                logger.error(get_error_message(res.status_code))
         except Exception as e:
             logger.info(e)

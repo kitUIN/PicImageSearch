@@ -27,17 +27,15 @@ class BaiDuNorm:
 
 
 class BaiDuResponse:
-    def __init__(self, resp):
-        self.url: str = resp.request.url  # 搜索结果地址
+    def __init__(self, res):
+        self.url: str = res.request.url  # 搜索结果地址
         """百度识图原网页"""
         self.similar = list()
         """相似结果返回值"""
         self.raw: Optional[List[BaiDuNorm]] = list()
         """来源结果返回值"""
         self.origin: list = json.loads(
-            re.search(pattern=r"cardData = (.+);window\.commonData", string=resp.text)[
-                1
-            ]
+            re.search(pattern=r"cardData = (.+);window\.commonData", string=res.text)[1]
         )
         """原始返回值"""
         for i in self.origin:

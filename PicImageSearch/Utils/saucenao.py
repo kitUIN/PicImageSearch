@@ -1,6 +1,6 @@
 from typing import List
 
-import requests
+import httpx
 
 
 class SauceNAONorm:
@@ -30,9 +30,9 @@ class SauceNAONorm:
         """pixiv的画师id（如果有）"""
 
     def download_thumbnail(self, filename="thumbnail.png"):  # 缩略图生成
-        with requests.get(self.thumbnail, stream=True) as resp:
+        with httpx.stream("GET", self.thumbnail) as res:
             with open(filename, "wb") as fd:
-                for chunk in resp.iter_content():
+                for chunk in res.iter_bytes():
                     fd.write(chunk)
 
     @staticmethod
@@ -92,12 +92,12 @@ class SauceNAONorm:
 
 
 class SauceNAOResponse:
-    def __init__(self, resp: dict):
-        resp_header = resp["header"]
-        resp_results = resp["results"]
+    def __init__(self, res: dict):
+        resp_header = res["header"]
+        resp_results = res["results"]
         self.raw: List[SauceNAONorm] = [SauceNAONorm(i) for i in resp_results]
         """所有的返回结果"""
-        self.origin: dict = resp
+        self.origin: dict = res
         """原始返回结果"""
         self.short_remaining: int = resp_header["short_remaining"]  # 每30秒访问额度
         """每30秒访问额度"""

@@ -64,8 +64,8 @@ class GoogleNorm:
 
 
 class GoogleResponse:
-    def __init__(self, resp, pages, index):
-        self.origin: list = resp
+    def __init__(self, res, pages, index):
+        self.origin: list = res
         """原始返回值"""
         self.raw: List[GoogleNorm] = list()
         """结果返回值"""

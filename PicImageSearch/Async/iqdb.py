@@ -9,7 +9,7 @@ class AsyncIqdb(HandOver):
     """
     Iqdb and Iqdb 3d
     -----------
-    Reverse image from https://www.iqdb.org\n
+    Reverse image from https://iqdb.org\n
 
 
     Params Keys
@@ -20,14 +20,14 @@ class AsyncIqdb(HandOver):
     def __init__(self, **requests_kwargs):
         super().__init__(**requests_kwargs)
         self.requests_kwargs = requests_kwargs
-        self.url = "https://www.iqdb.org/"
+        self.url = "https://iqdb.org/"
         self.url_3d = "https://3d.iqdb.org/"
 
     async def search(self, url) -> IqdbResponse:
         """
         Iqdb
         -----------
-        Reverse image from https://www.iqdb.org\n
+        Reverse image from https://iqdb.org\n
 
 
         Return Attributes
@@ -51,8 +51,8 @@ class AsyncIqdb(HandOver):
         try:
 
             if url[:4] == "http":  # 网络url
-                datas = {"url": url}
-                res = await self.post(self.url, _data=datas)
+                data = {"url": url}
+                res = await self.post(self.url, _data=data)
             else:  # 是否是本地文件
                 res = await self.post(self.url, _files={"file": open(url, "rb")})
             if res.status_code == 200:
@@ -83,8 +83,8 @@ class AsyncIqdb(HandOver):
         """
         try:
             if url[:4] == "http":  # 网络url
-                datas = {"url": url}
-                res = await self.post(self.url_3d, _data=datas)
+                data = {"url": url}
+                res = await self.post(self.url_3d, _data=data)
             else:  # 是否是本地文件
                 res = await self.post(self.url_3d, _files={"file": open(url, "rb")})
             if res.status_code == 200:

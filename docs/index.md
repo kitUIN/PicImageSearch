@@ -3,7 +3,7 @@
 ## 支持(点击跳转到api原网页)
 - [x] [SauceNAO](https://saucenao.com/)
 - [x] [TraceMoe](https://trace.moe/)
-- [x] [Iqdb](http://www.iqdb.org/)
+- [x] [Iqdb](http://iqdb.org/)
 - [x] [Ascii2D](https://ascii2d.net/)
 - [x] [Google谷歌识图](https://www.google.com/imghp)
 - [x] [BaiDu百度识图](https://graph.baidu.com/) 
