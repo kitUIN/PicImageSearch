@@ -13,7 +13,7 @@
 - [x] [Iqdb](http://iqdb.org/)
 - [x] [Ascii2D](https://ascii2d.net/)
 - [x] [Google谷歌识图](https://www.google.com/imghp)  
-- [ ] ~~BaiDu百度识图~~无法使用  
+- [x] [BaiDu百度识图](https://graph.baidu.com/)
 - [x] 异步
 ## 关于异步用法
 使用方法相似且较为简单  
