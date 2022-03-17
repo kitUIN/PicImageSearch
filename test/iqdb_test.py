@@ -1,12 +1,8 @@
 from loguru import logger
-from PicImageSearch import Iqdb
+from PicImageSearch.sync import Iqdb
 
-_REQUESTS_KWARGS = {
-    # 'proxies': {
-    #     'https': 'http://127.0.0.1:10809',
-    # }
-    # 如果需要代理
-}
+# requests_kwargs = {"proxies": "http://127.0.0.1:1081"}
+# iqdb = Iqdb(**requests_kwargs)
 iqdb = Iqdb()
 res = iqdb.search(r"https://pixiv.cat/77702503-1.jpg")
 

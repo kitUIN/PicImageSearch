@@ -1,7 +1,8 @@
 from loguru import logger
-from PicImageSearch import Google
+from PicImageSearch.sync import Google
 
-google = Google()
+requests_kwargs = {"proxies": "http://127.0.0.1:1081"}
+google = Google(**requests_kwargs)
 res = google.search(
     "https://media.discordapp.net/attachments/783138508038471701/813452582948306974/hl-18-1-900x1280.png?width=314&height=447"
 )

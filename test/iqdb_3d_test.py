@@ -1,12 +1,8 @@
 from loguru import logger
-from PicImageSearch import Iqdb
+from PicImageSearch.sync import Iqdb
 
-# 如果需要代理
-_REQUESTS_KWARGS = {
-    "proxies": {
-        "https": "http://127.0.0.1:8888",
-    }
-}
+# requests_kwargs = {"proxies": "http://127.0.0.1:1081"}
+# iqdb = Iqdb(**requests_kwargs)
 iqdb = Iqdb()
 res = iqdb.search_3d(
     "https://3d.iqdb.org/3dbooru/2/8/6/2865ab9c1d9fe8860892945e79435219.jpg"

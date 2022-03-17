@@ -13,7 +13,7 @@ class NetWork:
         timeout=20,
         env=False,
         internal=False,
-        proxy=None,
+        proxies=None,
     ):
         """
 
@@ -22,14 +22,14 @@ class NetWork:
         :param timeout:
         :param env:  debug输出:HTTPX_LOG_LEVEL=debug
         :param internal:
-        :param proxy:
+        :param proxies:
         """
-        self.proxy = proxy
+        self.proxies = proxies
         self.internal = internal
         self.client = httpx.AsyncClient(
             verify=False,
             timeout=httpx.Timeout(timeout, connect=60),
-            proxies=self.proxy,
+            proxies=self.proxies,
             limits=httpx.Limits(
                 max_keepalive_connections=limit, max_connections=max_connections
             ),
@@ -52,9 +52,9 @@ class NetWork:
 
 
 class ClientManager:
-    def __init__(self, s, env, proxy):
+    def __init__(self, s, env, proxies):
         if s is None:
-            self.session = NetWork(internal=True, env=env, proxy=proxy)
+            self.session = NetWork(internal=True, env=env, proxies=proxies)
         else:
             self.session = s
 
@@ -70,14 +70,14 @@ class ClientManager:
 
 
 class HandOver(object):
-    def __init__(self, client=None, env=False, proxy=None, **requests_kwargs):
+    def __init__(self, client=None, env=False, proxies=None, **requests_kwargs):
         self.session = client
         self.env = env
-        self.proxy = proxy
+        self.proxies = proxies
         self.requests_kwargs = requests_kwargs
 
     async def get(self, _url, _headers=None, _params=None):
-        async with ClientManager(self.session, self.env, self.proxy) as session:
+        async with ClientManager(self.session, self.env, self.proxies) as session:
             res = await session.get(_url, headers=_headers, params=_params)
             await asyncio.sleep(0)
             return res
@@ -85,7 +85,7 @@ class HandOver(object):
     async def post(
         self, _url, _headers=None, _params=None, _data=None, _json=None, _files=None
     ):
-        async with ClientManager(self.session, self.env, self.proxy) as session:
+        async with ClientManager(self.session, self.env, self.proxies) as session:
             if _json:
                 res = await session.post(
                     _url, headers=_headers, params=_params, json=_json
@@ -102,7 +102,7 @@ class HandOver(object):
             return res
 
     async def downloader(self, url="", path=None, filename=""):  # 下载器
-        async with ClientManager(self.session, self.env, self.proxy) as session:
+        async with ClientManager(self.session, self.env, self.proxies) as session:
             async with session.stream("GET", url=url) as r:
                 if path:
                     file = Path(path).joinpath(filename)

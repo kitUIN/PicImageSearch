@@ -20,7 +20,7 @@
 不懂异步的请百度学习异步后再使用  
 详细见测试文件夹内异步测试文件  
 ```python 
-async with NetWork() as client:  # 可以设置代理 NetWork(proxy='http://127.0.0.1:10809')
+async with NetWork() as client:  # 可以设置代理 NetWork(proxies='http://127.0.0.1:10809')
    saucenao = AsyncSauceNAO(client=client)  # client不能少
    res = await saucenao.search('https://pixiv.cat/77702503-1.jpg')
     # 下面操作与同步方法一致

@@ -1,13 +1,10 @@
 from loguru import logger
-from PicImageSearch import SauceNAO
+from PicImageSearch.sync import SauceNAO
 
-_REQUESTS_KWARGS = {
-    # 'proxies': {
-    #     'https': 'http://127.0.0.1:10809',
-    # }
-    # 如果需要代理
-}
-saucenao = SauceNAO(api_key="54a8d90c583d3b66b6dd3d7e9001a39b588cd842")
+api_key = "a4ab3f81009b003528f7e31aed187fa32a063f58"
+# requests_kwargs = {"proxies": "http://127.0.0.1:1081"}
+# saucenao = SauceNAO(api_key=api_key, **requests_kwargs)
+saucenao = SauceNAO(api_key=api_key)
 res = saucenao.search("https://pixiv.cat/77702503-1.jpg")
 # res = saucenao.search(r'C:/kitUIN/img/tinted-good.jpg') #搜索本地图片
 logger.info(res.origin)  # 原始数据

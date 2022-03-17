@@ -1,12 +1,15 @@
 import asyncio
 
 from loguru import logger
-from PicImageSearch import AsyncTraceMoe, NetWork
+from PicImageSearch import NetWork, TraceMoe
+
+# proxies = "http://127.0.0.1:1081"
+proxies = None
 
 
 async def main():
-    async with NetWork() as client:
-        tracemoe = AsyncTraceMoe(mute=False, size=None, client=client)
+    async with NetWork(proxies=proxies) as client:
+        tracemoe = TraceMoe(mute=False, size=None, client=client)
         res = await tracemoe.search("https://trace.moe/img/tinted-good.jpg")  # 搜索网络图片
         # res = await tracemoe.search(r'C:/Users/kulujun/Pictures/1.png')  # 搜索本地图片
         logger.info(res.origin)

@@ -1,12 +1,8 @@
 from loguru import logger
-from PicImageSearch.tracemoe import TraceMoe
+from PicImageSearch.sync import TraceMoe
 
-_REQUESTS_KWARGS = {
-    # 'proxies': {
-    #     'https': 'http://127.0.0.1:8888',
-    # }
-    # 如果需要代理
-}
+# requests_kwargs = {"proxies": "http://127.0.0.1:1081"}
+# tracemoe = TraceMoe(mute=False, size=None, **requests_kwargs)
 tracemoe = TraceMoe(mute=False, size=None)
 res = tracemoe.search("https://trace.moe/img/tinted-good.jpg")  # 搜索网络图片
 # res = tracemoe.search(r'C:/Users/kulujun/Pictures/1.png')  # 搜索本地图片

@@ -1,13 +1,14 @@
-import httpx
-from PicImageSearch.Utils import BaiDuResponse
+from .network import HandOver
+from .Utils import BaiDuResponse
 
 
-class BaiDu:
+class BaiDu(HandOver):
     def __init__(self, **requests_kwargs):
+        super().__init__(**requests_kwargs)
         self.url = "https://graph.baidu.com/upload"
         self.requests_kwargs = requests_kwargs
 
-    def search(self, url: str) -> BaiDuResponse:
+    async def search(self, url: str) -> BaiDuResponse:
         params = {"from": "pc"}
         files = None
         if url[:4] == "http":  # 网络url
@@ -15,10 +16,7 @@ class BaiDu:
         else:
             # 上传文件
             files = {"image": open(url, "rb")}
-        res = httpx.post(
-            self.url, params=params, files=files, verify=False, **self.requests_kwargs
-        )
-
+        res = await self.post(self.url, _params=params, _files=files)
         url = res.json()["data"]["url"]
-        res = httpx.get(url, verify=False, **self.requests_kwargs)
+        res = await self.get(url)
         return BaiDuResponse(res)

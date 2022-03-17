@@ -1,12 +1,15 @@
 import asyncio
 
 from loguru import logger
-from PicImageSearch import AsyncIqdb, NetWork
+from PicImageSearch import Iqdb, NetWork
+
+# proxies = "http://127.0.0.1:1081"
+proxies = None
 
 
 async def main():
-    async with NetWork() as client:
-        iqdb = AsyncIqdb(client=client)
+    async with NetWork(proxies=proxies) as client:
+        iqdb = Iqdb(client=client)
         res = await iqdb.search("https://pixiv.cat/77702503-1.jpg")
         # logger.info(res.origin)
         # logger.info(res.raw)

@@ -1,11 +1,11 @@
-import httpx
 from loguru import logger
 
+from .network import HandOver
 from .Utils import get_error_message
 from .Utils.iqdb import IqdbResponse
 
 
-class Iqdb:
+class Iqdb(HandOver):
     """
     Iqdb and Iqdb 3d
     -----------
@@ -14,15 +14,16 @@ class Iqdb:
 
     Params Keys
     -----------
-    :param **requests_kwargs: proxy settings
+    :param **requests_kwargs: proxies settings
     """
 
     def __init__(self, **requests_kwargs):
+        super().__init__(**requests_kwargs)
+        self.requests_kwargs = requests_kwargs
         self.url = "https://iqdb.org/"
         self.url_3d = "https://3d.iqdb.org/"
-        self.requests_kwargs = requests_kwargs
 
-    def search(self, url) -> IqdbResponse:
+    async def search(self, url) -> IqdbResponse:
         """
         Iqdb
         -----------
@@ -48,12 +49,12 @@ class Iqdb:
 
         """
         try:
+
             if url[:4] == "http":  # 网络url
                 data = {"url": url}
-                res = httpx.post(self.url, data=data, **self.requests_kwargs)
+                res = await self.post(self.url, _data=data)
             else:  # 是否是本地文件
-                files = {"file": open(url, "rb")}
-                res = httpx.post(self.url, files=files, **self.requests_kwargs)
+                res = await self.post(self.url, _files={"file": open(url, "rb")})
             if res.status_code == 200:
                 # logger.info(res.text)
                 return IqdbResponse(res.content)
@@ -62,7 +63,7 @@ class Iqdb:
         except Exception as e:
             logger.error(e)
 
-    def search_3d(self, url) -> IqdbResponse:
+    async def search_3d(self, url) -> IqdbResponse:
         """
         Iqdb 3D
         -----------
@@ -83,10 +84,9 @@ class Iqdb:
         try:
             if url[:4] == "http":  # 网络url
                 data = {"url": url}
-                res = httpx.post(self.url_3d, data=data, **self.requests_kwargs)
+                res = await self.post(self.url_3d, _data=data)
             else:  # 是否是本地文件
-                files = {"file": open(url, "rb")}
-                res = httpx.post(self.url_3d, files=files, **self.requests_kwargs)
+                res = await self.post(self.url_3d, _files={"file": open(url, "rb")})
             if res.status_code == 200:
                 return IqdbResponse(res.content)
             else:
