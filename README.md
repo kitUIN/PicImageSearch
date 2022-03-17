@@ -5,7 +5,7 @@
 ![forks](https://img.shields.io/github/forks/kitUIN/PicImageSearch)  
 
 聚合整合图片识别api,用于以图搜源(以图搜图，以图搜番)，支持SauceNAO,tracemoe,iqdb,ascii2d,google(谷歌识图),baidu(百度识图)等
-# [文档](https://kitUIN.github.io/wiki/picimagesearch/)
+# [文档](https://www.kituin.fun/wiki/picimagesearch/)
 
 ## 支持
 - [x] [SauceNAO](https://saucenao.com/)
