@@ -18,7 +18,7 @@ aiofiles = "^0.8.0"
 beautifulsoup4 = "^4.10.0"
 httpx = "^0.22.0"
 loguru = "^0.6.0"
-pathlib = "^1.0.1"
+pathlib2 = "^2.3.7"
 
 [tool.poetry.dev-dependencies]
 

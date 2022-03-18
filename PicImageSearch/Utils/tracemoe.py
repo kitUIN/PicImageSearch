@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib2 import Path
 from typing import List, Optional
 
 import httpx

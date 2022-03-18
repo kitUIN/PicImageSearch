@@ -1,5 +1,5 @@
 import asyncio
-from pathlib import Path
+from pathlib2 import Path
 
 import aiofiles
 import httpx
