@@ -1,11 +1,11 @@
-import httpx
 from bs4 import BeautifulSoup
 from loguru import logger
 
+from .network import HandOver
 from .Utils import Ascii2DResponse, get_error_message
 
 
-class Ascii2D:
+class Ascii2D(HandOver):
     """
     Ascii2D
     -----------
@@ -14,11 +14,12 @@ class Ascii2D:
 
     Params Keys
     -----------
-    :param **requests_kwargs:   proxy settings.\n
+    :param **requests_kwargs:   proxies settings.\n
     :param bovw(boolean):   use ascii2d bovw search, default False \n
     """
 
     def __init__(self, bovw=False, **requests_kwargs):
+        super().__init__(**requests_kwargs)
         self.requests_kwargs = requests_kwargs
         self.bovw = bovw
 
@@ -28,7 +29,7 @@ class Ascii2D:
         res = soup.find_all(class_="row item-box")
         return Ascii2DResponse(res)
 
-    def search(self, url) -> Ascii2DResponse:
+    async def search(self, url) -> Ascii2DResponse:
         """
         Ascii2D
         -----------
@@ -49,19 +50,15 @@ class Ascii2D:
         try:
             if url[:4] == "http":  # 网络url
                 ascii2d_url = "https://ascii2d.net/search/uri"
-                data = {"uri": url}
-                res = httpx.post(ascii2d_url, data=data, **self.requests_kwargs)
+                res = await self.post(ascii2d_url, _data={"uri": url})
             else:  # 是否是本地文件
                 ascii2d_url = "https://ascii2d.net/search/file"
-                files = {"file": open(url, "rb")}
-                res = httpx.post(ascii2d_url, files=files, **self.requests_kwargs)
+                res = await self.post(ascii2d_url, _files={"file": open(url, "rb")})
+
             if res.status_code == 200:
                 if self.bovw:
                     # 如果启用bovw选项，第一次请求是向服务器提交文件
-                    res = httpx.get(
-                        str(res.url).replace("/color/", "/bovw/"),
-                        **self.requests_kwargs
-                    )
+                    res = await self.get(str(res.url).replace("/color/", "/bovw/"))
             else:
                 logger.error(res.status_code)
                 logger.error(get_error_message(res.status_code))

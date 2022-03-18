@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "PicImageSearch"
-version = "2.3.0"
+version = "0.3.0"
 description = "PicImageSearch APIs for Python 3.x 适用于 Python 3 以图搜源整合API"
 authors = ["kitUIN <kulujun@gmail.com>"]
 license = "MIT"
@@ -13,7 +13,7 @@ repository = "https://github.com/kitUIN/PicImageSearch"
 keywords = ["google", "iqdb", "saucenao", "tracemoe", "ascii2d"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.6"
 aiofiles = "^0.8.0"
 beautifulsoup4 = "^4.10.0"
 httpx = "^0.22.0"

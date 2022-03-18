@@ -1,10 +1,10 @@
-import httpx
 from loguru import logger
 
+from .network import HandOver
 from .Utils import SauceNAOResponse, get_error_message
 
 
-class SauceNAO:
+class SauceNAO(HandOver):
     def __init__(
         self,
         api_key: str = None,
@@ -38,6 +38,7 @@ class SauceNAO:
         :param hide:(int) result hiding control, none=0, clear return value (default)=1, suspect return value=2, all return value=3
         """
         # minsim 控制最小相似度
+        super().__init__(**requests_kwargs)
         self.url = "https://saucenao.com/search.php"
         self.requests_kwargs = requests_kwargs
         params = {
@@ -56,7 +57,7 @@ class SauceNAO:
             params["dbmaski"] = dbmaski
         self.params = params
 
-    def search(self, url: str) -> SauceNAOResponse:
+    async def search(self, url: str) -> SauceNAOResponse:
         """
         SauceNAO
         -----------
@@ -93,8 +94,10 @@ class SauceNAO:
             else:
                 # 上传文件
                 files = {"file": open(url, "rb")}
-            res = httpx.post(
-                self.url, params=params, files=files, **self.requests_kwargs
+            res = await self.post(
+                self.url,
+                _params=params,
+                _files=files,
             )
             if res.status_code == 200:
                 data = res.json()

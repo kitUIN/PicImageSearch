@@ -1,15 +1,15 @@
 import asyncio
 
 from loguru import logger
-from PicImageSearch import AsyncBaiDu, NetWork
+from PicImageSearch import BaiDu, NetWork
 
-# proxy = "http://127.0.0.1:10809"
-proxy = None
+# proxies = "http://127.0.0.1:1081"
+proxies = None
 
 
 async def main():
-    async with NetWork(proxy=proxy) as client:
-        baidu = AsyncBaiDu(client=client)
+    async with NetWork(proxies=proxies) as client:
+        baidu = BaiDu(client=client)
         res = await baidu.search(
             "https://i0.hdslb.com/bfs/article/e756dd0a8375a4c30cc0ee3a51c8067157486135.jpg@1524w_856h.webp"
         )

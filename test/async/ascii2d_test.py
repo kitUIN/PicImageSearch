@@ -1,12 +1,15 @@
 import asyncio
 
 from loguru import logger
-from PicImageSearch import AsyncAscii2D, NetWork
+from PicImageSearch import Ascii2D, NetWork
+
+# proxies = "http://127.0.0.1:1081"
+proxies = None
 
 
 async def main():
-    async with NetWork() as client:
-        ascii2d = AsyncAscii2D(client=client, bovw=True)
+    async with NetWork(proxies=proxies) as client:
+        ascii2d = Ascii2D(client=client, bovw=True)
         res = await ascii2d.search("https://pixiv.cat/77702503-1.jpg")
         # res = await ascii2d.search(r'C:/kitUIN/img/tinted-good.jpg')  # 搜索本地图片
         # logger.info(res.origin)  # 原始数据

@@ -1,10 +1,12 @@
+from pathlib import Path
 from typing import List
 
-import httpx
+from ..network import HandOver
 
 
-class SauceNAONorm:
-    def __init__(self, data: dict):
+class SauceNAONorm(HandOver):
+    def __init__(self, data: dict, **requests_kwargs):
+        super().__init__(**requests_kwargs)
         result_header = data["header"]
         result_data = data["data"]
         self.raw: dict = data
@@ -29,11 +31,18 @@ class SauceNAONorm:
         self.member_id: str = self._get_member_id(result_data)
         """pixiv的画师id（如果有）"""
 
-    def download_thumbnail(self, filename="thumbnail.png"):  # 缩略图生成
-        with httpx.stream("GET", self.thumbnail) as res:
-            with open(filename, "wb") as fd:
-                for chunk in res.iter_bytes():
-                    fd.write(chunk)
+    async def download_thumbnail(
+        self, filename="thumbnail.png", path: Path = Path.cwd()
+    ) -> Path:
+        """
+        下载缩略图
+
+        :param filename: 重命名文件
+        :param path: 本地地址(默认当前目录)
+        :return: 文件路径
+        """
+        endpoint = await self.downloader(self.thumbnail, path, filename)
+        return endpoint
 
     @staticmethod
     def _get_title(data):

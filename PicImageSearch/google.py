@@ -1,14 +1,13 @@
 from urllib.parse import quote
 
-import httpx
 from bs4 import BeautifulSoup
 from loguru import logger
-from PicImageSearch.Utils import GoogleResponse
 
-from .Utils import get_error_message
+from .network import HandOver
+from .Utils import GoogleResponse, get_error_message
 
 
-class Google:
+class Google(HandOver):
     """
     Google
     -----------
@@ -17,10 +16,11 @@ class Google:
 
     Params Keys
     -----------
-    :param **requests_kwargs: proxy settings
+    :param **requests_kwargs: proxies settings
     """
 
     def __init__(self, **request_kwargs):
+        super().__init__(**request_kwargs)
         params = dict()
         self.url = "https://www.google.com/searchbyimage"
         self.params = params
@@ -30,18 +30,18 @@ class Google:
         self.requests_kwargs = request_kwargs
 
     @staticmethod
-    def _slice(res, index):
+    def _slice(res, index) -> GoogleResponse:
         soup = BeautifulSoup(res, "html.parser")
         res = soup.find_all(class_="g")
         pages = soup.find_all("td")
         return GoogleResponse(res, pages[1:], index)
 
-    def goto_page(self, url, index):
-        response = httpx.get(url, headers=self.header, **self.requests_kwargs)
+    async def goto_page(self, url, index):
+        response = await self.get(url, _headers=self.header)
         if response.status_code == 200:
             return self._slice(response.text, index)
 
-    def search(self, url) -> GoogleResponse:
+    async def search(self, url) -> GoogleResponse:
         """
         Google
         -----------
@@ -62,16 +62,13 @@ class Google:
             if url[:4] == "http":
                 encoded_image_url = quote(url, safe="")
                 params["image_url"] = encoded_image_url
-                response = httpx.get(
-                    self.url, params=params, headers=self.header, **self.requests_kwargs
+                response = await self.get(
+                    self.url, _params=params, _headers=self.header
                 )
             else:
                 multipart = {"encoded_image": (url, open(url, "rb"))}
-                response = httpx.post(
-                    f"{self.url}/upload",
-                    files=multipart,
-                    headers=self.header,
-                    **self.requests_kwargs,
+                response = await self.post(
+                    f"{self.url}/upload", _files=multipart, _headers=self.header
                 )
             if response.status_code == 200:
                 return self._slice(response.text, 1)

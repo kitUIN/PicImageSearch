@@ -1,6 +1,8 @@
 from loguru import logger
-from PicImageSearch import Ascii2D
+from PicImageSearch.sync import Ascii2D
 
+# requests_kwargs = {"proxies": "http://127.0.0.1:1081"}
+# ascii2d = Ascii2D(bovw=False, **requests_kwargs)
 ascii2d = Ascii2D(bovw=False)
 res = ascii2d.search("https://pixiv.cat/77702503-1.jpg")
 # res = ascii2d.search(r'C:/kitUIN/img/tinted-good.jpg')  # 搜索本地图片

@@ -4,3 +4,4 @@ from .errors import get_error_message
 from .google import GoogleNorm, GoogleResponse
 from .iqdb import IqdbNorm, IqdbResponse
 from .saucenao import SauceNAONorm, SauceNAOResponse
+from .tracemoe import TraceMoeAnilist, TraceMoeMe, TraceMoeNorm, TraceMoeResponse

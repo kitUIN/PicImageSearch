@@ -1,12 +1,15 @@
 import asyncio
 
 from loguru import logger
-from PicImageSearch import AsyncGoogle, NetWork
+from PicImageSearch import Google, NetWork
+
+proxies = "http://127.0.0.1:1081"
+# proxies = None
 
 
 async def main():
-    async with NetWork(proxy="http://127.0.0.1:10809") as client:
-        google = AsyncGoogle(client=client)
+    async with NetWork(proxies=proxies) as client:
+        google = Google(client=client)
         res = await google.search(
             "https://media.discordapp.net/attachments/783138508038471701/813452582948306974/hl-18-1-900x1280.png?width=314&height=447"
         )

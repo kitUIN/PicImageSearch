@@ -1,14 +1,16 @@
 import asyncio
 
 from loguru import logger
-from PicImageSearch import AsyncSauceNAO, NetWork
+from PicImageSearch import NetWork, SauceNAO
+
+# proxies = "http://127.0.0.1:1081"
+proxies = None
+api_key = "a4ab3f81009b003528f7e31aed187fa32a063f58"
 
 
 async def main():
-    async with NetWork(proxy="http://127.0.0.1:10809") as client:
-        saucenao = AsyncSauceNAO(
-            api_key="54a8d90c583d3b66b6dd3d7e9001a39b588cd842", client=client
-        )
+    async with NetWork(proxies=proxies) as client:
+        saucenao = SauceNAO(api_key=api_key, client=client)
         res = await saucenao.search("https://pixiv.cat/77702503-1.jpg")
         # res = await saucenao.search(r'C:\Users\kulujun\Pictures\90139691_p0.png') #搜索本地图片
         logger.info(res.origin)  # 原始数据
