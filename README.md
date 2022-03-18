@@ -15,13 +15,35 @@
 - [x] [Google谷歌识图](https://www.google.com/imghp)  
 - [x] [BaiDu百度识图](https://graph.baidu.com/)
 - [x] 异步
-## 关于异步用法
-使用方法相似且较为简单  
-不懂异步的请百度学习异步后再使用  
-详细见测试文件夹内异步测试文件  
-```python 
+## 简要说明
+详细见[文档](https://www.kituin.fun/wiki/picimagesearch/) 或者[`test`](https://github.com/kitUIN/PicImageSearch/tree/main/test) 文件夹中的[`demo`](https://github.com/kitUIN/PicImageSearch/tree/main/test)   
+`同步`请使用`from PicImageSearch.sync import ...`导入  
+`异步`请使用`from PicImageSearch import NetWork,...`导入
+
+## 简单示例
+```python
+from loguru import logger
+from PicImageSearch.sync import SauceNAO
+
+saucenao = SauceNAO()
+res = saucenao.search('https://pixiv.cat/77702503-1.jpg')
+# res = saucenao.search(r'C:/kitUIN/img/tinted-good.jpg') #搜索本地图片
+logger.info(res.origin)  # 原始数据
+logger.info(res.raw)  #
+logger.info(res.raw[0])  #
+logger.info(res.long_remaining)  # 99
+logger.info(res.short_remaining)  # 3
+logger.info(res.raw[0].thumbnail)  # 缩略图
+logger.info(res.raw[0].similarity)  # 相似度
+logger.info(res.raw[0].title)  # 标题
+logger.info(res.raw[0].author)  # 作者
+logger.info(res.raw[0].url)
+```
+```python
+from PicImageSearch import SauceNAO, NetWork
+
 async with NetWork() as client:  # 可以设置代理 NetWork(proxies='http://127.0.0.1:10809')
-   saucenao = AsyncSauceNAO(client=client)  # client不能少
+   saucenao = SauceNAO(client=client)  # client不能少
    res = await saucenao.search('https://pixiv.cat/77702503-1.jpg')
     # 下面操作与同步方法一致
 ```
