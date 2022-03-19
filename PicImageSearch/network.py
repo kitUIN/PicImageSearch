@@ -1,11 +1,10 @@
-import asyncio
-from pathlib2 import Path
+from pathlib import Path
 
 import aiofiles
 import httpx
 
 
-class NetWork:
+class Network:
     def __init__(
         self,
         limit=30,
@@ -34,57 +33,60 @@ class NetWork:
                 max_keepalive_connections=limit, max_connections=max_connections
             ),
             trust_env=env,
+            follow_redirects=True,
+            event_hooks={"response": [raise_on_4xx_5xx]},
         )
 
     def start(self):
         return self.client
 
     async def close(self):
-        await asyncio.sleep(0)
         await self.client.aclose()
 
     async def __aenter__(self):
         return self.client
 
     async def __aexit__(self, exc_type, exc, tb):
-        await asyncio.sleep(0)
         await self.client.aclose()
 
 
+async def raise_on_4xx_5xx(response: httpx.Response):
+    if 400 <= response.status_code <= 599:
+        response.raise_for_status()
+
+
 class ClientManager:
-    def __init__(self, s, env, proxies):
-        if s is None:
-            self.session = NetWork(internal=True, env=env, proxies=proxies)
-        else:
-            self.session = s
+    def __init__(self, session, env, proxies):
+        self.session = (
+            Network(internal=True, env=env, proxies=proxies) if not session else session
+        )
 
     async def __aenter__(self):
-        if isinstance(self.session, NetWork):
+        if isinstance(self.session, Network):
             return self.session.start()
         if isinstance(self.session, httpx.AsyncClient):
             return self.session
 
-    async def __aexit__(self, exception_type, exception_value, traceback):
-        if isinstance(self.session, NetWork) and self.session.internal:
+    async def __aexit__(self, exc_type, exc, tb):
+        if isinstance(self.session, Network) and self.session.internal:
             await self.session.close()
 
 
-class HandOver(object):
+class HandOver:
     def __init__(self, client=None, env=False, proxies=None, **requests_kwargs):
         self.session = client
         self.env = env
         self.proxies = proxies
         self.requests_kwargs = requests_kwargs
 
-    async def get(self, _url, _headers=None, _params=None):
+    async def get(self, _url, _headers=None, _params=None) -> httpx.Response:
         async with ClientManager(self.session, self.env, self.proxies) as session:
             res = await session.get(_url, headers=_headers, params=_params)
-            await asyncio.sleep(0)
             return res
 
     async def post(
         self, _url, _headers=None, _params=None, _data=None, _json=None, _files=None
-    ):
+    ) -> httpx.Response:
         async with ClientManager(self.session, self.env, self.proxies) as session:
             if _json:
                 res = await session.post(
@@ -98,10 +100,9 @@ class HandOver(object):
                 res = await session.post(
                     _url, headers=_headers, params=_params, data=_data
                 )
-            await asyncio.sleep(0)
             return res
 
-    async def downloader(self, url="", path=None, filename=""):  # 下载器
+    async def downloader(self, url="", path=None, filename="") -> Path:  # 下载器
         async with ClientManager(self.session, self.env, self.proxies) as session:
             async with session.stream("GET", url=url) as r:
                 if path:

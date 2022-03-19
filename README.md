@@ -16,9 +16,9 @@
 - [x] [BaiDu百度识图](https://graph.baidu.com/)
 - [x] 异步
 ## 简要说明
-详细见[文档](https://www.kituin.fun/wiki/picimagesearch/) 或者[`test`](https://github.com/kitUIN/PicImageSearch/tree/main/test) 文件夹中的[`demo`](https://github.com/kitUIN/PicImageSearch/tree/main/test)   
+详细见[文档](https://www.kituin.fun/wiki/picimagesearch/) 或者[`demo`](https://github.com/kitUIN/PicImageSearch/tree/main/demo) 
 `同步`请使用`from PicImageSearch.sync import ...`导入  
-`异步`请使用`from PicImageSearch import NetWork,...`导入
+`异步`请使用`from PicImageSearch import Network,...`导入
 
 ## 简单示例
 ```python
@@ -39,12 +39,13 @@ logger.info(res.raw[0].title)  # 标题
 logger.info(res.raw[0].author)  # 作者
 logger.info(res.raw[0].url)
 ```
-```python
-from PicImageSearch import SauceNAO, NetWork
 
-async with NetWork() as client:  # 可以设置代理 NetWork(proxies='http://127.0.0.1:10809')
-   saucenao = SauceNAO(client=client)  # client不能少
-   res = await saucenao.search('https://pixiv.cat/77702503-1.jpg')
+```python
+from PicImageSearch import SauceNAO, Network
+
+async with Network() as client:  # 可以设置代理 Network(proxies='http://127.0.0.1:10809')
+    saucenao = SauceNAO(client=client)  # client不能少
+    res = await saucenao.search('https://pixiv.cat/77702503-1.jpg')
     # 下面操作与同步方法一致
 ```
 ### 安装

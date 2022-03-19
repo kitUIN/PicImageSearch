@@ -1,8 +1,9 @@
-from bs4 import BeautifulSoup
 from loguru import logger
+from lxml.html import HTMLParser, fromstring
+from pyquery import PyQuery
 
 from .network import HandOver
-from .Utils import Ascii2DResponse, get_error_message
+from .Utils import Ascii2DResponse
 
 
 class Ascii2D(HandOver):
@@ -24,12 +25,13 @@ class Ascii2D(HandOver):
         self.bovw = bovw
 
     @staticmethod
-    def _slice(res) -> Ascii2DResponse:
-        soup = BeautifulSoup(res, "html.parser")
-        res = soup.find_all(class_="row item-box")
-        return Ascii2DResponse(res)
+    def _slice(res: str) -> Ascii2DResponse:
+        utf8_parser = HTMLParser(encoding="utf-8")
+        d = PyQuery(fromstring(res, parser=utf8_parser))("div.row.item-box")
+        return Ascii2DResponse(d)
 
-    async def search(self, url) -> Ascii2DResponse:
+    @logger.catch()
+    async def search(self, url: str) -> Ascii2DResponse:
         """
         Ascii2D
         -----------
@@ -47,26 +49,15 @@ class Ascii2D(HandOver):
         • .raw[0].thumbnail = First index of url image that was found\n
         • .raw[0].detail = First index of details image that was found
         """
-        try:
-            if url[:4] == "http":  # 网络url
-                ascii2d_url = "https://ascii2d.net/search/uri"
-                res = await self.post(ascii2d_url, _data={"uri": url})
-            else:  # 是否是本地文件
-                ascii2d_url = "https://ascii2d.net/search/file"
-                res = await self.post(ascii2d_url, _files={"file": open(url, "rb")})
+        if url[:4] == "http":  # 网络url
+            ascii2d_url = "https://ascii2d.net/search/uri"
+            res = await self.post(ascii2d_url, _data={"uri": url})
+        else:  # 是否是本地文件
+            ascii2d_url = "https://ascii2d.net/search/file"
+            res = await self.post(ascii2d_url, _files={"file": open(url, "rb")})
 
-            if res.status_code == 200:
-                if self.bovw:
-                    # 如果启用bovw选项，第一次请求是向服务器提交文件
-                    res = await self.get(str(res.url).replace("/color/", "/bovw/"))
-            else:
-                logger.error(res.status_code)
-                logger.error(get_error_message(res.status_code))
+        # 如果启用bovw选项，第一次请求是向服务器提交文件
+        if self.bovw:
+            res = await self.get(str(res.url).replace("/color/", "/bovw/"))
 
-            if res.status_code == 200:
-                return self._slice(res.text)
-            else:
-                logger.error(res.status_code)
-                logger.error(get_error_message(res.status_code))
-        except Exception as e:
-            logger.error(e)
+        return self._slice(res.text)

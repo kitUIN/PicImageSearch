@@ -1,7 +1,9 @@
+from typing import Dict, Union
+
 from loguru import logger
 
 from .network import HandOver
-from .Utils import SauceNAOResponse, get_error_message
+from .Utils import SauceNAOResponse
 
 
 class SauceNAO(HandOver):
@@ -28,20 +30,20 @@ class SauceNAO(HandOver):
         Params Keys
         -----------
         :param api_key: (str) Access key for SauceNAO (default=None)
-        :param output_type:(int) 0=normal (default) html 1=xml api (not implemented) 2=json api default=2
-        :param testmode:(int) Test mode 0=normal 1=test (default=0)
-        :param numres:(int) output number (default=5)
-        :param dbmask:(int) The mask used to select the specific index to be enabled (default=None)
-        :param dbmaski:(int) is used to select the mask of the specific index to be disabled (default=None)
-        :param db:(int)Search for a specific index number or all indexes (default=999), see https://saucenao.com/tools/examples/api/index_details.txt
-        :param minsim:(int)Control the minimum similarity (default=30)
-        :param hide:(int) result hiding control, none=0, clear return value (default)=1, suspect return value=2, all return value=3
+        :param output_type: (int) 0=normal (default) html 1=xml api (not implemented) 2=json api default=2
+        :param testmode: (int) Test mode 0=normal 1=test (default=0)
+        :param numres: (int) output number (default=5)
+        :param dbmask: (int) The mask used to select the specific index to be enabled (default=None)
+        :param dbmaski: (int) is used to select the mask of the specific index to be disabled (default=None)
+        :param db: (int) Search for a specific index number or all indexes (default=999), see https://saucenao.com/tools/examples/api/index_details.txt
+        :param minsim: (int) Control the minimum similarity (default=30)
+        :param hide: (int) result hiding control, none=0, clear return value (default)=1, suspect return value=2, all return value=3
         """
         # minsim 控制最小相似度
         super().__init__(**requests_kwargs)
         self.url = "https://saucenao.com/search.php"
         self.requests_kwargs = requests_kwargs
-        params = {
+        params: Dict[str, Union[str, int]] = {
             "testmode": testmode,
             "numres": numres,
             "output_type": output_type,
@@ -57,6 +59,7 @@ class SauceNAO(HandOver):
             params["dbmaski"] = dbmaski
         self.params = params
 
+    @logger.catch()
     async def search(self, url: str) -> SauceNAOResponse:
         """
         SauceNAO
@@ -86,23 +89,16 @@ class SauceNAO(HandOver):
 
         further documentation visit https://saucenao.com/user.php?page=search-api
         """
-        try:
-            params = self.params
-            files = None
-            if url[:4] == "http":  # 网络url
-                params["url"] = url
-            else:
-                # 上传文件
-                files = {"file": open(url, "rb")}
-            res = await self.post(
-                self.url,
-                _params=params,
-                _files=files,
-            )
-            if res.status_code == 200:
-                data = res.json()
-                return SauceNAOResponse(data)
-            else:
-                logger.error(get_error_message(res.status_code))
-        except Exception as e:
-            logger.info(e)
+        params = self.params
+        files = None
+        if url[:4] == "http":  # 网络url
+            params["url"] = url
+        else:
+            # 上传文件
+            files = {"file": open(url, "rb")}
+        res = await self.post(
+            self.url,
+            _params=params,
+            _files=files,
+        )
+        return SauceNAOResponse(res.json())

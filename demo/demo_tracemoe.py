@@ -1,20 +1,20 @@
-import asyncio
-
 from loguru import logger
-from PicImageSearch import NetWork, TraceMoe
+from PicImageSearch import Network
+from PicImageSearch.sync import TraceMoe
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None
+# url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test05.jpg"
+url = r"images/test05.jpg"  # 搜索本地图片
 
 
-async def main():
-    async with NetWork(proxies=proxies) as client:
-        tracemoe = TraceMoe(mute=False, size=None, client=client)
-        res = await tracemoe.search("https://trace.moe/img/tinted-good.jpg")  # 搜索网络图片
-        # res = await tracemoe.search(r'C:/Users/kulujun/Pictures/1.png')  # 搜索本地图片
-        logger.info(res.origin)
-        logger.info(res.raw)
-        logger.info(res.raw[0])
+@logger.catch()
+async def test():
+    async with Network(proxies=proxies) as client:
+        tracemoe = TraceMoe(client=client, mute=False, size=None)
+        res = await tracemoe.search(url)
+        # logger.info(res.origin)  # 原始数据
+        logger.info(res.raw[0].origin)
         logger.info(res.frameCount)
         logger.info(res.raw[0].anilist)
         logger.info(res.raw[0].idMal)
@@ -34,5 +34,7 @@ async def main():
         logger.info(res.raw[0].image)
 
 
-loop = asyncio.new_event_loop()
-loop.run_until_complete(main())
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.get_event_loop().run_until_complete(test())

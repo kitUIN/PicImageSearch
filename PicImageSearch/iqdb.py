@@ -1,8 +1,7 @@
 from loguru import logger
 
 from .network import HandOver
-from .Utils import get_error_message
-from .Utils.iqdb import IqdbResponse
+from .Utils import IqdbResponse
 
 
 class Iqdb(HandOver):
@@ -23,7 +22,9 @@ class Iqdb(HandOver):
         self.url = "https://iqdb.org/"
         self.url_3d = "https://3d.iqdb.org/"
 
-    async def search(self, url) -> IqdbResponse:
+    # TODO: &forcegray=on
+    @logger.catch()
+    async def search(self, url: str) -> IqdbResponse:
         """
         Iqdb
         -----------
@@ -48,22 +49,15 @@ class Iqdb(HandOver):
         • .raw[0].size = First index detail of image size that was found
 
         """
-        try:
+        if url[:4] == "http":  # 网络url
+            data = {"url": url}
+            res = await self.post(self.url, _data=data)
+        else:  # 是否是本地文件
+            res = await self.post(self.url, _files={"file": open(url, "rb")})
+        return IqdbResponse(res.text)
 
-            if url[:4] == "http":  # 网络url
-                data = {"url": url}
-                res = await self.post(self.url, _data=data)
-            else:  # 是否是本地文件
-                res = await self.post(self.url, _files={"file": open(url, "rb")})
-            if res.status_code == 200:
-                # logger.info(res.text)
-                return IqdbResponse(res.content)
-            else:
-                logger.error(get_error_message(res.status_code))
-        except Exception as e:
-            logger.error(e)
-
-    async def search_3d(self, url) -> IqdbResponse:
+    @logger.catch()
+    async def search_3d(self, url: str) -> IqdbResponse:
         """
         Iqdb 3D
         -----------
@@ -81,15 +75,9 @@ class Iqdb(HandOver):
         • .raw[0].similarity = First index of similarity image that was found\n
         • .raw[0].size = First index detail of image size that was found
         """
-        try:
-            if url[:4] == "http":  # 网络url
-                data = {"url": url}
-                res = await self.post(self.url_3d, _data=data)
-            else:  # 是否是本地文件
-                res = await self.post(self.url_3d, _files={"file": open(url, "rb")})
-            if res.status_code == 200:
-                return IqdbResponse(res.content)
-            else:
-                logger.error(get_error_message(res.status_code))
-        except Exception as e:
-            logger.error(e)
+        if url[:4] == "http":  # 网络url
+            data = {"url": url}
+            res = await self.post(self.url_3d, _data=data)
+        else:  # 是否是本地文件
+            res = await self.post(self.url_3d, _files={"file": open(url, "rb")})
+        return IqdbResponse(res.text)

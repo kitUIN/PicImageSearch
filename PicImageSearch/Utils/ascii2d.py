@@ -1,70 +1,49 @@
 from typing import List
 
+from pyquery import PyQuery
+
 
 class Ascii2DNorm:
-    ascii2d_url = "https://ascii2d.net"
-
-    def __init__(self, data):
-        self.thumbnail: str = ""
-        """缩略图地址"""
-        self.detail: str = data[3].small.string
-        """原图长宽，类型，大小"""
-        self.title: str = ""
-        """标题"""
-        self.authors: str = ""
-        """作者"""
-        self.url: str = ""
-        """url地址"""
-        self.marks: str = ""
-
-        self._arrange(data)
-
-    def _arrange(self, data):
-        o_url = data[3].find("div", class_="detail-box gray-link").contents
-        urls = self._get_urls(o_url)
-        self.thumbnail = self.ascii2d_url + data[1].find("img")["src"]
-        self.url = urls["url"]
-        self.title = urls["title"]
-        self.authors = urls["authors"]
-        self.marks = urls["mark"]
+    def __init__(self, data: PyQuery):
+        self.origin: PyQuery = data  # 原始数据
+        info = self._get_info(data("div.detail-box.gray-link"))
+        # 原图长宽，类型，大小
+        self.detail: str = data("small").eq(0).text()
+        self.thumbnail: str = "https://ascii2d.net" + data("img").eq(0).attr("src")
+        self.url: str = info["url"]
+        self.title: str = info["title"]
+        self.author: str = info["author"]
+        self.author_url: str = info["author_url"]
+        self.mark: str = info["mark"]
 
     @staticmethod
-    def _get_urls(data):
-        all_urls = {
+    def _get_info(data: PyQuery) -> dict:
+        info = {
             "url": "",
             "title": "",
-            "authors_urls": "",
-            "authors": "",
+            "author_url": "",
+            "author": "",
             "mark": "",
         }
 
-        for x in data:
-            if x == "\n":
-                continue
-            try:
-                origin = x.find_all("a")
-                all_urls["url"] = origin[0]["href"]
-                all_urls["title"] = origin[0].string
-                all_urls["authors_urls"] = origin[1]["href"]
-                all_urls["authors"] = origin[1].string
-                all_urls["mark"] = x.small.string
-            except:
-                pass
-        return all_urls
+        infos = data.find("h6")
+        if infos:
+            links = infos.find("a")
+            if links:
+                info["url"] = links.eq(0).attr("href")
+                info["mark"] = infos("small").eq(0).text()
+                if len(list(links.items())) > 1:
+                    info["title"] = links.eq(0).text()
+                    info["author_url"] = links.eq(1).attr("href")
+                    info["author"] = links.eq(1).text()
+                elif links.eq(0).parents("small"):
+                    info["title"] = infos.contents().eq(0).text()
 
-    def __repr__(self):
-        return f"<NormAscii2D(title={repr(self.title)}, authors={self.authors}, mark={self.marks})>"
+        return info
 
 
 class Ascii2DResponse:
-    def __init__(self, res):
-        self.origin: list = res
-        """原始返回值"""
-        self.raw: List[Ascii2DNorm] = list()
-        """结果返回值"""
-        for ele in self.origin:
-            detail = ele.contents
-            self.raw.append(Ascii2DNorm(detail))
-
-    def __repr__(self):
-        return f"<Ascii2DResponse(count={repr(len(self.origin))}>"
+    def __init__(self, res: PyQuery):
+        self.origin: PyQuery = res  # 原始数据
+        # 结果返回值
+        self.raw: List[Ascii2DNorm] = [Ascii2DNorm(i) for i in res.items()]
