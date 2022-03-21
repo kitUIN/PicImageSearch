@@ -17,7 +17,7 @@ keywords = ["google", "iqdb", "saucenao", "tracemoe", "ascii2d"]
 python = "^3.6"
 aiofiles = "^0.8.0"
 httpx = "^0.22.0"
-lmxl = "^4.8.0"
+lxml = "^4.8.0"
 loguru = "^0.6.0"
 pyquery = "^1.4.3"
 
