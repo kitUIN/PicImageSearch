@@ -1,4 +1,4 @@
-from typing import Dict, Union
+from typing import Any, Dict, Optional, Union
 
 from loguru import logger
 
@@ -9,18 +9,17 @@ from .Utils import SauceNAOResponse
 class SauceNAO(HandOver):
     def __init__(
         self,
-        api_key: str = None,
-        *,
+        api_key: Optional[str] = None,
         numres: int = 5,
         hide: int = 1,
         minsim: int = 30,
         output_type: int = 2,
         testmode: int = 0,
-        dbmask: int = None,
-        dbmaski: int = None,
+        dbmask: Optional[int] = None,
+        dbmaski: Optional[int] = None,
         db: int = 999,
-        **requests_kwargs
-    ) -> None:
+        **requests_kwargs: Any
+    ):
         """
         SauceNAO
         -----------
@@ -42,7 +41,6 @@ class SauceNAO(HandOver):
         # minsim 控制最小相似度
         super().__init__(**requests_kwargs)
         self.url = "https://saucenao.com/search.php"
-        self.requests_kwargs = requests_kwargs
         params: Dict[str, Union[str, int]] = {
             "testmode": testmode,
             "numres": numres,

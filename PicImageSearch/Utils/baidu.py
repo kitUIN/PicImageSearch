@@ -1,31 +1,34 @@
 import json
 import re
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
+
+from httpx import Response
 
 
 class BaiDuNorm:
-    def __init__(self, data):
-        self.origin: dict = data  # 原始数据
+    def __init__(self, data: Dict[str, Any]):
+        self.origin: Dict[str, Any] = data  # 原始数据
         self.page_title: str = data["fromPageTitle"]  # 页面标题
         self.title: str = data["title"][0]  # 标题
         self.abstract: str = data["abstract"]  # 说明文字
         self.image_src: str = data["image_src"]  # 图片地址
         self.url: str = data["url"]  # 图片所在网页地址
-        self.img_list: list = data.get("imgList", [])  # 其他图片地址列表
+        self.img_list: List[str] = data.get("imgList", [])  # 其他图片地址列表
 
 
 class BaiDuResponse:
-    def __init__(self, res):
-        self.url: str = res.request.url  # 搜索结果地址
-        self.similar: Optional[List[Dict]] = []  # 相似结果返回值
-        self.raw: Optional[List[BaiDuNorm]] = []  # 来源结果返回值
+    def __init__(self, res: Response):
+        self.url: str = str(res.url)  # 搜索结果地址
+        self.similar: List[Dict[str, Any]] = []  # 相似结果返回值
+        self.raw: List[BaiDuNorm] = []  # 来源结果返回值
         # 原始数据
-        self.origin: list = json.loads(
-            re.search(r"cardData = (.+);window\.commonData", res.text)[1]
+        self.origin: List[Dict[str, Any]] = json.loads(
+            re.search(r"cardData = (.+);window\.commonData", res.text)[1]  # type: ignore
         )
+        self.same: Optional[Dict[str, Any]] = {}
         for i in self.origin:
             setattr(self, i["cardName"], i)
-        if hasattr(self, "same"):
+        if self.same:
             self.raw = [BaiDuNorm(x) for x in self.same["tplData"]["list"]]
             info = self.same["extData"]["showInfo"]
             del info["other_info"]
@@ -36,7 +39,7 @@ class BaiDuResponse:
                     except IndexError:
                         self.similar.append({y: z})
         # 获取所有卡片名
-        self.item: list[str] = [
+        self.item: List[str] = [
             attr
             for attr in dir(self)
             if not callable(getattr(self, attr))

@@ -1,15 +1,15 @@
 from pathlib import Path
-from typing import List
+from typing import Any, Dict, List, Optional, Union
 
 from ..network import HandOver
 
 
 class SauceNAONorm(HandOver):
-    def __init__(self, data: dict, **requests_kwargs):
+    def __init__(self, data: Dict[str, Any], **requests_kwargs: Any):
         super().__init__(**requests_kwargs)
         result_header = data["header"]
         result_data = data["data"]
-        self.origin: dict = data  # 原始数据
+        self.origin: Dict[str, Any] = data  # 原始数据
         self.similarity: float = float(result_header["similarity"])
         self.thumbnail: str = result_header["thumbnail"]
         self.index_id: int = result_header["index_id"]  # 文件 id
@@ -21,7 +21,7 @@ class SauceNAONorm(HandOver):
         self.member_id: int = result_data.get("member_id", 0)
 
     async def download_thumbnail(
-        self, filename="thumbnail.png", path: Path = Path.cwd()
+        self, path: Optional[str], filename: str = "thumbnail.png"
     ) -> Path:
         """
         下载缩略图
@@ -30,18 +30,18 @@ class SauceNAONorm(HandOver):
         :param path: 本地地址(默认当前目录)
         :return: 文件路径
         """
-        endpoint = await self.downloader(self.thumbnail, path, filename)
+        endpoint = await self.downloader(self.thumbnail, filename, path)
         return endpoint
 
     @staticmethod
-    def _get_title(data) -> str:
+    def _get_title(data: Dict[str, Any]) -> Union[str, Any]:
         for i in ["title", "jp_name", "eng_name", "material", "source", "created_at"]:
             if i in data:
                 return data[i]
         return ""
 
     @staticmethod
-    def _get_url(data) -> str:
+    def _get_url(data: Dict[str, Any]) -> Union[str, Any]:
         if "ext_urls" in data:
             return data["ext_urls"][0]
         elif "getchu_id" in data:
@@ -49,7 +49,7 @@ class SauceNAONorm(HandOver):
         return ""
 
     @staticmethod
-    def _get_author(data) -> str:
+    def _get_author(data: Dict[str, Any]) -> Union[str, Any]:
         for i in [
             "author",
             "author_name",
@@ -66,12 +66,12 @@ class SauceNAONorm(HandOver):
 
 
 class SauceNAOResponse:
-    def __init__(self, res: dict):
-        res_header = res["header"]
-        res_results = res["results"]
+    def __init__(self, data: Dict[str, Any]):
+        res_header = data["header"]
+        res_results = data["results"]
         # 所有的返回结果
         self.raw: List[SauceNAONorm] = [SauceNAONorm(i) for i in res_results]
-        self.origin: dict = res  # 原始返回结果
+        self.origin: Dict[str, Any] = data  # 原始返回结果
         self.short_remaining: int = res_header["short_remaining"]  # 每30秒访问额度
         self.long_remaining: int = res_header["long_remaining"]  # 每天访问额度
         self.user_id: int = res_header["user_id"]

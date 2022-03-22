@@ -1,6 +1,6 @@
-from typing import List
+from typing import Dict, List
 
-from pyquery import PyQuery
+from pyquery import PyQuery  # type: ignore
 
 
 class Ascii2DNorm:
@@ -17,7 +17,7 @@ class Ascii2DNorm:
         self.mark: str = info["mark"]
 
     @staticmethod
-    def _get_info(data: PyQuery) -> dict:
+    def _get_info(data: PyQuery) -> Dict[str, str]:
         info = {
             "url": "",
             "title": "",
@@ -43,7 +43,7 @@ class Ascii2DNorm:
 
 
 class Ascii2DResponse:
-    def __init__(self, res: PyQuery):
-        self.origin: PyQuery = res  # 原始数据
+    def __init__(self, data: PyQuery):
+        self.origin: PyQuery = data  # 原始数据
         # 结果返回值
-        self.raw: List[Ascii2DNorm] = [Ascii2DNorm(i) for i in res.items()]
+        self.raw: List[Ascii2DNorm] = [Ascii2DNorm(i) for i in data.items()]

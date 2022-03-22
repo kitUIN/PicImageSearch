@@ -1,8 +1,6 @@
 from typing import List
 
-from pyquery import PyQuery
-
-GOOGLE_URL = "https://www.google.com"
+from pyquery import PyQuery  # type: ignore
 
 
 class GoogleNorm:
@@ -29,7 +27,5 @@ class GoogleResponse:
         self.page: int = len(pages)  # 总页数
         self.pages: List[PyQuery] = pages  # 页面源
 
-    def get_page_url(self, index) -> str:
-        if self.index != index:
-            return f'{GOOGLE_URL}{self.pages[index - 1]("a").eq(0).attr("href")}'
-        return ""
+    def get_page_url(self, index: int) -> str:
+        return f'https://www.google.com{self.pages[index - 1]("a").eq(0).attr("href")}'

@@ -1,3 +1,4 @@
+# type:ignore
 """
 From: telethon/sync
 This magical module will rewrite all public methods in the public interface

@@ -1,6 +1,6 @@
 from loguru import logger
-from PicImageSearch import Network
-from PicImageSearch.sync import Iqdb
+
+from PicImageSearch import Iqdb, Network
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None
@@ -9,7 +9,7 @@ url = r"images/test01.jpg"  # 搜索本地图片
 
 
 @logger.catch()
-async def test():
+async def test() -> None:
     async with Network(proxies=proxies) as client:
         iqdb = Iqdb(client=client)
         res = await iqdb.search(url)

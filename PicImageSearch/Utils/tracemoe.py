@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 import httpx
 
@@ -7,7 +7,7 @@ from ..network import HandOver
 
 
 class TraceMoeMe:
-    def __init__(self, data):
+    def __init__(self, data: Dict[str, Any]):
         self.id: str = data["id"]  # IP 地址（访客）或电子邮件地址（用户）
         self.priority: int = data["priority"]  # 优先级
         self.concurrency: int = data["concurrency"]  # 搜索请求数量
@@ -17,7 +17,12 @@ class TraceMoeMe:
 
 class TraceMoeNorm(HandOver):
     def __init__(
-        self, data, chinese_title=True, mute=False, size=None, **requests_kwargs
+        self,
+        data: Dict[str, Any],
+        chinese_title: bool = True,
+        mute: bool = False,
+        size: Optional[str] = None,
+        **requests_kwargs: Any
     ):
         """
 
@@ -27,16 +32,16 @@ class TraceMoeNorm(HandOver):
         :param size: 视频与图片大小(s/m/l)
         """
         super().__init__(**requests_kwargs)
-        self.origin: dict = data  # 原始数据
+        self.origin: Dict[str, Any] = data  # 原始数据
         self.idMal: int = 0  # 匹配的MyAnimelist ID见https://myanimelist.net/
-        self.title: dict = {}
+        self.title: Dict[str, str] = {}
         self.title_native: str = ""
         """番剧国际命名"""
         self.title_english: str = ""
         self.title_romaji: str = ""
         self.title_chinese: str = ""
         self.anilist: Optional[int] = None  # 匹配的Anilist ID见https://anilist.co/
-        self.synonyms: list = []  # 备用英文标题
+        self.synonyms: List[str] = []  # 备用英文标题
         self.isAdult: bool = False
         if type(data["anilist"]) == dict:
             self.anilist = data["anilist"]["id"]
@@ -65,7 +70,7 @@ class TraceMoeNorm(HandOver):
             self.video += "&mute"
 
     async def download_image(
-        self, filename="image.png", path: Path = Path.cwd()
+        self, path: Optional[str], filename: str = "image.png"
     ) -> Path:
         """
         下载缩略图
@@ -74,11 +79,11 @@ class TraceMoeNorm(HandOver):
         :param path: 本地地址(默认当前目录)
         :return: 文件路径
         """
-        endpoint = await self.downloader(self.image, path, filename)
+        endpoint = await self.downloader(self.image, filename, path)
         return endpoint
 
     async def download_video(
-        self, filename="video.mp4", path: Path = Path.cwd()
+        self, path: Optional[str], filename: str = "video.mp4"
     ) -> Path:
         """
 
@@ -88,16 +93,16 @@ class TraceMoeNorm(HandOver):
         :param path: 本地地址(默认当前目录)
         :return: 文件路径
         """
-        endpoint = await self.downloader(self.video, path, filename)
+        endpoint = await self.downloader(self.video, filename, path)
         return endpoint
 
-    def _get_chinese_title(self) -> str:
+    def _get_chinese_title(self) -> Union[str, Any]:
         return self.get_anime_title(self.origin["anilist"]["id"])["data"]["Media"][
             "title"
         ]["chinese"]
 
     @staticmethod
-    def get_anime_title(anilist_id: int) -> dict:
+    def get_anime_title(anilist_id: int) -> Any:
         """获取中文标题
 
         :param anilist_id: id
@@ -127,12 +132,16 @@ class TraceMoeNorm(HandOver):
 
 class TraceMoeResponse:
     def __init__(
-        self, res: dict, chinese_title: bool, mute: bool, size: str, **requests_kwargs
+        self,
+        data: Dict[str, Any],
+        chinese_title: bool,
+        mute: bool,
+        size: Optional[str],
+        **requests_kwargs: Any
     ):
-        self.requests_kwargs: dict = requests_kwargs
-        self.origin: dict = res  # 原始数据
+        self.origin: Dict[str, Any] = data  # 原始数据
         self.raw: List[TraceMoeNorm] = []  # 结果返回值
-        res_docs = res["result"]
+        res_docs = data["result"]
         for i in res_docs:
             self.raw.append(
                 TraceMoeNorm(
@@ -140,8 +149,8 @@ class TraceMoeResponse:
                     chinese_title=chinese_title,
                     mute=mute,
                     size=size,
-                    **self.requests_kwargs,
+                    **requests_kwargs,
                 )
             )
-        self.frameCount: int = res["frameCount"]  # 搜索的帧总数
-        self.error: str = res["error"]  # 错误报告
+        self.frameCount: int = data["frameCount"]  # 搜索的帧总数
+        self.error: str = data["error"]  # 错误报告

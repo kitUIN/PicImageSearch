@@ -1,6 +1,8 @@
+from typing import Any
+
 from loguru import logger
 from lxml.html import HTMLParser, fromstring
-from pyquery import PyQuery
+from pyquery import PyQuery  # type: ignore
 
 from .network import HandOver
 from .Utils import Ascii2DResponse
@@ -19,10 +21,9 @@ class Ascii2D(HandOver):
     :param bovw(boolean):   use ascii2d bovw search, default False \n
     """
 
-    def __init__(self, bovw=False, **requests_kwargs):
+    def __init__(self, bovw: bool = False, **requests_kwargs: Any):
         super().__init__(**requests_kwargs)
-        self.requests_kwargs = requests_kwargs
-        self.bovw = bovw
+        self.bovw: bool = bovw
 
     @staticmethod
     def _slice(res: str) -> Ascii2DResponse:

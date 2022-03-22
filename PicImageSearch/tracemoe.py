@@ -1,3 +1,5 @@
+from typing import Any, Dict, Optional, Union
+
 from loguru import logger
 
 from .network import HandOver
@@ -8,7 +10,9 @@ class TraceMoe(HandOver):
     search_url = "https://api.trace.moe/search"
     me_url = "https://api.trace.moe/me"
 
-    def __init__(self, mute=False, size=None, **requests_kwargs):
+    def __init__(
+        self, mute: bool = False, size: Optional[str] = None, **requests_kwargs: Any
+    ):
         """主类
 
         :param size: 预览 视频/图像 大小(可填:s/m/l)(小/中/大)
@@ -16,9 +20,11 @@ class TraceMoe(HandOver):
         :param requests_kwargs:代理设置
         """
         super().__init__(**requests_kwargs)
-        self.size: str = size
+        self.size: Optional[str] = size
         self.mute: bool = mute
-        self.requests_kwargs = requests_kwargs
+        self.requests_kwargs: Dict[str, Any] = (
+            requests_kwargs if requests_kwargs else {}
+        )
 
     # @staticmethod
     # def _base_64(filename):
@@ -29,20 +35,19 @@ class TraceMoe(HandOver):
 
     # 获取自己的信息
     @logger.catch()
-    async def me(self, key=None) -> TraceMoeMe:
+    async def me(self, key: Optional[str] = None) -> TraceMoeMe:
         params = {"key": key} if key else None
         res = await self.get(self.me_url, _params=params, **self.requests_kwargs)
         return TraceMoeMe(res.json())
 
     @staticmethod
-    def _first_if(param):
-        if param != "":
-            param += "&"
-        return param
-
-    @staticmethod
-    def set_params(url, anilist_id, anilist_info, cut_borders):
-        params = {}
+    def set_params(
+        url: Optional[str],
+        anilist_id: Optional[int],
+        anilist_info: bool,
+        cut_borders: bool,
+    ) -> Dict[str, Union[bool, int, str]]:
+        params: Dict[str, Union[bool, int, str]] = {}
         if anilist_info:
             params["anilistInfo"] = True
         if cut_borders:
@@ -56,12 +61,12 @@ class TraceMoe(HandOver):
     @logger.catch()
     async def search(
         self,
-        url,
-        key=None,
-        anilist_id=None,
-        chinese_title=True,
-        anilist_info=True,
-        cut_borders=True,
+        url: str,
+        key: Optional[str] = None,
+        anilist_id: Optional[int] = None,
+        chinese_title: bool = True,
+        anilist_info: bool = True,
+        cut_borders: bool = True,
     ) -> TraceMoeResponse:
         """识别图片
         :param key: API密钥 https://soruly.github.io/trace.moe-api/#/limits?id=api-search-quota-and-limits
@@ -71,9 +76,7 @@ class TraceMoe(HandOver):
         :param chinese_title: 中文番剧标题
         :param cut_borders: 切割黑边框(默认开启)
         """
-        headers = None
-        if headers:
-            headers = {"x-trace-key": key}
+        headers = {"x-trace-key": key} if key else None
         if url[:4] == "http":  # 网络url
             params = self.set_params(url, anilist_id, anilist_info, cut_borders)
             res = await self.get(self.search_url, _headers=headers, _params=params)
@@ -85,7 +88,6 @@ class TraceMoe(HandOver):
                 _params=params,
                 _files={"image": open(url, "rb")},
             )
-        data = res.json()
         return TraceMoeResponse(
-            data, chinese_title, self.mute, self.size, **self.requests_kwargs
+            res.json(), chinese_title, self.mute, self.size, **self.requests_kwargs
         )

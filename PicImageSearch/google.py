@@ -1,8 +1,9 @@
+from typing import Any, Dict
 from urllib.parse import quote
 
 from loguru import logger
 from lxml.html import HTMLParser, fromstring
-from pyquery import PyQuery
+from pyquery import PyQuery  # type: ignore
 
 from .network import HandOver
 from .Utils import GoogleResponse
@@ -20,14 +21,13 @@ class Google(HandOver):
     :param **requests_kwargs: proxies settings
     """
 
-    def __init__(self, **request_kwargs):
+    def __init__(self, **request_kwargs: Any):
         super().__init__(**request_kwargs)
         self.url = "https://www.google.com/searchbyimage"
-        self.params = {}
+        self.params: Dict[str, Any] = {}
         self.header = {
             "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0",
         }
-        self.requests_kwargs = request_kwargs
 
     @staticmethod
     def _slice(res: str, index: int = 1) -> GoogleResponse:
@@ -38,9 +38,8 @@ class Google(HandOver):
         return GoogleResponse(data, pages, index)
 
     async def goto_page(self, url: str, index: int) -> GoogleResponse:
-        if url:
-            response = await self.get(url, _headers=self.header)
-            return self._slice(response.text, index)
+        response = await self.get(url, _headers=self.header)
+        return self._slice(response.text, index)
 
     @logger.catch()
     async def search(self, url: str) -> GoogleResponse:

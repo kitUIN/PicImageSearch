@@ -1,6 +1,6 @@
 from loguru import logger
-from PicImageSearch import Network
-from PicImageSearch.sync import SauceNAO
+
+from PicImageSearch import Network, SauceNAO
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None
@@ -10,7 +10,7 @@ api_key = "a4ab3f81009b003528f7e31aed187fa32a063f58"
 
 
 @logger.catch()
-async def test():
+async def test() -> None:
     async with Network(proxies=proxies) as client:
         saucenao = SauceNAO(client=client, api_key=api_key)
         res = await saucenao.search(url)

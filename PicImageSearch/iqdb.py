@@ -1,4 +1,8 @@
+from typing import Any
+
 from loguru import logger
+from lxml.html import HTMLParser, fromstring
+from pyquery import PyQuery  # type: ignore
 
 from .network import HandOver
 from .Utils import IqdbResponse
@@ -16,11 +20,16 @@ class Iqdb(HandOver):
     :param **requests_kwargs: proxies settings
     """
 
-    def __init__(self, **requests_kwargs):
+    def __init__(self, **requests_kwargs: Any):
         super().__init__(**requests_kwargs)
-        self.requests_kwargs = requests_kwargs
         self.url = "https://iqdb.org/"
         self.url_3d = "https://3d.iqdb.org/"
+
+    @staticmethod
+    def _slice(res: str) -> IqdbResponse:
+        utf8_parser = HTMLParser(encoding="utf-8")
+        d = PyQuery(fromstring(res, parser=utf8_parser))
+        return IqdbResponse(d)
 
     # TODO: &forcegray=on
     @logger.catch()
@@ -54,7 +63,7 @@ class Iqdb(HandOver):
             res = await self.post(self.url, _data=data)
         else:  # 是否是本地文件
             res = await self.post(self.url, _files={"file": open(url, "rb")})
-        return IqdbResponse(res.text)
+        return self._slice(res.text)
 
     @logger.catch()
     async def search_3d(self, url: str) -> IqdbResponse:
@@ -80,4 +89,4 @@ class Iqdb(HandOver):
             res = await self.post(self.url_3d, _data=data)
         else:  # 是否是本地文件
             res = await self.post(self.url_3d, _files={"file": open(url, "rb")})
-        return IqdbResponse(res.text)
+        return self._slice(res.text)

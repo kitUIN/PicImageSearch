@@ -1,6 +1,6 @@
 from loguru import logger
-from PicImageSearch import Network
-from PicImageSearch.sync import Ascii2D
+
+from PicImageSearch import Ascii2D, Network
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None
@@ -10,7 +10,7 @@ bovw = True
 
 
 @logger.catch()
-async def test():
+async def test() -> None:
     async with Network(proxies=proxies) as client:
         ascii2d = Ascii2D(client=client, bovw=bovw)
         res = await ascii2d.search(url)

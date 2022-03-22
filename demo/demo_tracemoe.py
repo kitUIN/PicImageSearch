@@ -1,6 +1,6 @@
 from loguru import logger
-from PicImageSearch import Network
-from PicImageSearch.sync import TraceMoe
+
+from PicImageSearch import Network, TraceMoe
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None
@@ -9,7 +9,7 @@ url = r"images/test05.jpg"  # 搜索本地图片
 
 
 @logger.catch()
-async def test():
+async def test() -> None:
     async with Network(proxies=proxies) as client:
         tracemoe = TraceMoe(client=client, mute=False, size=None)
         res = await tracemoe.search(url)
