@@ -50,4 +50,4 @@ jobs:
         run: python -m pip install --upgrade pip
       - name: Run Pip Install
         run: |
-          pip install picimagesearch==${{ github.event.release.tag_name }} -i https://pypi.org/
+          pip install picimagesearch==${{ github.event.release.tag_name }}
