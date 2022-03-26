@@ -19,10 +19,13 @@ class Network:
             }
         else:
             headers.update(headers)
+        self.cookies: Dict[str, str] = {}
         if cookies:
-            headers.update({"Cookie": cookies})
+            for line in cookies.split(";"):
+                key, value = line.strip().split("=", 1)
+                self.cookies[key] = value
         self.client: AsyncClient = AsyncClient(
-            proxies=proxies, headers=headers, verify=False, follow_redirects=True  # type: ignore
+            proxies=proxies, headers=headers, cookies=self.cookies, verify=False, follow_redirects=True  # type: ignore
         )
 
     def start(self) -> AsyncClient:

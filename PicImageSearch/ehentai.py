@@ -9,13 +9,13 @@ from .network import HandOver
 class EHentai(HandOver):
     def __init__(
         self,
-        cover: bool = False,
+        covers: bool = False,
         similar: bool = True,
         exp: bool = False,
         **request_kwargs: Any
     ):
         super().__init__(**request_kwargs)
-        self.covers: bool = cover
+        self.covers: bool = covers
         self.similar: bool = similar
         self.exp: bool = exp
 
@@ -35,6 +35,4 @@ class EHentai(HandOver):
         if self.exp:
             data["fs_exp"] = "on"
         resp = await self.post(url=url, data=data, files=files)
-        logger.info(resp.headers)
-        logger.info(resp.text)
         return EHentaiResponse(resp)
