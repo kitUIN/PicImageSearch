@@ -9,16 +9,20 @@
 
 ## 支持
 - [x] [SauceNAO](https://saucenao.com/)
-- [x] [TraceMoe](https://trace.moe/) (6月30日更新新的api)
+- [x] [TraceMoe](https://trace.moe/)
 - [x] [Iqdb](http://iqdb.org/)
 - [x] [Ascii2D](https://ascii2d.net/)
 - [x] [Google谷歌识图](https://www.google.com/imghp)  
 - [x] [BaiDu百度识图](https://graph.baidu.com/)
-- [x] 异步
+- [x] [E-Hantai](https://e-hentai.org/)  
+- [x] [ExHantai](https://exhentai.org/)  
+- [x] 同步/异步
 ## 简要说明
-详细见[文档](https://www.kituin.fun/wiki/picimagesearch/) 或者[`demo`](https://github.com/kitUIN/PicImageSearch/tree/main/demo) 
+
+详细见[文档](https://www.kituin.fun/wiki/picimagesearch/) 或者[`demo`](https://github.com/kitUIN/PicImageSearch/tree/main/demo)  
 `同步`请使用`from PicImageSearch.sync import ...`导入  
-`异步`请使用`from PicImageSearch import Network,...`导入
+`异步`请使用`from PicImageSearch import Network,...`导入  
+**推荐使用异步**  
 
 ## 简单示例
 ```python
