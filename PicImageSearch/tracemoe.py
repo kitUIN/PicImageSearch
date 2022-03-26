@@ -2,8 +2,8 @@ from typing import Any, Dict, Optional, Union
 
 from loguru import logger
 
+from .model import TraceMoeMe, TraceMoeResponse
 from .network import HandOver
-from .Utils import TraceMoeMe, TraceMoeResponse
 
 
 class TraceMoe(HandOver):

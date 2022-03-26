@@ -4,8 +4,8 @@ from loguru import logger
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
+from .model import IqdbResponse
 from .network import HandOver
-from .Utils import IqdbResponse
 
 
 class Iqdb(HandOver):

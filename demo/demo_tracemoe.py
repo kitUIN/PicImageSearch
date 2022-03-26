@@ -3,8 +3,8 @@ import asyncio
 from loguru import logger
 
 from PicImageSearch import Network, TraceMoe
+from PicImageSearch.model import TraceMoeResponse
 from PicImageSearch.sync import TraceMoe as TraceMoeSync
-from PicImageSearch.Utils import TraceMoeResponse
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None

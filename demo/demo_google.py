@@ -3,8 +3,8 @@ import asyncio
 from loguru import logger
 
 from PicImageSearch import Google, Network
+from PicImageSearch.model import GoogleResponse
 from PicImageSearch.sync import Google as GoogleSync
-from PicImageSearch.Utils import GoogleResponse
 
 proxies = "http://127.0.0.1:1081"
 # proxies = None

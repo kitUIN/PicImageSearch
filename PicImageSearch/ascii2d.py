@@ -4,8 +4,8 @@ from loguru import logger
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
+from .model import Ascii2DResponse
 from .network import HandOver
-from .Utils import Ascii2DResponse
 
 
 class Ascii2D(HandOver):

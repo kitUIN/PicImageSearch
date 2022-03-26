@@ -2,8 +2,8 @@ from typing import Any
 
 from loguru import logger
 
+from .model import BaiDuResponse
 from .network import HandOver
-from .Utils import BaiDuResponse
 
 
 class BaiDu(HandOver):

@@ -3,8 +3,8 @@ import asyncio
 from loguru import logger
 
 from PicImageSearch import Network, SauceNAO
+from PicImageSearch.model import SauceNAOResponse
 from PicImageSearch.sync import SauceNAO as SauceNAOSync
-from PicImageSearch.Utils import SauceNAOResponse
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None

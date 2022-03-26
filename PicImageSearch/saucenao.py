@@ -2,8 +2,8 @@ from typing import Any, Dict, Optional, Union
 
 from loguru import logger
 
+from .model import SauceNAOResponse
 from .network import HandOver
-from .Utils import SauceNAOResponse
 
 
 class SauceNAO(HandOver):

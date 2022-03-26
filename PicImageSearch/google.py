@@ -5,8 +5,8 @@ from loguru import logger
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
+from .model import GoogleResponse
 from .network import HandOver
-from .Utils import GoogleResponse
 
 
 class Google(HandOver):

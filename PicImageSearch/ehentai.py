@@ -2,8 +2,8 @@ from typing import Any
 
 from loguru import logger
 
+from .model import EHentaiResponse
 from .network import HandOver
-from .Utils import EHentaiResponse
 
 
 class EHentai(HandOver):

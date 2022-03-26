@@ -3,8 +3,8 @@ import asyncio
 from loguru import logger
 
 from PicImageSearch import Ascii2D, Network
+from PicImageSearch.model import Ascii2DResponse
 from PicImageSearch.sync import Ascii2D as Ascii2DSync
-from PicImageSearch.Utils import Ascii2DResponse
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None

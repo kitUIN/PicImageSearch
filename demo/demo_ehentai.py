@@ -3,8 +3,8 @@ import asyncio
 from loguru import logger
 
 from PicImageSearch import EHentai, Network
+from PicImageSearch.model import EHentaiResponse
 from PicImageSearch.sync import EHentai as EHentaiSync
-from PicImageSearch.Utils import EHentaiResponse
 
 proxies = "http://127.0.0.1:1081"
 # proxies = None
