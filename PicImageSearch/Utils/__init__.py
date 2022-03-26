@@ -1,22 +1,7 @@
-from .ascii2d import Ascii2DNorm, Ascii2DResponse
-from .baidu import BaiDuNorm, BaiDuResponse
-from .google import GoogleNorm, GoogleResponse
-from .iqdb import IqdbNorm, IqdbResponse
-from .saucenao import SauceNAONorm, SauceNAOResponse
-from .tracemoe import TraceMoeMe, TraceMoeNorm, TraceMoeResponse
-
-__all__ = [
-    "Ascii2DNorm",
-    "Ascii2DResponse",
-    "BaiDuResponse",
-    "GoogleNorm",
-    "GoogleNorm",
-    "GoogleResponse",
-    "IqdbNorm",
-    "IqdbResponse",
-    "SauceNAONorm",
-    "SauceNAOResponse",
-    "TraceMoeMe",
-    "TraceMoeNorm",
-    "TraceMoeResponse",
-]
+from .ascii2d import Ascii2DItem, Ascii2DResponse
+from .baidu import BaiDuItem, BaiDuResponse
+from .ehentai import EHentaiItem, EHentaiResponse
+from .google import GoogleItem, GoogleResponse
+from .iqdb import IqdbItem, IqdbResponse
+from .saucenao import SauceNAOItem, SauceNAOResponse
+from .tracemoe import TraceMoeItem, TraceMoeMe, TraceMoeResponse

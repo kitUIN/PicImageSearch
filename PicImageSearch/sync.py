@@ -1,4 +1,3 @@
-# type:ignore
 """
 From: telethon/sync
 This magical module will rewrite all public methods in the public interface
@@ -11,7 +10,7 @@ import asyncio
 import functools
 import inspect
 
-from . import Ascii2D, BaiDu, Google, Iqdb, SauceNAO, TraceMoe
+from . import Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe
 
 
 def _syncify_wrap(t, method_name):
@@ -39,6 +38,15 @@ def syncify(*types):
                     _syncify_wrap(t, name)
 
 
-syncify(Ascii2D, BaiDu, Google, Iqdb, SauceNAO, TraceMoe)
+syncify(Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe)
 
-__all__ = ["Ascii2D", "BaiDu", "Google", "Iqdb", "SauceNAO", "TraceMoe"]
+__all__ = [
+    "Ascii2D",
+    "BaiDu",
+    "EHentai",
+    "Google",
+    "Iqdb",
+    "Network",
+    "SauceNAO",
+    "TraceMoe",
+]
