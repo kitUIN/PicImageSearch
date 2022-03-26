@@ -1,13 +1,16 @@
 from typing import Any
 
+from loguru import logger
+
 from .network import HandOver
 from .Utils import BaiDuResponse
 
 
 class BaiDu(HandOver):
-    def __init__(self, **requests_kwargs: Any):
-        super().__init__(**requests_kwargs)
+    def __init__(self, **request_kwargs: Any):
+        super().__init__(**request_kwargs)
 
+    @logger.catch()
     async def search(self, url: str) -> BaiDuResponse:
         params = {"from": "pc"}
         files = None
@@ -16,8 +19,8 @@ class BaiDu(HandOver):
         else:
             # 上传文件
             files = {"image": open(url, "rb")}
-        res = await self.post(
-            "https://graph.baidu.com/upload", _params=params, _files=files
+        resp = await self.post(
+            "https://graph.baidu.com/upload", params=params, files=files
         )
-        res = await self.get(res.json()["data"]["url"])
-        return BaiDuResponse(res)
+        resp = await self.get(resp.json()["data"]["url"])
+        return BaiDuResponse(resp)

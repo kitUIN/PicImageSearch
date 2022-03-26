@@ -1,12 +1,8 @@
-from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
-
-from ..network import HandOver
+from typing import Any, Dict, List, Union
 
 
-class SauceNAONorm(HandOver):
-    def __init__(self, data: Dict[str, Any], **requests_kwargs: Any):
-        super().__init__(**requests_kwargs)
+class SauceNAOItem:
+    def __init__(self, data: Dict[str, Any]):
         result_header = data["header"]
         result_data = data["data"]
         self.origin: Dict[str, Any] = data  # 原始数据
@@ -19,19 +15,6 @@ class SauceNAONorm(HandOver):
         self.author: str = self._get_author(result_data)
         self.pixiv_id: int = result_data.get("pixiv_id", 0)
         self.member_id: int = result_data.get("member_id", 0)
-
-    async def download_thumbnail(
-        self, path: Optional[str], filename: str = "thumbnail.png"
-    ) -> Path:
-        """
-        下载缩略图
-
-        :param filename: 重命名文件
-        :param path: 本地地址(默认当前目录)
-        :return: 文件路径
-        """
-        endpoint = await self.downloader(self.thumbnail, filename, path)
-        return endpoint
 
     @staticmethod
     def _get_title(data: Dict[str, Any]) -> Union[str, Any]:
@@ -70,7 +53,7 @@ class SauceNAOResponse:
         res_header = data["header"]
         res_results = data["results"]
         # 所有的返回结果
-        self.raw: List[SauceNAONorm] = [SauceNAONorm(i) for i in res_results]
+        self.raw: List[SauceNAOItem] = [SauceNAOItem(i) for i in res_results]
         self.origin: Dict[str, Any] = data  # 原始返回结果
         self.short_remaining: int = res_header["short_remaining"]  # 每30秒访问额度
         self.long_remaining: int = res_header["long_remaining"]  # 每天访问额度

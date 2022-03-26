@@ -15,7 +15,6 @@ keywords = ["google", "iqdb", "saucenao", "tracemoe", "ascii2d"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
-aiofiles = "^0.8.0"
 httpx = "^0.22.0"
 lxml = "^4.8.0"
 loguru = "^0.6.0"

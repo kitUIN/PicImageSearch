@@ -11,20 +11,18 @@ class TraceMoe(HandOver):
     me_url = "https://api.trace.moe/me"
 
     def __init__(
-        self, mute: bool = False, size: Optional[str] = None, **requests_kwargs: Any
+        self, mute: bool = False, size: Optional[str] = None, **request_kwargs: Any
     ):
         """主类
 
         :param size: 预览 视频/图像 大小(可填:s/m/l)(小/中/大)
         :param mute: 预览视频是否静音（默认不静音）
-        :param requests_kwargs:代理设置
+        :param request_kwargs:代理设置
         """
-        super().__init__(**requests_kwargs)
+        super().__init__(**request_kwargs)
         self.size: Optional[str] = size
         self.mute: bool = mute
-        self.requests_kwargs: Dict[str, Any] = (
-            requests_kwargs if requests_kwargs else {}
-        )
+        self.request_kwargs: Dict[str, Any] = request_kwargs if request_kwargs else {}
 
     # @staticmethod
     # def _base_64(filename):
@@ -37,8 +35,8 @@ class TraceMoe(HandOver):
     @logger.catch()
     async def me(self, key: Optional[str] = None) -> TraceMoeMe:
         params = {"key": key} if key else None
-        res = await self.get(self.me_url, _params=params, **self.requests_kwargs)
-        return TraceMoeMe(res.json())
+        resp = await self.get(self.me_url, params=params, **self.request_kwargs)
+        return TraceMoeMe(resp.json())
 
     @staticmethod
     def set_params(
@@ -79,15 +77,15 @@ class TraceMoe(HandOver):
         headers = {"x-trace-key": key} if key else None
         if url[:4] == "http":  # 网络url
             params = self.set_params(url, anilist_id, anilist_info, cut_borders)
-            res = await self.get(self.search_url, _headers=headers, _params=params)
+            resp = await self.get(self.search_url, headers=headers, params=params)  # type: ignore
         else:  # 是否是本地文件
             params = self.set_params(None, anilist_id, anilist_info, cut_borders)
-            res = await self.post(
+            resp = await self.post(
                 self.search_url,
-                _headers=headers,
-                _params=params,
-                _files={"image": open(url, "rb")},
+                headers=headers,
+                params=params,
+                files={"image": open(url, "rb")},
             )
         return TraceMoeResponse(
-            res.json(), chinese_title, self.mute, self.size, **self.requests_kwargs
+            resp.json(), chinese_title, self.mute, self.size, **self.request_kwargs
         )

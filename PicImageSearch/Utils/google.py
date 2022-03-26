@@ -1,9 +1,9 @@
 from typing import List
 
-from pyquery import PyQuery  # type: ignore
+from pyquery import PyQuery
 
 
-class GoogleNorm:
+class GoogleItem:
     def __init__(self, data: PyQuery):
         self.origin: PyQuery = data  # 原始数据
         self.title: str = data("h3").text()
@@ -22,7 +22,7 @@ class GoogleResponse:
     def __init__(self, data: PyQuery, pages: List[PyQuery], index: int):
         self.origin: PyQuery = data  # 原始数据
         # 结果返回值
-        self.raw: List[GoogleNorm] = [GoogleNorm(i) for i in data.items()]
+        self.raw: List[GoogleItem] = [GoogleItem(i) for i in data.items()]
         self.index: int = index  # 当前页
         self.page: int = len(pages)  # 总页数
         self.pages: List[PyQuery] = pages  # 页面源

@@ -2,7 +2,7 @@ from typing import Any
 
 from loguru import logger
 from lxml.html import HTMLParser, fromstring
-from pyquery import PyQuery  # type: ignore
+from pyquery import PyQuery
 
 from .network import HandOver
 from .Utils import Ascii2DResponse
@@ -17,18 +17,18 @@ class Ascii2D(HandOver):
 
     Params Keys
     -----------
-    :param **requests_kwargs:   proxies settings.\n
+    :param **request_kwargs:   proxies settings.\n
     :param bovw(boolean):   use ascii2d bovw search, default False \n
     """
 
-    def __init__(self, bovw: bool = False, **requests_kwargs: Any):
-        super().__init__(**requests_kwargs)
+    def __init__(self, bovw: bool = False, **request_kwargs: Any):
+        super().__init__(**request_kwargs)
         self.bovw: bool = bovw
 
     @staticmethod
-    def _slice(res: str) -> Ascii2DResponse:
+    def _slice(resp: str) -> Ascii2DResponse:
         utf8_parser = HTMLParser(encoding="utf-8")
-        d = PyQuery(fromstring(res, parser=utf8_parser))("div.row.item-box")
+        d = PyQuery(fromstring(resp, parser=utf8_parser))("div.row.item-box")
         return Ascii2DResponse(d)
 
     @logger.catch()
@@ -52,13 +52,13 @@ class Ascii2D(HandOver):
         """
         if url[:4] == "http":  # 网络url
             ascii2d_url = "https://ascii2d.net/search/uri"
-            res = await self.post(ascii2d_url, _data={"uri": url})
+            resp = await self.post(ascii2d_url, data={"uri": url})
         else:  # 是否是本地文件
             ascii2d_url = "https://ascii2d.net/search/file"
-            res = await self.post(ascii2d_url, _files={"file": open(url, "rb")})
+            resp = await self.post(ascii2d_url, files={"file": open(url, "rb")})
 
         # 如果启用bovw选项，第一次请求是向服务器提交文件
         if self.bovw:
-            res = await self.get(str(res.url).replace("/color/", "/bovw/"))
+            resp = await self.get(str(resp.url).replace("/color/", "/bovw/"))
 
-        return self._slice(res.text)
+        return self._slice(resp.text)

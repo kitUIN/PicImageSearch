@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 from httpx import Response
 
 
-class BaiDuNorm:
+class BaiDuItem:
     def __init__(self, data: Dict[str, Any]):
         self.origin: Dict[str, Any] = data  # 原始数据
         self.page_title: str = data["fromPageTitle"]  # 页面标题
@@ -20,7 +20,7 @@ class BaiDuResponse:
     def __init__(self, res: Response):
         self.url: str = str(res.url)  # 搜索结果地址
         self.similar: List[Dict[str, Any]] = []  # 相似结果返回值
-        self.raw: List[BaiDuNorm] = []  # 来源结果返回值
+        self.raw: List[BaiDuItem] = []  # 来源结果返回值
         # 原始数据
         self.origin: List[Dict[str, Any]] = json.loads(
             re.search(r"cardData = (.+);window\.commonData", res.text)[1]  # type: ignore
@@ -29,7 +29,7 @@ class BaiDuResponse:
         for i in self.origin:
             setattr(self, i["cardName"], i)
         if self.same:
-            self.raw = [BaiDuNorm(x) for x in self.same["tplData"]["list"]]
+            self.raw = [BaiDuItem(x) for x in self.same["tplData"]["list"]]
             info = self.same["extData"]["showInfo"]
             del info["other_info"]
             for y in info:

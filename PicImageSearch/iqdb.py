@@ -2,7 +2,7 @@ from typing import Any
 
 from loguru import logger
 from lxml.html import HTMLParser, fromstring
-from pyquery import PyQuery  # type: ignore
+from pyquery import PyQuery
 
 from .network import HandOver
 from .Utils import IqdbResponse
@@ -17,18 +17,18 @@ class Iqdb(HandOver):
 
     Params Keys
     -----------
-    :param **requests_kwargs: proxies settings
+    :param **request_kwargs: proxies settings
     """
 
-    def __init__(self, **requests_kwargs: Any):
-        super().__init__(**requests_kwargs)
+    def __init__(self, **request_kwargs: Any):
+        super().__init__(**request_kwargs)
         self.url = "https://iqdb.org/"
         self.url_3d = "https://3d.iqdb.org/"
 
     @staticmethod
-    def _slice(res: str) -> IqdbResponse:
+    def _slice(resp: str) -> IqdbResponse:
         utf8_parser = HTMLParser(encoding="utf-8")
-        d = PyQuery(fromstring(res, parser=utf8_parser))
+        d = PyQuery(fromstring(resp, parser=utf8_parser))
         return IqdbResponse(d)
 
     # TODO: &forcegray=on
@@ -60,10 +60,10 @@ class Iqdb(HandOver):
         """
         if url[:4] == "http":  # 网络url
             data = {"url": url}
-            res = await self.post(self.url, _data=data)
+            resp = await self.post(self.url, data=data)
         else:  # 是否是本地文件
-            res = await self.post(self.url, _files={"file": open(url, "rb")})
-        return self._slice(res.text)
+            resp = await self.post(self.url, files={"file": open(url, "rb")})
+        return self._slice(resp.text)
 
     @logger.catch()
     async def search_3d(self, url: str) -> IqdbResponse:
@@ -86,7 +86,7 @@ class Iqdb(HandOver):
         """
         if url[:4] == "http":  # 网络url
             data = {"url": url}
-            res = await self.post(self.url_3d, _data=data)
+            resp = await self.post(self.url_3d, data=data)
         else:  # 是否是本地文件
-            res = await self.post(self.url_3d, _files={"file": open(url, "rb")})
-        return self._slice(res.text)
+            resp = await self.post(self.url_3d, files={"file": open(url, "rb")})
+        return self._slice(resp.text)

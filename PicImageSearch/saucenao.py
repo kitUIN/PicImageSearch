@@ -18,7 +18,7 @@ class SauceNAO(HandOver):
         dbmask: Optional[int] = None,
         dbmaski: Optional[int] = None,
         db: int = 999,
-        **requests_kwargs: Any
+        **request_kwargs: Any
     ):
         """
         SauceNAO
@@ -39,7 +39,7 @@ class SauceNAO(HandOver):
         :param hide: (int) result hiding control, none=0, clear return value (default)=1, suspect return value=2, all return value=3
         """
         # minsim 控制最小相似度
-        super().__init__(**requests_kwargs)
+        super().__init__(**request_kwargs)
         self.url = "https://saucenao.com/search.php"
         params: Dict[str, Union[str, int]] = {
             "testmode": testmode,
@@ -94,9 +94,9 @@ class SauceNAO(HandOver):
         else:
             # 上传文件
             files = {"file": open(url, "rb")}
-        res = await self.post(
+        resp = await self.post(
             self.url,
-            _params=params,
-            _files=files,
+            params=params,
+            files=files,
         )
-        return SauceNAOResponse(res.json())
+        return SauceNAOResponse(resp.json())

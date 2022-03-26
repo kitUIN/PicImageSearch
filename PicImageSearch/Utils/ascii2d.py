@@ -1,9 +1,9 @@
 from typing import Dict, List
 
-from pyquery import PyQuery  # type: ignore
+from pyquery import PyQuery
 
 
-class Ascii2DNorm:
+class Ascii2DItem:
     def __init__(self, data: PyQuery):
         self.origin: PyQuery = data  # 原始数据
         info = self._get_info(data("div.detail-box.gray-link"))
@@ -46,4 +46,4 @@ class Ascii2DResponse:
     def __init__(self, data: PyQuery):
         self.origin: PyQuery = data  # 原始数据
         # 结果返回值
-        self.raw: List[Ascii2DNorm] = [Ascii2DNorm(i) for i in data.items()]
+        self.raw: List[Ascii2DItem] = [Ascii2DItem(i) for i in data.items()]

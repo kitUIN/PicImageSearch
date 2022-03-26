@@ -1,9 +1,6 @@
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import httpx
-
-from ..network import HandOver
 
 
 class TraceMoeMe:
@@ -15,14 +12,14 @@ class TraceMoeMe:
         self.quotaUsed: int = data["quotaUsed"]  # 本月已经使用的搜索配额
 
 
-class TraceMoeNorm(HandOver):
+class TraceMoeItem:
     def __init__(
         self,
         data: Dict[str, Any],
         chinese_title: bool = True,
         mute: bool = False,
         size: Optional[str] = None,
-        **requests_kwargs: Any
+        **request_kwargs: Any
     ):
         """
 
@@ -31,7 +28,6 @@ class TraceMoeNorm(HandOver):
         :param mute: 预览视频静音
         :param size: 视频与图片大小(s/m/l)
         """
-        super().__init__(**requests_kwargs)
         self.origin: Dict[str, Any] = data  # 原始数据
         self.idMal: int = 0  # 匹配的MyAnimelist ID见https://myanimelist.net/
         self.title: Dict[str, str] = {}
@@ -69,40 +65,13 @@ class TraceMoeNorm(HandOver):
         if mute:  # 视频静音设置
             self.video += "&mute"
 
-    async def download_image(
-        self, path: Optional[str], filename: str = "image.png"
-    ) -> Path:
-        """
-        下载缩略图
-
-        :param filename: 重命名文件
-        :param path: 本地地址(默认当前目录)
-        :return: 文件路径
-        """
-        endpoint = await self.downloader(self.image, filename, path)
-        return endpoint
-
-    async def download_video(
-        self, path: Optional[str], filename: str = "video.mp4"
-    ) -> Path:
-        """
-
-        下载预览视频
-
-        :param filename: 重命名文件
-        :param path: 本地地址(默认当前目录)
-        :return: 文件路径
-        """
-        endpoint = await self.downloader(self.video, filename, path)
-        return endpoint
-
     def _get_chinese_title(self) -> Union[str, Any]:
-        return self.get_anime_title(self.origin["anilist"]["id"])["data"]["Media"][
+        return self._get_anime_title(self.origin["anilist"]["id"])["data"]["Media"][
             "title"
         ]["chinese"]
 
     @staticmethod
-    def get_anime_title(anilist_id: int) -> Any:
+    def _get_anime_title(anilist_id: int) -> Any:
         """获取中文标题
 
         :param anilist_id: id
@@ -126,8 +95,7 @@ class TraceMoeNorm(HandOver):
 
         url = "https://trace.moe/anilist/"
 
-        response = httpx.post(url, json={"query": query, "variables": variables})
-        return response.json()
+        return httpx.post(url, json={"query": query, "variables": variables}).json()
 
 
 class TraceMoeResponse:
@@ -137,19 +105,19 @@ class TraceMoeResponse:
         chinese_title: bool,
         mute: bool,
         size: Optional[str],
-        **requests_kwargs: Any
+        **request_kwargs: Any
     ):
         self.origin: Dict[str, Any] = data  # 原始数据
-        self.raw: List[TraceMoeNorm] = []  # 结果返回值
+        self.raw: List[TraceMoeItem] = []  # 结果返回值
         res_docs = data["result"]
         for i in res_docs:
             self.raw.append(
-                TraceMoeNorm(
+                TraceMoeItem(
                     i,
                     chinese_title=chinese_title,
                     mute=mute,
                     size=size,
-                    **requests_kwargs,
+                    **request_kwargs,
                 )
             )
         self.frameCount: int = data["frameCount"]  # 搜索的帧总数

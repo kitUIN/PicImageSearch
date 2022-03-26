@@ -1,9 +1,9 @@
 from typing import Dict, List
 
-from pyquery import PyQuery  # type: ignore
+from pyquery import PyQuery
 
 
-class IqdbNorm:
+class IqdbItem:
     def __init__(self, data: PyQuery):
         self.origin: PyQuery = data  # 原始数据
         self.content: str = ""  # 备注
@@ -48,8 +48,8 @@ class IqdbNorm:
 class IqdbResponse:
     def __init__(self, data: PyQuery):
         self.origin: PyQuery = data  # 原始数据
-        self.raw: List[IqdbNorm] = []  # 结果返回值
-        self.more: List[IqdbNorm] = []  # 更多结果返回值(低相似度)
+        self.raw: List[IqdbItem] = []  # 结果返回值
+        self.more: List[IqdbItem] = []  # 更多结果返回值(低相似度)
         self.saucenao_url: str = ""  # SauceNao搜索链接
         self.ascii2d_url: str = ""  # Ascii2d搜索链接
         self.google_url: str = ""  # Google搜索链接
@@ -59,7 +59,7 @@ class IqdbResponse:
     def _arrange(self, data: PyQuery) -> None:
         tables = list(data("#pages > div > table").items())
         if len(tables) > 1:
-            self.raw.extend([IqdbNorm(i) for i in tables[1:]])
+            self.raw.extend([IqdbItem(i) for i in tables[1:]])
         content = tables[0].find("th").text()
         if content == "No relevant matches":
             self._get_other_urls(tables[0].find("a"))
@@ -68,7 +68,7 @@ class IqdbResponse:
         self._get_more(data("#more1 > div.pages > div > table"))
 
     def _get_more(self, data: PyQuery) -> None:
-        self.more.extend([IqdbNorm(i) for i in data.items()])
+        self.more.extend([IqdbItem(i) for i in data.items()])
 
     def _get_other_urls(self, data: PyQuery) -> None:
         for link in data.items():
