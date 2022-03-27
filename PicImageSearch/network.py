@@ -1,7 +1,7 @@
 from types import TracebackType
 from typing import Any, Dict, Optional, Type, Union
 
-from httpx import AsyncClient, Response
+from httpx import AsyncClient, AsyncHTTPTransport, Response
 
 
 class Network:
@@ -24,8 +24,14 @@ class Network:
             for line in cookies.split(";"):
                 key, value = line.strip().split("=", 1)
                 self.cookies[key] = value
+        transport = AsyncHTTPTransport(verify=False, retries=3)
         self.client: AsyncClient = AsyncClient(
-            proxies=proxies, headers=headers, cookies=self.cookies, verify=False, follow_redirects=True  # type: ignore
+            proxies=proxies,
+            headers=headers,
+            cookies=self.cookies,
+            timeout=10.0,
+            follow_redirects=True,
+            transport=transport,
         )
 
     def start(self) -> AsyncClient:

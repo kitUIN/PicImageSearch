@@ -16,14 +16,14 @@ url = r"images/test04.jpg"  # 搜索本地图片
 async def test() -> None:
     async with Network(proxies=proxies) as client:
         iqdb = Iqdb(client=client)
-        resp = await iqdb.search_3d(url)
+        resp = await iqdb.search(url, is_3d=True)
         show_result(resp)
 
 
 @logger.catch()
 def test_sync() -> None:
     iqdb = IqdbSync(proxies=proxies)
-    resp = iqdb.search_3d(url)
+    resp = iqdb.search(url, is_3d=True)
     show_result(resp)
 
 
