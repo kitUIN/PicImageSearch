@@ -17,10 +17,10 @@ keywords = ["google", "iqdb", "saucenao", "tracemoe", "ascii2d"]
 python = "^3.6"
 httpx = "^0.22.0"
 lxml = "^4.8.0"
-loguru = "^0.6.0"
 pyquery = "^1.4.3"
 
 [tool.poetry.dev-dependencies]
+loguru = "^0.6.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

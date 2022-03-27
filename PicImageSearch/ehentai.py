@@ -1,7 +1,5 @@
 from typing import Any
 
-from loguru import logger
-
 from .model import EHentaiResponse
 from .network import HandOver
 
@@ -19,7 +17,6 @@ class EHentai(HandOver):
         self.similar: bool = similar
         self.exp: bool = exp
 
-    @logger.catch()
     async def search(self, file_path: str, ex: bool = False) -> EHentaiResponse:
         url = (
             "https://exhentai.org/upld/image_lookup.php"

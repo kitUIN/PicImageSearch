@@ -1,7 +1,5 @@
 from typing import Any, Dict, Optional, Union
 
-from loguru import logger
-
 from .model import TraceMoeMe, TraceMoeResponse
 from .network import HandOver
 
@@ -32,7 +30,6 @@ class TraceMoe(HandOver):
     #         return coding.decode()
 
     # 获取自己的信息
-    @logger.catch()
     async def me(self, key: Optional[str] = None) -> TraceMoeMe:
         params = {"key": key} if key else None
         resp = await self.get(self.me_url, params=params, **self.request_kwargs)
@@ -56,7 +53,6 @@ class TraceMoe(HandOver):
             params["url"] = url
         return params
 
-    @logger.catch()
     async def search(
         self,
         url: str,
@@ -78,7 +74,7 @@ class TraceMoe(HandOver):
         if url[:4] == "http":  # 网络url
             params = self.set_params(url, anilist_id, anilist_info, cut_borders)
             resp = await self.get(self.search_url, headers=headers, params=params)  # type: ignore
-        else:  # 是否是本地文件
+        else:  # 本地文件
             params = self.set_params(None, anilist_id, anilist_info, cut_borders)
             resp = await self.post(
                 self.search_url,

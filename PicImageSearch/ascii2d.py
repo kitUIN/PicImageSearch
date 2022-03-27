@@ -1,6 +1,5 @@
 from typing import Any
 
-from loguru import logger
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
@@ -31,7 +30,6 @@ class Ascii2D(HandOver):
         d = PyQuery(fromstring(resp, parser=utf8_parser))("div.row.item-box")
         return Ascii2DResponse(d)
 
-    @logger.catch()
     async def search(self, url: str) -> Ascii2DResponse:
         """
         Ascii2D
@@ -53,7 +51,7 @@ class Ascii2D(HandOver):
         if url[:4] == "http":  # 网络url
             ascii2d_url = "https://ascii2d.net/search/uri"
             resp = await self.post(ascii2d_url, data={"uri": url})
-        else:  # 是否是本地文件
+        else:  # 本地文件
             ascii2d_url = "https://ascii2d.net/search/file"
             resp = await self.post(ascii2d_url, files={"file": open(url, "rb")})
 

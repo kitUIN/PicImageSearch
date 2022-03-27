@@ -1,7 +1,5 @@
 from typing import Any
 
-from loguru import logger
-
 from .model import BaiDuResponse
 from .network import HandOver
 
@@ -10,7 +8,6 @@ class BaiDu(HandOver):
     def __init__(self, **request_kwargs: Any):
         super().__init__(**request_kwargs)
 
-    @logger.catch()
     async def search(self, url: str) -> BaiDuResponse:
         params = {"from": "pc"}
         files = None

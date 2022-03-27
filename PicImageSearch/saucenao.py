@@ -1,7 +1,5 @@
 from typing import Any, Dict, Optional, Union
 
-from loguru import logger
-
 from .model import SauceNAOResponse
 from .network import HandOver
 
@@ -57,7 +55,6 @@ class SauceNAO(HandOver):
             params["dbmaski"] = dbmaski
         self.params = params
 
-    @logger.catch()
     async def search(self, url: str) -> SauceNAOResponse:
         """
         SauceNAO

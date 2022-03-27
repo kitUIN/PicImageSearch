@@ -1,7 +1,6 @@
 from typing import Any
 from urllib.parse import quote
 
-from loguru import logger
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
@@ -33,12 +32,10 @@ class Google(HandOver):
         pages = list(d.find("td").items())[1:-1]
         return GoogleResponse(data, pages, index)
 
-    @logger.catch()
     async def goto_page(self, url: str, index: int) -> GoogleResponse:
         resp = await self.get(url)
         return self._slice(resp.text, index)
 
-    @logger.catch()
     async def search(self, url: str) -> GoogleResponse:
         """
         Google

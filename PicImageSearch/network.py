@@ -26,7 +26,7 @@ class Network:
                 self.cookies[key] = value
         transport = AsyncHTTPTransport(verify=False, retries=3)
         self.client: AsyncClient = AsyncClient(
-            proxies=proxies,
+            proxies=proxies,  # type: ignore
             headers=headers,
             cookies=self.cookies,
             timeout=10.0,
