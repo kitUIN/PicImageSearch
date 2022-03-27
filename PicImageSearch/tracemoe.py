@@ -20,7 +20,6 @@ class TraceMoe(HandOver):
         super().__init__(**request_kwargs)
         self.size: Optional[str] = size
         self.mute: bool = mute
-        self.request_kwargs: Dict[str, Any] = request_kwargs if request_kwargs else {}
 
     # @staticmethod
     # def _base_64(filename):
@@ -32,7 +31,7 @@ class TraceMoe(HandOver):
     # 获取自己的信息
     async def me(self, key: Optional[str] = None) -> TraceMoeMe:
         params = {"key": key} if key else None
-        resp = await self.get(self.me_url, params=params, **self.request_kwargs)
+        resp = await self.get(self.me_url, params=params)
         return TraceMoeMe(resp.json())
 
     @staticmethod
@@ -83,5 +82,5 @@ class TraceMoe(HandOver):
                 files={"image": open(url, "rb")},
             )
         return TraceMoeResponse(
-            resp.json(), chinese_title, self.mute, self.size, **self.request_kwargs
+            resp.json(), chinese_title, self.mute, self.size
         )
