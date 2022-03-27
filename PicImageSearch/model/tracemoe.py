@@ -1,7 +1,6 @@
 from typing import Any, Dict, List, Optional
 
-import httpx
-
+from httpx import HTTPTransport, Client
 
 ANIME_INFO_QUERY = """
 query ($id: Int) {
@@ -74,7 +73,6 @@ class TraceMoeItem:
         chinese_title: bool = True,
         mute: bool = False,
         size: Optional[str] = None,
-        **request_kwargs: Any
     ):
         """
 
@@ -106,14 +104,14 @@ class TraceMoeItem:
             self.isAdult = data["anilist"]["isAdult"]
             self.anime_info = self._get_anime_info(self.anilist)
             if chinese_title:
-                self.title_chinese = self.anime_info["data"]["Media"]["title"].get("chinese", "")
+                self.title_chinese = self.anime_info["title"].get("chinese", "")
         else:
             self.anilist = data["anilist"]
         self.filename: str = data["filename"]
         self.episode: int = data["episode"]
         self.From: float = data["from"]
         self.To: float = data["to"]
-        self.similarity: float = float(data["similarity"]) * 100
+        self.similarity: float = float(f"{data['similarity']:.4f}") * 100
         self.video: str = data["video"]
         self.image: str = data["image"]
         if size in ["l", "s", "m"]:  # 大小设置
@@ -135,7 +133,11 @@ class TraceMoeItem:
 
         url = "https://trace.moe/anilist/"
 
-        return httpx.post(url, json={"query": ANIME_INFO_QUERY, "variables": variables}).json()
+        transport = HTTPTransport(verify=False, retries=3)
+        with Client(timeout=10.0, transport=transport) as client:
+            return client.post(
+                url, json={"query": ANIME_INFO_QUERY, "variables": variables}
+            ).json()["data"]["Media"]
 
 
 class TraceMoeResponse:
@@ -145,7 +147,6 @@ class TraceMoeResponse:
         chinese_title: bool,
         mute: bool,
         size: Optional[str],
-        **request_kwargs: Any
     ):
         self.origin: Dict[str, Any] = data  # 原始数据
         self.raw: List[TraceMoeItem] = []  # 结果返回值
@@ -157,7 +158,6 @@ class TraceMoeResponse:
                     chinese_title=chinese_title,
                     mute=mute,
                     size=size,
-                    **request_kwargs,
                 )
             )
         self.frameCount: int = data["frameCount"]  # 搜索的帧总数
