@@ -21,7 +21,7 @@ class EHentaiItem:
         self.url = data.find(".glink").parent("a").attr("href")
         self.thumbnail = data.find(".glthumb img").attr("src")
         self.type = data.find(".cn").eq(0).text()
-        self.date = data.find("[id^='posted']").text()
+        self.date = data.find("[id^='posted']").eq(0).text()
         self.tags = [i.text() for i in data.find("div.gt").items()]
 
 

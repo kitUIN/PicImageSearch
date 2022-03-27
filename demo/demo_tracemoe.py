@@ -47,6 +47,7 @@ def show_result(resp: TraceMoeResponse) -> None:
     logger.info(resp.raw[0].similarity)
     logger.info(resp.raw[0].video)
     logger.info(resp.raw[0].image)
+    logger.info(resp.raw[0].anime_info)
 
 
 if __name__ == "__main__":

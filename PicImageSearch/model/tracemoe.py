@@ -1,6 +1,61 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 import httpx
+
+
+ANIME_INFO_QUERY = """
+query ($id: Int) {
+  Media(id: $id, type: ANIME) {
+    id
+    title {
+      native
+      romaji
+      english
+    }
+    type
+    format
+    status
+    startDate {
+      year
+      month
+      day
+    }
+    endDate {
+      year
+      month
+      day
+    }
+    season
+    episodes
+    duration
+    source
+    coverImage {
+      large
+      medium
+    }
+    bannerImage
+    genres
+    synonyms
+    studios {
+      edges {
+        isMain
+        node {
+          id
+          name
+          siteUrl
+        }
+      }
+    }
+    isAdult
+    externalLinks {
+      id
+      url
+      site
+    }
+    siteUrl
+  }
+}
+"""
 
 
 class TraceMoeMe:
@@ -39,6 +94,7 @@ class TraceMoeItem:
         self.anilist: Optional[int] = None  # 匹配的Anilist ID见https://anilist.co/
         self.synonyms: List[str] = []  # 备用英文标题
         self.isAdult: bool = False
+        self.anime_info: Dict[str, Any] = {}  # 动画信息
         if type(data["anilist"]) == dict:
             self.anilist = data["anilist"]["id"]
             self.idMal = data["anilist"]["idMal"]
@@ -48,14 +104,15 @@ class TraceMoeItem:
             self.title_romaji = data["anilist"]["title"]["romaji"]
             self.synonyms = data["anilist"]["synonyms"]
             self.isAdult = data["anilist"]["isAdult"]
+            self.anime_info = self._get_anime_info(self.anilist)
             if chinese_title:
-                self.title_chinese = self._get_chinese_title()
+                self.title_chinese = self.anime_info["data"]["Media"]["title"].get("chinese", "")
         else:
             self.anilist = data["anilist"]
         self.filename: str = data["filename"]
         self.episode: int = data["episode"]
-        self.From: int = data["from"]
-        self.To: int = data["to"]
+        self.From: float = data["from"]
+        self.To: float = data["to"]
         self.similarity: float = float(data["similarity"]) * 100
         self.video: str = data["video"]
         self.image: str = data["image"]
@@ -65,29 +122,12 @@ class TraceMoeItem:
         if mute:  # 视频静音设置
             self.video += "&mute"
 
-    def _get_chinese_title(self) -> Union[str, Any]:
-        return self._get_anime_title(self.origin["anilist"]["id"])["data"]["Media"][
-            "title"
-        ]["chinese"]
-
     @staticmethod
-    def _get_anime_title(anilist_id: int) -> Any:
-        """获取中文标题
+    def _get_anime_info(anilist_id: int) -> Any:
+        """获取动画信息
 
         :param anilist_id: id
         :return: dict
-        """
-        query = """
-        query ($id: Int) { # Define which variables will be used in the query (id)
-          Media (id: $id, type: ANIME) { # Insert our variables into the query arguments (id) (type: ANIME is hard-coded in the query)
-            id
-            title {
-              romaji
-              english
-              native
-            }
-          }
-        }
         """
 
         # Define our query variables and values that will be used in the query request
@@ -95,7 +135,7 @@ class TraceMoeItem:
 
         url = "https://trace.moe/anilist/"
 
-        return httpx.post(url, json={"query": query, "variables": variables}).json()
+        return httpx.post(url, json={"query": ANIME_INFO_QUERY, "variables": variables}).json()
 
 
 class TraceMoeResponse:
