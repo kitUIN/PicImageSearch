@@ -81,6 +81,4 @@ class TraceMoe(HandOver):
                 params=params,
                 files={"image": open(url, "rb")},
             )
-        return TraceMoeResponse(
-            resp.json(), chinese_title, self.mute, self.size
-        )
+        return TraceMoeResponse(resp.json(), chinese_title, self.mute, self.size)

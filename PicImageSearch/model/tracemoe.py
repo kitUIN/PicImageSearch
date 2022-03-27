@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional
 
-from httpx import HTTPTransport, Client
+from httpx import Client, HTTPTransport
 
 ANIME_INFO_QUERY = """
 query ($id: Int) {
