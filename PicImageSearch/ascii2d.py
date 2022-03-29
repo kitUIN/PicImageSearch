@@ -48,7 +48,7 @@ class Ascii2D(HandOver):
         • .raw[0].thumbnail = First index of url image that was found\n
         • .raw[0].detail = First index of details image that was found
         """
-        if url[:4] == "http":  # 网络url
+        if url.startswith("http"):  # 网络url
             ascii2d_url = "https://ascii2d.net/search/uri"
             resp = await self.post(ascii2d_url, data={"uri": url})
         else:  # 本地文件

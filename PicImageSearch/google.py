@@ -52,7 +52,7 @@ class Google(HandOver):
         • .raw[2].url = First index of url source that was found\n
         • .raw[2].thumbnail = First index of url image that was found
         """
-        if url[:4] == "http":
+        if url.startswith("http"):
             encoded_image_url = quote(url, safe="")
             params = {"image_url": encoded_image_url}
             resp = await self.get(self.url, params=params)

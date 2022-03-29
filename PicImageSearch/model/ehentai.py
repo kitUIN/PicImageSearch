@@ -19,7 +19,11 @@ class EHentaiItem:
     def _arrange(self, data: PyQuery) -> None:
         self.title = data.find(".glink").text()
         self.url = data.find(".glink").parent("a").attr("href")
-        self.thumbnail = data.find(".glthumb img").attr("src")
+        self.thumbnail = data.find(".glthumb img")
+        if self.thumbnail.attr("src").startswith("http"):
+            self.thumbnail = self.thumbnail.attr("src")
+        else:
+            self.thumbnail = self.thumbnail.attr("data-src")
         self.type = data.find(".cn").eq(0).text()
         self.date = data.find("[id^='posted']").eq(0).text()
         self.tags = [i.text() for i in data.find("div.gt").items()]

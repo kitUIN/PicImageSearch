@@ -25,7 +25,7 @@ class EHentai(HandOver):
             else "https://upld.e-hentai.org/image_lookup.php"
         )
         data = {"f_sfile": "search"}
-        if url[:4] == "http":  # 网络url
+        if url.startswith("http"):  # 网络url
             file_content = io.BytesIO((await self.get(url)).content)
             files = {"sfile": file_content}
         else:  # 本地文件

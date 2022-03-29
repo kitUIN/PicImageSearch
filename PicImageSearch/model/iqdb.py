@@ -40,7 +40,7 @@ class IqdbItem:
 
     @staticmethod
     def _get_url(url: str) -> str:
-        if url[:4] == "http":
+        if url.startswith("http"):
             return url
         return f"https:{url}"
 

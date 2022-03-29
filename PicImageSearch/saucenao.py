@@ -86,7 +86,7 @@ class SauceNAO(HandOver):
         """
         params = self.params
         files = None
-        if url[:4] == "http":  # 网络url
+        if url.startswith("http"):  # 网络url
             params["url"] = url
         else:
             # 上传文件

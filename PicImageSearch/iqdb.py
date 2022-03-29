@@ -21,7 +21,7 @@ class Iqdb(HandOver):
         self, url: str, force_gray: bool = False, is_3d: bool = False
     ) -> IqdbResponse:
         iqdb_url = "https://3d.iqdb.org/" if is_3d else "https://iqdb.org/"
-        if url[:4] == "http":  # 网络url
+        if url.startswith("http"):  # 网络url
             data = {"url": url}
             if force_gray:  # 忽略颜色
                 data["forcegray"] = "on"

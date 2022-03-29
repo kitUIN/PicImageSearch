@@ -70,7 +70,7 @@ class TraceMoe(HandOver):
         :param cut_borders: 切割黑边框(默认开启)
         """
         headers = {"x-trace-key": key} if key else None
-        if url[:4] == "http":  # 网络url
+        if url.startswith("http"):  # 网络url
             params = self.set_params(url, anilist_id, anilist_info, cut_borders)
             resp = await self.get(self.search_url, headers=headers, params=params)  # type: ignore
         else:  # 本地文件

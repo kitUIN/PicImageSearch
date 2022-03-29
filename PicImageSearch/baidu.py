@@ -11,7 +11,7 @@ class BaiDu(HandOver):
     async def search(self, url: str) -> BaiDuResponse:
         params = {"from": "pc"}
         files = None
-        if url[:4] == "http":  # 网络url
+        if url.startswith("http"):  # 网络url
             params["image"] = url
         else:
             # 上传文件
