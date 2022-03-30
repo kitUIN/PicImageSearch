@@ -21,7 +21,7 @@ async def test() -> None:
 
 
 @logger.catch()
-async def test_sync() -> None:
+def test_sync() -> None:
     baidu = BaiDuSync(proxies=proxies)
     resp = baidu.search(url)
     show_result(resp)
