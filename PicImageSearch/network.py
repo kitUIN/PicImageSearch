@@ -1,7 +1,7 @@
 from types import TracebackType
 from typing import Any, Dict, Optional, Type, Union
 
-from httpx import AsyncClient, AsyncHTTPTransport, Response
+from httpx import AsyncClient, AsyncHTTPTransport, Response, Timeout
 
 
 class Network:
@@ -29,7 +29,7 @@ class Network:
             proxies=proxies,  # type: ignore
             headers=headers,
             cookies=self.cookies,
-            timeout=10.0,
+            timeout=Timeout(20, connect=60),
             follow_redirects=True,
             transport=transport,
         )
