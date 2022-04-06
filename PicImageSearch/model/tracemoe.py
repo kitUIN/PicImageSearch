@@ -111,7 +111,7 @@ class TraceMoeItem:
         self.episode: int = data["episode"]
         self.From: float = data["from"]
         self.To: float = data["to"]
-        self.similarity: float = float(f"{data['similarity']:.4f}") * 100
+        self.similarity: float = float(f"{data['similarity'] * 100:.2f}")
         self.video: str = data["video"]
         self.image: str = data["image"]
         if size in ["l", "s", "m"]:  # 大小设置
