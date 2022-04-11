@@ -115,8 +115,8 @@ class TraceMoeItem:
         self.video: str = data["video"]
         self.image: str = data["image"]
         if size in ["l", "s", "m"]:  # 大小设置
-            self.video += "&size=" + size
-            self.image += "&size=" + size
+            self.video += f"&size={size}"
+            self.image += f"&size={size}"
         if mute:  # 视频静音设置
             self.video += "&mute"
 
@@ -151,14 +151,16 @@ class TraceMoeResponse:
         self.origin: Dict[str, Any] = data  # 原始数据
         self.raw: List[TraceMoeItem] = []  # 结果返回值
         res_docs = data["result"]
-        for i in res_docs:
-            self.raw.append(
+        self.raw.extend(
+            [
                 TraceMoeItem(
                     i,
                     chinese_title=chinese_title,
                     mute=mute,
                     size=size,
                 )
-            )
+                for i in res_docs
+            ]
+        )
         self.frameCount: int = data["frameCount"]  # 搜索的帧总数
         self.error: str = data["error"]  # 错误报告

@@ -20,10 +20,7 @@ def _syncify_wrap(t, method_name):
     def syncified(*args, **kwargs):
         coro = method(*args, **kwargs)
         loop = asyncio.get_event_loop()
-        if loop.is_running():
-            return coro
-        else:
-            return loop.run_until_complete(coro)
+        return coro if loop.is_running() else loop.run_until_complete(coro)
 
     # Save an accessible reference to the original method
     setattr(syncified, "__tl.sync", method)
@@ -33,9 +30,10 @@ def _syncify_wrap(t, method_name):
 def syncify(*types):
     for t in types:
         for name in dir(t):
-            if not name.startswith("_") or name == "__call__":
-                if inspect.iscoroutinefunction(getattr(t, name)):
-                    _syncify_wrap(t, name)
+            if (
+                not name.startswith("_") or name == "__call__"
+            ) and inspect.iscoroutinefunction(getattr(t, name)):
+                _syncify_wrap(t, name)
 
 
 syncify(Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe)

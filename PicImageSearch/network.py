@@ -67,9 +67,7 @@ class ClientManager:
         )
 
     async def __aenter__(self) -> AsyncClient:
-        if isinstance(self.client, Network):
-            return self.client.start()
-        return self.client
+        return self.client.start() if isinstance(self.client, Network) else self.client
 
     async def __aexit__(
         self,

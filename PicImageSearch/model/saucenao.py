@@ -18,10 +18,21 @@ class SauceNAOItem:
 
     @staticmethod
     def _get_title(data: Dict[str, Any]) -> Union[str, Any]:
-        for i in ["title", "jp_name", "eng_name", "material", "source", "created_at"]:
-            if i in data:
-                return data[i]
-        return ""
+        return next(
+            (
+                data[i]
+                for i in [
+                    "title",
+                    "jp_name",
+                    "eng_name",
+                    "material",
+                    "source",
+                    "created_at",
+                ]
+                if i in data
+            ),
+            "",
+        )
 
     @staticmethod
     def _get_url(data: Dict[str, Any]) -> Union[str, Any]:
@@ -33,19 +44,21 @@ class SauceNAOItem:
 
     @staticmethod
     def _get_author(data: Dict[str, Any]) -> Union[str, Any]:
-        for i in [
-            "author",
-            "author_name",
-            "member_name",
-            "pawoo_user_username",
-            "company",
-            "creator",
-        ]:
-            if i in data:
-                if i == "creator" and isinstance(data[i], list):
-                    return data[i][0]
-                return data[i]
-        return ""
+        return next(
+            (
+                data[i][0] if i == "creator" and isinstance(data[i], list) else data[i]
+                for i in [
+                    "author",
+                    "author_name",
+                    "member_name",
+                    "pawoo_user_username",
+                    "company",
+                    "creator",
+                ]
+                if i in data
+            ),
+            "",
+        )
 
 
 class SauceNAOResponse:
