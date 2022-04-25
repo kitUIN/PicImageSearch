@@ -1,4 +1,6 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
+
+from httpx import QueryParams
 
 from .model import SauceNAOResponse
 from .network import HandOver
@@ -16,6 +18,7 @@ class SauceNAO(HandOver):
         dbmask: Optional[int] = None,
         dbmaski: Optional[int] = None,
         db: int = 999,
+        dbs: Optional[List[int]] = None,
         **request_kwargs: Any
     ):
         """
@@ -33,6 +36,7 @@ class SauceNAO(HandOver):
         :param dbmask: (int) The mask used to select the specific index to be enabled (default=None)
         :param dbmaski: (int) is used to select the mask of the specific index to be disabled (default=None)
         :param db: (int) Search for a specific index number or all indexes (default=999), see https://saucenao.com/tools/examples/api/index_details.txt
+        :param dbs: (list) Search for specific indexes number or all indexes (default=None), see https://saucenao.com/tools/examples/api/index_details.txt
         :param minsim: (int) Control the minimum similarity (default=30)
         :param hide: (int) result hiding control, none=0, clear return value (default)=1, suspect return value=2, all return value=3
         """
@@ -53,7 +57,11 @@ class SauceNAO(HandOver):
             params["dbmask"] = dbmask
         if dbmaski is not None:
             params["dbmaski"] = dbmaski
-        self.params = params
+        self.params = QueryParams(params)
+        if dbs is not None:
+            self.params = self.params.remove("db")
+            for i in dbs:
+                self.params = self.params.add("dbs[]", i)
 
     async def search(self, url: str) -> SauceNAOResponse:
         """
@@ -87,7 +95,7 @@ class SauceNAO(HandOver):
         params = self.params
         files = None
         if url.startswith("http"):  # 网络url
-            params["url"] = url
+            params = params.add("url", url)
         else:
             # 上传文件
             files = {"file": open(url, "rb")}

@@ -1,7 +1,7 @@
 from types import TracebackType
 from typing import Any, Dict, Optional, Type, Union
 
-from httpx import AsyncClient, AsyncHTTPTransport, Response, Timeout
+from httpx import AsyncClient, AsyncHTTPTransport, QueryParams, Response, Timeout
 
 
 class Network:
@@ -103,7 +103,7 @@ class HandOver:
     async def post(
         self,
         url: str,
-        params: Optional[Dict[str, Any]] = None,
+        params: Union[Dict[str, Any], QueryParams, None] = None,
         data: Optional[Dict[Any, Any]] = None,
         files: Optional[Dict[str, Any]] = None,
         json: Optional[Dict[str, Any]] = None,
