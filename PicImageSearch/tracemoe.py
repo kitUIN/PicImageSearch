@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, BinaryIO, Dict, Optional, Union
 
 from .model import TraceMoeMe, TraceMoeResponse
 from .network import HandOver
@@ -54,7 +54,8 @@ class TraceMoe(HandOver):
 
     async def search(
         self,
-        url: str,
+        url: Optional[str] = None,
+        file: Optional[BinaryIO] = None,
         key: Optional[str] = None,
         anilist_id: Optional[int] = None,
         chinese_title: bool = True,
@@ -63,22 +64,25 @@ class TraceMoe(HandOver):
     ) -> TraceMoeResponse:
         """识别图片
         :param key: API密钥 https://soruly.github.io/trace.moe-api/#/limits?id=api-search-quota-and-limits
-        :param url: 网络地址(http或https链接)或本地(本地图片路径)  When using video / gif, only the 1st frame would be extracted for searching
+        :param url: 网络地址(http或https链接) When using video / gif, only the 1st frame would be extracted for searching
+        :param file: 本地图片文件 When using video / gif, only the 1st frame would be extracted for searching
         :param anilist_id: 搜索限制为特定的 Anilist ID(默认无)
         :param anilist_info: 详细信息(默认开启)
         :param chinese_title: 中文番剧标题
         :param cut_borders: 切割黑边框(默认开启)
         """
         headers = {"x-trace-key": key} if key else None
-        if url.startswith("http"):  # 网络url
+        if url:
             params = self.set_params(url, anilist_id, anilist_info, cut_borders)
             resp = await self.get(self.search_url, headers=headers, params=params)  # type: ignore
-        else:  # 本地文件
+        elif file:
             params = self.set_params(None, anilist_id, anilist_info, cut_borders)
             resp = await self.post(
                 self.search_url,
                 headers=headers,
                 params=params,
-                files={"image": open(url, "rb")},
+                files={"image": file},
             )
+        else:
+            raise ValueError("url or file is required")
         return TraceMoeResponse(resp.json(), chinese_title, self.mute, self.size)

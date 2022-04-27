@@ -8,22 +8,24 @@ from PicImageSearch.sync import BaiDu as BaiDuSync
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None
-# url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test02.jpg"
-url = r"images/test02.jpg"  # 搜索本地图片
+url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test02.jpg"
+file = open(r"images/test02.jpg", "rb")
 
 
 @logger.catch()
 async def test() -> None:
     async with Network(proxies=proxies) as client:
         baidu = BaiDu(client=client)
-        resp = await baidu.search(url)
+        # resp = await baidu.search(url=url)
+        resp = await baidu.search(file=file)
         show_result(resp)
 
 
 @logger.catch()
 def test_sync() -> None:
     baidu = BaiDuSync(proxies=proxies)
-    resp = baidu.search(url)
+    resp = baidu.search(url=url)
+    # resp = baidu.search(file=file)
     show_result(resp)
 
 

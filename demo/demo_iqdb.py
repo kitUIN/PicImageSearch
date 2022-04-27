@@ -8,22 +8,24 @@ from PicImageSearch.sync import Iqdb as IqdbSync
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None
-# url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-url = r"images/test01.jpg"  # 搜索本地图片
+url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
+file = open(r"images/test01.jpg", "rb")
 
 
 @logger.catch()
 async def test() -> None:
     async with Network(proxies=proxies) as client:
         iqdb = Iqdb(client=client)
-        resp = await iqdb.search(url)
+        # resp = await iqdb.search(url=url)
+        resp = await iqdb.search(file=file)
         show_result(resp)
 
 
 @logger.catch()
 def test_sync() -> None:
     iqdb = IqdbSync(proxies=proxies)
-    resp = iqdb.search(url)
+    resp = iqdb.search(url=url)
+    # resp = iqdb.search(file=file)
     show_result(resp)
 
 

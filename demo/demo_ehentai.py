@@ -8,8 +8,8 @@ from PicImageSearch.sync import EHentai as EHentaiSync
 
 proxies = "http://127.0.0.1:1081"
 # proxies = None
-# url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test06.jpg"
-url = r"images/test06.jpg"  # 搜索本地图片
+url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test06.jpg"
+file = open(r"images/test06.jpg", "rb")
 cookies = None  # 注意：如果要使用 EXHentai 搜索，需要提供 cookies
 ex = False  # 是否使用 EXHentai 搜索
 
@@ -18,14 +18,16 @@ ex = False  # 是否使用 EXHentai 搜索
 async def test() -> None:
     async with Network(proxies=proxies, cookies=cookies) as client:
         ehentai = EHentai(client=client)
-        resp = await ehentai.search(url, ex=ex)
+        # resp = await ehentai.search(url=url, ex=ex)
+        resp = await ehentai.search(file=file, ex=ex)
         show_result(resp)
 
 
 @logger.catch()
 def test_sync() -> None:
     ehentai = EHentaiSync(proxies=proxies, cookies=cookies)
-    resp = ehentai.search(url, ex=ex)
+    resp = ehentai.search(url=url, ex=ex)
+    # resp = ehentai.search(file=file, ex=ex)
     show_result(resp)
 
 

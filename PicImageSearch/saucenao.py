@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, BinaryIO, Dict, List, Optional, Union
 
 from httpx import QueryParams
 
@@ -63,7 +63,9 @@ class SauceNAO(HandOver):
             for i in dbs:
                 self.params = self.params.add("dbs[]", i)
 
-    async def search(self, url: str) -> SauceNAOResponse:
+    async def search(
+        self, url: Optional[str] = None, file: Optional[BinaryIO] = None
+    ) -> SauceNAOResponse:
         """
         SauceNAO
         -----------
@@ -88,17 +90,19 @@ class SauceNAO(HandOver):
 
         Params Keys
         -----------
-        :param url: network address or local
+        :param url: network address
+        :param file: local file
 
         further documentation visit https://saucenao.com/user.php?page=search-api
         """
         params = self.params
         files = None
-        if url.startswith("http"):  # 网络url
+        if url:
             params = params.add("url", url)
+        elif file:
+            files = {"file": file}
         else:
-            # 上传文件
-            files = {"file": open(url, "rb")}
+            raise ValueError("url or file is required")
         resp = await self.post(
             self.url,
             params=params,

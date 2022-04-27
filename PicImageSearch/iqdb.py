@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, BinaryIO, Optional
 
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
@@ -18,15 +18,21 @@ class Iqdb(HandOver):
         return IqdbResponse(d)
 
     async def search(
-        self, url: str, force_gray: bool = False, is_3d: bool = False
+        self,
+        url: Optional[str] = None,
+        file: Optional[BinaryIO] = None,
+        force_gray: bool = False,
+        is_3d: bool = False,
     ) -> IqdbResponse:
         iqdb_url = "https://3d.iqdb.org/" if is_3d else "https://iqdb.org/"
-        if url.startswith("http"):  # 网络url
+        if url:
             data = {"url": url}
             if force_gray:  # 忽略颜色
                 data["forcegray"] = "on"
             resp = await self.post(iqdb_url, data=data)
-        else:  # 本地文件
+        elif file:
             data = {"forcegray": "on"} if force_gray else None  # type: ignore
-            resp = await self.post(iqdb_url, data=data, files={"file": open(url, "rb")})
+            resp = await self.post(iqdb_url, data=data, files={"file": file})
+        else:
+            raise ValueError("url or file is required")
         return self._slice(resp.text)

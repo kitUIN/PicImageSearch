@@ -8,15 +8,16 @@ from PicImageSearch.sync import Google as GoogleSync
 
 proxies = "http://127.0.0.1:1081"
 # proxies = None
-# url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test03.jpg"
-url = r"images/test03.jpg"  # 搜索本地图片
+url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test03.jpg"
+file = open(r"images/test03.jpg", "rb")
 
 
 @logger.catch()
 async def test() -> None:
     async with Network(proxies=proxies) as client:
         google = Google(client=client)
-        resp = await google.search(url)
+        # resp = await google.search(url=url)
+        resp = await google.search(file=file)
         show_result(resp)
         resp2 = await google.goto_page(resp.get_page_url(2), 2)
         show_result(resp2)
@@ -25,7 +26,8 @@ async def test() -> None:
 @logger.catch()
 def test_sync() -> None:
     google = GoogleSync(proxies=proxies)
-    resp = google.search(url)
+    resp = google.search(url=url)
+    # resp = google.search(file=file)
     show_result(resp)
     resp2 = google.goto_page(resp.get_page_url(2), 2)
     show_result(resp2)

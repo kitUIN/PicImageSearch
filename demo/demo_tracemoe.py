@@ -8,22 +8,24 @@ from PicImageSearch.sync import TraceMoe as TraceMoeSync
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None
-# url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test05.jpg"
-url = r"images/test05.jpg"  # 搜索本地图片
+url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test05.jpg"
+file = open(r"images/test05.jpg", "rb")
 
 
 @logger.catch()
 async def test() -> None:
     async with Network(proxies=proxies) as client:
         tracemoe = TraceMoe(client=client, mute=False, size=None)
-        resp = await tracemoe.search(url)
+        # resp = await tracemoe.search(url=url)
+        resp = await tracemoe.search(file=file)
         show_result(resp)
 
 
 @logger.catch()
 def test_sync() -> None:
     tracemoe = TraceMoeSync(proxies=proxies, mute=False, size=None)
-    resp = tracemoe.search(url)
+    resp = tracemoe.search(url=url)
+    # resp = tracemoe.search(file=file)
     show_result(resp)
 
 

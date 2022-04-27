@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, BinaryIO, Optional
 from urllib.parse import quote
 
 from lxml.html import HTMLParser, fromstring
@@ -36,7 +36,9 @@ class Google(HandOver):
         resp = await self.get(url)
         return self._slice(resp.text, index)
 
-    async def search(self, url: str) -> GoogleResponse:
+    async def search(
+        self, url: Optional[str] = None, file: Optional[BinaryIO] = None
+    ) -> GoogleResponse:
         """
         Google
         -----------
@@ -52,11 +54,13 @@ class Google(HandOver):
         • .raw[2].url = First index of url source that was found\n
         • .raw[2].thumbnail = First index of url image that was found
         """
-        if url.startswith("http"):
+        if url:
             encoded_image_url = quote(url, safe="")
             params = {"image_url": encoded_image_url}
             resp = await self.get(self.url, params=params)
-        else:
-            files = {"encoded_image": (url, open(url, "rb"))}
+        elif file:
+            files = {"encoded_image": (url, file)}
             resp = await self.post(f"{self.url}/upload", files=files)
+        else:
+            raise ValueError("url or file is required")
         return self._slice(resp.text, 1)

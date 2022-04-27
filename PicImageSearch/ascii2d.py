@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, BinaryIO, Optional
 
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
@@ -30,7 +30,9 @@ class Ascii2D(HandOver):
         d = PyQuery(fromstring(resp, parser=utf8_parser))("div.row.item-box")
         return Ascii2DResponse(d)
 
-    async def search(self, url: str) -> Ascii2DResponse:
+    async def search(
+        self, url: Optional[str] = None, file: Optional[BinaryIO] = None
+    ) -> Ascii2DResponse:
         """
         Ascii2D
         -----------
@@ -48,12 +50,14 @@ class Ascii2D(HandOver):
         • .raw[0].thumbnail = First index of url image that was found\n
         • .raw[0].detail = First index of details image that was found
         """
-        if url.startswith("http"):  # 网络url
+        if url:
             ascii2d_url = "https://ascii2d.net/search/uri"
             resp = await self.post(ascii2d_url, data={"uri": url})
-        else:  # 本地文件
+        elif file:
             ascii2d_url = "https://ascii2d.net/search/file"
-            resp = await self.post(ascii2d_url, files={"file": open(url, "rb")})
+            resp = await self.post(ascii2d_url, files={"file": file})
+        else:
+            raise ValueError("url or file is required")
 
         # 如果启用bovw选项，第一次请求是向服务器提交文件
         if self.bovw:

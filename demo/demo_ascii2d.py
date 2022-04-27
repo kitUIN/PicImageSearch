@@ -8,8 +8,8 @@ from PicImageSearch.sync import Ascii2D as Ascii2DSync
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None
-# url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-url = r"images/test01.jpg"  # 搜索本地图片
+url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
+file = open(r"images/test01.jpg", "rb")
 bovw = True  # 是否使用特征检索
 
 
@@ -17,14 +17,16 @@ bovw = True  # 是否使用特征检索
 async def test() -> None:
     async with Network(proxies=proxies) as client:
         ascii2d = Ascii2D(client=client, bovw=bovw)
-        resp = await ascii2d.search(url)
+        # resp = await ascii2d.search(url=url)
+        resp = await ascii2d.search(file=file)
         show_result(resp)
 
 
 @logger.catch()
 def test_sync() -> None:
     ascii2d = Ascii2DSync(proxies=proxies, bovw=bovw)
-    resp = ascii2d.search(url)
+    resp = ascii2d.search(url=url)
+    # resp = ascii2d.search(file=file)
     show_result(resp)
 
 
