@@ -108,4 +108,6 @@ class SauceNAO(HandOver):
             params=params,
             files=files,
         )
-        return SauceNAOResponse(resp.json())
+        resp_json = resp.json()
+        resp_json.update({"status_code": resp.status_code})
+        return SauceNAOResponse(resp_json)

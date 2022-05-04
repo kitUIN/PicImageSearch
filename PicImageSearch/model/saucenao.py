@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Optional, Union
 
 
 class SauceNAOItem:
@@ -63,19 +63,27 @@ class SauceNAOItem:
 
 class SauceNAOResponse:
     def __init__(self, data: Dict[str, Any]):
+        # HTTP 状态码
+        self.status_code: int = data["status_code"]
         res_header = data["header"]
-        res_results = data["results"]
+        res_results = data.get("results", [])
         # 所有的返回结果
         self.raw: List[SauceNAOItem] = [SauceNAOItem(i) for i in res_results]
         self.origin: Dict[str, Any] = data  # 原始返回结果
-        self.short_remaining: int = res_header["short_remaining"]  # 每30秒访问额度
-        self.long_remaining: int = res_header["long_remaining"]  # 每天访问额度
-        self.user_id: int = res_header["user_id"]
-        self.account_type: int = res_header["account_type"]
-        self.short_limit: str = res_header["short_limit"]
-        self.long_limit: str = res_header["long_limit"]
-        self.status: int = res_header["status"]  # 返回http状态值
-        self.results_requested: int = res_header["results_requested"]  # 数据返回值数量
-        self.search_depth: int = res_header["search_depth"]  # 搜索所涉及的数据库数量
-        self.minimum_similarity: float = res_header["minimum_similarity"]  # 最小相似度
-        self.results_returned: int = res_header["results_returned"]  # 数据返回值数量
+        # 每30秒访问额度
+        self.short_remaining: Optional[int] = res_header.get("short_remaining")
+        # 每天访问额度
+        self.long_remaining: Optional[int] = res_header.get("long_remaining")
+        self.user_id: Optional[int] = res_header.get("user_id")
+        self.account_type: Optional[int] = res_header.get("account_type")
+        self.short_limit: Optional[str] = res_header.get("short_limit")
+        self.long_limit: Optional[str] = res_header.get("long_limit")
+        self.status: Optional[int] = res_header.get("status")
+        # 数据返回值数量
+        self.results_requested: Optional[int] = res_header.get("results_requested")
+        # 搜索所涉及的数据库数量
+        self.search_depth: Optional[int] = res_header.get("search_depth")
+        # 最小相似度
+        self.minimum_similarity: Optional[float] = res_header.get("minimum_similarity")
+        # 数据返回值数量
+        self.results_returned: Optional[int] = res_header.get("results_returned")

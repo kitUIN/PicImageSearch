@@ -31,6 +31,7 @@ def test_sync() -> None:
 
 
 def show_result(resp: SauceNAOResponse) -> None:
+    logger.info(resp.status_code)  # HTTP 状态码
     # logger.info(resp.origin)  # 原始数据
     logger.info(resp.raw[0].origin)
     logger.info(resp.long_remaining)
