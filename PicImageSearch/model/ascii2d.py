@@ -39,6 +39,9 @@ class Ascii2DItem:
                 elif links.eq(0).parents("small"):
                     info["title"] = infos.contents().eq(0).text()
 
+        infos = data.find(".external")
+        if info['title'] == '' and infos:
+            info['title'] = infos.eq(0).text()
         return info
 
 
