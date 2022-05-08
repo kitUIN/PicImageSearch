@@ -40,8 +40,9 @@ class Ascii2DItem:
                     info["title"] = infos.contents().eq(0).text()
 
         infos = data.find(".external")
-        if info['title'] == '' and infos:
-            info['title'] = infos.eq(0).text()
+        if info["title"] == "" and infos:
+            info["title"] = infos.eq(0).text()
+
         return info
 
 
