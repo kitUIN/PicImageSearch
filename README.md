@@ -58,3 +58,6 @@ async with Network() as client:  # 可以设置代理 Network(proxies='http://12
 - 或者
 - `pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
 
+## Star History
+
+[![Star History](https://starchart.cc/kitUIN/PicImageSearch.svg)](https://starchart.cc/kitUIN/PicImageSearch)
