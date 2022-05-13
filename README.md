@@ -4,7 +4,7 @@
 ![stars](https://img.shields.io/github/stars/kitUIN/PicImageSearch)
 ![forks](https://img.shields.io/github/forks/kitUIN/PicImageSearch)  
 聚合识图引擎  
-整合图片识别api,用于以图搜源(以图搜图，以图搜番)，支持SauceNAO,tracemoe,iqdb,ascii2d,google(谷歌识图),baidu(百度识图),E-Hantai,ExHantai识图
+整合图片识别api,用于以图搜源(以图搜图，以图搜番)，支持SauceNAO,tracemoe,iqdb,ascii2d,google(谷歌识图),baidu(百度识图),E-Hentai,ExHentai识图
 # [文档](https://www.kituin.fun/wiki/picimagesearch/)
 
 ## 支持
@@ -12,10 +12,10 @@
 - [x] [TraceMoe](https://trace.moe/)
 - [x] [Iqdb](http://iqdb.org/)
 - [x] [Ascii2D](https://ascii2d.net/)
-- [x] [Google谷歌识图](https://www.google.com/imghp)  
+- [x] [Google谷歌识图](https://www.google.com/imghp)
 - [x] [BaiDu百度识图](https://graph.baidu.com/)
-- [x] [E-Hantai](https://e-hentai.org/)  
-- [x] [ExHantai](https://exhentai.org/)  
+- [x] [E-Hentai](https://e-hentai.org/)
+- [x] [ExHentai](https://exhentai.org/)
 - [x] 同步/异步
 ## 简要说明
 
