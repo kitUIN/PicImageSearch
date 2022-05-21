@@ -2,7 +2,7 @@
 
 # PicImageSearch
 
-✨ 聚合识图引擎 ✨
+✨ 聚合识图引擎 用于以图搜源✨
 </div>
 
 <p align="center">
@@ -25,7 +25,6 @@
   ·
   <a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛提交建议</a>
 </p>
-整合图片识别api,用于以图搜源(以图搜图，以图搜番)，支持SauceNAO,tracemoe,iqdb,ascii2d,google(谷歌识图),baidu(百度识图),E-Hentai,ExHentai识图
 
 ## 支持
 - [x] [SauceNAO](https://saucenao.com/)
