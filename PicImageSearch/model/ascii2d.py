@@ -8,6 +8,7 @@ class Ascii2DItem:
         self.origin: PyQuery = data  # 原始数据
         info = self._get_info(data("div.detail-box.gray-link"))
         # 原图长宽，类型，大小
+        self.hash: str = data("div.hash").eq(0).text()
         self.detail: str = data("small").eq(0).text()
         self.thumbnail: str = "https://ascii2d.net" + data("img").eq(0).attr("src")
         self.url: str = info["url"]

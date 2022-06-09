@@ -38,6 +38,7 @@ def show_result(resp: Ascii2DResponse) -> None:
     logger.info(resp.raw[1].author)
     logger.info(resp.raw[1].author_url)
     logger.info(resp.raw[1].url)
+    logger.info(resp.raw[1].hash)
     logger.info(resp.raw[1].detail)
     logger.info(resp.raw[1].mark)
     logger.info("-" * 50)
