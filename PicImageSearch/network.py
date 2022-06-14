@@ -29,7 +29,7 @@ class Network:
             proxies=proxies,  # type: ignore
             headers=headers,
             cookies=self.cookies,
-            timeout=Timeout(20, connect=60),
+            timeout=Timeout(20.0, connect=60.0, read=60.0),
             follow_redirects=True,
             transport=transport,
         )
