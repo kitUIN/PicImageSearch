@@ -1,5 +1,7 @@
 from typing import Dict, List
 
+from httpx import Response
+from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
 
@@ -48,7 +50,12 @@ class Ascii2DItem:
 
 
 class Ascii2DResponse:
-    def __init__(self, data: PyQuery):
-        self.origin: PyQuery = data  # 原始数据
+    def __init__(self, resp: Response):
+        self.origin: str = resp.text  # 原始数据
+        utf8_parser = HTMLParser(encoding="utf-8")
+        data = PyQuery(fromstring(self.origin, parser=utf8_parser))
         # 结果返回值
-        self.raw: List[Ascii2DItem] = [Ascii2DItem(i) for i in data.items()]
+        self.raw: List[Ascii2DItem] = [
+            Ascii2DItem(i) for i in data.find("div.row.item-box").items()
+        ]
+        self.url: str = str(resp.url)

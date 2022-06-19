@@ -32,6 +32,7 @@ def test_sync() -> None:
 
 def show_result(resp: Ascii2DResponse) -> None:
     # logger.info(resp.origin)  # 原始数据
+    logger.info(resp.url)  # 搜索结果链接
     logger.info(resp.raw[1].origin)
     logger.info(resp.raw[1].thumbnail)
     logger.info(resp.raw[1].title)

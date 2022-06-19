@@ -24,12 +24,6 @@ class Ascii2D(HandOver):
         super().__init__(**request_kwargs)
         self.bovw: bool = bovw
 
-    @staticmethod
-    def _slice(resp: str) -> Ascii2DResponse:
-        utf8_parser = HTMLParser(encoding="utf-8")
-        d = PyQuery(fromstring(resp, parser=utf8_parser))("div.row.item-box")
-        return Ascii2DResponse(d)
-
     async def search(
         self, url: Optional[str] = None, file: Optional[BinaryIO] = None
     ) -> Ascii2DResponse:
@@ -63,4 +57,4 @@ class Ascii2D(HandOver):
         if self.bovw:
             resp = await self.get(str(resp.url).replace("/color/", "/bovw/"))
 
-        return self._slice(resp.text)
+        return Ascii2DResponse(resp)
