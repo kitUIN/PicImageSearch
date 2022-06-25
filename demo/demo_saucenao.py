@@ -16,7 +16,7 @@ api_key = "a4ab3f81009b003528f7e31aed187fa32a063f58"
 @logger.catch()
 async def test() -> None:
     async with Network(proxies=proxies) as client:
-        saucenao = SauceNAO(client=client, api_key=api_key)
+        saucenao = SauceNAO(client=client, api_key=api_key, hide=3)
         # resp = await saucenao.search(url=url)
         resp = await saucenao.search(file=file)
         show_result(resp)
@@ -38,6 +38,7 @@ def show_result(resp: SauceNAOResponse) -> None:
     logger.info(resp.short_remaining)
     logger.info(resp.raw[0].thumbnail)
     logger.info(resp.raw[0].similarity)
+    logger.info(resp.raw[0].hidden)
     logger.info(resp.raw[0].title)
     logger.info(resp.raw[0].author)
     logger.info(resp.raw[0].url)

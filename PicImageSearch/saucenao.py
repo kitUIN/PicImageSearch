@@ -11,7 +11,7 @@ class SauceNAO(HandOver):
         self,
         api_key: Optional[str] = None,
         numres: int = 5,
-        hide: int = 1,
+        hide: int = 0,
         minsim: int = 30,
         output_type: int = 2,
         testmode: int = 0,
@@ -38,7 +38,7 @@ class SauceNAO(HandOver):
         :param db: (int) Search for a specific index number or all indexes (default=999), see https://saucenao.com/tools/examples/api/index_details.txt
         :param dbs: (list) Search for specific indexes number or all indexes (default=None), see https://saucenao.com/tools/examples/api/index_details.txt
         :param minsim: (int) Control the minimum similarity (default=30)
-        :param hide: (int) result hiding control, none=0, clear return value (default)=1, suspect return value=2, all return value=3
+        :param hide: (int) result hiding control, 0=show all, 1=hide expected explicit, 2=hide expected and suspected explicit, 3=hide all but expected safe. Default is 0.
         """
         # minsim 控制最小相似度
         super().__init__(**request_kwargs)
