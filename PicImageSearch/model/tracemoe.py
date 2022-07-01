@@ -35,6 +35,11 @@ class TraceMoeItem:
         self.anilist: int = data["anilist"]  # 匹配的Anilist ID见https://anilist.co/
         self.synonyms: List[str] = []  # 备用英文标题
         self.isAdult: bool = False
+        self.type: str = ""
+        self.format: str = ""
+        self.start_date: Dict[str, Any] = {}
+        self.end_date: Dict[str, Any] = {}
+        self.cover_image: str = ""
         self.filename: str = data["filename"]
         self.episode: int = data["episode"]
         self.From: float = data["from"]

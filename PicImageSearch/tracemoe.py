@@ -14,6 +14,21 @@ query ($id: Int) {
       romaji
       english
     }
+    type
+    format
+    startDate {
+      year
+      month
+      day
+    }
+    endDate {
+      year
+      month
+      day
+    }
+    coverImage {
+      large
+    }
     synonyms
     isAdult
   }
@@ -85,6 +100,11 @@ class TraceMoe(HandOver):
         item.title_english = item.anime_info["title"]["english"]
         item.synonyms = item.anime_info["synonyms"]
         item.isAdult = item.anime_info["isAdult"]
+        item.type = item.anime_info["type"]
+        item.format = item.anime_info["format"]
+        item.start_date = item.anime_info["startDate"]
+        item.end_date = item.anime_info["endDate"]
+        item.cover_image = item.anime_info["coverImage"]["large"]
         if chinese_title:
             item.title_chinese = item.anime_info["title"].get("chinese", "")
 
