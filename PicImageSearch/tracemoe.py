@@ -1,7 +1,24 @@
+import asyncio
 from typing import Any, BinaryIO, Dict, Optional, Union
 
-from .model import TraceMoeMe, TraceMoeResponse
+from .model import TraceMoeItem, TraceMoeMe, TraceMoeResponse
 from .network import HandOver
+
+ANIME_INFO_QUERY = """
+query ($id: Int) {
+  Media (id: $id, type: ANIME) {
+    id
+    idMal
+    title {
+      native
+      romaji
+      english
+    }
+    synonyms
+    isAdult
+  }
+}
+"""
 
 
 class TraceMoe(HandOver):
@@ -38,12 +55,9 @@ class TraceMoe(HandOver):
     def set_params(
         url: Optional[str],
         anilist_id: Optional[int],
-        anilist_info: bool,
         cut_borders: bool,
     ) -> Dict[str, Union[bool, int, str]]:
         params: Dict[str, Union[bool, int, str]] = {}
-        if anilist_info:
-            params["anilistInfo"] = True
         if cut_borders:
             params["cutBorders"] = True
         if anilist_id:
@@ -52,6 +66,28 @@ class TraceMoe(HandOver):
             params["url"] = url
         return params
 
+    async def update_anime_info(
+        self, item: TraceMoeItem, chinese_title: bool = True
+    ) -> None:
+        variables = {"id": item.anilist}
+        url = "https://trace.moe/anilist/"
+        item.anime_info = (
+            await self.post(
+                url=url, json={"query": ANIME_INFO_QUERY, "variables": variables}
+            )
+        ).json()["data"]["Media"]
+        item.idMal = item.anime_info[
+            "idMal"
+        ]  # 匹配的MyAnimelist ID见https://myanimelist.net/
+        item.title = item.anime_info["title"]
+        item.title_native = item.anime_info["title"]["native"]
+        item.title_romaji = item.anime_info["title"]["romaji"]
+        item.title_english = item.anime_info["title"]["english"]
+        item.synonyms = item.anime_info["synonyms"]
+        item.isAdult = item.anime_info["isAdult"]
+        if chinese_title:
+            item.title_chinese = item.anime_info["title"].get("chinese", "")
+
     async def search(
         self,
         url: Optional[str] = None,
@@ -59,7 +95,6 @@ class TraceMoe(HandOver):
         key: Optional[str] = None,
         anilist_id: Optional[int] = None,
         chinese_title: bool = True,
-        anilist_info: bool = True,
         cut_borders: bool = True,
     ) -> TraceMoeResponse:
         """识别图片
@@ -67,16 +102,15 @@ class TraceMoe(HandOver):
         :param url: 网络地址(http或https链接) When using video / gif, only the 1st frame would be extracted for searching
         :param file: 本地图片文件 When using video / gif, only the 1st frame would be extracted for searching
         :param anilist_id: 搜索限制为特定的 Anilist ID(默认无)
-        :param anilist_info: 详细信息(默认开启)
         :param chinese_title: 中文番剧标题
         :param cut_borders: 切割黑边框(默认开启)
         """
         headers = {"x-trace-key": key} if key else None
         if url:
-            params = self.set_params(url, anilist_id, anilist_info, cut_borders)
+            params = self.set_params(url, anilist_id, cut_borders)
             resp = await self.get(self.search_url, headers=headers, params=params)  # type: ignore
         elif file:
-            params = self.set_params(None, anilist_id, anilist_info, cut_borders)
+            params = self.set_params(None, anilist_id, cut_borders)
             resp = await self.post(
                 self.search_url,
                 headers=headers,
@@ -85,4 +119,8 @@ class TraceMoe(HandOver):
             )
         else:
             raise ValueError("url or file is required")
-        return TraceMoeResponse(resp.json(), chinese_title, self.mute, self.size)
+        result = TraceMoeResponse(resp.json(), self.mute, self.size)
+        await asyncio.gather(
+            *[self.update_anime_info(item, chinese_title) for item in result.raw]
+        )
+        return result

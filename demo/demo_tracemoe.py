@@ -32,10 +32,10 @@ def test_sync() -> None:
 def show_result(resp: TraceMoeResponse) -> None:
     # logger.info(resp.origin)  # 原始数据
     logger.info(resp.raw[0].origin)
+    logger.info(resp.raw[0].anime_info)
     logger.info(resp.frameCount)
     logger.info(resp.raw[0].anilist)
     logger.info(resp.raw[0].idMal)
-    logger.info(resp.raw[0].title)
     logger.info(resp.raw[0].title_native)
     logger.info(resp.raw[0].title_romaji)
     logger.info(resp.raw[0].title_english)
@@ -49,7 +49,6 @@ def show_result(resp: TraceMoeResponse) -> None:
     logger.info(resp.raw[0].similarity)
     logger.info(resp.raw[0].video)
     logger.info(resp.raw[0].image)
-    logger.info(resp.raw[0].anime_info)
 
 
 if __name__ == "__main__":
