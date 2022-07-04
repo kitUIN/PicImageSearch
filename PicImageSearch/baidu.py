@@ -1,4 +1,7 @@
+from json import loads as json_loads
 from typing import Any, BinaryIO, Optional
+
+from aiohttp import FormData
 
 from .model import BaiDuResponse
 from .network import HandOver
@@ -12,15 +15,16 @@ class BaiDu(HandOver):
         self, url: Optional[str] = None, file: Optional[BinaryIO] = None
     ) -> BaiDuResponse:
         params = {"from": "pc"}
-        files = None
+        data = None
         if url:
             params["image"] = url
         elif file:
-            files = {"image": file}
+            data = FormData()
+            data.add_field("image", file, filename="file.png")
         else:
             raise ValueError("url or file is required")
-        resp = await self.post(
-            "https://graph.baidu.com/upload", params=params, files=files
+        resp_text, resp_url, _ = await self.post(
+            "https://graph.baidu.com/upload", params=params, data=data
         )
-        resp = await self.get(resp.json()["data"]["url"])
-        return BaiDuResponse(resp)
+        resp_text, resp_url, _ = await self.get((json_loads(resp_text))["data"]["url"])
+        return BaiDuResponse(resp_text, resp_url)

@@ -1,6 +1,5 @@
 from typing import List
 
-from httpx import Response
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
@@ -30,11 +29,11 @@ class EHentaiItem:
 
 
 class EHentaiResponse:
-    def __init__(self, resp: Response):
-        self.origin: str = resp.text  # 原始数据
+    def __init__(self, resp_text: str, resp_url: str):
+        self.origin: str = resp_text  # 原始数据
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(self.origin, parser=utf8_parser))
         self.raw: List[EHentaiItem] = [
             EHentaiItem(i) for i in data.find(".glcat").parents("tr").items()
         ]
-        self.url: str = str(resp.url)
+        self.url: str = resp_url

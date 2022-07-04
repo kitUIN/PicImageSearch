@@ -2,8 +2,6 @@ import json
 import re
 from typing import Any, Dict, List, Optional
 
-from httpx import Response
-
 
 class BaiDuItem:
     def __init__(self, data: Dict[str, Any]):
@@ -17,13 +15,13 @@ class BaiDuItem:
 
 
 class BaiDuResponse:
-    def __init__(self, res: Response):
-        self.url: str = str(res.url)  # 搜索结果地址
+    def __init__(self, resp_text: str, resp_url: str):
+        self.url: str = resp_url  # 搜索结果地址
         self.similar: List[Dict[str, Any]] = []  # 相似结果返回值
         self.raw: List[BaiDuItem] = []  # 来源结果返回值
         # 原始数据
         self.origin: List[Dict[str, Any]] = json.loads(
-            re.search(r"cardData = (.+);window\.commonData", res.text)[1]  # type: ignore
+            re.search(r"cardData = (.+);window\.commonData", resp_text)[1]  # type: ignore
         )
         self.same: Optional[Dict[str, Any]] = {}
         for i in self.origin:

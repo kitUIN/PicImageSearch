@@ -1,6 +1,7 @@
 from typing import Any, BinaryIO, Optional
 from urllib.parse import quote
 
+from aiohttp import FormData
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
@@ -33,8 +34,8 @@ class Google(HandOver):
         return GoogleResponse(data, pages, index)
 
     async def goto_page(self, url: str, index: int) -> GoogleResponse:
-        resp = await self.get(url)
-        return self._slice(resp.text, index)
+        resp_text, _, _ = await self.get(url)
+        return self._slice(resp_text, index)
 
     async def search(
         self, url: Optional[str] = None, file: Optional[BinaryIO] = None
@@ -57,10 +58,11 @@ class Google(HandOver):
         if url:
             encoded_image_url = quote(url, safe="")
             params = {"image_url": encoded_image_url}
-            resp = await self.get(self.url, params=params)
+            resp_text, _, _ = await self.get(self.url, params=params)
         elif file:
-            files = {"encoded_image": (url, file)}
-            resp = await self.post(f"{self.url}/upload", files=files)
+            data = FormData()
+            data.add_field("encoded_image", file, filename="file.png")
+            resp_text, _, _ = await self.post(f"{self.url}/upload", data=data)
         else:
             raise ValueError("url or file is required")
-        return self._slice(resp.text, 1)
+        return self._slice(resp_text, 1)

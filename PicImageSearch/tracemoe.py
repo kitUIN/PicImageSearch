@@ -1,5 +1,8 @@
 import asyncio
+from json import loads as json_loads
 from typing import Any, BinaryIO, Dict, Optional, Union
+
+from aiohttp import FormData
 
 from .model import TraceMoeItem, TraceMoeMe, TraceMoeResponse
 from .network import HandOver
@@ -63,8 +66,8 @@ class TraceMoe(HandOver):
     # 获取自己的信息
     async def me(self, key: Optional[str] = None) -> TraceMoeMe:
         params = {"key": key} if key else None
-        resp = await self.get(self.me_url, params=params)
-        return TraceMoeMe(resp.json())
+        resp_text, _, _ = await self.get(self.me_url, params=params)
+        return TraceMoeMe(json_loads(resp_text))
 
     @staticmethod
     def set_params(
@@ -74,7 +77,7 @@ class TraceMoe(HandOver):
     ) -> Dict[str, Union[bool, int, str]]:
         params: Dict[str, Union[bool, int, str]] = {}
         if cut_borders:
-            params["cutBorders"] = True
+            params["cutBorders"] = "true"
         if anilist_id:
             params["anilistID"] = anilist_id
         if url:
@@ -86,11 +89,13 @@ class TraceMoe(HandOver):
     ) -> None:
         variables = {"id": item.anilist}
         url = "https://trace.moe/anilist/"
-        item.anime_info = (
-            await self.post(
-                url=url, json={"query": ANIME_INFO_QUERY, "variables": variables}
-            )
-        ).json()["data"]["Media"]
+        item.anime_info = json_loads(
+            (
+                await self.post(
+                    url=url, json={"query": ANIME_INFO_QUERY, "variables": variables}
+                )
+            )[0]
+        )["data"]["Media"]
         item.idMal = item.anime_info[
             "idMal"
         ]  # 匹配的MyAnimelist ID见https://myanimelist.net/
@@ -126,20 +131,22 @@ class TraceMoe(HandOver):
         :param cut_borders: 切割黑边框(默认开启)
         """
         headers = {"x-trace-key": key} if key else None
+        data = None
         if url:
             params = self.set_params(url, anilist_id, cut_borders)
-            resp = await self.get(self.search_url, headers=headers, params=params)  # type: ignore
         elif file:
             params = self.set_params(None, anilist_id, cut_borders)
-            resp = await self.post(
-                self.search_url,
-                headers=headers,
-                params=params,
-                files={"image": file},
-            )
+            data = FormData()
+            data.add_field("file", file, filename="file.png")
         else:
             raise ValueError("url or file is required")
-        result = TraceMoeResponse(resp.json(), self.mute, self.size)
+        resp_text, _, _ = await self.post(
+            self.search_url,
+            headers=headers,
+            params=params,
+            data=data,
+        )
+        result = TraceMoeResponse(json_loads(resp_text), self.mute, self.size)
         await asyncio.gather(
             *[self.update_anime_info(item, chinese_title) for item in result.raw]
         )

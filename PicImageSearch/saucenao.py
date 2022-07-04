@@ -1,6 +1,8 @@
+from json import loads as json_loads
 from typing import Any, BinaryIO, Dict, List, Optional, Union
 
-from httpx import QueryParams
+from aiohttp import FormData
+from multidict import MultiDict
 
 from .model import SauceNAOResponse
 from .network import HandOver
@@ -57,11 +59,11 @@ class SauceNAO(HandOver):
             params["dbmask"] = dbmask
         if dbmaski is not None:
             params["dbmaski"] = dbmaski
-        self.params = QueryParams(params)
+        self.params = MultiDict(params)
         if dbs is not None:
-            self.params = self.params.remove("db")
+            del self.params["db"]
             for i in dbs:
-                self.params = self.params.add("dbs[]", i)
+                self.params.add("dbs[]", i)
 
     async def search(
         self, url: Optional[str] = None, file: Optional[BinaryIO] = None
@@ -96,18 +98,18 @@ class SauceNAO(HandOver):
         further documentation visit https://saucenao.com/user.php?page=search-api
         """
         params = self.params
-        files = None
+        data = None
         if url:
-            params = params.add("url", url)
+            params.add("url", url)
         elif file:
-            files = {"file": file}
+            data = FormData({"file": file})
         else:
             raise ValueError("url or file is required")
-        resp = await self.post(
+        resp_text, _, resp_status = await self.post(
             self.url,
             params=params,
-            files=files,
+            data=data,
         )
-        resp_json = resp.json()
-        resp_json.update({"status_code": resp.status_code})
+        resp_json = json_loads(resp_text)
+        resp_json.update({"status_code": resp_status})
         return SauceNAOResponse(resp_json)

@@ -1,5 +1,6 @@
 from typing import Any, BinaryIO, Optional
 
+from aiohttp import FormData
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
@@ -25,14 +26,15 @@ class Iqdb(HandOver):
         is_3d: bool = False,
     ) -> IqdbResponse:
         iqdb_url = "https://3d.iqdb.org/" if is_3d else "https://iqdb.org/"
+        data = FormData()
+        if force_gray:  # 忽略颜色
+            data.add_field("forcegray", "on")
         if url:
-            data = {"url": url}
-            if force_gray:  # 忽略颜色
-                data["forcegray"] = "on"
-            resp = await self.post(iqdb_url, data=data)
+            data.add_field("url", url)
+            resp_text, _, _ = await self.post(iqdb_url, data=data)
         elif file:
-            data = {"forcegray": "on"} if force_gray else None  # type: ignore
-            resp = await self.post(iqdb_url, data=data, files={"file": file})
+            data.add_field("file", file, filename="file.png")
+            resp_text, _, _ = await self.post(iqdb_url, data=data)
         else:
             raise ValueError("url or file is required")
-        return self._slice(resp.text)
+        return self._slice(resp_text)
