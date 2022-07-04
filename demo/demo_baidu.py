@@ -26,7 +26,7 @@ def test_sync() -> None:
     baidu = BaiDuSync(proxies=proxies)
     resp = baidu.search(url=url)
     # resp = baidu.search(file=file)
-    show_result(resp)
+    show_result(resp)  # type: ignore
 
 
 def show_result(resp: BaiDuResponse) -> None:

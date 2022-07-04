@@ -11,7 +11,8 @@ proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
 file = open(r"images/test01.jpg", "rb")
 bovw = True  # 是否使用特征检索
-bypass = False # 是否绕过DNS污染
+bypass = False  # 是否绕过DNS污染
+
 
 @logger.catch()
 async def test() -> None:
@@ -27,7 +28,7 @@ def test_sync() -> None:
     ascii2d = Ascii2DSync(proxies=proxies, bovw=bovw, bypass=bypass)
     resp = ascii2d.search(url=url)
     # resp = ascii2d.search(file=file)
-    show_result(resp)
+    show_result(resp)  # type: ignore
 
 
 def show_result(resp: Ascii2DResponse) -> None:

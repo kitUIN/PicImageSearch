@@ -1,8 +1,9 @@
 from types import TracebackType
 from typing import Any, Dict, Optional, Tuple, Type, Union
 
-from aiohttp import ClientSession, ClientTimeout, FormData
+from aiohttp import ClientSession, ClientTimeout, FormData, TCPConnector
 from multidict import MultiDict
+
 
 class Network:
     def __init__(
@@ -11,6 +12,7 @@ class Network:
         proxies: Optional[str] = None,
         headers: Optional[Dict[str, str]] = None,
         cookies: Optional[str] = None,
+        bypass: bool = False,
     ):
         self.internal: bool = internal
         if not headers:
@@ -22,7 +24,21 @@ class Network:
             for line in cookies.split(";"):
                 key, value = line.strip().split("=", 1)
                 self.cookies[key] = value
+        kwargs = {}
+        if bypass:
+            import ssl
+
+            from .bypass import ByPassResolver
+
+            ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+            ssl_ctx.check_hostname = False
+            ssl_ctx.verify_mode = ssl.CERT_NONE
+
+            kwargs.update({"ssl": ssl_ctx, "resolver": ByPassResolver()})
+
+        self.conn = TCPConnector(**kwargs)  # type: ignore
         self.client: ClientSession = ClientSession(
+            connector=self.conn,
             headers=headers,
             cookies=self.cookies,
             timeout=ClientTimeout(total=20.0),
@@ -58,11 +74,14 @@ class ClientManager:
         proxies: Optional[str] = None,
         headers: Optional[Dict[str, str]] = None,
         cookies: Optional[str] = None,
+        bypass: bool = False,
     ):
-        self.client: Union[Network, ClientSession] = (
-            Network(internal=True, proxies=proxies, headers=headers, cookies=cookies)
-            if client is None
-            else client
+        self.client: Union[Network, ClientSession] = client or Network(
+            internal=True,
+            proxies=proxies,
+            headers=headers,
+            cookies=cookies,
+            bypass=bypass,
         )
 
     async def __aenter__(self) -> ClientSession:
@@ -85,17 +104,19 @@ class HandOver:
         proxies: Optional[str] = None,
         headers: Optional[Dict[str, str]] = None,
         cookies: Optional[str] = None,
+        bypass: bool = False,
     ):
         self.client: Optional[ClientSession] = client
         self.proxies: Optional[str] = proxies
         self.headers: Optional[Dict[str, str]] = headers
         self.cookies: Optional[str] = cookies
+        self.bypass: bool = bypass
 
     async def get(
         self, url: str, params: Optional[Dict[str, str]] = None, **kwargs: Any
     ) -> Tuple[str, str, int]:
         async with ClientManager(
-            self.client, self.proxies, self.headers, self.cookies
+            self.client, self.proxies, self.headers, self.cookies, self.bypass
         ) as client:
             async with client.get(url, params=params, **kwargs) as resp:
                 return await resp.text(), str(resp.url), resp.status
@@ -109,7 +130,7 @@ class HandOver:
         **kwargs: Any
     ) -> Tuple[str, str, int]:
         async with ClientManager(
-            self.client, self.proxies, self.headers, self.cookies
+            self.client, self.proxies, self.headers, self.cookies, self.bypass
         ) as client:
             async with client.post(
                 url, params=params, data=data, json=json, **kwargs
@@ -118,7 +139,7 @@ class HandOver:
 
     async def download(self, url: str) -> bytes:
         async with ClientManager(
-            self.client, self.proxies, self.headers, self.cookies
+            self.client, self.proxies, self.headers, self.cookies, self.bypass
         ) as client:
             async with client.get(url) as resp:
                 return await resp.read()

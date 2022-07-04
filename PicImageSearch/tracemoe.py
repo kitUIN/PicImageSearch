@@ -6,7 +6,6 @@ from aiohttp import FormData
 
 from .model import TraceMoeItem, TraceMoeMe, TraceMoeResponse
 from .network import HandOver
-from .bypass import BypassHostname
 
 ANIME_INFO_QUERY = """
 query ($id: Int) {
@@ -45,20 +44,18 @@ class TraceMoe(HandOver):
     me_url = "https://api.trace.moe/me"
 
     def __init__(
-        self, mute: bool = False, size: Optional[str] = None, bypass: bool = False, **request_kwargs: Any
+        self, mute: bool = False, size: Optional[str] = None, **request_kwargs: Any
     ):
         """主类
 
-        :param size: 预览 视频/图像 大小(可填:s/m/l)(小/中/大)
-        :param mute: 预览视频是否静音（默认不静音）
-        :param request_kwargs:代理设置
-        :param bypass: 绕过DNS污染
+        :param size: preview video/image size(can be:s/m/l)(small/medium/large)
+        :param mute: mute the preview video（default:False）
+        :param **request_kwargs: proxies and bypass settings.
         """
         super().__init__(**request_kwargs)
         self.size: Optional[str] = size
         self.mute: bool = mute
-        if bypass:
-            BypassHostname("api.trace.moe")
+
     # @staticmethod
     # def _base_64(filename):
     #     with open(filename, 'rb') as f:

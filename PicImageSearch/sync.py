@@ -13,11 +13,11 @@ import inspect
 from . import Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe
 
 
-def _syncify_wrap(t, method_name):
+def _syncify_wrap(t, method_name):  # type: ignore
     method = getattr(t, method_name)
 
     @functools.wraps(method)
-    def syncified(*args, **kwargs):
+    def syncified(*args, **kwargs):  # type: ignore
         coro = method(*args, **kwargs)
         loop = asyncio.get_event_loop()
         return coro if loop.is_running() else loop.run_until_complete(coro)
@@ -27,16 +27,16 @@ def _syncify_wrap(t, method_name):
     setattr(t, method_name, syncified)
 
 
-def syncify(*types):
+def syncify(*types):  # type: ignore
     for t in types:
         for name in dir(t):
             if (
                 not name.startswith("_") or name == "__call__"
             ) and inspect.iscoroutinefunction(getattr(t, name)):
-                _syncify_wrap(t, name)
+                _syncify_wrap(t, name)  # type: ignore
 
 
-syncify(Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe)
+syncify(Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe)  # type: ignore
 
 __all__ = [
     "Ascii2D",

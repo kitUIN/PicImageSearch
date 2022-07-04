@@ -28,7 +28,7 @@ def test_sync() -> None:
     ehentai = EHentaiSync(proxies=proxies, cookies=cookies)
     resp = ehentai.search(url=url, ex=ex)
     # resp = ehentai.search(file=file, ex=ex)
-    show_result(resp)
+    show_result(resp)  # type: ignore
 
 
 def show_result(resp: EHentaiResponse) -> None:

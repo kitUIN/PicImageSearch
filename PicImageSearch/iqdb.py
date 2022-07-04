@@ -6,7 +6,7 @@ from pyquery import PyQuery
 
 from .model import IqdbResponse
 from .network import HandOver
-from .bypass import BypassHostname
+
 
 class Iqdb(HandOver):
     """
@@ -17,14 +17,12 @@ class Iqdb(HandOver):
 
     Params Keys
     -----------
-    :param **request_kwargs:   proxies settings.\n
-    :param bypass(bool): Bypass DNS cache pollution (default=False) \n
+    :param **request_kwargs: proxies and bypass settings.\n
     """
-    def __init__(self, bypass: bool = False, **request_kwargs: Any):
+
+    def __init__(self, **request_kwargs: Any):
         super().__init__(**request_kwargs)
-        if bypass:
-            BypassHostname("iqdb.org")
-            BypassHostname("3d.iqdb.org")
+
     @staticmethod
     def _slice(resp: str) -> IqdbResponse:
         utf8_parser = HTMLParser(encoding="utf-8")
