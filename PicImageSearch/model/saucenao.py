@@ -10,7 +10,7 @@ class SauceNAOItem:
         self.thumbnail: str = result_header["thumbnail"]
         self.index_id: int = result_header["index_id"]  # 文件 id
         self.index_name: str = result_header["index_name"]  # 文件名称
-        self.hidden: int = result_header["hidden"]  # 是否为搜索引擎参数 hide 对应的 NSFW 内容
+        self.hidden: int = result_header.get("hidden", 0)  # 是否为搜索引擎参数 hide 对应的 NSFW 内容
         self.title: str = self._get_title(result_data)
         self.url: str = self._get_url(result_data)
         self.author: str = self._get_author(result_data)

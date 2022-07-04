@@ -9,6 +9,17 @@ from .network import HandOver
 
 
 class Iqdb(HandOver):
+    """
+    Iqdb
+    -----------
+    Reverse image from https://iqdb.org\n
+
+
+    Params Keys
+    -----------
+    :param **request_kwargs: proxies and bypass settings.\n
+    """
+
     def __init__(self, **request_kwargs: Any):
         super().__init__(**request_kwargs)
 

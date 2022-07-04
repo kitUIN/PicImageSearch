@@ -41,6 +41,7 @@ class SauceNAO(HandOver):
         :param dbs: (list) Search for specific indexes number or all indexes (default=None), see https://saucenao.com/tools/examples/api/index_details.txt
         :param minsim: (int) Control the minimum similarity (default=30)
         :param hide: (int) result hiding control, 0=show all, 1=hide expected explicit, 2=hide expected and suspected explicit, 3=hide all but expected safe. Default is 0.
+        :param **request_kwargs: proxies and bypass settings.
         """
         # minsim 控制最小相似度
         super().__init__(**request_kwargs)

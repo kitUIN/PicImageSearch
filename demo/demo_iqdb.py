@@ -10,12 +10,13 @@ from PicImageSearch.sync import Iqdb as IqdbSync
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
 file = open(r"images/test01.jpg", "rb")
+bypass = False  # 绕过DNS污染
 
 
 @logger.catch()
 async def test() -> None:
     async with Network(proxies=proxies) as client:
-        iqdb = Iqdb(client=client)
+        iqdb = Iqdb(client=client, bypass=bypass)
         # resp = await iqdb.search(url=url)
         resp = await iqdb.search(file=file)
         show_result(resp)
@@ -23,10 +24,10 @@ async def test() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    iqdb = IqdbSync(proxies=proxies)
+    iqdb = IqdbSync(proxies=proxies, bypass=bypass)
     resp = iqdb.search(url=url)
     # resp = iqdb.search(file=file)
-    show_result(resp)
+    show_result(resp)  # type: ignore
 
 
 def show_result(resp: IqdbResponse) -> None:

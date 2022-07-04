@@ -28,9 +28,9 @@ def test_sync() -> None:
     google = GoogleSync(proxies=proxies)
     resp = google.search(url=url)
     # resp = google.search(file=file)
-    show_result(resp)
-    resp2 = google.goto_page(resp.get_page_url(2), 2)
-    show_result(resp2)
+    show_result(resp)  # type: ignore
+    resp2 = google.goto_page(resp.get_page_url(2), 2)  # type: ignore
+    show_result(resp2)  # type: ignore
 
 
 def show_result(resp: GoogleResponse) -> None:
