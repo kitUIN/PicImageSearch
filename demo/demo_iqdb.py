@@ -15,8 +15,8 @@ bypass = False  # 绕过DNS污染
 
 @logger.catch()
 async def test() -> None:
-    async with Network(proxies=proxies) as client:
-        iqdb = Iqdb(client=client, bypass=bypass)
+    async with Network(proxies=proxies, bypass=bypass) as client:
+        iqdb = Iqdb(client=client)
         # resp = await iqdb.search(url=url)
         resp = await iqdb.search(file=file)
         show_result(resp)

@@ -9,6 +9,10 @@ from aiohttp import ClientSession, ClientTimeout
 from aiohttp.abc import AbstractResolver
 
 
+class DNSError(Exception):
+    pass
+
+
 class ByPassResolver(AbstractResolver):
     def __init__(
         self,
@@ -17,16 +21,17 @@ class ByPassResolver(AbstractResolver):
         self.endpoints = endpoints or [
             "https://1.0.0.1/dns-query",
             "https://1.1.1.1/dns-query",
-            "https://[2606:4700:4700::1001]/dns-query",
-            "https://[2606:4700:4700::1111]/dns-query",
+            "https://dns.alidns.com/resolve",
+            "https://doh.dns.sb/dns-query",
             "https://cloudflare-dns.com/dns-query",
         ]
 
     async def resolve(
-        self, host: str, port: int, family: int = socket.AF_INET
+        self, hostname: str, port: int = 0, family: int = socket.AF_INET
     ) -> List[Dict[str, Any]]:
         tasks = [
-            self._resolve(endpoint, host, port, family) for endpoint in self.endpoints
+            self._resolve(endpoint, hostname, port, family)
+            for endpoint in self.endpoints
         ]
         done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
 
@@ -35,7 +40,7 @@ class ByPassResolver(AbstractResolver):
             future.cancel()
 
         if len(ips) == 0:
-            raise Exception(f"Failed to resolve {host}")
+            raise DNSError(f"Failed to resolve {hostname}")
 
         return [
             {
@@ -68,7 +73,7 @@ class ByPassResolver(AbstractResolver):
     async def parse_result(hostname: str, response: str) -> List[str]:
         data = json.loads(response)
         if data["Status"] != 0:
-            raise Exception(f"Failed to resolve {hostname}")
+            raise DNSError(f"Failed to resolve {hostname}")
 
         # Pattern to match IPv4 addresses
         pattern = re.compile(
@@ -105,6 +110,6 @@ class ByPassResolver(AbstractResolver):
                 if resp.status == 200:
                     return await self.parse_result(hostname, await resp.text())
                 else:
-                    raise Exception(
+                    raise DNSError(
                         f"Failed to resolve {hostname} with {endpoint}: HTTP Status {resp.status}"
                     )

@@ -16,8 +16,8 @@ bypass = False  # 是否绕过DNS污染
 
 @logger.catch()
 async def test() -> None:
-    async with Network(proxies=proxies) as client:
-        ascii2d = Ascii2D(client=client, bovw=bovw, bypass=bypass)
+    async with Network(proxies=proxies, bypass=bypass) as client:
+        ascii2d = Ascii2D(client=client, bovw=bovw)
         # resp = await ascii2d.search(url=url)
         resp = await ascii2d.search(file=file)
         show_result(resp)
@@ -25,7 +25,7 @@ async def test() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    ascii2d = Ascii2DSync(proxies=proxies, bovw=bovw, bypass=bypass)
+    ascii2d = Ascii2DSync(proxies=proxies, bypass=bypass, bovw=bovw)
     resp = ascii2d.search(url=url)
     # resp = ascii2d.search(file=file)
     show_result(resp)  # type: ignore

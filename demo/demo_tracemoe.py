@@ -10,13 +10,13 @@ from PicImageSearch.sync import TraceMoe as TraceMoeSync
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test05.jpg"
 file = open(r"images/test05.jpg", "rb")
-bypass = True  # 是否绕过DNS污染
+bypass = False  # 是否绕过DNS污染
 
 
 @logger.catch()
 async def test() -> None:
-    async with Network(proxies=proxies) as client:
-        tracemoe = TraceMoe(client=client, mute=False, size=None, bypass=bypass)
+    async with Network(proxies=proxies, bypass=bypass) as client:
+        tracemoe = TraceMoe(client=client, mute=False, size=None)
         # resp = await tracemoe.search(url=url)
         resp = await tracemoe.search(file=file)
         show_result(resp)
@@ -24,7 +24,7 @@ async def test() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    tracemoe = TraceMoeSync(proxies=proxies, mute=False, size=None, bypass=bypass)
+    tracemoe = TraceMoeSync(proxies=proxies, bypass=bypass, mute=False, size=None)
     resp = tracemoe.search(url=url)
     # resp = tracemoe.search(file=file)
     show_result(resp)  # type: ignore
