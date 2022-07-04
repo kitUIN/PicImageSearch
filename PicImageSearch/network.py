@@ -4,7 +4,6 @@ from typing import Any, Dict, Optional, Tuple, Type, Union
 from aiohttp import ClientSession, ClientTimeout, FormData
 from multidict import MultiDict
 
-
 class Network:
     def __init__(
         self,

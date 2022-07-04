@@ -4,7 +4,7 @@ from aiohttp import FormData
 
 from .model import Ascii2DResponse
 from .network import HandOver
-
+from .bypass import BypassHostname
 
 class Ascii2D(HandOver):
     """
@@ -19,10 +19,11 @@ class Ascii2D(HandOver):
     :param bovw(boolean):   use ascii2d bovw search, default False \n
     """
 
-    def __init__(self, bovw: bool = False, **request_kwargs: Any):
+    def __init__(self, bovw: bool = False, bypass: bool = False, **request_kwargs: Any):
         super().__init__(**request_kwargs)
         self.bovw: bool = bovw
-
+        if bypass:
+            BypassHostname('ascii2d.net')
     async def search(
         self, url: Optional[str] = None, file: Optional[BinaryIO] = None
     ) -> Ascii2DResponse:

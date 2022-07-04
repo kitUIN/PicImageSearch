@@ -6,12 +6,14 @@ from pyquery import PyQuery
 
 from .model import IqdbResponse
 from .network import HandOver
-
+from .bypass import BypassHostname
 
 class Iqdb(HandOver):
-    def __init__(self, **request_kwargs: Any):
+    def __init__(self, bypass: bool = False, **request_kwargs: Any):
         super().__init__(**request_kwargs)
-
+        if bypass:
+            BypassHostname("iqdb.org")
+            BypassHostname("3d.iqdb.org")
     @staticmethod
     def _slice(resp: str) -> IqdbResponse:
         utf8_parser = HTMLParser(encoding="utf-8")

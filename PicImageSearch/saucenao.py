@@ -6,7 +6,7 @@ from multidict import MultiDict
 
 from .model import SauceNAOResponse
 from .network import HandOver
-
+from .bypass import BypassHostname
 
 class SauceNAO(HandOver):
     def __init__(
@@ -21,6 +21,7 @@ class SauceNAO(HandOver):
         dbmaski: Optional[int] = None,
         db: int = 999,
         dbs: Optional[List[int]] = None,
+        bypass: bool = False,
         **request_kwargs: Any
     ):
         """
@@ -41,10 +42,15 @@ class SauceNAO(HandOver):
         :param dbs: (list) Search for specific indexes number or all indexes (default=None), see https://saucenao.com/tools/examples/api/index_details.txt
         :param minsim: (int) Control the minimum similarity (default=30)
         :param hide: (int) result hiding control, 0=show all, 1=hide expected explicit, 2=hide expected and suspected explicit, 3=hide all but expected safe. Default is 0.
+        :param bypass: (bool) Bypass DNS cache pollution (default=False)
         """
         # minsim 控制最小相似度
         super().__init__(**request_kwargs)
         self.url = "https://saucenao.com/search.php"
+
+        if bypass:
+            BypassHostname('saucenao.com')
+
         params: Dict[str, Union[str, int]] = {
             "testmode": testmode,
             "numres": numres,
