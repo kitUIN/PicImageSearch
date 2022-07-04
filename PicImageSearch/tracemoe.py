@@ -52,6 +52,7 @@ class TraceMoe(HandOver):
         :param size: 预览 视频/图像 大小(可填:s/m/l)(小/中/大)
         :param mute: 预览视频是否静音（默认不静音）
         :param request_kwargs:代理设置
+        :param bypass: 绕过DNS污染
         """
         super().__init__(**request_kwargs)
         self.size: Optional[str] = size

@@ -16,7 +16,8 @@ class Ascii2D(HandOver):
     Params Keys
     -----------
     :param **request_kwargs:   proxies settings.\n
-    :param bovw(boolean):   use ascii2d bovw search, default False \n
+    :param bovw(bool):   use ascii2d bovw search, default False \n
+    :param bypass(bool): Bypass DNS cache pollution (default=False) \n
     """
 
     def __init__(self, bovw: bool = False, bypass: bool = False, **request_kwargs: Any):

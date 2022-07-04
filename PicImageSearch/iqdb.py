@@ -9,6 +9,17 @@ from .network import HandOver
 from .bypass import BypassHostname
 
 class Iqdb(HandOver):
+    """
+    Iqdb
+    -----------
+    Reverse image from https://iqdb.org\n
+
+
+    Params Keys
+    -----------
+    :param **request_kwargs:   proxies settings.\n
+    :param bypass(bool): Bypass DNS cache pollution (default=False) \n
+    """
     def __init__(self, bypass: bool = False, **request_kwargs: Any):
         super().__init__(**request_kwargs)
         if bypass:

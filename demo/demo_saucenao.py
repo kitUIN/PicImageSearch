@@ -6,11 +6,11 @@ from PicImageSearch import Network, SauceNAO
 from PicImageSearch.model import SauceNAOResponse
 from PicImageSearch.sync import SauceNAO as SauceNAOSync
 
-proxies = "http://127.0.0.1:1081"
+# proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
 file = open(r"images/test01.jpg", "rb")
-api_key = "your api key"
+api_key = "a4ab3f81009b003528f7e31aed187fa32a063f58"
 bypass = False # 是否绕过DNS污染
 
 @logger.catch()
@@ -49,8 +49,5 @@ def show_result(resp: SauceNAOResponse) -> None:
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    if api_key == "your api key":
-        print("使用前请修改api key")
-        exit()
     loop.run_until_complete(test())
     # test_sync()
