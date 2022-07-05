@@ -1,8 +1,8 @@
 import asyncio
-import json
 import logging as logger
 import re
 import socket
+from json import loads as json_loads
 from typing import Any, Dict, List, Optional, Set
 
 from aiohttp import ClientSession, ClientTimeout
@@ -30,8 +30,7 @@ class ByPassResolver(AbstractResolver):
         self, hostname: str, port: int = 0, family: int = socket.AF_INET
     ) -> List[Dict[str, Any]]:
         tasks = [
-            self._resolve(endpoint, hostname, port, family)
-            for endpoint in self.endpoints
+            self._resolve(endpoint, hostname, family) for endpoint in self.endpoints
         ]
         done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
 
@@ -44,7 +43,7 @@ class ByPassResolver(AbstractResolver):
 
         return [
             {
-                "hostname": "",
+                "hostname": hostname,
                 "host": i,
                 "port": port,
                 "family": family,
@@ -70,8 +69,7 @@ class ByPassResolver(AbstractResolver):
         pass
 
     @staticmethod
-    async def parse_result(hostname: str, response: str) -> List[str]:
-        data = json.loads(response)
+    def parse_result(hostname: str, data: Dict[str, Any]) -> List[str]:
         if data["Status"] != 0:
             raise DNSError(f"Failed to resolve {hostname}")
 
@@ -108,7 +106,7 @@ class ByPassResolver(AbstractResolver):
                 timeout=ClientTimeout(total=timeout),
             ) as resp:
                 if resp.status == 200:
-                    return await self.parse_result(hostname, await resp.text())
+                    return self.parse_result(hostname, json_loads(await resp.text()))
                 else:
                     raise DNSError(
                         f"Failed to resolve {hostname} with {endpoint}: HTTP Status {resp.status}"
