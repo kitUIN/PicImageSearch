@@ -36,14 +36,28 @@ class Network:
 
             kwargs.update({"ssl": ssl_ctx, "resolver": ByPassResolver()})
 
-        self.conn = TCPConnector(**kwargs)  # type: ignore
+        _flag = False
+        if proxies:
+            try:
+                from aiohttp_socks import ProxyConnector
+
+                self.conn = ProxyConnector.from_url(proxies, **kwargs)
+            except ModuleNotFoundError as e:
+                if proxies.startswith("socks"):
+                    raise e
+                self.conn = TCPConnector(**kwargs)  # type: ignore
+                _flag = True
+        else:
+            self.conn = TCPConnector(**kwargs)  # type: ignore
+
         self.client: ClientSession = ClientSession(
             connector=self.conn,
             headers=headers,
             cookies=self.cookies,
             timeout=ClientTimeout(total=20.0),
         )
-        if proxies:
+
+        if proxies and _flag:
             from functools import partial
 
             self.client.get = partial(self.client.get, proxy=proxies)  # type: ignore
