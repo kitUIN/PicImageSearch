@@ -57,9 +57,9 @@ class IqdbResponse:
     def _arrange(self, data: PyQuery) -> None:
         tables = list(data("#pages > div > table").items())
         if len(tables) > 1:
-            self.raw.extend([IqdbItem(i) for i in tables[1:]])
-        content = tables[0].find("th").text()
-        if content == "No relevant matches":
+            tables = tables[1:]
+            self.raw.extend([IqdbItem(i) for i in tables])
+        if tables[0].find("th").text() == "No relevant matches":
             self._get_other_urls(tables[0].find("a"))
         else:
             self._get_other_urls(data("#show1 > a"))
