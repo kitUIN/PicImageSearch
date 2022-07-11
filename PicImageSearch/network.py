@@ -12,6 +12,7 @@ class Network:
         proxies: Optional[str] = None,
         headers: Optional[Dict[str, str]] = None,
         cookies: Optional[str] = None,
+        timeout: float = 30,
         bypass: bool = False,
     ):
         self.internal: bool = internal
@@ -54,7 +55,7 @@ class Network:
             connector=self.conn,
             headers=headers,
             cookies=self.cookies,
-            timeout=ClientTimeout(total=20.0),
+            timeout=ClientTimeout(total=timeout),
         )
 
         if proxies and _flag:
@@ -88,6 +89,7 @@ class ClientManager:
         proxies: Optional[str] = None,
         headers: Optional[Dict[str, str]] = None,
         cookies: Optional[str] = None,
+        timeout: float = 30,
         bypass: bool = False,
     ):
         self.client: Union[Network, ClientSession] = client or Network(
@@ -95,6 +97,7 @@ class ClientManager:
             proxies=proxies,
             headers=headers,
             cookies=cookies,
+            timeout=timeout,
             bypass=bypass,
         )
 
@@ -118,19 +121,26 @@ class HandOver:
         proxies: Optional[str] = None,
         headers: Optional[Dict[str, str]] = None,
         cookies: Optional[str] = None,
+        timeout: float = 30,
         bypass: bool = False,
     ):
         self.client: Optional[ClientSession] = client
         self.proxies: Optional[str] = proxies
         self.headers: Optional[Dict[str, str]] = headers
         self.cookies: Optional[str] = cookies
+        self.timeout: float = timeout
         self.bypass: bool = bypass
 
     async def get(
         self, url: str, params: Optional[Dict[str, str]] = None, **kwargs: Any
     ) -> Tuple[str, str, int]:
         async with ClientManager(
-            self.client, self.proxies, self.headers, self.cookies, self.bypass
+            self.client,
+            self.proxies,
+            self.headers,
+            self.cookies,
+            self.timeout,
+            self.bypass,
         ) as client:
             async with client.get(url, params=params, **kwargs) as resp:
                 return await resp.text(), str(resp.url), resp.status
@@ -144,7 +154,12 @@ class HandOver:
         **kwargs: Any
     ) -> Tuple[str, str, int]:
         async with ClientManager(
-            self.client, self.proxies, self.headers, self.cookies, self.bypass
+            self.client,
+            self.proxies,
+            self.headers,
+            self.cookies,
+            self.timeout,
+            self.bypass,
         ) as client:
             async with client.post(
                 url, params=params, data=data, json=json, **kwargs
@@ -153,7 +168,12 @@ class HandOver:
 
     async def download(self, url: str) -> bytes:
         async with ClientManager(
-            self.client, self.proxies, self.headers, self.cookies, self.bypass
+            self.client,
+            self.proxies,
+            self.headers,
+            self.cookies,
+            self.timeout,
+            self.bypass,
         ) as client:
             async with client.get(url) as resp:
                 return await resp.read()
