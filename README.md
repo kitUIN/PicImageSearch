@@ -27,6 +27,7 @@
 </p>
 
 ## 支持
+
 - [x] [SauceNAO](https://saucenao.com/)
 - [x] [TraceMoe](https://trace.moe/)
 - [x] [Iqdb](http://iqdb.org/)
@@ -36,6 +37,7 @@
 - [x] [E-Hentai](https://e-hentai.org/)
 - [x] [ExHentai](https://exhentai.org/)
 - [x] 同步/异步
+
 ## 简要说明
 
 详细见[文档](https://www.kituin.fun/wiki/picimagesearch/) 或者[`demo`](https://github.com/kitUIN/PicImageSearch/tree/main/demo)  
@@ -44,34 +46,48 @@
 **推荐使用异步**  
 
 ## 简单示例
+
 ```python
 from loguru import logger
-from PicImageSearch.sync import SauceNAO
+from PicImageSearch import SauceNAO, Network
 
-saucenao = SauceNAO()
-res = saucenao.search('https://pixiv.cat/77702503-1.jpg')
-# res = saucenao.search(r'C:/kitUIN/img/tinted-good.jpg') #搜索本地图片
-logger.info(res.origin)  # 原始数据
-logger.info(res.raw)  #
-logger.info(res.raw[0])  #
-logger.info(res.long_remaining)  # 99
-logger.info(res.short_remaining)  # 3
-logger.info(res.raw[0].thumbnail)  # 缩略图
-logger.info(res.raw[0].similarity)  # 相似度
-logger.info(res.raw[0].title)  # 标题
-logger.info(res.raw[0].author)  # 作者
-logger.info(res.raw[0].url)
+async with Network() as client:  # 可以设置代理 Network(proxies='scheme://host:port')
+    saucenao = SauceNAO(client=client, api_key="your api key")  # client, api_key 不能少
+    url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
+    resp = await saucenao.search(url=url)
+    # 搜索本地图片
+    # file = open(r"demo/images/test01.jpg", "rb")
+    # resp = await saucenao.search(file=file)
+
+    logger.info(resp.status_code)  # HTTP 状态码
+    # logger.info(resp.origin)  # 原始数据
+    logger.info(resp.raw[0].origin)
+    logger.info(resp.long_remaining)
+    logger.info(resp.short_remaining)
+    logger.info(resp.raw[0].thumbnail)
+    logger.info(resp.raw[0].similarity)
+    logger.info(resp.raw[0].hidden)
+    logger.info(resp.raw[0].title)
+    logger.info(resp.raw[0].author)
+    logger.info(resp.raw[0].url)
+    logger.info(resp.raw[0].pixiv_id)
+    logger.info(resp.raw[0].member_id)
 ```
 
 ```python
-from PicImageSearch import SauceNAO, Network
+from PicImageSearch.sync import SauceNAO
 
-async with Network() as client:  # 可以设置代理 Network(proxies='http://127.0.0.1:10809')
-    saucenao = SauceNAO(client=client)  # client不能少
-    res = await saucenao.search('https://pixiv.cat/77702503-1.jpg')
-    # 下面操作与同步方法一致
+saucenao = SauceNAO(api_key="your api key")  # api_key 不能少
+url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
+resp = saucenao.search(url=url)
+# 搜索本地图片
+# file = open(r"demo/images/test01.jpg", "rb")
+# resp = saucenao.search(file=file)
+# 下面操作与异步方法一致
 ```
+
 ### 安装
+
 - 此包需要 Python 3.6 或更新版本。
 - `pip install PicImageSearch`
 - 或者
