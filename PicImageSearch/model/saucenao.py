@@ -18,8 +18,8 @@ class SauceNAOItem:
         self.member_id: int = result_data.get("member_id", 0)
 
     @staticmethod
-    def _get_title(data: Dict[str, Any]) -> Union[str, Any]:
-        return next(
+    def _get_title(data: Dict[str, Any]) -> str:
+        title = next(
             (
                 data[i]
                 for i in [
@@ -34,6 +34,9 @@ class SauceNAOItem:
             ),
             "",
         )
+        if title is None:
+            title = ""
+        return title
 
     @staticmethod
     def _get_url(data: Dict[str, Any]) -> Union[str, Any]:
