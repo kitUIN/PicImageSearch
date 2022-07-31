@@ -21,7 +21,7 @@
   </a>
  </p>
 <p align="center">
-  <a href="https://www.kituin.fun/wiki/picimagesearch/">📖文档</a>
+  <a href="https://pic-image-search.kituin.fun/">📖文档</a>
   ·
   <a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛提交建议</a>
 </p>
@@ -40,7 +40,7 @@
 
 ## 简要说明
 
-详细见[文档](https://www.kituin.fun/wiki/picimagesearch/) 或者[`demo`](https://github.com/kitUIN/PicImageSearch/tree/main/demo)  
+详细见[文档](https://pic-image-search.kituin.fun/) 或者[`demo`](https://github.com/kitUIN/PicImageSearch/tree/main/demo)  
 `同步`请使用`from PicImageSearch.sync import ...`导入  
 `异步`请使用`from PicImageSearch import Network,...`导入  
 **推荐使用异步**  
