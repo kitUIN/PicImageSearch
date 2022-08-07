@@ -1,0 +1,41 @@
+{
+  "extends": [
+    "config:base",
+    "schedule:weekends"
+  ],
+  "dependencyDashboard": false,
+  "rangeStrategy": "bump",
+  "enabledManagers": [
+    "poetry",
+    "github-actions"
+  ],
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "labels": [
+        "dependencies"
+      ],
+      "automerge": true
+    },
+    {
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "labels": [
+        "dependencies",
+        "breaking"
+      ]
+    }
+  ]
+}
