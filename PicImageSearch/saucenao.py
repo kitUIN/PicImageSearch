@@ -1,7 +1,7 @@
 from json import loads as json_loads
-from typing import Any, BinaryIO, Dict, List, Optional, Union
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
 
-from aiohttp import FormData
 from multidict import MultiDict
 
 from .model import SauceNAOResponse
@@ -67,7 +67,7 @@ class SauceNAO(HandOver):
                 self.params.add("dbs[]", i)
 
     async def search(
-        self, url: Optional[str] = None, file: Optional[BinaryIO] = None
+        self, url: Optional[str] = None, file: Union[str, Path, None] = None
     ) -> SauceNAOResponse:
         """
         SauceNAO
@@ -103,7 +103,7 @@ class SauceNAO(HandOver):
         if url:
             params.add("url", url)
         elif file:
-            data = FormData({"file": file})
+            data = {"file": open(file, "rb")}
         else:
             raise ValueError("url or file is required")
         resp_text, _, resp_status = await self.post(

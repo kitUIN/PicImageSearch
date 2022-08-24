@@ -56,7 +56,7 @@ async with Network() as client:  # 可以设置代理 Network(proxies='scheme://
     url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
     resp = await saucenao.search(url=url)
     # 搜索本地图片
-    # file = open(r"demo/images/test01.jpg", "rb")
+    # file = "demo/images/test01.jpg"
     # resp = await saucenao.search(file=file)
 
     logger.info(resp.status_code)  # HTTP 状态码
@@ -81,7 +81,7 @@ saucenao = SauceNAO(api_key="your api key")  # api_key 不能少
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
 resp = saucenao.search(url=url)
 # 搜索本地图片
-# file = open(r"demo/images/test01.jpg", "rb")
+# file = "demo/images/test01.jpg"
 # resp = saucenao.search(file=file)
 # 下面操作与异步方法一致
 ```

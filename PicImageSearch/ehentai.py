@@ -1,7 +1,6 @@
 import io
-from typing import Any, BinaryIO, Optional
-
-from aiohttp import FormData
+from pathlib import Path
+from typing import Any, Dict, Optional, Union
 
 from .model import EHentaiResponse
 from .network import HandOver
@@ -23,7 +22,7 @@ class EHentai(HandOver):
     async def search(
         self,
         url: Optional[str] = None,
-        file: Optional[BinaryIO] = None,
+        file: Union[str, Path, None] = None,
         ex: bool = False,
     ) -> EHentaiResponse:
         _url = (
@@ -31,18 +30,18 @@ class EHentai(HandOver):
             if ex
             else "https://upld.e-hentai.org/image_lookup.php"
         )
-        data = FormData({"f_sfile": "search"})
+        data: Dict[str, Any] = {"f_sfile": "search"}
         if url:
-            file = io.BytesIO(await self.download(url))
-        if file:
-            data.add_field("sfile", file, filename="file.png")
+            data["sfile"] = io.BytesIO(await self.download(url))
+        elif file:
+            data["sfile"] = open(file, "rb")
         else:
             raise ValueError("url or file is required")
         if self.covers:
-            data.add_field("fs_covers", "on")
+            data["fs_covers"] = "on"
         if self.similar:
-            data.add_field("fs_similar", "on")
+            data["fs_similar"] = "on"
         if self.exp:
-            data.add_field("fs_exp", "on")
+            data["fs_exp"] = "on"
         resp_text, resp_url, _ = await self.post(url=_url, data=data)
         return EHentaiResponse(resp_text, resp_url)

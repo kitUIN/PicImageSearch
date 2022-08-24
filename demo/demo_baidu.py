@@ -9,7 +9,7 @@ from PicImageSearch.sync import BaiDu as BaiDuSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test02.jpg"
-file = open(r"images/test02.jpg", "rb")
+file = "images/test02.jpg"
 
 
 @logger.catch()

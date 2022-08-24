@@ -9,7 +9,7 @@ from PicImageSearch.sync import Iqdb as IqdbSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-file = open(r"images/test01.jpg", "rb")
+file = "images/test01.jpg"
 bypass = False  # 绕过DNS污染
 
 

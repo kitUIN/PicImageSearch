@@ -1,8 +1,7 @@
 import asyncio
 from json import loads as json_loads
-from typing import Any, BinaryIO, Dict, Optional, Union
-
-from aiohttp import FormData
+from pathlib import Path
+from typing import Any, Dict, Optional, Union
 
 from .model import TraceMoeItem, TraceMoeMe, TraceMoeResponse
 from .network import HandOver
@@ -55,13 +54,6 @@ class TraceMoe(HandOver):
         super().__init__(**request_kwargs)
         self.size: Optional[str] = size
         self.mute: bool = mute
-
-    # @staticmethod
-    # def _base_64(filename):
-    #     with open(filename, 'rb') as f:
-    #         coding = base64.b64encode(f.read())  # 读取文件内容，转换为base64编码
-    #         # print('本地base64转码~')
-    #         return coding.decode()
 
     # 获取自己的信息
     async def me(self, key: Optional[str] = None) -> TraceMoeMe:
@@ -116,7 +108,7 @@ class TraceMoe(HandOver):
     async def search(
         self,
         url: Optional[str] = None,
-        file: Optional[BinaryIO] = None,
+        file: Union[str, Path, None] = None,
         key: Optional[str] = None,
         anilist_id: Optional[int] = None,
         chinese_title: bool = True,
@@ -136,8 +128,7 @@ class TraceMoe(HandOver):
             params = self.set_params(url, anilist_id, cut_borders)
         elif file:
             params = self.set_params(None, anilist_id, cut_borders)
-            data = FormData()
-            data.add_field("file", file, filename="file.png")
+            data = {"file": open(file, "rb")}
         else:
             raise ValueError("url or file is required")
         resp_text, _, _ = await self.post(

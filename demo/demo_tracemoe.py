@@ -9,7 +9,7 @@ from PicImageSearch.sync import TraceMoe as TraceMoeSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test05.jpg"
-file = open(r"images/test05.jpg", "rb")
+file = "images/test05.jpg"
 bypass = False  # 是否绕过DNS污染
 
 

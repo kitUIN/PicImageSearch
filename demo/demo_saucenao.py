@@ -9,7 +9,7 @@ from PicImageSearch.sync import SauceNAO as SauceNAOSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-file = open(r"images/test01.jpg", "rb")
+file = "images/test01.jpg"
 api_key = "a4ab3f81009b003528f7e31aed187fa32a063f58"
 bypass = True  # 是否绕过DNS污染
 
@@ -18,8 +18,8 @@ bypass = True  # 是否绕过DNS污染
 async def test() -> None:
     async with Network(proxies=proxies, bypass=bypass) as client:
         saucenao = SauceNAO(client=client, api_key=api_key, hide=3)
-        resp = await saucenao.search(url=url)
-        # resp = await saucenao.search(file=file)
+        # resp = await saucenao.search(url=url)
+        resp = await saucenao.search(file=file)
         show_result(resp)
 
 

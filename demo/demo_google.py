@@ -9,7 +9,7 @@ from PicImageSearch.sync import Google as GoogleSync
 proxies = "http://127.0.0.1:1081"
 # proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test03.jpg"
-file = open(r"images/test03.jpg", "rb")
+file = "images/test03.jpg"
 
 
 @logger.catch()

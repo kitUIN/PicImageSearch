@@ -1,6 +1,6 @@
-from typing import Any, BinaryIO, Optional
+from pathlib import Path
+from typing import Any, Dict, Optional, Union
 
-from aiohttp import FormData
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
@@ -32,19 +32,19 @@ class Iqdb(HandOver):
     async def search(
         self,
         url: Optional[str] = None,
-        file: Optional[BinaryIO] = None,
+        file: Union[str, Path, None] = None,
         force_gray: bool = False,
         is_3d: bool = False,
     ) -> IqdbResponse:
         iqdb_url = "https://3d.iqdb.org/" if is_3d else "https://iqdb.org/"
-        data = FormData()
+        data: Dict[str, Any] = {}
         if force_gray:  # 忽略颜色
-            data.add_field("forcegray", "on")
+            data["forcegray"] = "on"
         if url:
-            data.add_field("url", url)
+            data["url"] = url
             resp_text, _, _ = await self.post(iqdb_url, data=data)
         elif file:
-            data.add_field("file", file, filename="file.png")
+            data["file"] = open(file, "rb")
             resp_text, _, _ = await self.post(iqdb_url, data=data)
         else:
             raise ValueError("url or file is required")

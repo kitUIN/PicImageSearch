@@ -1,7 +1,7 @@
-from typing import Any, BinaryIO, Optional
+from pathlib import Path
+from typing import Any, Optional, Union
 from urllib.parse import quote
 
-from aiohttp import FormData
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
@@ -38,7 +38,7 @@ class Google(HandOver):
         return self._slice(resp_text, index)
 
     async def search(
-        self, url: Optional[str] = None, file: Optional[BinaryIO] = None
+        self, url: Optional[str] = None, file: Union[str, Path, None] = None
     ) -> GoogleResponse:
         """
         Google
@@ -60,8 +60,7 @@ class Google(HandOver):
             params = {"image_url": encoded_image_url}
             resp_text, _, _ = await self.get(self.url, params=params)
         elif file:
-            data = FormData()
-            data.add_field("encoded_image", file, filename="file.png")
+            data = {"encoded_image": open(file, "rb")}
             resp_text, _, _ = await self.post(f"{self.url}/upload", data=data)
         else:
             raise ValueError("url or file is required")

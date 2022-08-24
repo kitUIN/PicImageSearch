@@ -1,7 +1,6 @@
 from json import loads as json_loads
-from typing import Any, BinaryIO, Optional
-
-from aiohttp import FormData
+from pathlib import Path
+from typing import Any, Optional, Union
 
 from .model import BaiDuResponse
 from .network import HandOver
@@ -12,15 +11,14 @@ class BaiDu(HandOver):
         super().__init__(**request_kwargs)
 
     async def search(
-        self, url: Optional[str] = None, file: Optional[BinaryIO] = None
+        self, url: Optional[str] = None, file: Union[str, Path, None] = None
     ) -> BaiDuResponse:
         params = {"from": "pc"}
         data = None
         if url:
             params["image"] = url
         elif file:
-            data = FormData()
-            data.add_field("image", file, filename="file.png")
+            data = {"image": open(file, "rb")}
         else:
             raise ValueError("url or file is required")
         resp_text, resp_url, _ = await self.post(
