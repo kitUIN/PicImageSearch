@@ -16,16 +16,18 @@ class EHentaiItem:
         self._arrange(data)
 
     def _arrange(self, data: PyQuery) -> None:
-        self.title = data.find(".glink").text()
-        self.url = data.find(".glink").parent("a").attr("href")
-        thumbnail = data.find(".glthumb img")
-        if thumbnail.attr("src").startswith("http"):
-            self.thumbnail = thumbnail.attr("src")
+        glink = data.find(".glink")
+        self.title = glink.text()
+        if glink.parent("div"):
+            self.url = glink.parent("div").parent("a").attr("href")
         else:
-            self.thumbnail = thumbnail.attr("data-src")
+            self.url = glink.parent("a").attr("href")
+        self.thumbnail = data.find("img").attr("src")
         self.type = data.find(".cn").eq(0).text()
         self.date = data.find("[id^='posted']").eq(0).text()
-        self.tags = [i.text() for i in data.find("div.gt").items()]
+        self.tags = [
+            i.text() for i in data.find("div[class=gt],div[class=gtl]").items()
+        ]
 
 
 class EHentaiResponse:
@@ -34,6 +36,8 @@ class EHentaiResponse:
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(self.origin, parser=utf8_parser))
         self.raw: List[EHentaiItem] = [
-            EHentaiItem(i) for i in data.find(".glcat").parents("tr").items()
+            EHentaiItem(i)
+            for i in data.find(".itg").children("tr").items()
+            if i.children("td")
         ]
         self.url: str = resp_url
