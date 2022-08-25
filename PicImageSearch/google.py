@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Dict, Optional, Union
 from urllib.parse import quote
 
 from lxml.html import HTMLParser, fromstring
@@ -38,7 +38,7 @@ class Google(HandOver):
         return self._slice(resp_text, index)
 
     async def search(
-        self, url: Optional[str] = None, file: Union[str, Path, None] = None
+        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
     ) -> GoogleResponse:
         """
         Google
@@ -60,7 +60,11 @@ class Google(HandOver):
             params = {"image_url": encoded_image_url}
             resp_text, _, _ = await self.get(self.url, params=params)
         elif file:
-            data = {"encoded_image": open(file, "rb")}
+            data: Dict[str, Any] = (
+                {"encoded_image": file}
+                if isinstance(file, bytes)
+                else {"encoded_image": open(file, "rb")}
+            )
             resp_text, _, _ = await self.post(f"{self.url}/upload", data=data)
         else:
             raise ValueError("url or file is required")

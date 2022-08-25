@@ -67,7 +67,7 @@ class SauceNAO(HandOver):
                 self.params.add("dbs[]", i)
 
     async def search(
-        self, url: Optional[str] = None, file: Union[str, Path, None] = None
+        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
     ) -> SauceNAOResponse:
         """
         SauceNAO
@@ -99,11 +99,15 @@ class SauceNAO(HandOver):
         further documentation visit https://saucenao.com/user.php?page=search-api
         """
         params = self.params
-        data = None
+        data: Optional[Dict[str, Any]] = None
         if url:
             params.add("url", url)
         elif file:
-            data = {"file": open(file, "rb")}
+            data = (
+                {"file": file}
+                if isinstance(file, bytes)
+                else {"file": open(file, "rb")}
+            )
         else:
             raise ValueError("url or file is required")
         resp_text, _, resp_status = await self.post(

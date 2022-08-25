@@ -32,7 +32,7 @@ class Iqdb(HandOver):
     async def search(
         self,
         url: Optional[str] = None,
-        file: Union[str, Path, None] = None,
+        file: Union[str, bytes, Path, None] = None,
         force_gray: bool = False,
         is_3d: bool = False,
     ) -> IqdbResponse:
@@ -44,7 +44,7 @@ class Iqdb(HandOver):
             data["url"] = url
             resp_text, _, _ = await self.post(iqdb_url, data=data)
         elif file:
-            data["file"] = open(file, "rb")
+            data["file"] = file if isinstance(file, bytes) else open(file, "rb")
             resp_text, _, _ = await self.post(iqdb_url, data=data)
         else:
             raise ValueError("url or file is required")

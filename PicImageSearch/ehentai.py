@@ -22,7 +22,7 @@ class EHentai(HandOver):
     async def search(
         self,
         url: Optional[str] = None,
-        file: Union[str, Path, None] = None,
+        file: Union[str, bytes, Path, None] = None,
         ex: bool = False,
     ) -> EHentaiResponse:
         _url = (
@@ -34,7 +34,7 @@ class EHentai(HandOver):
         if url:
             data["sfile"] = io.BytesIO(await self.download(url))
         elif file:
-            data["sfile"] = open(file, "rb")
+            data["sfile"] = file if isinstance(file, bytes) else open(file, "rb")
         else:
             raise ValueError("url or file is required")
         if self.covers:

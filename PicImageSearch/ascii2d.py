@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 from .model import Ascii2DResponse
 from .network import HandOver
@@ -23,7 +23,7 @@ class Ascii2D(HandOver):
         self.bovw: bool = bovw
 
     async def search(
-        self, url: Optional[str] = None, file: Union[str, Path, None] = None
+        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
     ) -> Ascii2DResponse:
         """
         Ascii2D
@@ -47,7 +47,11 @@ class Ascii2D(HandOver):
             resp_text, resp_url, _ = await self.post(ascii2d_url, data={"uri": url})
         elif file:
             ascii2d_url = "https://ascii2d.net/search/file"
-            data = {"file": open(file, "rb")}
+            data: Dict[str, Any] = (
+                {"file": file}
+                if isinstance(file, bytes)
+                else {"file": open(file, "rb")}
+            )
             resp_text, resp_url, _ = await self.post(ascii2d_url, data=data)
         else:
             raise ValueError("url or file is required")

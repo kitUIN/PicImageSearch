@@ -1,6 +1,6 @@
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 from .model import BaiDuResponse
 from .network import HandOver
@@ -11,14 +11,18 @@ class BaiDu(HandOver):
         super().__init__(**request_kwargs)
 
     async def search(
-        self, url: Optional[str] = None, file: Union[str, Path, None] = None
+        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
     ) -> BaiDuResponse:
         params = {"from": "pc"}
-        data = None
+        data: Optional[Dict[str, Any]] = None
         if url:
             params["image"] = url
         elif file:
-            data = {"image": open(file, "rb")}
+            data = (
+                {"image": file}
+                if isinstance(file, bytes)
+                else {"image": open(file, "rb")}
+            )
         else:
             raise ValueError("url or file is required")
         resp_text, resp_url, _ = await self.post(

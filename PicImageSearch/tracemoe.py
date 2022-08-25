@@ -108,7 +108,7 @@ class TraceMoe(HandOver):
     async def search(
         self,
         url: Optional[str] = None,
-        file: Union[str, Path, None] = None,
+        file: Union[str, bytes, Path, None] = None,
         key: Optional[str] = None,
         anilist_id: Optional[int] = None,
         chinese_title: bool = True,
@@ -123,12 +123,16 @@ class TraceMoe(HandOver):
         :param cut_borders: 切割黑边框(默认开启)
         """
         headers = {"x-trace-key": key} if key else None
-        data = None
+        data: Optional[Dict[str, Any]] = None
         if url:
             params = self.set_params(url, anilist_id, cut_borders)
         elif file:
             params = self.set_params(None, anilist_id, cut_borders)
-            data = {"file": open(file, "rb")}
+            data = (
+                {"file": file}
+                if isinstance(file, bytes)
+                else {"file": open(file, "rb")}
+            )
         else:
             raise ValueError("url or file is required")
         resp_text, _, _ = await self.post(
