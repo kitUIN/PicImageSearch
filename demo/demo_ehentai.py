@@ -11,12 +11,13 @@ proxies = "http://127.0.0.1:1081"
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test06.jpg"
 file = "images/test06.jpg"
 cookies = None  # 注意：如果要使用 EXHentai 搜索，需要提供 cookies
-ex = False  # 是否使用 EXHentai 搜索
+ex = False  # 是否使用 EXHentai 搜索，推荐用 bool(cookies) ，即配置了 cookies 就使用 EXHentai 搜索
+timeout = 60  # 尽可能避免超时返回空的 document
 
 
 @logger.catch()
 async def test() -> None:
-    async with Network(proxies=proxies, cookies=cookies) as client:
+    async with Network(proxies=proxies, cookies=cookies, timeout=timeout) as client:
         ehentai = EHentai(client=client)
         # resp = await ehentai.search(url=url, ex=ex)
         resp = await ehentai.search(file=file, ex=ex)
@@ -25,7 +26,7 @@ async def test() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    ehentai = EHentaiSync(proxies=proxies, cookies=cookies)
+    ehentai = EHentaiSync(proxies=proxies, cookies=cookies, timeout=timeout)
     resp = ehentai.search(url=url, ex=ex)
     # resp = ehentai.search(file=file, ex=ex)
     show_result(resp)  # type: ignore
