@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "PicImageSearch"
-version = "3.4.2"
+version = "3.4.3"
 description = "PicImageSearch APIs for Python 3.x 适用于 Python 3 以图搜源整合API"
 authors = ["kitUIN <kulujun@gmail.com>"]
 maintainers = ["kitUIN <kulujun@gmail.com>", "lleans", "chinoll", "NekoAria"]
@@ -15,7 +15,7 @@ keywords = ["google", "iqdb", "saucenao", "tracemoe", "ascii2d"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-aiohttp = { extras = ["speedups"], version = "^3.8.1" }
+aiohttp = {extras = ["speedups"], version = "^3.8.1"}
 aiohttp_socks = { version = "^0.7.1", optional = true }
 lxml = "^4.9.1"
 multidict = "^6.0.2"
