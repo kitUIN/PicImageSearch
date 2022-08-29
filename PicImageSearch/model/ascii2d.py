@@ -42,8 +42,14 @@ class Ascii2DItem:
                     info["title"] = infos.contents().eq(0).text()
 
         infos = data.find(".external")
-        if info["title"] == "" and infos:
-            info["title"] = infos.eq(0).text()
+        if infos:
+            if info["url"] == "":
+                links = infos.find("a")
+                if links:
+                    info["url"] = links.eq(0).attr("href")
+                    infos.remove("a")
+            if info["title"] == "":
+                info["title"] = infos.eq(0).text()
 
         return info
 
