@@ -48,8 +48,13 @@ class Ascii2DItem:
                     self.title = infos.contents().eq(0).text()
 
         infos = data.find("div.detail-box.gray-link .external")
-        if infos and self.title == "":
-            self.title = infos.eq(0).text()
+        if infos:
+            if self.title == "":
+                self.title = infos.eq(0).text()
+            if not self.url_list:
+                links = infos.find("a")
+                if links:
+                    self.url_list = [(i.attr("href"), i.text()) for i in links.items()]
 
         self.url_list = list(
             map(
