@@ -4,6 +4,10 @@ from typing import Any, Dict, Optional, Tuple, Type, Union
 from aiohttp import ClientSession, ClientTimeout, FormData, TCPConnector
 from multidict import MultiDict
 
+DEFAULT_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36"
+}
+
 
 class Network:
     def __init__(
@@ -14,28 +18,30 @@ class Network:
         cookies: Optional[str] = None,
         timeout: float = 30,
         bypass: bool = False,
+        cf_bypass: bool = False,
     ):
         self.internal: bool = internal
-        if not headers:
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36"
-            }
+        headers = {**DEFAULT_HEADERS, **headers} if headers else DEFAULT_HEADERS
         self.cookies: Dict[str, str] = {}
         if cookies:
             for line in cookies.split(";"):
                 key, value = line.strip().split("=", 1)
                 self.cookies[key] = value
-        kwargs = {}
-        if bypass:
+        kwargs: Dict[str, Any] = {}
+        if bypass or cf_bypass:
             import ssl
-
-            from .bypass import ByPassResolver
 
             ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
             ssl_ctx.check_hostname = False
             ssl_ctx.verify_mode = ssl.CERT_NONE
+            if cf_bypass:
+                ssl_ctx.options &= ~ssl.OP_NO_TLSv1_3
+                ssl_ctx.minimum_version = ssl.TLSVersion.TLSv1
+            kwargs["ssl"] = ssl_ctx
+            if bypass:
+                from .bypass import ByPassResolver
 
-            kwargs.update({"ssl": ssl_ctx, "resolver": ByPassResolver()})
+                kwargs["resolver"] = ByPassResolver()
 
         _flag = False
         if proxies:
@@ -46,10 +52,10 @@ class Network:
             except ModuleNotFoundError as e:
                 if proxies.startswith("socks"):
                     raise e
-                self.conn = TCPConnector(**kwargs)  # type: ignore
+                self.conn = TCPConnector(**kwargs)
                 _flag = True
         else:
-            self.conn = TCPConnector(**kwargs)  # type: ignore
+            self.conn = TCPConnector(**kwargs)
 
         self.client: ClientSession = ClientSession(
             connector=self.conn,

@@ -11,12 +11,13 @@ proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
 file = "images/test01.jpg"
 bovw = True  # 是否使用特征检索
-bypass = False  # 是否绕过DNS污染
+bypass = False  # 是否绕过 DNS 污染
+cf_bypass = True  # 是否尝试绕过 Cloudflare
 
 
 @logger.catch()
 async def test() -> None:
-    async with Network(proxies=proxies, bypass=bypass) as client:
+    async with Network(proxies=proxies, bypass=bypass, cf_bypass=cf_bypass) as client:
         ascii2d = Ascii2D(client=client, bovw=bovw)
         # resp = await ascii2d.search(url=url)
         resp = await ascii2d.search(file=file)
@@ -25,7 +26,9 @@ async def test() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    ascii2d = Ascii2DSync(proxies=proxies, bypass=bypass, bovw=bovw)
+    ascii2d = Ascii2DSync(
+        proxies=proxies, bypass=bypass, cf_bypass=cf_bypass, bovw=bovw
+    )
     resp = ascii2d.search(url=url)
     # resp = ascii2d.search(file=file)
     show_result(resp)  # type: ignore
