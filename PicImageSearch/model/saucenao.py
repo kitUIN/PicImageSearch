@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 
 class SauceNAOItem:
@@ -13,56 +13,85 @@ class SauceNAOItem:
         self.hidden: int = result_header.get("hidden", 0)  # 是否为搜索引擎参数 hide 对应的 NSFW 内容
         self.title: str = self._get_title(result_data)
         self.url: str = self._get_url(result_data)
+        self.ext_urls: List[str] = result_data.get("ext_urls", [])
         self.author: str = self._get_author(result_data)
-        self.pixiv_id: int = result_data.get("pixiv_id", 0)
-        self.member_id: int = result_data.get("member_id", 0)
+        self.author_url: str = self._get_author_url(result_data)
+        self.source: str = result_data.get("source", "")
 
     @staticmethod
     def _get_title(data: Dict[str, Any]) -> str:
-        title = next(
-            (
-                data[i]
-                for i in [
-                    "title",
-                    "jp_name",
-                    "eng_name",
-                    "material",
-                    "source",
-                    "created_at",
-                ]
-                if i in data
-            ),
-            "",
+        return (
+            next(
+                (
+                    data[i]
+                    for i in [
+                        "title",
+                        "material",
+                        "jp_name",
+                        "eng_name",
+                        "source",
+                        "created_at",
+                    ]
+                    if i in data and data[i]
+                ),
+                "",
+            )
+            or ""
         )
-        if title is None:
-            title = ""
-        return title
 
     @staticmethod
-    def _get_url(data: Dict[str, Any]) -> Union[str, Any]:
-        if "ext_urls" in data:
-            return data["ext_urls"][0]
+    def _get_url(data: Dict[str, Any]) -> str:
+        if "pixiv_id" in data:
+            return f'https://www.pixiv.net/artworks/{data["pixiv_id"]}'
+        elif "pawoo_id" in data:
+            return f'https://pawoo.net/@{data["pawoo_user_acct"]}/{data["pawoo_id"]}'
         elif "getchu_id" in data:
             return f'https://www.getchu.com/soft.phtml?id={data["getchu_id"]}'
+        elif "ext_urls" in data:
+            return data["ext_urls"][0]  # type: ignore
         return ""
 
     @staticmethod
-    def _get_author(data: Dict[str, Any]) -> Union[str, Any]:
-        return next(
-            (
-                data[i][0] if i == "creator" and isinstance(data[i], list) else data[i]
-                for i in [
-                    "author",
-                    "author_name",
-                    "member_name",
-                    "pawoo_user_username",
-                    "company",
-                    "creator",
-                ]
-                if i in data
-            ),
-            "",
+    def _get_author(data: Dict[str, Any]) -> str:
+        return (
+            next(
+                (
+                    ", ".join(data[i])
+                    if i == "creator" and isinstance(data[i], list)
+                    else data[i]
+                    for i in [
+                        "author",
+                        "member_name",
+                        "creator",
+                        "twitter_user_handle",
+                        "pawoo_user_display_name",
+                        "author_name",
+                        "user_name",
+                        "artist",
+                        "company",
+                    ]
+                    if i in data and data[i]
+                ),
+                "",
+            )
+            or ""
         )
+
+    @staticmethod
+    def _get_author_url(data: Dict[str, Any]) -> str:
+        if "pixiv_id" in data:
+            return f'https://www.pixiv.net/users/{data["member_id"]}'
+        elif "seiga_id" in data:
+            return f'https://seiga.nicovideo.jp/user/illust/{data["member_id"]}'
+        elif "nijie_id" in data:
+            return f'https://nijie.info/members.php?id={data["member_id"]}'
+        elif "bcy_id" in data:
+            return f'https://bcy.net/u/{data["member_id"]}'
+        elif "tweet_id" in data:
+            return f'https://twitter.com/intent/user?user_id={data["twitter_user_id"]}'
+        elif "pawoo_user_acct" in data:
+            return f'https://pawoo.net/@{data["pawoo_user_acct"]}'
+        return data.get("author_url", "")
 
 
 class SauceNAOResponse:
