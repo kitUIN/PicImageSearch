@@ -17,8 +17,8 @@ class Network:
         headers: Optional[Dict[str, str]] = None,
         cookies: Optional[str] = None,
         timeout: float = 30,
+        verify_ssl: bool = True,
         bypass: bool = False,
-        cf_bypass: bool = False,
     ):
         self.internal: bool = internal
         headers = {**DEFAULT_HEADERS, **headers} if headers else DEFAULT_HEADERS
@@ -28,15 +28,12 @@ class Network:
                 key, value = line.strip().split("=", 1)
                 self.cookies[key] = value
         kwargs: Dict[str, Any] = {}
-        if bypass or cf_bypass:
+        if not verify_ssl or bypass:
             import ssl
 
             ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
             ssl_ctx.check_hostname = False
             ssl_ctx.verify_mode = ssl.CERT_NONE
-            if cf_bypass:
-                ssl_ctx.options &= ~ssl.OP_NO_TLSv1_3
-                ssl_ctx.minimum_version = ssl.TLSVersion.TLSv1
             kwargs["ssl"] = ssl_ctx
             if bypass:
                 from .bypass import ByPassResolver
