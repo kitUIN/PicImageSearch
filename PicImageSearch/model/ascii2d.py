@@ -19,12 +19,6 @@ class Ascii2DItem:
         self._arrange(data)
 
     def _arrange(self, data: PyQuery) -> None:
-        links = data.find("div.pull-xs-right > a")
-        if links:
-            self.url = links.eq(0).attr("href")
-            self.url_list = [(self.url, links.eq(0).text())]
-            return
-
         infos = data.find("div.detail-box.gray-link")
         if infos:
             links = infos.find("a")
@@ -55,6 +49,12 @@ class Ascii2DItem:
                 self.url_list,
             )
         )
+
+        if not self.url_list:
+            links = data.find("div.pull-xs-right > a")
+            if links:
+                self.url = links.eq(0).attr("href")
+                self.url_list = [(self.url, links.eq(0).text())]
 
 
 class Ascii2DResponse:
