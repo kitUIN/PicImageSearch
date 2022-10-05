@@ -120,3 +120,4 @@ class SauceNAOResponse:
         self.minimum_similarity: Optional[float] = res_header.get("minimum_similarity")
         # 数据返回值数量
         self.results_returned: Optional[int] = res_header.get("results_returned")
+        self.url: str = f'https://saucenao.com/search.php?url=https://saucenao.com{res_header.get("query_image_display")}'

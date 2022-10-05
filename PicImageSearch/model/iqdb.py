@@ -52,10 +52,17 @@ class IqdbResponse:
         self.ascii2d_url: str = ""  # Ascii2d搜索链接
         self.google_url: str = ""  # Google搜索链接
         self.tineye_url: str = ""  # TinEye搜索链接
+        self.url: str = ""
         self._arrange(data)
 
     def _arrange(self, data: PyQuery) -> None:
+        host = (
+            "https://iqdb.org"
+            if data('a[href^="//3d.iqdb.org"]')
+            else "https://3d.iqdb.org"
+        )
         tables = list(data("#pages > div > table").items())
+        self.url = f'{host}/?url=https://iqdb.org{tables[0].find("img").attr("src")}'
         if len(tables) > 1:
             tables = tables[1:]
             self.raw.extend([IqdbItem(i) for i in tables])

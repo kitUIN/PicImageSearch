@@ -32,7 +32,8 @@ def test_sync() -> None:
 
 def show_result(resp: IqdbResponse) -> None:
     # logger.info(resp.origin)  # 原始数据
-    logger.info(resp.raw[0].origin)
+    logger.info(resp.url)
+    # logger.info(resp.raw[0].origin)
     logger.info(f"说明: {resp.raw[0].content}")
     logger.info(f"来源地址: {resp.raw[0].url}")
     logger.info(f"缩略图: {resp.raw[0].thumbnail}")

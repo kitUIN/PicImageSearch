@@ -33,7 +33,8 @@ def test_sync() -> None:
 
 def show_result(resp: SauceNAOResponse) -> None:
     logger.info(resp.status_code)  # HTTP 状态码
-    # logger.info(resp.origin)  # 原始数据
+    logger.info(resp.origin)  # 原始数据
+    logger.info(resp.url)
     logger.info(resp.raw[0].origin)
     logger.info(resp.long_remaining)
     logger.info(resp.short_remaining)
@@ -43,8 +44,7 @@ def show_result(resp: SauceNAOResponse) -> None:
     logger.info(resp.raw[0].title)
     logger.info(resp.raw[0].author)
     logger.info(resp.raw[0].url)
-    logger.info(resp.raw[0].pixiv_id)
-    logger.info(resp.raw[0].member_id)
+    logger.info(resp.raw[0].ext_urls)
     logger.info("-" * 50)
 
 
