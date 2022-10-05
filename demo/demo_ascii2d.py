@@ -10,13 +10,14 @@ from PicImageSearch.sync import Ascii2D as Ascii2DSync
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
 file = "images/test01.jpg"
-bovw = True  # 是否使用特征检索
+bovw = False  # 是否使用特征检索
 bypass = False  # 是否绕过 DNS 污染
+verify_ssl = True  # 是否校验 SSL 证书
 
 
 @logger.catch()
 async def test() -> None:
-    async with Network(proxies=proxies, bypass=bypass) as client:
+    async with Network(proxies=proxies, bypass=bypass, verify_ssl=verify_ssl) as client:
         ascii2d = Ascii2D(client=client, bovw=bovw)
         # resp = await ascii2d.search(url=url)
         resp = await ascii2d.search(file=file)
@@ -25,7 +26,9 @@ async def test() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    ascii2d = Ascii2DSync(proxies=proxies, bypass=bypass, bovw=bovw)
+    ascii2d = Ascii2DSync(
+        proxies=proxies, bypass=bypass, verify_ssl=verify_ssl, bovw=bovw
+    )
     resp = ascii2d.search(url=url)
     # resp = ascii2d.search(file=file)
     show_result(resp)  # type: ignore
@@ -34,15 +37,18 @@ def test_sync() -> None:
 def show_result(resp: Ascii2DResponse) -> None:
     # logger.info(resp.origin)  # 原始数据
     logger.info(resp.url)  # 搜索结果链接
-    logger.info(resp.raw[1].origin)
-    logger.info(resp.raw[1].thumbnail)
-    logger.info(resp.raw[1].title)
-    logger.info(resp.raw[1].author)
-    logger.info(resp.raw[1].author_url)
-    logger.info(resp.raw[1].url)
-    logger.info(resp.raw[1].url_list)
-    logger.info(resp.raw[1].hash)
-    logger.info(resp.raw[1].detail)
+    selected = resp.raw[0]
+    if not (selected.title or selected.url_list):
+        selected = resp.raw[1]
+    logger.info(selected.origin)
+    logger.info(selected.thumbnail)
+    logger.info(selected.title)
+    logger.info(selected.author)
+    logger.info(selected.author_url)
+    logger.info(selected.url)
+    logger.info(selected.url_list)
+    logger.info(selected.hash)
+    logger.info(selected.detail)
     logger.info("-" * 50)
 
 
