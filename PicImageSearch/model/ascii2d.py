@@ -25,7 +25,7 @@ class Ascii2DItem:
             self.url_list = [(self.url, links.eq(0).text())]
             return
 
-        infos = data.find("div.detail-box.gray-link h6")
+        infos = data.find("div.detail-box.gray-link")
         if infos:
             links = infos.find("a")
             if links:
@@ -45,15 +45,6 @@ class Ascii2DItem:
                     self.author = links.eq(1).text()
                 elif links.eq(0).parents("small"):
                     self.title = infos.contents().eq(0).text()
-
-        infos = data.find("div.detail-box.gray-link .external")
-        if infos:
-            if self.title == "":
-                self.title = infos.eq(0).text()
-            if not self.url_list:
-                links = infos.find("a")
-                if links:
-                    self.url_list = [(i.attr("href"), i.text()) for i in links.items()]
 
         self.url_list = list(
             map(
