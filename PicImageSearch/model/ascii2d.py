@@ -44,7 +44,8 @@ class Ascii2DItem:
                     self.author_url = links.eq(1).attr("href")
                     self.author = links.eq(1).text()
                 elif links.eq(0).parents("small"):
-                    self.title = infos.contents().eq(0).text()
+                    infos.remove("small")
+                    self.title = infos.text()
 
         self.url_list = list(
             map(
