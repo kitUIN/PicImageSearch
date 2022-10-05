@@ -31,15 +31,14 @@ class Ascii2DItem:
             if links:
                 mark = infos("small").eq(-1).text()
                 self.url_list = [(i.attr("href"), i.text()) for i in links.items()]
-                if len(list(links.items())) > 1 and any(
-                    i == mark
-                    for i in [
-                        "pixiv",
-                        "twitter",
-                        "fanbox",
-                        "fantia",
-                    ]
-                ):
+                if len(list(links.items())) > 1 and mark in [
+                    "pixiv",
+                    "twitter",
+                    "fanbox",
+                    "fantia",
+                    "ニコニコ静画",
+                    "ニジエ",
+                ]:
                     self.title = links.eq(0).text()
                     self.url = links.eq(0).attr("href")
                     self.author_url = links.eq(1).attr("href")
