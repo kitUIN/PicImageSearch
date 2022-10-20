@@ -40,6 +40,10 @@ class Ascii2DItem:
                 elif links.eq(0).parents("small"):
                     infos.remove("small")
                     self.title = infos.text()
+            if not self.title:
+                external = infos.find("div.external")
+                external.remove("a")
+                self.title = external.text()
 
         self.url_list = list(
             map(
