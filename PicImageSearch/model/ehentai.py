@@ -38,9 +38,12 @@ class EHentaiResponse:
         self.origin: str = resp_text  # 原始数据
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(self.origin, parser=utf8_parser))
-        self.raw: List[EHentaiItem] = [
-            EHentaiItem(i)
-            for i in data.find(".itg").children("tr").items()
-            if i.children("td")
-        ]
+        if "No unfiltered results found." in resp_text:
+            self.raw = []
+        else:
+            self.raw = [
+                EHentaiItem(i)
+                for i in data.find(".itg").children("tr").items()
+                if i.children("td")
+            ]
         self.url: str = resp_url
