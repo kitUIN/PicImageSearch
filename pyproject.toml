@@ -19,7 +19,7 @@ aiohttp = {extras = ["speedups"], version = "^3.8.3"}
 aiohttp_socks = { version = "^0.7.1", optional = true }
 lxml = "^4.9.2"
 multidict = "^6.0.4"
-pyquery = "^1.4.3"
+pyquery = "^2.0.0"
 
 [tool.poetry.extras]
 socks = ["aiohttp_socks"]
