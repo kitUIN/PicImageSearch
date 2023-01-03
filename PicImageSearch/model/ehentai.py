@@ -23,9 +23,7 @@ class EHentaiItem:
         else:
             self.url = glink.parent("a").attr("href")
         thumbnail = data.find(".glthumb img")
-        self.thumbnail = thumbnail.attr("src")
-        if not self.thumbnail.startswith("http"):
-            self.thumbnail = thumbnail.attr("data-src")
+        self.thumbnail = thumbnail.attr("data-src") or thumbnail.attr("src")
         self.type = data.find(".cn").eq(0).text()
         self.date = data.find("[id^='posted']").eq(0).text()
         self.tags = [
