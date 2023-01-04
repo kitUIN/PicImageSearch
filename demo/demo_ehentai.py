@@ -41,7 +41,7 @@ def show_result(resp: EHentaiResponse) -> None:
     logger.info(resp.raw[0].thumbnail)
     logger.info(resp.raw[0].type)
     logger.info(resp.raw[0].date)
-    logger.info(resp.raw[0].tags)
+    logger.info(resp.raw[0].tags)  # 推荐使用 Compact / Extended 页面布局，否则拿不到 tags
     logger.info("-" * 50)
 
 
