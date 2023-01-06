@@ -28,7 +28,8 @@ class EHentaiItem:
             or data.find(".gl3t img")
         )
         self.thumbnail = thumbnail.attr("data-src") or thumbnail.attr("src")
-        self.type = data.find(".ct3").eq(0).text()
+        _type = data.find(".cs") or data.find(".cn")
+        self.type = _type.eq(0).text()
         self.date = data.find("[id^='posted']").eq(0).text()
         self.tags = [
             i.text() for i in data.find("div[class=gt],div[class=gtl]").items()
