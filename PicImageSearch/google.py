@@ -28,11 +28,10 @@ class Google(HandOver):
     def _slice(resp: str, index: int = 1) -> GoogleResponse:
         utf8_parser = HTMLParser(encoding="utf-8")
         d = PyQuery(fromstring(resp, parser=utf8_parser))
-
-        images_data = d.find("script")
         data = d.find(".g")
         pages = list(d.find("td").items())[1:-1]
-        return GoogleResponse(data, pages, index, images_data)
+        script_list = list(d.find("script").items())
+        return GoogleResponse(data, pages, index, script_list)
 
     async def goto_page(self, url: str, index: int) -> GoogleResponse:
         resp_text, _, _ = await self.get(url)
@@ -51,15 +50,15 @@ class Google(HandOver):
         -----------
         • .origin = Raw data from scrapper\n
         • .raw = Simplified data from scrapper\n
-        • .raw[2] = Second index of simplified data that was found <Should start from index 2, because from there is matching image>\n
-        • .raw[2].title = First index of title that was found\n
-        • .raw[2].url = First index of url source that was found\n
-        • .raw[2].thumbnail = First index of base64 string image that was found
+        • .raw[2] = Third index of simplified data that was found <Should start from index 2, because from there is matching image>\n
+        • .raw[2].title = Third index of title that was found\n
+        • .raw[2].url = Third index of url source that was found\n
+        • .raw[2].thumbnail = Third index of base64 string image that was found
         """
         if url:
             file = await self.download(url)
 
-        if not url or not file:
+        if not file:
             raise ValueError("url or file is required")
 
         data: Dict[str, Any] = (

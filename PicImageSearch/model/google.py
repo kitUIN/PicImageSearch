@@ -1,23 +1,35 @@
-from typing import List
 from re import compile
-from json import dump
+from typing import Dict, List, Optional
 
 from pyquery import PyQuery
 
 
 class GoogleItem:
-    def __init__(self, data: PyQuery, thumbnail: str):
+    def __init__(self, data: PyQuery, thumbnail: Optional[str]):
         self.origin: PyQuery = data  # 原始数据
         self.title: str = data("h3").text()
         self.url: str = data("a").eq(0).attr("href")
-        self.thumbnail: str = thumbnail
+        self.thumbnail: Optional[str] = thumbnail
+
 
 class GoogleResponse:
-    def __init__(self, data: PyQuery, pages: List[PyQuery], index: int, images_data: PyQuery):
+    def __init__(
+        self,
+        data: PyQuery,
+        pages: List[PyQuery],
+        index: int,
+        script_list: List[PyQuery],
+    ):
         self.origin: PyQuery = data  # 原始数据
         # 结果返回值
-        thumbnail: dict = self.create_list_thumbnail(images_data)
-        self.raw: List[GoogleItem] = [GoogleItem(i, (thumbnail[i("img").attr("id")] if i("img").attr("id") else None)) for i in data.items()]
+        thumbnail_dict: Dict[str, str] = self.create_thumbnail_dict(script_list)
+        self.raw: List[GoogleItem] = [
+            GoogleItem(
+                i,
+                (thumbnail_dict[i("img").attr("id")] if i("img").attr("id") else None),
+            )
+            for i in data.items()
+        ]
         self.index: int = index  # 当前页
         self.page: int = len(pages)  # 总页数
         self.pages: List[PyQuery] = pages  # 页面源
@@ -26,22 +38,20 @@ class GoogleResponse:
         return f'https://www.google.com{self.pages[index - 1]("a").eq(0).attr("href")}'
 
     @staticmethod
-    def create_list_thumbnail(data: PyQuery):
-        d: dict = {}
-        base_64_regex = compile(r"(data:image\/(?:jpeg|jpg|png|gif);base64,[^'\"]+)")
-        extract_id = compile(r"(\[(?:[\"']dimg_\d+['\"],?\s*)*[\"']dimg_\d+['\"]\])")
+    def create_thumbnail_dict(script_list: List[PyQuery]) -> Dict[str, str]:
+        thumbnail_dict = {}
+        base_64_regex = compile(r"data:image/(?:jpeg|jpg|png|gif);base64,[^'\"]+")
+        id_regex = compile(r"dimg_\d+")
 
-        base64 = base_64_regex.findall(data.text())
-        id = extract_id.findall(data.text())
-
-        for index, a in enumerate(id):
-            a = a.replace("[", "").replace("]", "").replace('"', '').replace("'", "")
-
-            if "," in a:
-                a = a.split(",")
-                for x in a:
-                    d[x] = str(base64[index]).replace("\\x3d", "=")
+        for script in script_list:
+            base_64_match = base_64_regex.findall(script.text())
+            if not base_64_match:
                 continue
 
-            d[a] = str(base64[index]).replace("\\x3d", "=")
-        return d
+            base64: str = base_64_match[0]
+            id_list: List[str] = id_regex.findall(script.text())
+
+            for _id in id_list:
+                thumbnail_dict[_id] = base64.replace(r"\x3d", "=")
+
+        return thumbnail_dict
