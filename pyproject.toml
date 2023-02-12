@@ -15,7 +15,7 @@ keywords = ["google", "iqdb", "saucenao", "tracemoe", "ascii2d"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-aiohttp = {extras = ["speedups"], version = "^3.8.3"}
+aiohttp = {extras = ["speedups"], version = "^3.8.4"}
 aiohttp_socks = { version = "^0.7.1", optional = true }
 lxml = "^4.9.2"
 multidict = "^6.0.4"
