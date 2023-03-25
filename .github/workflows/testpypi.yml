@@ -6,7 +6,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3.4.0
+    - uses: actions/checkout@v3.5.0
     - name: Set up Python
       uses: actions/setup-python@v4.5.0
       with:
@@ -18,7 +18,7 @@ jobs:
     - name: Build package
       run: python -m build
     - name: Publish package
-      uses: pypa/gh-action-pypi-publish@v1.8.1
+      uses: pypa/gh-action-pypi-publish@v1.8.3
       with:
         user: __token__
         password: ${{ secrets.TESTPYPI_TOKEN }}
