@@ -53,7 +53,8 @@ class Google(HandOver):
         -----------
         • .origin = Raw data from scrapper\n
         • .raw = Simplified data from scrapper\n
-        • .raw[2] = Third index of simplified data that was found <Should start from index 2, because from there is matching image>\n
+        • .raw[2] = Third index of simplified data that was found <Should start from index 2,
+                    because from there is matching image>\n
         • .raw[2].title = Third index of title that was found\n
         • .raw[2].url = Third index of url source that was found\n
         • .raw[2].thumbnail = Third index of base64 string image that was found

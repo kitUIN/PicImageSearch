@@ -37,10 +37,13 @@ class SauceNAO(HandOver):
         :param numres: (int) output number (default=5)
         :param dbmask: (int) The mask used to select the specific index to be enabled (default=None)
         :param dbmaski: (int) is used to select the mask of the specific index to be disabled (default=None)
-        :param db: (int) Search for a specific index number or all indexes (default=999), see https://saucenao.com/tools/examples/api/index_details.txt
-        :param dbs: (list) Search for specific indexes number or all indexes (default=None), see https://saucenao.com/tools/examples/api/index_details.txt
+        :param db: (int) Search for a specific index number or all indexes (default=999),
+                   see https://saucenao.com/tools/examples/api/index_details.txt
+        :param dbs: (list) Search for specific indexes number or all indexes (default=None),
+                    see https://saucenao.com/tools/examples/api/index_details.txt
         :param minsim: (int) Control the minimum similarity (default=30)
-        :param hide: (int) result hiding control, 0=show all, 1=hide expected explicit, 2=hide expected and suspected explicit, 3=hide all but expected safe. Default is 0.
+        :param hide: (int) result hiding control, 0=show all, 1=hide expected explicit,
+                     2=hide expected and suspected explicit, 3=hide all but expected safe. Default is 0.
         :param **request_kwargs: proxies and bypass settings.
         """
         # minsim 控制最小相似度
