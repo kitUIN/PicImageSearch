@@ -35,6 +35,14 @@ pretty = true
 show_error_codes = true
 strict = true
 
+[tool.ruff]
+select = ["F", "E", "W", "I"]
+target-version = "py37"
+line-length = 120
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
