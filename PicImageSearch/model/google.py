@@ -16,7 +16,7 @@ class GoogleResponse:
     def __init__(
         self,
         data: PyQuery,
-        pages: List[PyQuery],
+        pages: List[str],
         index: int,
         script_list: List[PyQuery],
     ):
@@ -32,10 +32,7 @@ class GoogleResponse:
         ]
         self.index: int = index  # 当前页
         self.page: int = len(pages)  # 总页数
-        self.pages: List[PyQuery] = pages  # 页面源
-
-    def get_page_url(self, index: int) -> str:
-        return f'https://www.google.com{self.pages[index - 1]("a").eq(0).attr("href")}'
+        self.pages: List[str] = pages  # 页面源
 
     @staticmethod
     def create_thumbnail_dict(script_list: List[PyQuery]) -> Dict[str, str]:

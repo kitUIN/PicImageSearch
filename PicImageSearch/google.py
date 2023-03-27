@@ -25,17 +25,20 @@ class Google(HandOver):
         self.url = "https://www.google.com/searchbyimage"
 
     @staticmethod
-    def _slice(resp: str, index: int = 1) -> GoogleResponse:
+    def _slice(resp_text: str, resp_url: str, index: int = 1) -> GoogleResponse:
         utf8_parser = HTMLParser(encoding="utf-8")
-        d = PyQuery(fromstring(resp, parser=utf8_parser))
+        d = PyQuery(fromstring(resp_text, parser=utf8_parser))
         data = d.find(".g")
-        pages = list(d.find("td").items())[1:-1]
+        pages = [f'https://www.google.com{i.attr("href")}' for i in d.find('a[aria-label~="Page"]').items()]
+        pages.insert(index-1, resp_url)
         script_list = list(d.find("script").items())
         return GoogleResponse(data, pages, index, script_list)
 
-    async def goto_page(self, url: str, index: int) -> GoogleResponse:
-        resp_text, _, _ = await self.get(url)
-        return self._slice(resp_text, index)
+    async def goto_page(self, resp: GoogleResponse, index: int) -> GoogleResponse:
+        if index == resp.index:
+            return resp
+        resp_text, resp_url, _ = await self.get(resp.pages[index - 1])
+        return self._slice(resp_text, resp_url, index)
 
     async def search(
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
@@ -66,5 +69,5 @@ class Google(HandOver):
             if isinstance(file, bytes)
             else {"encoded_image": open(file, "rb")}
         )
-        resp_text, _, _ = await self.post(f"{self.url}/upload", data=data)
-        return self._slice(resp_text, 1)
+        resp_text, resp_url, _ = await self.post(f"{self.url}/upload", data=data)
+        return self._slice(resp_text, resp_url)

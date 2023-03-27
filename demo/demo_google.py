@@ -19,7 +19,7 @@ async def test() -> None:
         # resp = await google.search(url=url)
         resp = await google.search(file=file)
         show_result(resp)
-        resp2 = await google.goto_page(resp.get_page_url(2), 2)
+        resp2 = await google.goto_page(resp, 2)
         show_result(resp2)
 
 
@@ -29,12 +29,13 @@ def test_sync() -> None:
     resp = google.search(url=url)
     # resp = google.search(file=file)
     show_result(resp)  # type: ignore
-    resp2 = google.goto_page(resp.get_page_url(2), 2)  # type: ignore
+    resp2 = google.goto_page(resp, 2)  # type: ignore
     show_result(resp2)  # type: ignore
 
 
 def show_result(resp: GoogleResponse) -> None:
     # logger.info(resp.origin)  # Original Data
+    # logger.info(resp.pages)
     # Should start from index 2, because from there is matching image
     logger.info(resp.raw[2].origin)
     logger.info(resp.index)
