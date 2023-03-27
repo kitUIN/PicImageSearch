@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional, Union
 
 from .model import Ascii2DResponse
 from .network import HandOver
+import cloudscraper
 
 
 class Ascii2D(HandOver):
@@ -61,5 +62,9 @@ class Ascii2D(HandOver):
             resp_text, resp_url, _ = await self.get(
                 resp_url.replace("/color/", "/bovw/")
             )
+        
+        # 替换resp_text
+        scraper = cloudscraper.create_scraper()
+        resp_text = scraper.get(resp_url).text.encode('utf-8')
 
         return Ascii2DResponse(resp_text, resp_url)
