@@ -44,7 +44,7 @@ class SauceNAO(HandOver):
         :param minsim: (int) Control the minimum similarity (default=30)
         :param hide: (int) result hiding control, 0=show all, 1=hide expected explicit,
                      2=hide expected and suspected explicit, 3=hide all but expected safe. Default is 0.
-        :param **request_kwargs: proxies and bypass settings.
+        :param **request_kwargs: proxies setting.
         """
         # minsim 控制最小相似度
         super().__init__(**request_kwargs)

@@ -49,7 +49,7 @@ class TraceMoe(HandOver):
 
         :param size: preview video/image size(can be:s/m/l)(small/medium/large)
         :param mute: mute the preview video（default:False）
-        :param **request_kwargs: proxies and bypass settings.
+        :param **request_kwargs: proxies setting.
         """
         super().__init__(**request_kwargs)
         self.size: Optional[str] = size

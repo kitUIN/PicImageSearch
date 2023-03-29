@@ -14,7 +14,7 @@ class Ascii2D(HandOver):
 
     Params Keys
     -----------
-    :param **request_kwargs: proxies and bypass settings.\n
+    :param **request_kwargs: proxies setting.\n
     :param bovw(bool): use ascii2d bovw search, default False \n
     """
 

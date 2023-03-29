@@ -22,7 +22,6 @@ class Network:
         cookies: Optional[str] = None,
         timeout: float = 30,
         verify_ssl: bool = True,
-        bypass: bool = False,
     ):
         self.internal: bool = internal
         headers = {**DEFAULT_HEADERS, **headers} if headers else DEFAULT_HEADERS
@@ -32,17 +31,13 @@ class Network:
                 key, value = line.strip().split("=", 1)
                 self.cookies[key] = value
         kwargs: Dict[str, Any] = {}
-        if not verify_ssl or bypass:
+        if not verify_ssl:
             import ssl
 
             ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
             ssl_ctx.check_hostname = False
             ssl_ctx.verify_mode = ssl.CERT_NONE
             kwargs["ssl"] = ssl_ctx
-            if bypass:
-                from .bypass import ByPassResolver
-
-                kwargs["resolver"] = ByPassResolver()
 
         _flag = False
         if proxies:
@@ -97,7 +92,6 @@ class ClientManager:
         headers: Optional[Dict[str, str]] = None,
         cookies: Optional[str] = None,
         timeout: float = 30,
-        bypass: bool = False,
     ):
         self.client: Union[Network, ClientSession] = client or Network(
             internal=True,
@@ -105,7 +99,6 @@ class ClientManager:
             headers=headers,
             cookies=cookies,
             timeout=timeout,
-            bypass=bypass,
         )
 
     async def __aenter__(self) -> ClientSession:
@@ -129,14 +122,12 @@ class HandOver:
         headers: Optional[Dict[str, str]] = None,
         cookies: Optional[str] = None,
         timeout: float = 30,
-        bypass: bool = False,
     ):
         self.client: Optional[ClientSession] = client
         self.proxies: Optional[str] = proxies
         self.headers: Optional[Dict[str, str]] = headers
         self.cookies: Optional[str] = cookies
         self.timeout: float = timeout
-        self.bypass: bool = bypass
 
     async def get(
         self, url: str, params: Optional[Dict[str, str]] = None, **kwargs: Any
@@ -147,7 +138,6 @@ class HandOver:
             self.headers,
             self.cookies,
             self.timeout,
-            self.bypass,
         ) as client:
             async with client.get(url, params=params, **kwargs) as resp:
                 return await resp.text(), str(resp.url), resp.status
@@ -166,7 +156,6 @@ class HandOver:
             self.headers,
             self.cookies,
             self.timeout,
-            self.bypass,
         ) as client:
             async with client.post(
                 url, params=params, data=data, json=json, **kwargs
@@ -180,7 +169,6 @@ class HandOver:
             self.headers,
             self.cookies,
             self.timeout,
-            self.bypass,
         ) as client:
             async with client.get(url) as resp:
                 return await resp.read()

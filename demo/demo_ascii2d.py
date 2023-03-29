@@ -11,13 +11,12 @@ proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
 file = "images/test01.jpg"
 bovw = False  # 是否使用特征检索
-bypass = False  # 是否绕过 DNS 污染
 verify_ssl = True  # 是否校验 SSL 证书
 
 
 @logger.catch()
 async def test() -> None:
-    async with Network(proxies=proxies, bypass=bypass, verify_ssl=verify_ssl) as client:
+    async with Network(proxies=proxies, verify_ssl=verify_ssl) as client:
         ascii2d = Ascii2D(client=client, bovw=bovw)
         # resp = await ascii2d.search(url=url)
         resp = await ascii2d.search(file=file)
@@ -26,9 +25,7 @@ async def test() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    ascii2d = Ascii2DSync(
-        proxies=proxies, bypass=bypass, verify_ssl=verify_ssl, bovw=bovw
-    )
+    ascii2d = Ascii2DSync(proxies=proxies, verify_ssl=verify_ssl, bovw=bovw)
     resp = ascii2d.search(url=url)
     # resp = ascii2d.search(file=file)
     show_result(resp)  # type: ignore

@@ -17,7 +17,7 @@ class Iqdb(HandOver):
 
     Params Keys
     -----------
-    :param **request_kwargs: proxies and bypass settings.\n
+    :param **request_kwargs: proxies setting.\n
     """
 
     def __init__(self, **request_kwargs: Any):
