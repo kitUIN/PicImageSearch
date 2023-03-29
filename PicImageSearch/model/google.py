@@ -1,6 +1,7 @@
 from re import compile
 from typing import Dict, List, Optional
 
+from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
 
@@ -13,30 +14,32 @@ class GoogleItem:
 
 
 class GoogleResponse:
-    def __init__(
-        self,
-        data: PyQuery,
-        pages: List[str],
-        index: int,
-        script_list: List[PyQuery],
-    ):
+    def __init__(self, resp_text: str, resp_url: str):
+        utf8_parser = HTMLParser(encoding="utf-8")
+        data = PyQuery(fromstring(resp_text, parser=utf8_parser))
         self.origin: PyQuery = data  # 原始数据
+        self.page_number: int = 1  # 当前页
+        self.url: str = resp_url
+        index = 1
+        for i, item in enumerate(
+            list(data.find('div[role="navigation"] td').items())[1:-1]
+        ):
+            if not PyQuery(item).find("a"):
+                index = i + 1
+                self.page_number = int(PyQuery(item).text())
+                break
+        self.pages: List[str] = [
+            f'https://www.google.com{i.attr("href")}'
+            for i in data.find('a[aria-label~="Page"]').items()
+        ]
+        self.pages.insert(index - 1, resp_url)
+        script_list = list(data.find("script").items())
         # 结果返回值
         thumbnail_dict: Dict[str, str] = self.create_thumbnail_dict(script_list)
         self.raw: List[GoogleItem] = [
-            GoogleItem(
-                i,
-                (
-                    thumbnail_dict[i("img").eq(1).attr("id")]
-                    if i("img").eq(1).attr("id")
-                    else None
-                ),
-            )
-            for i in data.items()
+            GoogleItem(i, (thumbnail_dict.get(i("img").eq(1).attr("id"), None)))
+            for i in data.find(".g").items()
         ]
-        self.index: int = index  # 当前页
-        self.page: int = len(pages)  # 总页数
-        self.pages: List[str] = pages  # 页面源
 
     @staticmethod
     def create_thumbnail_dict(script_list: List[PyQuery]) -> Dict[str, str]:

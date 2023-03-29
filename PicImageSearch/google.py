@@ -1,9 +1,6 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
-from lxml.html import HTMLParser, fromstring
-from pyquery import PyQuery
-
 from .model import GoogleResponse
 from .network import HandOver
 
@@ -24,24 +21,19 @@ class Google(HandOver):
         super().__init__(**request_kwargs)
         self.url = "https://www.google.com/searchbyimage"
 
-    @staticmethod
-    def _slice(resp_text: str, resp_url: str, index: int = 1) -> GoogleResponse:
-        utf8_parser = HTMLParser(encoding="utf-8")
-        d = PyQuery(fromstring(resp_text, parser=utf8_parser))
-        data = d.find(".g")
-        pages = [
-            f'https://www.google.com{i.attr("href")}'
-            for i in d.find('a[aria-label~="Page"]').items()
-        ]
-        pages.insert(index - 1, resp_url)
-        script_list = list(d.find("script").items())
-        return GoogleResponse(data, pages, index, script_list)
-
-    async def goto_page(self, resp: GoogleResponse, index: int) -> GoogleResponse:
-        if index == resp.index:
-            return resp
+    async def pre_page(self, resp: GoogleResponse) -> Optional[GoogleResponse]:
+        index = resp.pages.index(resp.url)
+        if index == 0:
+            return None
         resp_text, resp_url, _ = await self.get(resp.pages[index - 1])
-        return self._slice(resp_text, resp_url, index)
+        return GoogleResponse(resp_text, resp_url)
+
+    async def next_page(self, resp: GoogleResponse) -> Optional[GoogleResponse]:
+        index = resp.pages.index(resp.url)
+        if index == len(resp.pages) - 1:
+            return None
+        resp_text, resp_url, _ = await self.get(resp.pages[index + 1])
+        return GoogleResponse(resp_text, resp_url)
 
     async def search(
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
@@ -62,13 +54,17 @@ class Google(HandOver):
         • .raw[2].url = Third index of url source that was found\n
         • .raw[2].thumbnail = Third index of base64 string image that was found
         """
+        params: Dict[str, Any] = {"sbisrc": 1}
         if url:
-            files: Dict[str, Any] = {"encoded_image": await self.download(url)}
+            params["image_url"] = url
+            resp_text, resp_url, _ = await self.get(self.url, params=params)
         elif file:
             files = {
                 "encoded_image": file if isinstance(file, bytes) else open(file, "rb")
             }
+            resp_text, resp_url, _ = await self.post(
+                f"{self.url}/upload", data=params, files=files
+            )
         else:
             raise ValueError("url or file is required")
-        resp_text, resp_url, _ = await self.post(f"{self.url}/upload", files=files)
-        return self._slice(resp_text, resp_url)
+        return GoogleResponse(resp_text, resp_url)

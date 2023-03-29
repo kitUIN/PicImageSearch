@@ -1,4 +1,5 @@
 import asyncio
+from typing import Optional
 
 from loguru import logger
 
@@ -19,8 +20,10 @@ async def test() -> None:
         # resp = await google.search(url=url)
         resp = await google.search(file=file)
         show_result(resp)
-        resp2 = await google.goto_page(resp, 2)
+        resp2 = await google.next_page(resp)
         show_result(resp2)
+        resp3 = await google.pre_page(resp2)  # type: ignore
+        show_result(resp3)
 
 
 @logger.catch()
@@ -29,20 +32,26 @@ def test_sync() -> None:
     resp = google.search(url=url)
     # resp = google.search(file=file)
     show_result(resp)  # type: ignore
-    resp2 = google.goto_page(resp, 2)  # type: ignore
+    resp2 = google.next_page(resp)  # type: ignore
+    show_result(resp2)  # type: ignore
+    resp3 = google.pre_page(resp2)  # type: ignore
+    show_result(resp3)  # type: ignore
     show_result(resp2)  # type: ignore
 
 
-def show_result(resp: GoogleResponse) -> None:
+def show_result(resp: Optional[GoogleResponse]) -> None:
+    if not resp:
+        return
     # logger.info(resp.origin)  # Original Data
-    # logger.info(resp.pages)
+    logger.info(resp.pages)
+    logger.info(len(resp.pages))
+    logger.info(resp.url)
     # Should start from index 2, because from there is matching image
-    logger.info(resp.raw[2].origin)
-    logger.info(resp.index)
+    # logger.info(resp.raw[2].origin)
+    logger.info(resp.page_number)
     logger.info(resp.raw[2].thumbnail)
     logger.info(resp.raw[2].title)
     logger.info(resp.raw[2].url)
-    logger.info(resp.page)
     logger.info("-" * 50)
 
 
