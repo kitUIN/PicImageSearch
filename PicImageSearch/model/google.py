@@ -26,7 +26,11 @@ class GoogleResponse:
         self.raw: List[GoogleItem] = [
             GoogleItem(
                 i,
-                (thumbnail_dict[i("img").eq(1).attr("id")] if i("img").eq(1).attr("id") else None),
+                (
+                    thumbnail_dict[i("img").eq(1).attr("id")]
+                    if i("img").eq(1).attr("id")
+                    else None
+                ),
             )
             for i in data.items()
         ]

@@ -15,11 +15,11 @@ class BaiDu(HandOver):
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
     ) -> BaiDuResponse:
         params = {"from": "pc"}
-        data: Optional[Dict[str, Any]] = None
+        files: Optional[Dict[str, Any]] = None
         if url:
             params["image"] = url
         elif file:
-            data = (
+            files = (
                 {"image": file}
                 if isinstance(file, bytes)
                 else {"image": open(file, "rb")}
@@ -27,7 +27,7 @@ class BaiDu(HandOver):
         else:
             raise ValueError("url or file is required")
         resp_text, _, _ = await self.post(
-            "https://graph.baidu.com/upload", params=params, data=data
+            "https://graph.baidu.com/upload", params=params, files=files
         )
         next_url = (json_loads(resp_text))["data"]["url"]
         resp_text, resp_url, _ = await self.get(next_url)

@@ -2,7 +2,7 @@ from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from multidict import MultiDict
+from httpx import QueryParams
 
 from .model import SauceNAOResponse
 from .network import HandOver
@@ -49,7 +49,7 @@ class SauceNAO(HandOver):
         # minsim 控制最小相似度
         super().__init__(**request_kwargs)
         self.url = "https://saucenao.com/search.php"
-        params: Dict[str, Union[str, int]] = {
+        params: Dict[str, Any] = {
             "testmode": testmode,
             "numres": numres,
             "output_type": output_type,
@@ -63,11 +63,11 @@ class SauceNAO(HandOver):
             params["dbmask"] = dbmask
         if dbmaski is not None:
             params["dbmaski"] = dbmaski
-        self.params = MultiDict(params)
+        self.params = QueryParams(params)
         if dbs is not None:
-            del self.params["db"]
+            self.params = self.params.remove("db")
             for i in dbs:
-                self.params.add("dbs[]", i)
+                self.params = self.params.add("dbs[]", i)
 
     async def search(
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
@@ -102,11 +102,11 @@ class SauceNAO(HandOver):
         further documentation visit https://saucenao.com/user.php?page=search-api
         """
         params = self.params
-        data: Optional[Dict[str, Any]] = None
+        files: Optional[Dict[str, Any]] = None
         if url:
-            params.add("url", url)
+            params = params.add("url", url)
         elif file:
-            data = (
+            files = (
                 {"file": file}
                 if isinstance(file, bytes)
                 else {"file": open(file, "rb")}
@@ -116,7 +116,7 @@ class SauceNAO(HandOver):
         resp_text, _, resp_status = await self.post(
             self.url,
             params=params,
-            data=data,
+            files=files,
         )
         resp_json = json_loads(resp_text)
         resp_json.update({"status_code": resp_status})

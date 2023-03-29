@@ -1,8 +1,7 @@
 from types import TracebackType
 from typing import Any, Dict, Optional, Tuple, Type, Union
 
-from aiohttp import ClientSession, ClientTimeout, FormData, TCPConnector
-from multidict import MultiDict
+from httpx import AsyncClient, QueryParams
 
 DEFAULT_HEADERS = {
     "User-Agent": (
@@ -39,40 +38,22 @@ class Network:
             ssl_ctx.verify_mode = ssl.CERT_NONE
             kwargs["ssl"] = ssl_ctx
 
-        _flag = False
-        if proxies:
-            try:
-                from aiohttp_socks import ProxyConnector
-
-                self.conn = ProxyConnector.from_url(proxies, **kwargs)
-            except ModuleNotFoundError as e:
-                if proxies.startswith("socks"):
-                    raise e
-                self.conn = TCPConnector(**kwargs)
-                _flag = True
-        else:
-            self.conn = TCPConnector(**kwargs)
-
-        self.client: ClientSession = ClientSession(
-            connector=self.conn,
+        self.client: AsyncClient = AsyncClient(
             headers=headers,
             cookies=self.cookies,
-            timeout=ClientTimeout(total=timeout),
+            verify=verify_ssl,
+            proxies={"all://": proxies} if proxies else {},
+            timeout=timeout,
+            follow_redirects=True,
         )
 
-        if proxies and _flag:
-            from functools import partial
-
-            self.client.get = partial(self.client.get, proxy=proxies)  # type: ignore
-            self.client.post = partial(self.client.post, proxy=proxies)  # type: ignore
-
-    def start(self) -> ClientSession:
+    def start(self) -> AsyncClient:
         return self.client
 
     async def close(self) -> None:
-        await self.client.close()
+        await self.client.aclose()
 
-    async def __aenter__(self) -> ClientSession:
+    async def __aenter__(self) -> AsyncClient:
         return self.client
 
     async def __aexit__(
@@ -81,19 +62,19 @@ class Network:
         exc_val: Optional[BaseException] = None,
         exc_tb: Optional[TracebackType] = None,
     ) -> None:
-        await self.client.close()
+        await self.client.aclose()
 
 
 class ClientManager:
     def __init__(
         self,
-        client: Optional[ClientSession] = None,
+        client: Optional[AsyncClient] = None,
         proxies: Optional[str] = None,
         headers: Optional[Dict[str, str]] = None,
         cookies: Optional[str] = None,
         timeout: float = 30,
     ):
-        self.client: Union[Network, ClientSession] = client or Network(
+        self.client: Union[Network, AsyncClient] = client or Network(
             internal=True,
             proxies=proxies,
             headers=headers,
@@ -101,7 +82,7 @@ class ClientManager:
             timeout=timeout,
         )
 
-    async def __aenter__(self) -> ClientSession:
+    async def __aenter__(self) -> AsyncClient:
         return self.client.start() if isinstance(self.client, Network) else self.client
 
     async def __aexit__(
@@ -117,13 +98,13 @@ class ClientManager:
 class HandOver:
     def __init__(
         self,
-        client: Optional[ClientSession] = None,
+        client: Optional[AsyncClient] = None,
         proxies: Optional[str] = None,
         headers: Optional[Dict[str, str]] = None,
         cookies: Optional[str] = None,
         timeout: float = 30,
     ):
-        self.client: Optional[ClientSession] = client
+        self.client: Optional[AsyncClient] = client
         self.proxies: Optional[str] = proxies
         self.headers: Optional[Dict[str, str]] = headers
         self.cookies: Optional[str] = cookies
@@ -139,14 +120,15 @@ class HandOver:
             self.cookies,
             self.timeout,
         ) as client:
-            async with client.get(url, params=params, **kwargs) as resp:
-                return await resp.text(), str(resp.url), resp.status
+            resp = await client.get(url, params=params, **kwargs)
+            return resp.text, str(resp.url), resp.status_code
 
     async def post(
         self,
         url: str,
-        params: Union[Dict[str, Any], MultiDict[Union[str, int]], None] = None,
-        data: Union[Dict[Any, Any], FormData, None] = None,
+        params: Union[Dict[str, Any], QueryParams, None] = None,
+        data: Optional[Dict[Any, Any]] = None,
+        files: Optional[Dict[str, Any]] = None,
         json: Optional[Dict[str, Any]] = None,
         **kwargs: Any
     ) -> Tuple[str, str, int]:
@@ -157,10 +139,10 @@ class HandOver:
             self.cookies,
             self.timeout,
         ) as client:
-            async with client.post(
-                url, params=params, data=data, json=json, **kwargs
-            ) as resp:
-                return await resp.text(), str(resp.url), resp.status
+            resp = await client.post(
+                url, params=params, data=data, files=files, json=json, **kwargs  # type: ignore
+            )
+            return resp.text, str(resp.url), resp.status_code
 
     async def download(self, url: str) -> bytes:
         async with ClientManager(
@@ -170,5 +152,5 @@ class HandOver:
             self.cookies,
             self.timeout,
         ) as client:
-            async with client.get(url) as resp:
-                return await resp.read()
+            resp = await client.get(url)
+            return resp.read()

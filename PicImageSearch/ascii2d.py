@@ -47,12 +47,10 @@ class Ascii2D(HandOver):
             resp_text, resp_url, _ = await self.post(ascii2d_url, data={"uri": url})
         elif file:
             ascii2d_url = "https://ascii2d.net/search/file"
-            data: Dict[str, Any] = (
-                {"file": file}
-                if isinstance(file, bytes)
-                else {"file": open(file, "rb")}
-            )
-            resp_text, resp_url, _ = await self.post(ascii2d_url, data=data)
+            files: Dict[str, Any] = {
+                "file": file if isinstance(file, bytes) else open(file, "rb")
+            }
+            resp_text, resp_url, _ = await self.post(ascii2d_url, files=files)
         else:
             raise ValueError("url or file is required")
 

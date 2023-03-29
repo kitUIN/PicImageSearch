@@ -29,8 +29,11 @@ class Google(HandOver):
         utf8_parser = HTMLParser(encoding="utf-8")
         d = PyQuery(fromstring(resp_text, parser=utf8_parser))
         data = d.find(".g")
-        pages = [f'https://www.google.com{i.attr("href")}' for i in d.find('a[aria-label~="Page"]').items()]
-        pages.insert(index-1, resp_url)
+        pages = [
+            f'https://www.google.com{i.attr("href")}'
+            for i in d.find('a[aria-label~="Page"]').items()
+        ]
+        pages.insert(index - 1, resp_url)
         script_list = list(d.find("script").items())
         return GoogleResponse(data, pages, index, script_list)
 
@@ -60,15 +63,12 @@ class Google(HandOver):
         • .raw[2].thumbnail = Third index of base64 string image that was found
         """
         if url:
-            file = await self.download(url)
-
-        if not file:
+            files: Dict[str, Any] = {"encoded_image": await self.download(url)}
+        elif file:
+            files = {
+                "encoded_image": file if isinstance(file, bytes) else open(file, "rb")
+            }
+        else:
             raise ValueError("url or file is required")
-
-        data: Dict[str, Any] = (
-            {"encoded_image": file}
-            if isinstance(file, bytes)
-            else {"encoded_image": open(file, "rb")}
-        )
-        resp_text, resp_url, _ = await self.post(f"{self.url}/upload", data=data)
+        resp_text, resp_url, _ = await self.post(f"{self.url}/upload", files=files)
         return self._slice(resp_text, resp_url)

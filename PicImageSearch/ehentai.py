@@ -1,4 +1,3 @@
-import io
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
@@ -32,9 +31,9 @@ class EHentai(HandOver):
         )
         data: Dict[str, Any] = {"f_sfile": "search"}
         if url:
-            data["sfile"] = io.BytesIO(await self.download(url))
+            files: Dict[str, Any] = {"sfile": await self.download(url)}
         elif file:
-            data["sfile"] = file if isinstance(file, bytes) else open(file, "rb")
+            files = {"sfile": file if isinstance(file, bytes) else open(file, "rb")}
         else:
             raise ValueError("url or file is required")
         if self.covers:
@@ -43,5 +42,5 @@ class EHentai(HandOver):
             data["fs_similar"] = "on"
         if self.exp:
             data["fs_exp"] = "on"
-        resp_text, resp_url, _ = await self.post(url=_url, data=data)
+        resp_text, resp_url, _ = await self.post(url=_url, data=data, files=files)
         return EHentaiResponse(resp_text, resp_url)

@@ -123,12 +123,12 @@ class TraceMoe(HandOver):
         :param cut_borders: 切割黑边框(默认开启)
         """
         headers = {"x-trace-key": key} if key else None
-        data: Optional[Dict[str, Any]] = None
+        files: Optional[Dict[str, Any]] = None
         if url:
             params = self.set_params(url, anilist_id, cut_borders)
         elif file:
             params = self.set_params(None, anilist_id, cut_borders)
-            data = (
+            files = (
                 {"file": file}
                 if isinstance(file, bytes)
                 else {"file": open(file, "rb")}
@@ -139,7 +139,7 @@ class TraceMoe(HandOver):
             self.search_url,
             headers=headers,
             params=params,
-            data=data,
+            files=files,
         )
         result = TraceMoeResponse(json_loads(resp_text), self.mute, self.size)
         await asyncio.gather(

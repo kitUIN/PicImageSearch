@@ -15,14 +15,13 @@ keywords = ["google", "iqdb", "saucenao", "tracemoe", "ascii2d"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-aiohttp = {extras = ["speedups"], version = "^3.8.4"}
-aiohttp_socks = { version = "^0.8.0", optional = true }
+httpx = "^0.23.3"
 lxml = "^4.9.2"
-multidict = "^6.0.4"
 pyquery = "^2.0.0"
+socksio = { version = "^1.0.0", optional = true }
 
 [tool.poetry.extras]
-socks = ["aiohttp_socks"]
+socks = ["socksio"]
 
 [tool.poetry.dev-dependencies]
 loguru = "^0.6.0"
@@ -36,7 +35,7 @@ show_error_codes = true
 strict = true
 
 [tool.ruff]
-select = ["F", "E", "W", "I"]
+select = ["F", "E", "W", "I", "UP"]
 target-version = "py37"
 line-length = 120
 

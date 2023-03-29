@@ -44,8 +44,8 @@ class Iqdb(HandOver):
             data["url"] = url
             resp_text, _, _ = await self.post(iqdb_url, data=data)
         elif file:
-            data["file"] = file if isinstance(file, bytes) else open(file, "rb")
-            resp_text, _, _ = await self.post(iqdb_url, data=data)
+            files = {"file": file if isinstance(file, bytes) else open(file, "rb")}
+            resp_text, _, _ = await self.post(iqdb_url, data=data, files=files)
         else:
             raise ValueError("url or file is required")
         return self._slice(resp_text)
