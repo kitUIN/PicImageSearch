@@ -63,9 +63,9 @@ class Ascii2DItem:
 
 class Ascii2DResponse:
     def __init__(self, resp_text: str, resp_url: str):
-        self.origin: str = resp_text  # 原始数据
         utf8_parser = HTMLParser(encoding="utf-8")
-        data = PyQuery(fromstring(self.origin, parser=utf8_parser))
+        data = PyQuery(fromstring(resp_text, parser=utf8_parser))
+        self.origin: PyQuery = data  # 原始数据
         # 结果返回值
         self.raw: List[Ascii2DItem] = [
             Ascii2DItem(i) for i in data.find("div.row.item-box").items()

@@ -38,9 +38,9 @@ class EHentaiItem:
 
 class EHentaiResponse:
     def __init__(self, resp_text: str, resp_url: str):
-        self.origin: str = resp_text  # 原始数据
         utf8_parser = HTMLParser(encoding="utf-8")
-        data = PyQuery(fromstring(self.origin, parser=utf8_parser))
+        data = PyQuery(fromstring(resp_text, parser=utf8_parser))
+        self.origin: PyQuery = data  # 原始数据
         if "No unfiltered results found." in resp_text:
             self.raw = []
         else:

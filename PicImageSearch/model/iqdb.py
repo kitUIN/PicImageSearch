@@ -1,5 +1,6 @@
 from typing import Dict, List
 
+from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
 
@@ -44,7 +45,9 @@ class IqdbItem:
 
 
 class IqdbResponse:
-    def __init__(self, data: PyQuery):
+    def __init__(self, resp_text: str):
+        utf8_parser = HTMLParser(encoding="utf-8")
+        data = PyQuery(fromstring(resp_text, parser=utf8_parser))
         self.origin: PyQuery = data  # 原始数据
         self.raw: List[IqdbItem] = []  # 结果返回值
         self.more: List[IqdbItem] = []  # 更多结果返回值(低相似度)
