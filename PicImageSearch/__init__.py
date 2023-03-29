@@ -6,3 +6,4 @@ from .iqdb import Iqdb
 from .network import Network
 from .saucenao import SauceNAO
 from .tracemoe import TraceMoe
+from .yandex import Yandex

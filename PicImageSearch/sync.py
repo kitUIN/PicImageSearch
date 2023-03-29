@@ -10,7 +10,7 @@ import asyncio
 import functools
 import inspect
 
-from . import Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe
+from . import Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe, Yandex
 
 
 def _syncify_wrap(t, method_name):  # type: ignore
@@ -36,7 +36,7 @@ def syncify(*types):  # type: ignore
                 _syncify_wrap(t, name)  # type: ignore
 
 
-syncify(Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe)  # type: ignore
+syncify(Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe, Yandex)  # type: ignore
 
 __all__ = [
     "Ascii2D",
@@ -47,4 +47,5 @@ __all__ = [
     "Network",
     "SauceNAO",
     "TraceMoe",
+    "Yandex",
 ]
