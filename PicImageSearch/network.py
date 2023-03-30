@@ -121,7 +121,7 @@ class HandOver:
             self.timeout,
         ) as client:
             resp = await client.get(url, params=params, **kwargs)
-            return resp.text, str(resp.url), resp.status_code
+            return resp.text.encode('utf-8'), str(resp.url), resp.status_code
 
     async def post(
         self,
@@ -142,7 +142,7 @@ class HandOver:
             resp = await client.post(
                 url, params=params, data=data, files=files, json=json, **kwargs  # type: ignore
             )
-            return resp.text, str(resp.url), resp.status_code
+            return resp.text.encode('utf-8'), str(resp.url), resp.status_code
 
     async def download(self, url: str) -> bytes:
         async with ClientManager(
