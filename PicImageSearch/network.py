@@ -29,14 +29,6 @@ class Network:
             for line in cookies.split(";"):
                 key, value = line.strip().split("=", 1)
                 self.cookies[key] = value
-        kwargs: Dict[str, Any] = {}
-        if not verify_ssl:
-            import ssl
-
-            ssl_ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-            ssl_ctx.check_hostname = False
-            ssl_ctx.verify_mode = ssl.CERT_NONE
-            kwargs["ssl"] = ssl_ctx
 
         self.client: AsyncClient = AsyncClient(
             headers=headers,
