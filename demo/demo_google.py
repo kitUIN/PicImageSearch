@@ -46,12 +46,13 @@ def show_result(resp: Optional[GoogleResponse]) -> None:
     logger.info(resp.pages)
     logger.info(len(resp.pages))
     logger.info(resp.url)
-    # Should start from index 2, because from there is matching image
-    # logger.info(resp.raw[2].origin)
     logger.info(resp.page_number)
-    logger.info(resp.raw[2].thumbnail)
-    logger.info(resp.raw[2].title)
-    logger.info(resp.raw[2].url)
+    # try to get first result with thumbnail
+    selected = next((i for i in resp.raw if i.thumbnail), resp.raw[0])
+    logger.info(selected.origin)
+    logger.info(selected.thumbnail)
+    logger.info(selected.title)
+    logger.info(selected.url)
     logger.info("-" * 50)
 
 

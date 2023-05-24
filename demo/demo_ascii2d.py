@@ -34,9 +34,7 @@ def test_sync() -> None:
 def show_result(resp: Ascii2DResponse) -> None:
     # logger.info(resp.origin)  # 原始数据
     logger.info(resp.url)  # 搜索结果链接
-    selected = resp.raw[0]
-    if not (selected.title or selected.url_list):
-        selected = resp.raw[1]
+    selected = next((i for i in resp.raw if i.title or i.url_list), resp.raw[0])
     logger.info(selected.origin)
     logger.info(selected.thumbnail)
     logger.info(selected.title)
