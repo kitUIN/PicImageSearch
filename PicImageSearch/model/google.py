@@ -37,8 +37,8 @@ class GoogleResponse:
         # 结果返回值
         thumbnail_dict: Dict[str, str] = self.create_thumbnail_dict(script_list)
         self.raw: List[GoogleItem] = [
-            GoogleItem(i, (thumbnail_dict.get(i("img").eq(1).attr("id"), None)))
-            for i in data.find(".g").items()
+            GoogleItem(i, thumbnail_dict.get(i("img").attr("id"), None))
+            for i in data.find("#search .g").items()
         ]
 
     @staticmethod

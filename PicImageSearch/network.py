@@ -34,7 +34,7 @@ class Network:
             headers=headers,
             cookies=self.cookies,
             verify=verify_ssl,
-            proxies={"all://": proxies} if proxies else {},
+            proxies=proxies,
             timeout=timeout,
             follow_redirects=True,
         )
