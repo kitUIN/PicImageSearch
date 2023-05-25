@@ -132,7 +132,7 @@ class HandOver:
             self.timeout,
         ) as client:
             resp = await client.post(
-                url, params=params, data=data, files=files, json=json, **kwargs  # type: ignore
+                url, params=params, data=data, files=files, json=json, **kwargs
             )
             return resp.text, str(resp.url), resp.status_code
 

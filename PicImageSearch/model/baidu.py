@@ -4,8 +4,8 @@ from typing import Any, Dict, List
 class BaiDuItem:
     def __init__(self, data: Dict[str, Any]):
         self.origin: Dict[str, Any] = data  # 原始数据
-        self.similarity: float = round(float(data["simi"]) * 100, 2)
-        self.title: str = data["fromPageTitle"]  # 页面标题
+        # self.similarity: float = round(float(data["simi"]) * 100, 2)  # deprecated
+        # self.title: str = data["fromPageTitle"]  # 页面标题 deprecated
         self.thumbnail: str = data["thumbUrl"]  # 图片地址
         self.url: str = data["fromUrl"]  # 图片所在网页地址
 

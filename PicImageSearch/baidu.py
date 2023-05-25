@@ -33,6 +33,4 @@ class BaiDu(HandOver):
         resp_text, resp_url, _ = await self.get(next_url)
         next_url = (re.search(r'"firstUrl":"([^"]+)"', resp_text)[1]).replace(r"\/", "/")  # type: ignore
         resp_text, _, _ = await self.get(next_url)
-        next_url = (json_loads(resp_text))["data"]["ajaxTextUrl"]
-        resp_text, _, _ = await self.get(next_url)
         return BaiDuResponse(json_loads(resp_text), resp_url)

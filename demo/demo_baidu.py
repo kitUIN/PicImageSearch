@@ -33,8 +33,8 @@ def show_result(resp: BaiDuResponse) -> None:
     # logger.info(resp.origin)  # 原始数据
     logger.info(resp.url)
     # logger.info(resp.raw[0].origin)
-    logger.info(resp.raw[0].similarity)
-    logger.info(resp.raw[0].title)
+    # logger.info(resp.raw[0].similarity)  # deprecated
+    # logger.info(resp.raw[0].title)  # deprecated
     logger.info(resp.raw[0].url)
     logger.info(resp.raw[0].thumbnail)
     logger.info("-" * 50)
