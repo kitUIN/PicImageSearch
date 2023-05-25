@@ -28,14 +28,15 @@
 
 ## 支持
 
-- [x] [SauceNAO](https://saucenao.com/)
-- [x] [TraceMoe](https://trace.moe/)
-- [x] [Iqdb](http://iqdb.org/)
 - [x] [Ascii2D](https://ascii2d.net/)
-- [x] [Google谷歌识图](https://www.google.com/imghp)
-- [x] [BaiDu百度识图](https://graph.baidu.com/)
+- [x] [Baidu](https://graph.baidu.com/)
 - [x] [E-Hentai](https://e-hentai.org/)
 - [x] [ExHentai](https://exhentai.org/)
+- [x] [Google](https://www.google.com/imghp)
+- [x] [Iqdb](http://iqdb.org/)
+- [x] [SauceNAO](https://saucenao.com/)
+- [x] [TraceMoe](https://trace.moe/)
+- [x] [Yandex](https://yandex.com/images/search)
 - [x] 同步/异步
 
 ## 简要说明
@@ -43,48 +44,7 @@
 详细见[文档](https://pic-image-search.kituin.fun/) 或者[`demo`](https://github.com/kitUIN/PicImageSearch/tree/main/demo)  
 `同步`请使用`from PicImageSearch.sync import ...`导入  
 `异步`请使用`from PicImageSearch import Network,...`导入  
-**推荐使用异步**  
-
-## 简单示例
-
-```python
-from loguru import logger
-from PicImageSearch import SauceNAO, Network
-
-async with Network() as client:  # 可以设置代理 Network(proxies='scheme://host:port')
-    saucenao = SauceNAO(client=client, api_key="your api key")  # client, api_key 不能少
-    url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-    resp = await saucenao.search(url=url)
-    # 搜索本地图片
-    # file = "demo/images/test01.jpg"
-    # resp = await saucenao.search(file=file)
-
-    logger.info(resp.status_code)  # HTTP 状态码
-    # logger.info(resp.origin)  # 原始数据
-    logger.info(resp.raw[0].origin)
-    logger.info(resp.long_remaining)
-    logger.info(resp.short_remaining)
-    logger.info(resp.raw[0].thumbnail)
-    logger.info(resp.raw[0].similarity)
-    logger.info(resp.raw[0].hidden)
-    logger.info(resp.raw[0].title)
-    logger.info(resp.raw[0].author)
-    logger.info(resp.raw[0].url)
-    logger.info(resp.raw[0].pixiv_id)
-    logger.info(resp.raw[0].member_id)
-```
-
-```python
-from PicImageSearch.sync import SauceNAO
-
-saucenao = SauceNAO(api_key="your api key")  # api_key 不能少
-url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-resp = saucenao.search(url=url)
-# 搜索本地图片
-# file = "demo/images/test01.jpg"
-# resp = saucenao.search(file=file)
-# 下面操作与异步方法一致
-```
+**推荐使用异步**
 
 ### 安装
 
