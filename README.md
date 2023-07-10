@@ -33,7 +33,7 @@
 - [x] [E-Hentai](https://e-hentai.org/)
 - [x] [ExHentai](https://exhentai.org/)
 - [x] [Google](https://www.google.com/imghp)
-- [x] [Iqdb](http://iqdb.org/)
+- [x] [Iqdb](https://iqdb.org/)
 - [x] [SauceNAO](https://saucenao.com/)
 - [x] [TraceMoe](https://trace.moe/)
 - [x] [Yandex](https://yandex.com/images/search)
