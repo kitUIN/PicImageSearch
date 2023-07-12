@@ -44,20 +44,18 @@ class Ascii2D(HandOver):
         """
         if url:
             ascii2d_url = "https://ascii2d.net/search/uri"
-            resp_text, resp_url, _ = await self.post(ascii2d_url, data={"uri": url})
+            resp = await self.post(ascii2d_url, data={"uri": url})
         elif file:
             ascii2d_url = "https://ascii2d.net/search/file"
             files: Dict[str, Any] = {
                 "file": file if isinstance(file, bytes) else open(file, "rb")
             }
-            resp_text, resp_url, _ = await self.post(ascii2d_url, files=files)
+            resp = await self.post(ascii2d_url, files=files)
         else:
             raise ValueError("url or file is required")
 
         # 如果启用bovw选项，第一次请求是向服务器提交文件
         if self.bovw:
-            resp_text, resp_url, _ = await self.get(
-                resp_url.replace("/color/", "/bovw/")
-            )
+            resp = await self.get(resp.url.replace("/color/", "/bovw/"))
 
-        return Ascii2DResponse(resp_text, resp_url)
+        return Ascii2DResponse(resp.text, resp.url)

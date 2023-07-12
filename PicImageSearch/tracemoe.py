@@ -58,8 +58,8 @@ class TraceMoe(HandOver):
     # 获取自己的信息
     async def me(self, key: Optional[str] = None) -> TraceMoeMe:
         params = {"key": key} if key else None
-        resp_text, _, _ = await self.get(self.me_url, params=params)
-        return TraceMoeMe(json_loads(resp_text))
+        resp = await self.get(self.me_url, params=params)
+        return TraceMoeMe(json_loads(resp.text))
 
     @staticmethod
     def set_params(
@@ -135,13 +135,10 @@ class TraceMoe(HandOver):
             )
         else:
             raise ValueError("url or file is required")
-        resp_text, _, _ = await self.post(
-            self.search_url,
-            headers=headers,
-            params=params,
-            files=files,
+        resp = await self.post(
+            self.search_url, headers=headers, params=params, files=files
         )
-        result = TraceMoeResponse(json_loads(resp_text), self.mute, self.size)
+        result = TraceMoeResponse(json_loads(resp.text), self.mute, self.size)
         await asyncio.gather(
             *[self.update_anime_info(item, chinese_title) for item in result.raw]
         )

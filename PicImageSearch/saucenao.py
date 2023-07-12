@@ -113,11 +113,7 @@ class SauceNAO(HandOver):
             )
         else:
             raise ValueError("url or file is required")
-        resp_text, _, resp_status = await self.post(
-            self.url,
-            params=params,
-            files=files,
-        )
-        resp_json = json_loads(resp_text)
-        resp_json.update({"status_code": resp_status})
+        resp = await self.post(self.url, params=params, files=files)
+        resp_json = json_loads(resp.text)
+        resp_json.update({"status_code": resp.status_code})
         return SauceNAOResponse(resp_json)

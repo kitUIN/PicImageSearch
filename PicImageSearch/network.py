@@ -1,5 +1,6 @@
+from collections import namedtuple
 from types import TracebackType
-from typing import Any, Dict, Optional, Tuple, Type, Union
+from typing import Any, Dict, Optional, Type, Union
 
 from httpx import AsyncClient, QueryParams
 
@@ -10,6 +11,7 @@ DEFAULT_HEADERS = {
         "Chrome/99.0.4844.82 Safari/537.36"
     )
 }
+RESP = namedtuple("RESP", ["text", "url", "status_code"])
 
 
 class Network:
@@ -104,7 +106,7 @@ class HandOver:
 
     async def get(
         self, url: str, params: Optional[Dict[str, str]] = None, **kwargs: Any
-    ) -> Tuple[str, str, int]:
+    ) -> RESP:
         async with ClientManager(
             self.client,
             self.proxies,
@@ -113,7 +115,7 @@ class HandOver:
             self.timeout,
         ) as client:
             resp = await client.get(url, params=params, **kwargs)
-            return resp.text, str(resp.url), resp.status_code
+            return RESP(resp.text, str(resp.url), resp.status_code)
 
     async def post(
         self,
@@ -123,7 +125,7 @@ class HandOver:
         files: Optional[Dict[str, Any]] = None,
         json: Optional[Dict[str, Any]] = None,
         **kwargs: Any
-    ) -> Tuple[str, str, int]:
+    ) -> RESP:
         async with ClientManager(
             self.client,
             self.proxies,
@@ -134,7 +136,7 @@ class HandOver:
             resp = await client.post(
                 url, params=params, data=data, files=files, json=json, **kwargs
             )
-            return resp.text, str(resp.url), resp.status_code
+            return RESP(resp.text, str(resp.url), resp.status_code)
 
     async def download(self, url: str) -> bytes:
         async with ClientManager(

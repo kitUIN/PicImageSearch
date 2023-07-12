@@ -21,19 +21,19 @@ class Google(HandOver):
         super().__init__(**request_kwargs)
         self.url = "https://www.google.com/searchbyimage"
 
-    async def pre_page(self, resp: GoogleResponse) -> Optional[GoogleResponse]:
+    async def _navigate_page(self, resp: GoogleResponse, offset: int) -> Optional[GoogleResponse]:
         index = resp.pages.index(resp.url)
-        if index == 0:
+        new_index = index + offset
+        if new_index < 0 or new_index >= len(resp.pages):
             return None
-        resp_text, resp_url, _ = await self.get(resp.pages[index - 1])
-        return GoogleResponse(resp_text, resp_url)
+        _resp = await self.get(resp.pages[new_index])
+        return GoogleResponse(_resp.text, _resp.url)
+
+    async def pre_page(self, resp: GoogleResponse) -> Optional[GoogleResponse]:
+        return await self._navigate_page(resp, -1)
 
     async def next_page(self, resp: GoogleResponse) -> Optional[GoogleResponse]:
-        index = resp.pages.index(resp.url)
-        if index == len(resp.pages) - 1:
-            return None
-        resp_text, resp_url, _ = await self.get(resp.pages[index + 1])
-        return GoogleResponse(resp_text, resp_url)
+        return await self._navigate_page(resp, 1)
 
     async def search(
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
@@ -57,14 +57,12 @@ class Google(HandOver):
         params: Dict[str, Any] = {"sbisrc": 1}
         if url:
             params["image_url"] = url
-            resp_text, resp_url, _ = await self.get(self.url, params=params)
+            resp = await self.get(self.url, params=params)
         elif file:
             files = {
                 "encoded_image": file if isinstance(file, bytes) else open(file, "rb")
             }
-            resp_text, resp_url, _ = await self.post(
-                f"{self.url}/upload", data=params, files=files
-            )
+            resp = await self.post(f"{self.url}/upload", data=params, files=files)
         else:
             raise ValueError("url or file is required")
-        return GoogleResponse(resp_text, resp_url)
+        return GoogleResponse(resp.text, resp.url)

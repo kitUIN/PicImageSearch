@@ -1,10 +1,12 @@
-from typing import List, Tuple
+from collections import namedtuple
+from typing import List
 
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
-SUPPORTED_SOURCES = ["pixiv", "twitter", "fanbox", "fantia", "ニコニコ静画", "ニジエ"]
 BASE_URL = "https://ascii2d.net"
+SUPPORTED_SOURCES = ["pixiv", "twitter", "fanbox", "fantia", "ニコニコ静画", "ニジエ"]
+URL = namedtuple("URL", ["href", "text"])
 
 
 class Ascii2DItem:
@@ -15,7 +17,7 @@ class Ascii2DItem:
         self.detail: str = data("small").eq(0).text()
         self.thumbnail: str = BASE_URL + data("img").eq(0).attr("src")
         self.url: str = ""
-        self.url_list: List[Tuple[str, str]] = []
+        self.url_list: List[URL] = []
         self.title: str = ""
         self.author: str = ""
         self.author_url: str = ""
@@ -26,7 +28,7 @@ class Ascii2DItem:
         if infos:
             links = infos.find("a")
             self.url_list = (
-                [(i.attr("href"), i.text()) for i in links.items()] if links else []
+                [URL(i.attr("href"), i.text()) for i in links.items()] if links else []
             )
             mark = infos("small").eq(-1).text() if links else ""
             self._arrange_links(infos, links, mark)
@@ -60,15 +62,15 @@ class Ascii2DItem:
 
     def _normalize_url_list(self) -> None:
         self.url_list = [
-            (BASE_URL + x[0], x[1]) if x[0].startswith("/") else x
-            for x in self.url_list
+            URL(BASE_URL + url.href, url.text) if url.href.startswith("/") else url
+            for url in self.url_list
         ]
 
     def _arrange_backup_links(self, data: PyQuery) -> None:
         links = data.find("div.pull-xs-right > a")
         if links:
             self.url = links.eq(0).attr("href")
-            self.url_list = [(self.url, links.eq(0).text())]
+            self.url_list = [URL(self.url, links.eq(0).text())]
 
 
 class Ascii2DResponse:

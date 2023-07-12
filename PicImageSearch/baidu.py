@@ -26,11 +26,12 @@ class BaiDu(HandOver):
             )
         else:
             raise ValueError("url or file is required")
-        resp_text, _, _ = await self.post(
+        resp = await self.post(
             "https://graph.baidu.com/upload", params=params, files=files
         )
-        next_url = (json_loads(resp_text))["data"]["url"]
-        resp_text, resp_url, _ = await self.get(next_url)
-        next_url = (re.search(r'"firstUrl":"([^"]+)"', resp_text)[1]).replace(r"\/", "/")  # type: ignore
-        resp_text, _, _ = await self.get(next_url)
-        return BaiDuResponse(json_loads(resp_text), resp_url)
+        next_url = (json_loads(resp.text))["data"]["url"]
+        resp = await self.get(next_url)
+        final_url = resp.url
+        next_url = (re.search(r'"firstUrl":"([^"]+)"', resp.text)[1]).replace(r"\/", "/")  # type: ignore
+        resp = await self.get(next_url)
+        return BaiDuResponse(json_loads(resp.text), final_url)

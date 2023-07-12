@@ -42,5 +42,5 @@ class EHentai(HandOver):
             data["fs_similar"] = "on"
         if self.exp:
             data["fs_exp"] = "on"
-        resp_text, resp_url, _ = await self.post(url=_url, data=data, files=files)
-        return EHentaiResponse(resp_text, resp_url)
+        resp = await self.post(url=_url, data=data, files=files)
+        return EHentaiResponse(resp.text, resp.url)

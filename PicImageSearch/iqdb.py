@@ -33,10 +33,10 @@ class Iqdb(HandOver):
             data["forcegray"] = "on"
         if url:
             data["url"] = url
-            resp_text, _, _ = await self.post(iqdb_url, data=data)
+            resp = await self.post(iqdb_url, data=data)
         elif file:
             files = {"file": file if isinstance(file, bytes) else open(file, "rb")}
-            resp_text, _, _ = await self.post(iqdb_url, data=data, files=files)
+            resp = await self.post(iqdb_url, data=data, files=files)
         else:
             raise ValueError("url or file is required")
-        return IqdbResponse(resp_text)
+        return IqdbResponse(resp.text)

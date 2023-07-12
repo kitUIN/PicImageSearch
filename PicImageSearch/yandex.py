@@ -46,15 +46,15 @@ class Yandex(HandOver):
         params = {"rpt": "imageview"}
         if url:
             params["url"] = url
-            resp_text, resp_url, _ = await self.get(self.url, params=params)
+            resp = await self.get(self.url, params=params)
         elif file:
             files: Dict[str, Any] = {
                 "upfile": file if isinstance(file, bytes) else open(file, "rb")
             }
-            resp_text, resp_url, _ = await self.post(
+            resp = await self.post(
                 self.url, params=params, data={"prg": 1}, files=files
             )
         else:
             raise ValueError("url or file is required")
 
-        return YandexResponse(resp_text, resp_url)
+        return YandexResponse(resp.text, resp.url)
