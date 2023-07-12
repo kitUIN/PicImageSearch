@@ -52,13 +52,15 @@ class Ascii2DItem:
 
     def _arrange_title(self, infos: PyQuery) -> None:
         if not self.title:
-            self.title = infos.find("h6").text() or self._extract_external_text(infos)
+            self.title = self._extract_external_text(infos) or infos.find("h6").text()
+        if self.title and any(i in self.title for i in {"詳細掲示板のログ", "2ちゃんねるのログ"}):
+            self.title = ""
 
     @staticmethod
     def _extract_external_text(infos: PyQuery) -> str:
-        external = infos.find("div.external")
+        external = infos.find(".external")
         external.remove("a")
-        return external.text() or ""
+        return "\n".join((i.text() for i in external.items() if i.text())) or ""
 
     def _normalize_url_list(self) -> None:
         self.url_list = [
