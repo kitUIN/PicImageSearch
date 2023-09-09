@@ -24,7 +24,7 @@ socksio = { version = "^1.0.0", optional = true }
 socks = ["socksio"]
 
 [tool.poetry.dev-dependencies]
-loguru = "^0.7.0"
+loguru = "^0.7.1"
 
 [tool.mypy]
 python_version = "3.7"
