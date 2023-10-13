@@ -9,6 +9,9 @@
     "poetry",
     "github-actions"
   ],
+  "constraints": {
+    "python": "3.7"
+  },
   "packageRules": [
     {
       "matchPackagePatterns": [
