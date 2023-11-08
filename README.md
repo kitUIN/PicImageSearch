@@ -2,7 +2,8 @@
 
 # PicImageSearch
 
-✨ 聚合识图引擎 用于以图搜源✨
+✨ 聚合识图引擎 用于以图搜源 ✨ Reverse Image Search Aggregator ✨
+
 </div>
 
 <p align="center">
@@ -21,36 +22,35 @@
   </a>
  </p>
 <p align="center">
-  <a href="https://pic-image-search.kituin.fun/">📖文档</a>
+  <a href="https://pic-image-search.kituin.fun/">📖文档 / Documentation</a>
   ·
-  <a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛提交建议</a>
+  <a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛提交建议 / Submit Suggestions</a>
 </p>
 
-## 支持
+## 简要说明 / Usage
 
-- [x] [Ascii2D](https://ascii2d.net/)
-- [x] [Baidu](https://graph.baidu.com/)
-- [x] [E-Hentai](https://e-hentai.org/)
-- [x] [ExHentai](https://exhentai.org/)
-- [x] [Google](https://www.google.com/imghp)
-- [x] [Iqdb](https://iqdb.org/)
-- [x] [SauceNAO](https://saucenao.com/)
-- [x] [TraceMoe](https://trace.moe/)
-- [x] [Yandex](https://yandex.com/images/search)
-- [x] 同步/异步
-
-## 简要说明
-
-详细见[文档](https://pic-image-search.kituin.fun/) 或者[`demo`](https://github.com/kitUIN/PicImageSearch/tree/main/demo)  
-`同步`请使用`from PicImageSearch.sync import ...`导入  
-`异步`请使用`from PicImageSearch import Network,...`导入  
+详细见[文档](https://pic-image-search.kituin.fun/) 或者[`demo`](https://github.com/kitUIN/PicImageSearch/tree/main/demo)
+\
+`同步`请使用`from PicImageSearch.sync import ...`导入\
+`异步`请使用`from PicImageSearch import Network,...`导入\
 **推荐使用异步**
 
-### 安装
+For details, see the [Documentation](https://pic-image-search.kituin.fun/) or the
+[`demo`](https://github.com/kitUIN/PicImageSearch/tree/main/demo). \
+For synchronous usage, import with `from PicImageSearch.sync import ...`. \
+For asynchronous usage, import with `from PicImageSearch import Network,...`. \
+**Asynchronous usage is recommended.**
+
+### 安装 / Installation
 
 - 此包需要 Python 3.7 或更新版本。
-- `pip install PicImageSearch`
-- 或者
+- `pip install PicImageSearch` 或者
+- `pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
+
+<!-- Separation -->
+
+- This package requires Python 3.8 or later.
+- `pip install PicImageSearch` or
 - `pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
 
 ## Star History
