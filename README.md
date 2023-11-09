@@ -13,7 +13,7 @@
   <a href="https://pypi.python.org/pypi/PicImageSearch">
     <img src="https://img.shields.io/pypi/v/PicImageSearch" alt="pypi">
   </a>
-  <img src="https://img.shields.io/badge/python-3.7+-blue" alt="python">
+  <img src="https://img.shields.io/badge/python-3.8+-blue" alt="python">
   <a href="https://github.com/kitUIN/PicImageSearch/releases">
     <img src="https://img.shields.io/github/v/release/kitUIN/PicImageSearch" alt="release">
   </a>
@@ -43,7 +43,7 @@ For asynchronous usage, import with `from PicImageSearch import Network,...`. \
 
 ### 安装 / Installation
 
-- 此包需要 Python 3.7 或更新版本。
+- 此包需要 Python 3.8 或更新版本。
 - `pip install PicImageSearch` 或者
 - `pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
 
