@@ -9,6 +9,13 @@ from .network import HandOver
 
 
 class SauceNAO(HandOver):
+    """API client for the SauceNAO image search engine.
+
+    Attributes:
+        url: The URL endpoint for the SauceNAO API.
+        params: Query parameters for the SauceNAO API.
+    """
+
     def __init__(
         self,
         api_key: Optional[str] = None,
@@ -21,32 +28,30 @@ class SauceNAO(HandOver):
         dbmaski: Optional[int] = None,
         db: int = 999,
         dbs: Optional[List[int]] = None,
-        **request_kwargs: Any
+        **request_kwargs: Any,
     ):
-        """
-        SauceNAO
-        -----------
-        Reverse image from https://saucenao.com\n
+        """Initializes SauceNAO API client with configuration.
 
+        Further documentation on the API can be found at on saucenao.com when your account is logged in:
+            https://saucenao.com/user.php?page=search-api
 
-        Params Keys
-        -----------
-        :param api_key: (str) Access key for SauceNAO (default=None)
-        :param output_type: (int) 0=normal (default) html 1=xml api (not implemented) 2=json api default=2
-        :param testmode: (int) Test mode 0=normal 1=test (default=0)
-        :param numres: (int) output number (default=5)
-        :param dbmask: (int) The mask used to select the specific index to be enabled (default=None)
-        :param dbmaski: (int) is used to select the mask of the specific index to be disabled (default=None)
-        :param db: (int) Search for a specific index number or all indexes (default=999),
-                   see https://saucenao.com/tools/examples/api/index_details.txt
-        :param dbs: (list) Search for specific indexes number or all indexes (default=None),
-                    see https://saucenao.com/tools/examples/api/index_details.txt
-        :param minsim: (int) Control the minimum similarity (default=30)
-        :param hide: (int) result hiding control, 0=show all, 1=hide expected explicit,
-                     2=hide expected and suspected explicit, 3=hide all but expected safe. Default is 0.
-        :param **request_kwargs: proxies setting.
+        For more information on `dbmask`, `dbmaski`, `db`, and `dbs` specifically, see:
+            https://saucenao.com/tools/examples/api/index_details.txt
+
+        Args:
+            api_key: Access key for SauceNAO.
+            numres: The number of results to return.
+            hide: Control over hiding results based on content rating.
+            minsim: The minimum similarity threshold required for a result.
+            output_type: Specifies the output format (0=html, 1=xml, 2=json).
+            testmode: Enables test mode, which performs a dry-run.
+            dbmask: A bitmask to select specific indices to be enabled.
+            dbmaski: A bitmask to select specific indices to be disabled.
+            db: Specifies individual database indices to search (999 for all).
+            dbs: Specifies multiple database indices to search.
+            **request_kwargs: Additional keyword arguments for request configuration.
         """
-        # minsim 控制最小相似度
+        # minsim 控制最小相似度 (minsim controls the minimum similarity)
         super().__init__(**request_kwargs)
         self.url = "https://saucenao.com/search.php"
         params: Dict[str, Any] = {
@@ -72,34 +77,17 @@ class SauceNAO(HandOver):
     async def search(
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
     ) -> SauceNAOResponse:
-        """
-        SauceNAO
-        -----------
-        Reverse image from https://saucenao.com\n
+        """Searches for images using the SauceNAO API.
 
+        Args:
+            url: The URL of the image to be searched.
+            file: The local file path or image file bytes to be searched.
 
-        Return Attributes
-        -----------
-        • .origin = Raw data from scrapper\n
-        • .raw = Simplified data from scrapper\n
-        • .raw[0] = First index of simplified data that was found\n
-        • .raw[0].title = First index of title that was found\n
-        • .raw[0].url = First index of url source that was found\n
-        • .raw[0].thumbnail = First index of url image that was found\n
-        • .raw[0].similarity = First index of similarity image that was found\n
-        • .raw[0].author = First index of author image that was found\n
-        • .raw[0].pixiv_id = First index of pixiv id that was found\n
-        • .raw[0].member_id = First index of memeber id that was found\n
-        • .long_remaining = Available limmits API in a day <day limit>\n
-        • .short_remaining = Available limmits API in a day <day limit>\n
+        Returns:
+            SauceNAOResponse: The response containing search results and metadata.
 
-
-        Params Keys
-        -----------
-        :param url: network address
-        :param file: local file
-
-        further documentation visit https://saucenao.com/user.php?page=search-api
+        Raises:
+            ValueError: If neither a URL nor a file is provided as a search parameter.
         """
         params = self.params
         files: Optional[Dict[str, Any]] = None

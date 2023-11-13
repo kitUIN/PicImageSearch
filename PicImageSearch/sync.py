@@ -14,6 +14,18 @@ from . import Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe
 
 
 def _syncify_wrap(t, method_name):  # type: ignore
+    """Wrap an asynchronous method to allow synchronous execution.
+
+    The wrapper checks if the event loop is already running, and executes the method
+    accordingly. The original asynchronous method is stored as `__tl.sync` attribute.
+
+    Args:
+        class_type: The class containing the method to wrap.
+        method_name: The name of the method to wrap.
+
+    Returns:
+        A wrapped synchronous method which can be called directly.
+    """
     method = getattr(t, method_name)
 
     @functools.wraps(method)
@@ -28,6 +40,14 @@ def _syncify_wrap(t, method_name):  # type: ignore
 
 
 def syncify(*types):  # type: ignore
+    """Decorate all coroutine methods of given classes to enable synchronous calling.
+
+    This function applies `_syncify_wrap` decorator to all coroutine methods
+    of the passed in classes, allowing those methods to be run synchronously.
+
+    Args:
+        classes: A variable number of class objects to syncify.
+    """
     for t in types:
         for name in dir(t):
             if (

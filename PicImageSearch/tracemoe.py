@@ -39,24 +39,46 @@ query ($id: Int) {
 
 
 class TraceMoe(HandOver):
+    """API Client for the TraceMoe API to search anime by image.
+
+    Inherits from HandOver for network operations.
+
+    Attributes:
+        search_url: A string representing the API endpoint for searching.
+        me_url: A string representing the API endpoint to retrieve user info.
+        size: An optional string indicating the size of the preview (s/m/l).
+        mute: A boolean indicating whether to mute the preview video.
+    """
+
     search_url = "https://api.trace.moe/search"
     me_url = "https://api.trace.moe/me"
 
     def __init__(
         self, mute: bool = False, size: Optional[str] = None, **request_kwargs: Any
     ):
-        """主类
+        """Initializes the TraceMoe client with optional settings.
 
-        :param size: preview video/image size(can be:s/m/l)(small/medium/large)
-        :param mute: mute the preview video（default:False）
-        :param **request_kwargs: proxies setting.
+        Args:
+            mute: If True, mutes the preview video. Defaults to False.
+            size: Defines the preview size. Can be 's', 'm', or 'l'.
+            **request_kwargs: Additional keyword arguments for request settings.
         """
         super().__init__(**request_kwargs)
         self.size: Optional[str] = size
         self.mute: bool = mute
 
-    # 获取自己的信息
     async def me(self, key: Optional[str] = None) -> TraceMoeMe:
+        """Retrieves information about the API key usage.
+
+        Args:
+            key: The API key for authentication.
+
+        Returns:
+            An instance of TraceMoeMe containing the user's information.
+
+        Raises:
+            HTTPError: If the request to the API fails.
+        """
         params = {"key": key} if key else None
         resp = await self.get(self.me_url, params=params)
         return TraceMoeMe(json_loads(resp.text))
@@ -67,6 +89,16 @@ class TraceMoe(HandOver):
         anilist_id: Optional[int],
         cut_borders: bool,
     ) -> Dict[str, Union[bool, int, str]]:
+        """Constructs query parameters for API requests.
+
+        Args:
+            url: The image URL to search for.
+            anilist_id: The Anilist ID to limit the search to.
+            cut_borders: If True, trims the borders of the image.
+
+        Returns:
+            A dictionary with query parameters for the API request.
+        """
         params: Dict[str, Union[bool, int, str]] = {}
         if cut_borders:
             params["cutBorders"] = "true"
@@ -79,6 +111,15 @@ class TraceMoe(HandOver):
     async def update_anime_info(
         self, item: TraceMoeItem, chinese_title: bool = True
     ) -> None:
+        """Updates the anime information of a search result item.
+
+        Args:
+            item: The TraceMoeItem object to update with additional data.
+            chinese_title: If True, retrieves the Chinese title if available.
+
+        Raises:
+            HTTPError: If the request to the API fails.
+        """
         variables = {"id": item.anilist}
         url = "https://trace.moe/anilist/"
         item.anime_info = json_loads(
@@ -90,7 +131,7 @@ class TraceMoe(HandOver):
         )["data"]["Media"]
         item.idMal = item.anime_info[
             "idMal"
-        ]  # 匹配的MyAnimelist ID见https://myanimelist.net/
+        ]  # 匹配的MyAnimelist ID见https://myanimelist.net/ (matched MyAnimelist ID)
         item.title = item.anime_info["title"]
         item.title_native = item.anime_info["title"]["native"]
         item.title_romaji = item.anime_info["title"]["romaji"]
@@ -114,13 +155,22 @@ class TraceMoe(HandOver):
         chinese_title: bool = True,
         cut_borders: bool = True,
     ) -> TraceMoeResponse:
-        """识别图片
-        :param key: API密钥 https://soruly.github.io/trace.moe-api/#/limits?id=api-search-quota-and-limits
-        :param url: 网络地址(http或https链接) When using video / gif, only the 1st frame would be extracted for searching
-        :param file: 本地图片文件 When using video / gif, only the 1st frame would be extracted for searching
-        :param anilist_id: 搜索限制为特定的 Anilist ID(默认无)
-        :param chinese_title: 中文番剧标题
-        :param cut_borders: 切割黑边框(默认开启)
+        """Searches for anime using an image or URL.
+
+        Args:
+            url: URL of the image.
+            file: Local image file path or image data.
+            key: API key for authentication.
+            anilist_id: Anilist ID to limit the search.
+            chinese_title: Include Chinese title in the result if available.
+            cut_borders: Trim image borders during search.
+
+        Returns:
+            A TraceMoeResponse object with search results.
+
+        Raises:
+            ValueError: If neither URL nor file is provided.
+            HTTPError: If the request to the API fails.
         """
         headers = {"x-trace-key": key} if key else None
         files: Optional[Dict[str, Any]] = None

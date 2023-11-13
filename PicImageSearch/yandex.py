@@ -6,43 +6,40 @@ from .network import HandOver
 
 
 class Yandex(HandOver):
-    """
-    Yandex
-    -----------
-    Reverse image from https://yandex.com/images/search\n
+    """API client for the Yandex image search engine.
 
-
-    Params Keys
-    -----------
-    :param **request_kwargs: proxies setting.\n
+    Attributes:
+        url: The URL endpoint for the Yandex API.
+        params: Query parameters for the Yandex API.
     """
 
     def __init__(self, **request_kwargs: Any):
+        """Initializes Yandex API client with configuration.
+
+        Args:
+            **request_kwargs: Additional keyword arguments for request configuration.
+        """
+
         super().__init__(**request_kwargs)
         self.url = "https://yandex.com/images/search"
 
     async def search(
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
     ) -> YandexResponse:
+        """Performs a reverse image search on Yandex using the URL or file of the image.
+
+        The user must provide either a URL or a file.
+
+        Args:
+            url: URL of the image to search.
+            file: Image file to search. Can be a file path (str or Path) or raw bytes.
+
+        Returns:
+            An instance of YandexResponse containing the search results and additional metadata.
+
+        Raises:
+            ValueError: If neither `url` nor `file` is provided.
         """
-        Yandex
-        -----------
-        Reverse image from https://yandex.com/images/search\n
-
-
-        Return Attributes
-        -----------
-        • .origin = Raw data from scrapper\n
-        • .raw = Simplified data from scrapper\n
-        • .raw[0] = First index of simplified data that was found\n
-        • .raw[0].title = First index of title that was found\n
-        • .raw[0].url = First index of url source that was found\n
-        • .raw[0].thumbnail = First index of url image that was found\n
-        • .raw[0].source = First index of source that was found\n
-        • .raw[0].content = First index of content that was found\n
-        • .raw[0].size = First index of size that was found\n
-        """
-
         params = {"rpt": "imageview"}
         if url:
             params["url"] = url

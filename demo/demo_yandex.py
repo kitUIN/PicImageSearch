@@ -30,8 +30,8 @@ def test_sync() -> None:
 
 
 def show_result(resp: YandexResponse) -> None:
-    # logger.info(resp.origin)  # 原始数据
-    logger.info(resp.url)  # 搜索结果链接
+    # logger.info(resp.origin)  # 原始数据 (Original data)
+    logger.info(resp.url)  # 搜索结果链接 (Link to search results)
     # logger.info(resp.raw[0].origin)
     logger.info(resp.raw[0].title)
     logger.info(resp.raw[0].url)

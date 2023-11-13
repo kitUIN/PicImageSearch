@@ -6,18 +6,19 @@ from .network import HandOver
 
 
 class Iqdb(HandOver):
-    """
-    Iqdb
-    -----------
-    Reverse image from https://iqdb.org\n
+    """API client for the Iqdb image search engine.
 
-
-    Params Keys
-    -----------
-    :param **request_kwargs: proxies setting.\n
+    Attributes:
+        url: The URL endpoint for the Iqdb API.
+        params: Query parameters for the Iqdb API.
     """
 
     def __init__(self, **request_kwargs: Any):
+        """Initializes Iqdb API client with configuration.
+
+        Args:
+            **request_kwargs: Additional keyword arguments for request configuration.
+        """
         super().__init__(**request_kwargs)
 
     async def search(
@@ -27,6 +28,22 @@ class Iqdb(HandOver):
         force_gray: bool = False,
         is_3d: bool = False,
     ) -> IqdbResponse:
+        """Performs a reverse image search on Iqdb using the URL or file of the image.
+
+        The user must provide either a URL or a file.
+
+        Args:
+            url: URL of the image to search.
+            file: Image file to search. Can be a file path (str or Path) or raw bytes.
+            force_gray: Whether to ignore color.
+            is_3d: Whether to search for irl images on none anime related sites. This uses the 3d.iqdb.org endpoint.
+
+        Returns:
+            An instance of IqdbResponse containing the search results and additional metadata.
+
+        Raises:
+            ValueError: If neither `url` nor `file` is provided.
+        """
         iqdb_url = "https://3d.iqdb.org/" if is_3d else "https://iqdb.org/"
         data: Dict[str, Any] = {}
         if force_gray:  # 忽略颜色

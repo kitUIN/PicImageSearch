@@ -10,8 +10,8 @@ from PicImageSearch.sync import Ascii2D as Ascii2DSync
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
 file = "images/test01.jpg"
-bovw = False  # 是否使用特征检索
-verify_ssl = True  # 是否校验 SSL 证书
+bovw = False  # 是否使用特征检索 (Use feature search or not)
+verify_ssl = True  # 是否校验 SSL 证书 (Whether to verify SSL certificates or not)
 
 
 @logger.catch()
@@ -32,8 +32,8 @@ def test_sync() -> None:
 
 
 def show_result(resp: Ascii2DResponse) -> None:
-    # logger.info(resp.origin)  # 原始数据
-    logger.info(resp.url)  # 搜索结果链接
+    # logger.info(resp.origin)  # 原始数据 (Original data)
+    logger.info(resp.url)  # 搜索结果链接 (Link to search results)
     selected = next((i for i in resp.raw if i.title or i.url_list), resp.raw[0])
     logger.info(selected.origin)
     logger.info(selected.thumbnail)
