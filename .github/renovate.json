@@ -6,8 +6,9 @@
   "dependencyDashboard": false,
   "rangeStrategy": "bump",
   "enabledManagers": [
+    "github-actions",
     "poetry",
-    "github-actions"
+    "pre-commit",
   ],
   "packageRules": [
     {
