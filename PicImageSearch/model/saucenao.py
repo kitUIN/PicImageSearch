@@ -104,7 +104,9 @@ class SauceNAOItem:
         return (
             next(
                 (
-                    ", ".join(data[i]) if i == "creator" and isinstance(data[i], list) else data[i]
+                    ", ".join(data[i])
+                    if i == "creator" and isinstance(data[i], list)
+                    else data[i]
                     for i in [
                         "author",
                         "member_name",
@@ -145,7 +147,7 @@ class SauceNAOItem:
             return f'https://twitter.com/intent/user?user_id={data["twitter_user_id"]}'
         elif "pawoo_user_acct" in data:
             return f'https://pawoo.net/@{data["pawoo_user_acct"]}'
-        return data.get("author_url", "")
+        return str(data.get("author_url", ""))
 
 
 class SauceNAOResponse:
@@ -200,5 +202,6 @@ class SauceNAOResponse:
         # 数据返回值数量 (result returned from source)
         self.results_returned: Optional[int] = res_header.get("results_returned")
         self.url: str = (
-            f"https://saucenao.com/search.php?url=" f'https://saucenao.com{res_header.get("query_image_display")}'
+            f"https://saucenao.com/search.php?url="
+            f'https://saucenao.com{res_header.get("query_image_display")}'
         )

@@ -52,20 +52,23 @@ class GoogleResponse:
         self.page_number: int = 1  # 当前页 (current page)
         self.url: str = resp_url
         index = 1
-        for i, item in enumerate(list(data.find('div[role="navigation"] td').items())[1:-1]):
+        for i, item in enumerate(
+            list(data.find('div[role="navigation"] td').items())[1:-1]
+        ):
             if not PyQuery(item).find("a"):
                 index = i + 1
                 self.page_number = int(PyQuery(item).text())
                 break
         self.pages: List[str] = [
-            f'https://www.google.com{i.attr("href")}' for i in data.find('a[aria-label~="Page"]').items()
+            f'https://www.google.com{i.attr("href")}'
+            for i in data.find('a[aria-label~="Page"]').items()
         ]
         self.pages.insert(index - 1, resp_url)
         script_list = list(data.find("script").items())
         # 结果返回值 (result returned from source)
         thumbnail_dict: Dict[str, str] = self.create_thumbnail_dict(script_list)
         self.raw: List[GoogleItem] = [
-            GoogleItem(i, thumbnail_dict.get(i('img[id^="dimg_"]').attr("id"), None))
+            GoogleItem(i, thumbnail_dict.get(i('img[id^="dimg_"]').attr("id")))
             for i in data.find("#search .g").items()
         ]
 

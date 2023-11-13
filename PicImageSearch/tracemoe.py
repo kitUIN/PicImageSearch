@@ -53,7 +53,9 @@ class TraceMoe(HandOver):
     search_url = "https://api.trace.moe/search"
     me_url = "https://api.trace.moe/me"
 
-    def __init__(self, mute: bool = False, size: Optional[str] = None, **request_kwargs: Any):
+    def __init__(
+        self, mute: bool = False, size: Optional[str] = None, **request_kwargs: Any
+    ):
         """Initializes the TraceMoe client with optional settings.
 
         Args:
@@ -106,7 +108,9 @@ class TraceMoe(HandOver):
             params["url"] = url
         return params
 
-    async def update_anime_info(self, item: TraceMoeItem, chinese_title: bool = True) -> None:
+    async def update_anime_info(
+        self, item: TraceMoeItem, chinese_title: bool = True
+    ) -> None:
         """Updates the anime information of a search result item.
 
         Args:
@@ -119,9 +123,15 @@ class TraceMoe(HandOver):
         variables = {"id": item.anilist}
         url = "https://trace.moe/anilist/"
         item.anime_info = json_loads(
-            (await self.post(url=url, json={"query": ANIME_INFO_QUERY, "variables": variables}))[0]
+            (
+                await self.post(
+                    url=url, json={"query": ANIME_INFO_QUERY, "variables": variables}
+                )
+            )[0]
         )["data"]["Media"]
-        item.idMal = item.anime_info["idMal"]  # 匹配的MyAnimelist ID见https://myanimelist.net/ (matched MyAnimelist ID)
+        item.idMal = item.anime_info[
+            "idMal"
+        ]  # 匹配的MyAnimelist ID见https://myanimelist.net/ (matched MyAnimelist ID)
         item.title = item.anime_info["title"]
         item.title_native = item.anime_info["title"]["native"]
         item.title_romaji = item.anime_info["title"]["romaji"]
@@ -168,10 +178,18 @@ class TraceMoe(HandOver):
             params = self.set_params(url, anilist_id, cut_borders)
         elif file:
             params = self.set_params(None, anilist_id, cut_borders)
-            files = {"file": file} if isinstance(file, bytes) else {"file": open(file, "rb")}
+            files = (
+                {"file": file}
+                if isinstance(file, bytes)
+                else {"file": open(file, "rb")}
+            )
         else:
             raise ValueError("url or file is required")
-        resp = await self.post(self.search_url, headers=headers, params=params, files=files)
+        resp = await self.post(
+            self.search_url, headers=headers, params=params, files=files
+        )
         result = TraceMoeResponse(json_loads(resp.text), self.mute, self.size)
-        await asyncio.gather(*[self.update_anime_info(item, chinese_title) for item in result.raw])
+        await asyncio.gather(
+            *[self.update_anime_info(item, chinese_title) for item in result.raw]
+        )
         return result

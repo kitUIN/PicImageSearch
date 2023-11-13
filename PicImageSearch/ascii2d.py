@@ -31,7 +31,9 @@ class Ascii2D(HandOver):
         super().__init__(**request_kwargs)
         self.bovw: bool = bovw
 
-    async def search(self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None) -> Ascii2DResponse:
+    async def search(
+        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
+    ) -> Ascii2DResponse:
         """
         Ascii2D Search
 
@@ -64,7 +66,9 @@ class Ascii2D(HandOver):
             resp = await self.post(ascii2d_url, data={"uri": url})
         elif file:
             ascii2d_url = "https://ascii2d.net/search/file"
-            files: Dict[str, Any] = {"file": file if isinstance(file, bytes) else open(file, "rb")}
+            files: Dict[str, Any] = {
+                "file": file if isinstance(file, bytes) else open(file, "rb")
+            }
             resp = await self.post(ascii2d_url, files=files)
         else:
             raise ValueError("url or file is required")

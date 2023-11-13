@@ -22,7 +22,9 @@ class Google(HandOver):
         super().__init__(**request_kwargs)
         self.url = "https://www.google.com/searchbyimage"
 
-    async def _navigate_page(self, resp: GoogleResponse, offset: int) -> Optional[GoogleResponse]:
+    async def _navigate_page(
+        self, resp: GoogleResponse, offset: int
+    ) -> Optional[GoogleResponse]:
         """Navigate to the next or previous page of the search results.
 
         Args:
@@ -66,7 +68,9 @@ class Google(HandOver):
         """
         return await self._navigate_page(resp, 1)
 
-    async def search(self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None) -> GoogleResponse:
+    async def search(
+        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
+    ) -> GoogleResponse:
         """Performs a reverse image search on Google using the URL or file of the image.
 
         The user must provide either a URL or a file.
@@ -86,7 +90,9 @@ class Google(HandOver):
             params["image_url"] = url
             resp = await self.get(self.url, params=params)
         elif file:
-            files = {"encoded_image": file if isinstance(file, bytes) else open(file, "rb")}
+            files = {
+                "encoded_image": file if isinstance(file, bytes) else open(file, "rb")
+            }
             resp = await self.post(f"{self.url}/upload", data=params, files=files)
         else:
             raise ValueError("url or file is required")

@@ -23,7 +23,9 @@ class BaiDu(HandOver):
         """
         super().__init__(**request_kwargs)
 
-    async def search(self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None) -> BaiDuResponse:
+    async def search(
+        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
+    ) -> BaiDuResponse:
         """Performs a reverse image search on BaiDu using the URL or file of the image.
 
         The user must provide either a URL or a file.
@@ -43,10 +45,16 @@ class BaiDu(HandOver):
         if url:
             params["image"] = url
         elif file:
-            files = {"image": file} if isinstance(file, bytes) else {"image": open(file, "rb")}
+            files = (
+                {"image": file}
+                if isinstance(file, bytes)
+                else {"image": open(file, "rb")}
+            )
         else:
             raise ValueError("url or file is required")
-        resp = await self.post("https://graph.baidu.com/upload", params=params, files=files)
+        resp = await self.post(
+            "https://graph.baidu.com/upload", params=params, files=files
+        )
         next_url = (json_loads(resp.text))["data"]["url"]
         resp = await self.get(next_url)
         final_url = resp.url

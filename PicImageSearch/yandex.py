@@ -23,7 +23,9 @@ class Yandex(HandOver):
         super().__init__(**request_kwargs)
         self.url = "https://yandex.com/images/search"
 
-    async def search(self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None) -> YandexResponse:
+    async def search(
+        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
+    ) -> YandexResponse:
         """Performs a reverse image search on Yandex using the URL or file of the image.
 
         The user must provide either a URL or a file.
@@ -43,8 +45,12 @@ class Yandex(HandOver):
             params["url"] = url
             resp = await self.get(self.url, params=params)
         elif file:
-            files: Dict[str, Any] = {"upfile": file if isinstance(file, bytes) else open(file, "rb")}
-            resp = await self.post(self.url, params=params, data={"prg": 1}, files=files)
+            files: Dict[str, Any] = {
+                "upfile": file if isinstance(file, bytes) else open(file, "rb")
+            }
+            resp = await self.post(
+                self.url, params=params, data={"prg": 1}, files=files
+            )
         else:
             raise ValueError("url or file is required")
 

@@ -22,9 +22,13 @@ class TraceMoeMe:
             "id"
         ]  # IP 地址（访客）或电子邮件地址（用户） (IP address (visitor) or email address (user))
         self.priority: int = data["priority"]  # 优先级 (priority)
-        self.concurrency: int = data["concurrency"]  # 搜索请求数量 (number of search requests)
+        self.concurrency: int = data[
+            "concurrency"
+        ]  # 搜索请求数量 (number of search requests)
         self.quota: int = data["quota"]  # 本月的搜索配额 (search quota for this month)
-        self.quotaUsed: int = data["quotaUsed"]  # 本月已经使用的搜索配额 (search quota used this month)
+        self.quotaUsed: int = data[
+            "quotaUsed"
+        ]  # 本月已经使用的搜索配额 (search quota used this month)
 
 
 class TraceMoeItem:
@@ -71,14 +75,18 @@ class TraceMoeItem:
         """
         self.origin: Dict[str, Any] = data  # 原始数据 (raw data)
         self.anime_info: Dict[str, Any] = {}  # 动画信息 (anime info)
-        self.idMal: int = 0  # 匹配的MyAnimelist ID见https://myanimelist.net/ (matched MyAnimelist ID)
+        self.idMal: int = (
+            0  # 匹配的MyAnimelist ID见https://myanimelist.net/ (matched MyAnimelist ID)
+        )
         self.title: Dict[str, str] = {}
         self.title_native: str = ""
         """番剧国际命名"""
         self.title_english: str = ""
         self.title_romaji: str = ""
         self.title_chinese: str = ""
-        self.anilist: int = data["anilist"]  # 匹配的Anilist ID见https://anilist.co/ (matched Anilist ID)
+        self.anilist: int = data[
+            "anilist"
+        ]  # 匹配的Anilist ID见https://anilist.co/ (matched Anilist ID)
         self.synonyms: List[str] = []  # 备用英文标题 (alternative English titles)
         self.isAdult: bool = False
         self.type: str = ""
@@ -136,5 +144,7 @@ class TraceMoeResponse:
                 for i in res_docs
             ]
         )
-        self.frameCount: int = data["frameCount"]  # 搜索的帧总数 (total number of frames searched)
+        self.frameCount: int = data[
+            "frameCount"
+        ]  # 搜索的帧总数 (total number of frames searched)
         self.error: str = data["error"]  # 错误报告 (error message)

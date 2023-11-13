@@ -12,7 +12,8 @@ class IqdbItem:
         content: Text content of the result (e.g., 'Best match', 'Additional match').
         url: URL of the image provided as search result.
         source: The name of the source platform where the image was found.
-        other_source (list[dict[str, str]]): A list of dictionaries containing 'source' and 'url' for additional sources.
+        other_source (list[dict[str, str]]): A list of dictionaries containing 'source' and 'url' for
+         additional sources.
         thumbnail: URL of the image's thumbnail.
         size: The dimensions and size of the image found.
         similarity: The percentage similarity between the search image and the result.
@@ -51,8 +52,7 @@ class IqdbItem:
         self.thumbnail = "https://iqdb.org" + tr_list[0]("td > a > img").attr("src")
         source_list = [i.tail.strip() for i in tr_list[1]("img")]
         self.source = source_list[0]
-        other_source = tr_list[1]("td > a")
-        if other_source:
+        if other_source := tr_list[1]("td > a"):
             self.other_source.append(
                 {
                     "source": source_list[1],
@@ -100,11 +100,13 @@ class IqdbResponse:
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
         self.origin: PyQuery = data  # 原始数据 (raw data)
         self.raw: List[IqdbItem] = []  # 结果返回值 (result returned from source)
-        self.more: List[IqdbItem] = []  # 更多结果返回值(低相似度)  (more results returned from source)
-        self.saucenao_url: str = ""  # SauceNao搜索链接 (SauceNao search link)
-        self.ascii2d_url: str = ""  # Ascii2d搜索链接 (Ascii2d search link)
-        self.google_url: str = ""  # Google搜索链接 (Google search link)
-        self.tineye_url: str = ""  # TinEye搜索链接 (TinEye search link)
+        self.more: List[
+            IqdbItem
+        ] = []  # 更多结果返回值 ( 低相似度)  (more results returned from source)
+        self.saucenao_url: str = ""  # SauceNao 搜索链接 (SauceNao search link)
+        self.ascii2d_url: str = ""  # Ascii2d 搜索链接 (Ascii2d search link)
+        self.google_url: str = ""  # Google 搜索链接 (Google search link)
+        self.tineye_url: str = ""  # TinEye 搜索链接 (TinEye search link)
         self.url: str = ""
         self._arrange(data)
 
@@ -114,7 +116,11 @@ class IqdbResponse:
         Args:
             data: A PyQuery object representing a search result item.
         """
-        host = "https://iqdb.org" if data('a[href^="//3d.iqdb.org"]') else "https://3d.iqdb.org"
+        host = (
+            "https://iqdb.org"
+            if data('a[href^="//3d.iqdb.org"]')
+            else "https://3d.iqdb.org"
+        )
         tables = list(data("#pages > div > table").items())
         self.url = f'{host}/?url=https://iqdb.org{tables[0].find("img").attr("src")}'
         if len(tables) > 1:
@@ -140,14 +146,23 @@ class IqdbResponse:
         Args:
             data: A PyQuery object representing a search result item.
         """
+        urls_with_name = {
+            "SauceNao": ["https:", "saucenao"],
+            "ascii2d.net": ["", "ascii2d"],
+            "Google Images": ["https:", "google"],
+            "TinEye": ["https:", "tineye"],
+        }
+
         for link in data.items():
-            if link.attr("href") == "#":
+            href = link.attr("href")
+            text = link.text()
+
+            if href == "#":
                 continue
-            if link.text() == "SauceNao":
-                self.saucenao_url = "https:" + link.attr("href")
-            elif link.text() == "ascii2d.net":
-                self.ascii2d_url = link.attr("href")
-            elif link.text() == "Google Images":
-                self.google_url = "https:" + link.attr("href")
-            elif link.text() == "TinEye":
-                self.tineye_url = "https:" + link.attr("href")
+
+            if text in urls_with_name:
+                prefix, attr_name = urls_with_name[text]
+                # 检查 href 是否已包含 `https:` 前缀
+                # check if the href already contains the `https:` prefix
+                full_url = href if href.startswith("https:") else prefix + href
+                setattr(self, f"{attr_name}_url", full_url)

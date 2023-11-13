@@ -74,7 +74,9 @@ class SauceNAO(HandOver):
             for i in dbs:
                 self.params = self.params.add("dbs[]", i)
 
-    async def search(self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None) -> SauceNAOResponse:
+    async def search(
+        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
+    ) -> SauceNAOResponse:
         """Searches for images using the SauceNAO API.
 
         Args:
@@ -92,7 +94,11 @@ class SauceNAO(HandOver):
         if url:
             params = params.add("url", url)
         elif file:
-            files = {"file": file} if isinstance(file, bytes) else {"file": open(file, "rb")}
+            files = (
+                {"file": file}
+                if isinstance(file, bytes)
+                else {"file": open(file, "rb")}
+            )
         else:
             raise ValueError("url or file is required")
         resp = await self.post(self.url, params=params, files=files)

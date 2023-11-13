@@ -13,7 +13,13 @@ class EHentai(HandOver):
         params: Query parameters for the EHentai API.
     """
 
-    def __init__(self, covers: bool = False, similar: bool = True, exp: bool = False, **request_kwargs: Any):
+    def __init__(
+        self,
+        covers: bool = False,
+        similar: bool = True,
+        exp: bool = False,
+        **request_kwargs: Any
+    ):
         """Initializes EHentai API client with configuration.
 
         Args:
@@ -53,7 +59,11 @@ class EHentai(HandOver):
         Raises:
             ValueError: If neither `url` nor `file` is provided.
         """
-        _url: str = "https://exhentai.org/upld/image_lookup.php" if ex else "https://upld.e-hentai.org/image_lookup.php"
+        _url: str = (
+            "https://exhentai.org/upld/image_lookup.php"
+            if ex
+            else "https://upld.e-hentai.org/image_lookup.php"
+        )
         data: Dict[str, Any] = {"f_sfile": "search"}
         if url:
             files: Dict[str, Any] = {"sfile": await self.download(url)}

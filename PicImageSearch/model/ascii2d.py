@@ -52,10 +52,11 @@ class Ascii2DItem:
         Args:
             data: A PyQuery instance containing the search result data.
         """
-        infos = data.find("div.detail-box.gray-link")
-        if infos:
+        if infos := data.find("div.detail-box.gray-link"):
             links = infos.find("a")
-            self.url_list = [URL(i.attr("href"), i.text()) for i in links.items()] if links else []
+            self.url_list = (
+                [URL(i.attr("href"), i.text()) for i in links.items()] if links else []
+            )
             mark = infos("small").eq(-1).text() if links else ""
             self._arrange_links(infos, links, mark)
             self._arrange_title(infos)
@@ -101,12 +102,13 @@ class Ascii2DItem:
     def _extract_external_text(infos: PyQuery) -> str:
         external = infos.find(".external")
         external.remove("a")
-        return "\n".join((i.text() for i in external.items() if i.text())) or ""
+        return "\n".join(i.text() for i in external.items() if i.text()) or ""
 
     def _normalize_url_list(self) -> None:
         """Normalize the URL list to absolute paths."""
         self.url_list = [
-            URL(BASE_URL + url.href, url.text) if url.href.startswith("/") else url for url in self.url_list
+            URL(BASE_URL + url.href, url.text) if url.href.startswith("/") else url
+            for url in self.url_list
         ]
 
     def _arrange_backup_links(self, data: PyQuery) -> None:
@@ -116,8 +118,7 @@ class Ascii2DItem:
         Args:
             data: PyQuery object to search for backup links.
         """
-        links = data.find("div.pull-xs-right > a")
-        if links:
+        if links := data.find("div.pull-xs-right > a"):
             self.url = links.eq(0).attr("href")
             self.url_list = [URL(self.url, links.eq(0).text())]
 
@@ -139,5 +140,7 @@ class Ascii2DResponse:
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
         self.origin: PyQuery = data  # 原始数据 (raw data)
         # 结果返回值 (result returned from source)
-        self.raw: List[Ascii2DItem] = [Ascii2DItem(i) for i in data.find("div.row.item-box").items()]
+        self.raw: List[Ascii2DItem] = [
+            Ascii2DItem(i) for i in data.find("div.row.item-box").items()
+        ]
         self.url: str = resp_url

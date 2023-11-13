@@ -29,7 +29,7 @@ class YandexItem:
         if not self.thumbnail:
             self.thumbnail = data.find("div.CbirSites-ItemThumb a").attr("href")
         if self.thumbnail and self.thumbnail.startswith("//"):
-            self.thumbnail = "https:" + self.thumbnail
+            self.thumbnail = f"https:{self.thumbnail}"
         self.source: str = data.find("a.CbirSites-ItemDomain").text()
         self.content: str = data.find("div.CbirSites-ItemDescription").text() or ""
         self.size: str = data.find("div.Thumb-Mark").text()
@@ -54,5 +54,7 @@ class YandexResponse:
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
         self.origin: PyQuery = data  # 原始数据 (raw data)
         # 结果返回值 (results returned from source)
-        self.raw: List[YandexItem] = [YandexItem(i) for i in data.find("li.CbirSites-Item").items()]
+        self.raw: List[YandexItem] = [
+            YandexItem(i) for i in data.find("li.CbirSites-Item").items()
+        ]
         self.url: str = resp_url

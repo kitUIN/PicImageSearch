@@ -173,7 +173,9 @@ class HandOver:
         self.cookies: Optional[str] = cookies
         self.timeout: float = timeout
 
-    async def get(self, url: str, params: Optional[Dict[str, str]] = None, **kwargs: Any) -> RESP:
+    async def get(
+        self, url: str, params: Optional[Dict[str, str]] = None, **kwargs: Any
+    ) -> RESP:
         """Performs an HTTP GET request.
 
         Args:
@@ -223,7 +225,9 @@ class HandOver:
             self.cookies,
             self.timeout,
         ) as client:
-            resp = await client.post(url, params=params, data=data, files=files, json=json, **kwargs)
+            resp = await client.post(
+                url, params=params, data=data, files=files, json=json, **kwargs
+            )
             return RESP(resp.text, str(resp.url), resp.status_code)
 
     async def download(self, url: str) -> bytes:
