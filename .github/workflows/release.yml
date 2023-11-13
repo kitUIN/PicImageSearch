@@ -16,15 +16,21 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4.7.1
         with:
-          python-version: ${{matrix.python-version}}
+          python-version: ${{ matrix.python-version }}
       - name: Install poetry
         run: pip install poetry
       - name: Install dependencies
         run: poetry install
-      - name: Build package
-        run: poetry build
+      - name: Build wheel
+        run: poetry build --format wheel
+
+      # Conditionally build sdist
+      - name: Build sdist
+        if: matrix.python-version == '3.8'
+        run: poetry build --format sdist
+
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@v1.8.10
         with:
           user: __token__
-          password: ${{secrets.PYPI_TOKEN}}
+          password: ${{ secrets.PYPI_TOKEN }}
