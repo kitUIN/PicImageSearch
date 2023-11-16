@@ -10,35 +10,38 @@ from .network import HandOver
 class BaiDu(HandOver):
     """API client for the BaiDu image search engine.
 
-    Attributes:
-        url: The URL endpoint for the BaiDu API.
-        params: Query parameters for the BaiDu API.
+    Used for performing reverse image searches using BaiDu service.
     """
 
     def __init__(self, **request_kwargs: Any):
-        """Initializes BaiDu API client with configuration.
+        """Initializes a BaiDu API client with specified configurations.
 
         Args:
-            **request_kwargs: Additional keyword arguments for request configuration.
+            **request_kwargs: Additional arguments for network requests.
         """
         super().__init__(**request_kwargs)
 
     async def search(
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
     ) -> BaiDuResponse:
-        """Performs a reverse image search on BaiDu using the URL or file of the image.
+        """Performs a reverse image search on BaiDu.
 
-        The user must provide either a URL or a file.
+        Supports searching by image URL or by uploading an image file.
+
+        Requires either 'url' or 'file' to be provided.
 
         Args:
             url: URL of the image to search.
-            file: Image file to search. Can be a file path (str or Path) or raw bytes.
+            file: Local image file (path or bytes) to search.
 
         Returns:
-            An instance of BaiDuResponse containing the search results and additional metadata.
+            BaiDuResponse: Contains search results and additional information.
 
         Raises:
-            ValueError: If neither `url` nor `file` is provided.
+            ValueError: If neither 'url' nor 'file' is provided.
+
+        Note:
+            The search process involves multiple HTTP requests to BaiDu's API.
         """
         params = {"from": "pc"}
         files: Optional[Dict[str, Any]] = None
@@ -51,7 +54,8 @@ class BaiDu(HandOver):
                 else {"image": open(file, "rb")}
             )
         else:
-            raise ValueError("url or file is required")
+            raise ValueError("Either 'url' or 'file' must be provided")
+
         resp = await self.post(
             "https://graph.baidu.com/upload", params=params, files=files
         )

@@ -6,50 +6,54 @@ from pyquery import PyQuery
 
 
 class GoogleItem:
-    """A single Google search result item.
+    """Represents a single Google search result item.
+
+    Holds details of a result from a Google reverse image search.
 
     Attributes:
-        origin: The raw data of the item.
-        title: The title of the search result.
-        url: The URL of the search result.
-        thumbnail: The optional base64 encoded thumbnail image.
+        origin: The raw data of the search result item.
+        title: Title of the search result.
+        url: URL to the search result.
+        thumbnail: Optional base64 encoded thumbnail image.
     """
 
     def __init__(self, data: PyQuery, thumbnail: Optional[str]):
-        """Initializes a GoogleItem instance.
+        """Initializes a GoogleItem with data from a search result.
 
         Args:
-            data: The PyQuery object containing the item's data.
-            thumbnail: An optional base64 encoded thumbnail image.
+            data: A PyQuery instance containing the search result item's data.
+            thumbnail: Optional base64 encoded thumbnail image.
         """
-        self.origin: PyQuery = data  # 原始数据 (raw data)
+        self.origin: PyQuery = data
         self.title: str = data("h3").text()
         self.url: str = data("a").eq(0).attr("href")
         self.thumbnail: Optional[str] = thumbnail
 
 
 class GoogleResponse:
-    """The response from a Google search query.
+    """Encapsulates a Google reverse image search response.
+
+    Contains the complete response from a Google reverse image search operation.
 
     Attributes:
-        origin: The raw data of the response.
+        origin: The raw response data.
         page_number: The current page number in the search results.
-        url: The URL to the Google search result page.
-        pages: A list of URLs to the pages of search results.
-        raw: A list of GoogleItem instances representing individual search results.
+        url: URL to the search result page.
+        pages: List of URLs to pages of search results.
+        raw: List of GoogleItem instances for each search result.
     """
 
     def __init__(self, resp_text: str, resp_url: str):
-        """Initializes a GoogleResponse instance.
+        """Initializes with the response text and URL.
 
         Args:
-            resp_text: The response text containing the HTML of the search results.
-            resp_url: The URL from which the response was obtained.
+            resp_text: The text of the response.
+            resp_url: URL to the search result page.
         """
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
-        self.origin: PyQuery = data  # 原始数据 (raw data)
-        self.page_number: int = 1  # 当前页 (current page)
+        self.origin: PyQuery = data
+        self.page_number: int = 1
         self.url: str = resp_url
         index = 1
         for i, item in enumerate(
@@ -65,7 +69,6 @@ class GoogleResponse:
         ]
         self.pages.insert(index - 1, resp_url)
         script_list = list(data.find("script").items())
-        # 结果返回值 (result returned from source)
         thumbnail_dict: Dict[str, str] = self.create_thumbnail_dict(script_list)
         self.raw: List[GoogleItem] = [
             GoogleItem(i, thumbnail_dict.get(i('img[id^="dimg_"]').attr("id")))
@@ -75,6 +78,8 @@ class GoogleResponse:
     @staticmethod
     def create_thumbnail_dict(script_list: List[PyQuery]) -> Dict[str, str]:
         """Extracts a dictionary of thumbnail images from the list of script tags.
+
+        Parses script tags to extract a mapping of image IDs to their base64 encoded thumbnails.
 
         Args:
             script_list: A list of PyQuery objects each containing a script element.
@@ -91,6 +96,7 @@ class GoogleResponse:
             if not base_64_match:
                 continue
 
+            # extract and adjust base64 encoded thumbnails
             base64: str = base_64_match[0]
             id_list: List[str] = id_regex.findall(script.text())
 

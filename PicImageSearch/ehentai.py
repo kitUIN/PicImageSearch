@@ -8,9 +8,12 @@ from .network import HandOver
 class EHentai(HandOver):
     """API client for the EHentai image search engine.
 
+    Used for performing reverse image searches using EHentai service.
+
     Attributes:
-        url: The URL endpoint for the EHentai API.
-        params: Query parameters for the EHentai API.
+        covers: A flag to search only for covers.
+        similar: A flag to enable similarity scanning.
+        exp: A flag to include results from expunged galleries.
     """
 
     def __init__(
@@ -20,15 +23,14 @@ class EHentai(HandOver):
         exp: bool = False,
         **request_kwargs: Any
     ):
-        """Initializes EHentai API client with configuration.
+        """Initializes an EHentai API client with specified configurations.
 
         Args:
-            covers: Whether to only search for covers.
-            similar: Whether to use similarity scan to find similar images.
-            exp: Whether to include results from the expunged galleries.
-            **request_kwargs: Additional keyword arguments for request configuration.
+            covers: If True, search only for covers; otherwise, False.
+            similar: If True, enable similarity scanning; otherwise, False.
+            exp: If True, include results from expunged galleries; otherwise, False.
+            **request_kwargs: Additional arguments for network requests.
         """
-
         super().__init__(**request_kwargs)
         self.covers: bool = covers
         self.similar: bool = similar
@@ -40,24 +42,25 @@ class EHentai(HandOver):
         file: Union[str, bytes, Path, None] = None,
         ex: bool = False,
     ) -> EHentaiResponse:
-        """Performs a reverse image search on EHentai using the URL or file of the image.
+        """Performs a reverse image search on EHentai.
 
-        The user must provide either a URL or a file.
+        Supports searching by image URL or by uploading an image file.
 
-        Note:
-            To use `ex` you must be logged in to exhentai.org via the cookies defined in `EHentai.request_kwargs`.
-            We recommend using `ex=bool(cookies)` or something similar to determine whether to use `ex`.
+        Requires either 'url' or 'file' to be provided.
 
         Args:
             url: URL of the image to search.
-            file: Image file to search. Can be a file path (str or Path) or raw bytes.
-            ex: Whether to search on exhentai.org instead of e-hentai.org. Defaults to False.
+            file: Local image file (path or bytes) to search.
+            ex: If True, search on exhentai.org; otherwise, use e-hentai.org.
 
         Returns:
-            An instance of EHentaiResponse containing the search results and additional metadata.
+            EHentaiResponse: Contains search results and additional information.
 
         Raises:
-            ValueError: If neither `url` nor `file` is provided.
+            ValueError: If neither 'url' nor 'file' is provided.
+
+        Note:
+            Searching on exhentai.org requires logged-in status via cookies in `EHentai.request_kwargs`.
         """
         _url: str = (
             "https://exhentai.org/upld/image_lookup.php"
@@ -70,7 +73,7 @@ class EHentai(HandOver):
         elif file:
             files = {"sfile": file if isinstance(file, bytes) else open(file, "rb")}
         else:
-            raise ValueError("url or file is required")
+            raise ValueError("Either 'url' or 'file' must be provided")
         if self.covers:
             data["fs_covers"] = "on"
         if self.similar:

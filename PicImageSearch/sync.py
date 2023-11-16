@@ -1,10 +1,8 @@
-"""
-From: telethon/sync
-This magical module will rewrite all public methods in the public interface
-of the library so they can run the loop on their own if it's not already
-running. This rewrite may not be desirable if the end user always uses the
-methods they way they should be ran, but it's incredibly useful for quick
-scripts and the runtime overhead is relatively low.
+"""From: telethon/sync
+Rewrites all public asynchronous methods in the library's public interface for synchronous execution.
+Useful for scripts, with low runtime overhead. Ideal for synchronous calls preference over managing an event loop.
+
+Automatically wraps asynchronous methods of specified classes, enabling synchronous calls.
 """
 import asyncio
 import functools
@@ -13,20 +11,21 @@ import inspect
 from . import Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe, Yandex
 
 
-def _syncify_wrap(t, method_name):  # type: ignore
-    """Wrap an asynchronous method to allow synchronous execution.
+def _syncify_wrap(class_type, method_name):  # type: ignore
+    """Wrap an asynchronous method of a class for synchronous calling.
 
-    The wrapper checks if the event loop is already running, and executes the method
-    accordingly. The original asynchronous method is stored as `__tl.sync` attribute.
+    Creates a synchronous version of the specified asynchronous method.
+    Checks if the event loop is running; if not, runs it until method completion.
+    Original asynchronous method remains accessible via `__tl.sync` attribute.
 
     Args:
-        class_type: The class containing the method to wrap.
-        method_name: The name of the method to wrap.
+        class_type: Class with the method to wrap.
+        method_name: Name of the asynchronous method to wrap.
 
     Returns:
-        A wrapped synchronous method which can be called directly.
+        None: Modifies the class method in-place.
     """
-    method = getattr(t, method_name)
+    method = getattr(class_type, method_name)
 
     @functools.wraps(method)
     def syncified(*args, **kwargs):  # type: ignore
@@ -34,26 +33,25 @@ def _syncify_wrap(t, method_name):  # type: ignore
         loop = asyncio.get_event_loop()
         return coro if loop.is_running() else loop.run_until_complete(coro)
 
-    # Save an accessible reference to the original method
     setattr(syncified, "__tl.sync", method)
-    setattr(t, method_name, syncified)
+    setattr(class_type, method_name, syncified)
 
 
-def syncify(*types):  # type: ignore
-    """Decorate all coroutine methods of given classes to enable synchronous calling.
+def syncify(*classes):  # type: ignore
+    """Decorate coroutine methods of classes for synchronous execution.
 
-    This function applies `_syncify_wrap` decorator to all coroutine methods
-    of the passed in classes, allowing those methods to be run synchronously.
+    Iterates over classes, applying `_syncify_wrap` to coroutine methods.
+    Enables methods to be used synchronously without managing an asyncio loop.
 
     Args:
-        classes: A variable number of class objects to syncify.
+        *classes: Classes to modify for synchronous coroutine method use.
     """
-    for t in types:
-        for name in dir(t):
+    for c in classes:
+        for name in dir(c):
             if (
                 not name.startswith("_") or name == "__call__"
-            ) and inspect.iscoroutinefunction(getattr(t, name)):
-                _syncify_wrap(t, name)  # type: ignore
+            ) and inspect.iscoroutinefunction(getattr(c, name)):
+                _syncify_wrap(c, name)  # type: ignore
 
 
 syncify(Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe, Yandex)  # type: ignore

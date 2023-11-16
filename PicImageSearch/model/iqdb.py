@@ -5,42 +5,45 @@ from pyquery import PyQuery
 
 
 class IqdbItem:
-    """A single IQDB search result item.
+    """Represents a single IQDB search result item.
+
+    Holds details of a result from an IQDB reverse image search.
 
     Attributes:
-        origin: The original PyQuery object containing the item data.
+        origin: The raw data of the search result item.
         content: Text content of the result (e.g., 'Best match', 'Additional match').
-        url: URL of the image provided as search result.
-        source: The name of the source platform where the image was found.
-        other_source (list[dict[str, str]]): A list of dictionaries containing 'source' and 'url' for
-         additional sources.
-        thumbnail: URL of the image's thumbnail.
-        size: The dimensions and size of the image found.
-        similarity: The percentage similarity between the search image and the result.
-
+        url: URL of the webpage with the image.
+        source: Name of the source platform where the image was found.
+        other_source: Additional source URLs and their corresponding source names.
+        thumbnail: URL of the thumbnail image.
+        size: Dimensions and size of the image found.
+        similarity: Percentage similarity between the search image and the result.
     """
 
     def __init__(self, data: PyQuery):
-        """Initializes an IqdbItem with data from IQDB search result.
+        """Initializes an IqdbItem with data from a search result.
 
         Args:
-            data: A PyQuery object representing a search result item.
+            data: A PyQuery instance containing the search result item's data.
         """
-        self.origin: PyQuery = data  # 原始数据 (raw data)
-        self.content: str = ""  # 备注
+        self.origin: PyQuery = data
+        self.content: str = ""
         self.url: str = ""
-        self.source: str = ""  # 来源平台名称 (source platform name)
-        self.other_source: List[Dict[str, str]] = []  # 其他来源数据 (data from other sources)
+        self.source: str = ""
+        self.other_source: List[Dict[str, str]] = []
         self.thumbnail: str = ""
-        self.size: str = ""  # 原图长宽大小 (original image width, height, size)
-        self.similarity: float = 0  # 相似值
+        self.size: str = ""
+        self.similarity: float = 0
         self._arrange(data)
 
     def _arrange(self, data: PyQuery) -> None:
-        """Arranges the PyQuery data into the object's attributes.
+        """Organize search result data.
+
+        Extracts and sets the content, URL, source, other sources, thumbnail, size,
+         and similarity attributes from the given data.
 
         Args:
-            data: A PyQuery object representing a search result item.
+            data: A PyQuery instance containing the search result item's data.
         """
         tr_list = list(data("tr").items())
         if len(tr_list) >= 5:
@@ -77,44 +80,47 @@ class IqdbItem:
 
 
 class IqdbResponse:
-    """Encapsulates the response from an IQDB image search.
+    """Encapsulates an IQDB reverse image search response.
+
+    Contains the complete response from an IQDB reverse image search operation.
 
     Attributes:
-        origin: The original PyQuery object containing the search result data.
-        raw: A list of IqdbItem objects representing the search results.
-        more: A list of IqdbItem objects representing the additional search results.
+        origin: The raw response data.
+        raw: List of IqdbItem instances for each search result.
+        more: Additional IqdbItem objects for lower similarity results.
         saucenao_url: URL of the search results on SauceNao.
         ascii2d_url: URL of the search results on Ascii2D.
         google_url: URL of the search results on Google Images.
         tineye_url: URL of the search results on TinEye.
-        url: URL of the search results on IQDB.
+        url: URL to the original IQDB search result page.
     """
 
     def __init__(self, resp_text: str):
-        """Initializes an IqdbResponse with data from IQDB search result.
+        """Initializes with the response text.
 
         Args:
-            resp_text: The HTML text of the IQDB search result.
+            resp_text: The text of the response.
         """
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
-        self.origin: PyQuery = data  # 原始数据 (raw data)
-        self.raw: List[IqdbItem] = []  # 结果返回值 (result returned from source)
-        self.more: List[
-            IqdbItem
-        ] = []  # 更多结果返回值 ( 低相似度)  (more results returned from source)
-        self.saucenao_url: str = ""  # SauceNao 搜索链接 (SauceNao search link)
-        self.ascii2d_url: str = ""  # Ascii2d 搜索链接 (Ascii2d search link)
-        self.google_url: str = ""  # Google 搜索链接 (Google search link)
-        self.tineye_url: str = ""  # TinEye 搜索链接 (TinEye search link)
+        self.origin: PyQuery = data
+        self.raw: List[IqdbItem] = []
+        self.more: List[IqdbItem] = []
+        self.saucenao_url: str = ""
+        self.ascii2d_url: str = ""
+        self.google_url: str = ""
+        self.tineye_url: str = ""
         self.url: str = ""
         self._arrange(data)
 
     def _arrange(self, data: PyQuery) -> None:
         """Arranges the PyQuery data into the object's attributes.
 
+        Extracts and sets the search result URL, primary and additional search results,
+         and URLs for other search engines.
+
         Args:
-            data: A PyQuery object representing a search result item.
+            data: A PyQuery instance representing a search result item.
         """
         host = (
             "https://iqdb.org"
@@ -135,16 +141,21 @@ class IqdbResponse:
     def _get_more(self, data: PyQuery) -> None:
         """Get additional search results with lower similarity.
 
+        Extracts additional search results from the provided data.
+
         Args:
-            data: A PyQuery object representing a search result item.
+            data: A PyQuery instance representing the search result item.
         """
         self.more.extend([IqdbItem(i) for i in data.items()])
 
     def _get_other_urls(self, data: PyQuery) -> None:
         """Get URLs for other search engines.
 
+        Extracts and sets the URLs for searches on other platforms like SauceNao, ascii2d.net, Google Images,
+         and TinEye.
+
         Args:
-            data: A PyQuery object representing a search result item.
+            data: A PyQuery instance representing the search result item.
         """
         urls_with_name = {
             "SauceNao": ["https:", "saucenao"],
@@ -162,7 +173,6 @@ class IqdbResponse:
 
             if text in urls_with_name:
                 prefix, attr_name = urls_with_name[text]
-                # 检查 href 是否已包含 `https:` 前缀
-                # check if the href already contains the `https:` prefix
+                # Check if the href already contains the `https:` prefix
                 full_url = href if href.startswith("https:") else prefix + href
                 setattr(self, f"{attr_name}_url", full_url)

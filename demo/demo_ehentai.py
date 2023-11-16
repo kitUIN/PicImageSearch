@@ -16,7 +16,7 @@ cookies = None
 # 是否使用 EXHentai 搜索，推荐用 bool(cookies) ，即配置了 cookies 就使用 EXHentai 搜索
 # Use EXHentai search or not, it's recommended to use bool(cookies), i.e. use EXHentai search if cookies is configured
 ex = False
-# 尽可能避免超时返回空的 document (Whenever possible, avoid timeouts that return empty )
+# 尽可能避免超时返回空的 document (Whenever possible, avoid timeouts that return an empty document)
 timeout = 60
 
 

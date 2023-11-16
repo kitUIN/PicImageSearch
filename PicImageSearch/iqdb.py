@@ -8,16 +8,14 @@ from .network import HandOver
 class Iqdb(HandOver):
     """API client for the Iqdb image search engine.
 
-    Attributes:
-        url: The URL endpoint for the Iqdb API.
-        params: Query parameters for the Iqdb API.
+    Used for performing reverse image searches using Iqdb service.
     """
 
     def __init__(self, **request_kwargs: Any):
-        """Initializes Iqdb API client with configuration.
+        """Initializes an Iqdb API client with request configuration.
 
         Args:
-            **request_kwargs: Additional keyword arguments for request configuration.
+            **request_kwargs: Additional arguments for network requests.
         """
         super().__init__(**request_kwargs)
 
@@ -28,25 +26,30 @@ class Iqdb(HandOver):
         force_gray: bool = False,
         is_3d: bool = False,
     ) -> IqdbResponse:
-        """Performs a reverse image search on Iqdb using the URL or file of the image.
+        """Performs a reverse image search on Iqdb.
 
-        The user must provide either a URL or a file.
+        Supports searching by image URL or by uploading an image file.
+
+        Requires either 'url' or 'file' to be provided.
 
         Args:
             url: URL of the image to search.
-            file: Image file to search. Can be a file path (str or Path) or raw bytes.
-            force_gray: Whether to ignore color.
-            is_3d: Whether to search for irl images on none anime related sites. This uses the 3d.iqdb.org endpoint.
+            file: Local image file (path or bytes) to search.
+            force_gray: If True, ignores color information in the image.
+            is_3d: If True, searches on 3d.iqdb.org for real-life images; otherwise, iqdb.org for anime images.
 
         Returns:
-            An instance of IqdbResponse containing the search results and additional metadata.
+            IqdbResponse: Contains search results and additional information.
 
         Raises:
-            ValueError: If neither `url` nor `file` is provided.
+            ValueError: If neither 'url' nor 'file' is provided.
+
+        Note:
+            Search can be tailored for anime or real-life images using `is_3d` parameter.
         """
         iqdb_url = "https://3d.iqdb.org/" if is_3d else "https://iqdb.org/"
         data: Dict[str, Any] = {}
-        if force_gray:  # 忽略颜色
+        if force_gray:
             data["forcegray"] = "on"
         if url:
             data["url"] = url
@@ -55,5 +58,5 @@ class Iqdb(HandOver):
             files = {"file": file if isinstance(file, bytes) else open(file, "rb")}
             resp = await self.post(iqdb_url, data=data, files=files)
         else:
-            raise ValueError("url or file is required")
+            raise ValueError("Either 'url' or 'file' must be provided")
         return IqdbResponse(resp.text)

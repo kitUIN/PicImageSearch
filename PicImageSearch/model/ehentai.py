@@ -5,38 +5,42 @@ from pyquery import PyQuery
 
 
 class EHentaiItem:
-    """A single e-hentai gallery item.
+    """Represents a single e-hentai gallery item.
+
+    Holds details of a gallery from an e-hentai reverse image search.
 
     Attributes:
-        origin: The raw data of the item.
-        title: The title of the gallery.
-        url: The URL of the gallery.
-        thumbnail: The URL to the thumbnail of the gallery.
-        type: The type or category of the gallery.
-        date: The date when the gallery was posted.
-        tags: A list of tags associated with the gallery.
+        origin: The raw data of the search result item.
+        thumbnail: URL of the gallery's thumbnail.
+        url: URL of the gallery.
+        title: Title of the gallery.
+        type: Category of the gallery.
+        date: Date when the gallery was posted.
+        tags: List of tags associated with the gallery.
     """
 
     def __init__(self, data: PyQuery):
-        """Initializes an EHentaiItem with parsed data from a page element.
+        """Initializes an EHentaiItem with data from a search result.
 
         Args:
-            data: A PyQuery object containing data of the gallery item.
+            data: A PyQuery instance containing the search result item's data.
         """
-        self.origin: PyQuery = data  # 原始数据 (raw data)
-        self.title: str = ""
-        self.url: str = ""
+        self.origin: PyQuery = data
         self.thumbnail: str = ""
+        self.url: str = ""
+        self.title: str = ""
         self.type: str = ""
         self.date: str = ""
         self.tags: List[str] = []
         self._arrange(data)
 
     def _arrange(self, data: PyQuery) -> None:
-        """Arranges data from a PyQuery object into attributes of the gallery item.
+        """Organize gallery data.
+
+        Extracts and sets the gallery's title, URL, thumbnail, type, date and tags.
 
         Args:
-            data: A PyQuery object containing data of the gallery item.
+            data: A PyQuery instance containing the gallery's data.
         """
         glink = data.find(".glink")
         self.title = glink.text()
@@ -59,24 +63,26 @@ class EHentaiItem:
 
 
 class EHentaiResponse:
-    """The response from an e-hentai gallery search.
+    """Encapsulates an e-hentai reverse image search response.
+
+    Contains the complete response from an e-hentai reverse image search operation.
 
     Attributes:
-        origin: The raw data of the response.
-        raw: A list of EHentaiItem instances representing gallery items.
-        url: The URL to the e-hentai search result page.
+        origin: The raw response data.
+        raw: List of EHentaiItem instances for each gallery item.
+        url: URL to the search result page.
     """
 
     def __init__(self, resp_text: str, resp_url: str):
-        """Initializes an EHentaiResponse with the text response and result URL.
+        """Initializes with the response text and URL.
 
         Args:
-            resp_text: The text of the HTTP response.
-            resp_url: The URL of the search result page.
+            resp_text: The text of the response.
+            resp_url: URL to the search result page.
         """
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
-        self.origin: PyQuery = data  # 原始数据 (raw data)
+        self.origin: PyQuery = data
         if "No unfiltered results found." in resp_text:
             self.raw = []
         elif tr_items := data.find(".itg").children("tr").items():

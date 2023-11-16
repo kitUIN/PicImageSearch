@@ -8,37 +8,39 @@ from .network import HandOver
 class Yandex(HandOver):
     """API client for the Yandex image search engine.
 
+    Used for performing reverse image searches using Yandex service.
+
     Attributes:
-        url: The URL endpoint for the Yandex API.
-        params: Query parameters for the Yandex API.
+        url: The base URL for Yandex search.
     """
 
     def __init__(self, **request_kwargs: Any):
-        """Initializes Yandex API client with configuration.
+        """Initializes a Yandex API client with specified configurations.
 
         Args:
-            **request_kwargs: Additional keyword arguments for request configuration.
+            **request_kwargs: Additional arguments for network requests.
         """
-
         super().__init__(**request_kwargs)
         self.url = "https://yandex.com/images/search"
 
     async def search(
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
     ) -> YandexResponse:
-        """Performs a reverse image search on Yandex using the URL or file of the image.
+        """Performs a reverse image search on Yandex.
 
-        The user must provide either a URL or a file.
+        Supports searching by image URL or by uploading an image file.
+
+        Requires either 'url' or 'file' to be provided.
 
         Args:
             url: URL of the image to search.
-            file: Image file to search. Can be a file path (str or Path) or raw bytes.
+            file: Local image file (path or bytes) to search.
 
         Returns:
-            An instance of YandexResponse containing the search results and additional metadata.
+            YandexResponse: Contains search results and additional information.
 
         Raises:
-            ValueError: If neither `url` nor `file` is provided.
+            ValueError: If neither 'url' nor 'file' is provided.
         """
         params = {"rpt": "imageview"}
         if url:
@@ -52,6 +54,6 @@ class Yandex(HandOver):
                 self.url, params=params, data={"prg": 1}, files=files
             )
         else:
-            raise ValueError("url or file is required")
+            raise ValueError("Either 'url' or 'file' must be provided")
 
         return YandexResponse(resp.text, resp.url)

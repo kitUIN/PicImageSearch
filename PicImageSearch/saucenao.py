@@ -11,9 +11,11 @@ from .network import HandOver
 class SauceNAO(HandOver):
     """API client for the SauceNAO image search engine.
 
+    Used for performing reverse image searches using SauceNAO service.
+
     Attributes:
-        url: The URL endpoint for the SauceNAO API.
-        params: Query parameters for the SauceNAO API.
+        url: The base URL for SauceNAO search.
+        params: The query parameters for SauceNAO search.
     """
 
     def __init__(
@@ -30,28 +32,27 @@ class SauceNAO(HandOver):
         dbs: Optional[List[int]] = None,
         **request_kwargs: Any,
     ):
-        """Initializes SauceNAO API client with configuration.
-
-        Further documentation on the API can be found at on saucenao.com when your account is logged in:
-            https://saucenao.com/user.php?page=search-api
-
-        For more information on `dbmask`, `dbmaski`, `db`, and `dbs` specifically, see:
-            https://saucenao.com/tools/examples/api/index_details.txt
+        """Initializes a SauceNAO API client with specified configurations.
 
         Args:
-            api_key: Access key for SauceNAO.
-            numres: The number of results to return.
-            hide: Control over hiding results based on content rating.
-            minsim: The minimum similarity threshold required for a result.
-            output_type: Specifies the output format (0=html, 1=xml, 2=json).
-            testmode: Enables test mode, which performs a dry-run.
-            dbmask: A bitmask to select specific indices to be enabled.
-            dbmaski: A bitmask to select specific indices to be disabled.
-            db: Specifies individual database indices to search (999 for all).
-            dbs: Specifies multiple database indices to search.
-            **request_kwargs: Additional keyword arguments for request configuration.
+            api_key: API key for SauceNAO API access.
+            numres: Number of results to return from search.
+            hide: Option to hide results based on content rating.
+            minsim: Minimum similarity percentage for results.
+            output_type: Output format of search results.
+            testmode: If 1, performs a dry-run search.
+            dbmask: Bitmask for enabling specific databases.
+            dbmaski: Bitmask for disabling specific databases.
+            db: Specifies database index(es) for search.
+            dbs: List of database indices for search.
+            **request_kwargs: Additional arguments for network requests.
+
+        Note:
+            Detailed API documentation is available at:
+            https://saucenao.com/user.php?page=search-api (requires login).
+            For specific details on `dbmask`, `dbmaski`, `db`, and `dbs`, refer to:
+            https://saucenao.com/tools/examples/api/index_details.txt
         """
-        # minsim 控制最小相似度 (minsim controls the minimum similarity)
         super().__init__(**request_kwargs)
         self.url = "https://saucenao.com/search.php"
         params: Dict[str, Any] = {
@@ -77,17 +78,21 @@ class SauceNAO(HandOver):
     async def search(
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
     ) -> SauceNAOResponse:
-        """Searches for images using the SauceNAO API.
+        """Performs a reverse image search on SauceNAO.
+
+        Supports searching by image URL or by uploading an image file.
+
+        Requires either 'url' or 'file' to be provided.
 
         Args:
-            url: The URL of the image to be searched.
-            file: The local file path or image file bytes to be searched.
+            url: URL of the image to search.
+            file: Local image file (path or bytes) to search.
 
         Returns:
-            SauceNAOResponse: The response containing search results and metadata.
+            SauceNAOResponse: Contains search results and additional information.
 
         Raises:
-            ValueError: If neither a URL nor a file is provided as a search parameter.
+            ValueError: If neither 'url' nor 'file' is provided.
         """
         params = self.params
         files: Optional[Dict[str, Any]] = None
@@ -100,7 +105,7 @@ class SauceNAO(HandOver):
                 else {"file": open(file, "rb")}
             )
         else:
-            raise ValueError("url or file is required")
+            raise ValueError("Either 'url' or 'file' must be provided")
         resp = await self.post(self.url, params=params, files=files)
         resp_json = json_loads(resp.text)
         resp_json.update({"status_code": resp.status_code})

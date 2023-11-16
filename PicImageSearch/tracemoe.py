@@ -39,15 +39,15 @@ query ($id: Int) {
 
 
 class TraceMoe(HandOver):
-    """API Client for the TraceMoe API to search anime by image.
+    """API Client for the TraceMoe image search engine.
 
-    Inherits from HandOver for network operations.
+    Used for performing reverse image searches using TraceMoe service.
 
     Attributes:
-        search_url: A string representing the API endpoint for searching.
-        me_url: A string representing the API endpoint to retrieve user info.
-        size: An optional string indicating the size of the preview (s/m/l).
-        mute: A boolean indicating whether to mute the preview video.
+        search_url: URL for TraceMoe API endpoint for image search.
+        me_url: URL for TraceMoe API endpoint to retrieve user info.
+        size: Optional string indicating preview size ('s', 'm', 'l').
+        mute: A flag to mute preview video in search results.
     """
 
     search_url = "https://api.trace.moe/search"
@@ -56,28 +56,25 @@ class TraceMoe(HandOver):
     def __init__(
         self, mute: bool = False, size: Optional[str] = None, **request_kwargs: Any
     ):
-        """Initializes the TraceMoe client with optional settings.
+        """Initializes a TraceMoe API client with specified configurations.
 
         Args:
-            mute: If True, mutes the preview video. Defaults to False.
-            size: Defines the preview size. Can be 's', 'm', or 'l'.
-            **request_kwargs: Additional keyword arguments for request settings.
+            mute: If True, mutes preview video in search results.
+            size: Specifies preview video size ('s', 'm', 'l').
+            **request_kwargs: Additional arguments for network requests.
         """
         super().__init__(**request_kwargs)
         self.size: Optional[str] = size
         self.mute: bool = mute
 
     async def me(self, key: Optional[str] = None) -> TraceMoeMe:
-        """Retrieves information about the API key usage.
+        """Retrieves information about the user's API key usage from TraceMoe.
 
         Args:
-            key: The API key for authentication.
+            key: Optional API key for authentication.
 
         Returns:
-            An instance of TraceMoeMe containing the user's information.
-
-        Raises:
-            HTTPError: If the request to the API fails.
+            TraceMoeMe: Information about the user's API key usage.
         """
         params = {"key": key} if key else None
         resp = await self.get(self.me_url, params=params)
@@ -89,15 +86,15 @@ class TraceMoe(HandOver):
         anilist_id: Optional[int],
         cut_borders: bool,
     ) -> Dict[str, Union[bool, int, str]]:
-        """Constructs query parameters for API requests.
+        """Constructs query parameters for TraceMoe API request.
 
         Args:
-            url: The image URL to search for.
-            anilist_id: The Anilist ID to limit the search to.
-            cut_borders: If True, trims the borders of the image.
+            url: URL of the image to search.
+            anilist_id: Anilist ID for specific anime focus.
+            cut_borders: If True, trims image borders during search.
 
         Returns:
-            A dictionary with query parameters for the API request.
+            Dict[str, Union[bool, int, str]]: Query parameters for the API request.
         """
         params: Dict[str, Union[bool, int, str]] = {}
         if cut_borders:
@@ -111,14 +108,11 @@ class TraceMoe(HandOver):
     async def update_anime_info(
         self, item: TraceMoeItem, chinese_title: bool = True
     ) -> None:
-        """Updates the anime information of a search result item.
+        """Updates TraceMoeItem with detailed anime information from TraceMoe API.
 
         Args:
-            item: The TraceMoeItem object to update with additional data.
-            chinese_title: If True, retrieves the Chinese title if available.
-
-        Raises:
-            HTTPError: If the request to the API fails.
+            item: TraceMoeItem to update with anime information.
+            chinese_title: If True, includes Chinese title in item info.
         """
         variables = {"id": item.anilist}
         url = "https://trace.moe/anilist/"
@@ -129,9 +123,8 @@ class TraceMoe(HandOver):
                 )
             )[0]
         )["data"]["Media"]
-        item.idMal = item.anime_info[
-            "idMal"
-        ]  # 匹配的MyAnimelist ID见https://myanimelist.net/ (matched MyAnimelist ID)
+        # Update item fields with anime information
+        item.idMal = item.anime_info["idMal"]
         item.title = item.anime_info["title"]
         item.title_native = item.anime_info["title"]["native"]
         item.title_romaji = item.anime_info["title"]["romaji"]
@@ -155,22 +148,25 @@ class TraceMoe(HandOver):
         chinese_title: bool = True,
         cut_borders: bool = True,
     ) -> TraceMoeResponse:
-        """Searches for anime using an image or URL.
+        """Performs an reverse image search on TraceMoe.
+
+        Supports searching by image URL or by uploading an image file.
+
+        Requires either 'url' or 'file' to be provided.
 
         Args:
-            url: URL of the image.
-            file: Local image file path or image data.
-            key: API key for authentication.
-            anilist_id: Anilist ID to limit the search.
-            chinese_title: Include Chinese title in the result if available.
-            cut_borders: Trim image borders during search.
+            url: URL of the image to search.
+            file: Local image file (path or bytes) to search.
+            key: Optional API key for authentication.
+            anilist_id: Anilist ID to limit search scope.
+            chinese_title: If True, includes Chinese titles in results.
+            cut_borders: If True, trims image borders for search.
 
         Returns:
-            A TraceMoeResponse object with search results.
+            TraceMoeResponse: Search results and additional metadata.
 
         Raises:
-            ValueError: If neither URL nor file is provided.
-            HTTPError: If the request to the API fails.
+            ValueError: If neither 'url' nor 'file' is provided.
         """
         headers = {"x-trace-key": key} if key else None
         files: Optional[Dict[str, Any]] = None
@@ -184,7 +180,7 @@ class TraceMoe(HandOver):
                 else {"file": open(file, "rb")}
             )
         else:
-            raise ValueError("url or file is required")
+            raise ValueError("Either 'url' or 'file' must be provided")
         resp = await self.post(
             self.search_url, headers=headers, params=params, files=files
         )
