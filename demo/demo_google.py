@@ -11,12 +11,13 @@ proxies = "http://127.0.0.1:1081"
 # proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test03.jpg"
 file = "images/test03.jpg"
+base_url = "https://www.google.co.jp/searchbyimage"
 
 
 @logger.catch()
 async def test() -> None:
     async with Network(proxies=proxies) as client:
-        google = Google(client=client)
+        google = Google(client=client, base_url=base_url)
         # resp = await google.search(url=url)
         resp = await google.search(file=file)
         show_result(resp)
@@ -28,7 +29,7 @@ async def test() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    google = GoogleSync(proxies=proxies)
+    google = GoogleSync(proxies=proxies, base_url=base_url)
     resp = google.search(url=url)
     # resp = google.search(file=file)
     show_result(resp)  # type: ignore
