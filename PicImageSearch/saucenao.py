@@ -7,6 +7,8 @@ from httpx import QueryParams
 from .model import SauceNAOResponse
 from .network import HandOver
 
+BASE_URL = "https://saucenao.com/search.php"
+
 
 class SauceNAO(HandOver):
     """API client for the SauceNAO image search engine.
@@ -14,7 +16,6 @@ class SauceNAO(HandOver):
     Used for performing reverse image searches using SauceNAO service.
 
     Attributes:
-        url: The base URL for SauceNAO search.
         params: The query parameters for SauceNAO search.
     """
 
@@ -54,7 +55,6 @@ class SauceNAO(HandOver):
             https://saucenao.com/tools/examples/api/index_details.txt
         """
         super().__init__(**request_kwargs)
-        self.url = "https://saucenao.com/search.php"
         params: Dict[str, Any] = {
             "testmode": testmode,
             "numres": numres,
@@ -106,7 +106,7 @@ class SauceNAO(HandOver):
             )
         else:
             raise ValueError("Either 'url' or 'file' must be provided")
-        resp = await self.post(self.url, params=params, files=files)
+        resp = await self.post(BASE_URL, params=params, files=files)
         resp_json = json_loads(resp.text)
         resp_json.update({"status_code": resp.status_code})
         return SauceNAOResponse(resp_json)
