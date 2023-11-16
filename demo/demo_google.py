@@ -7,7 +7,7 @@ from PicImageSearch import Google, Network
 from PicImageSearch.model import GoogleResponse
 from PicImageSearch.sync import Google as GoogleSync
 
-proxies = "http://127.0.0.1:1081"
+proxies = "http://127.0.0.1:1080"
 # proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test03.jpg"
 file = "images/test03.jpg"
@@ -23,8 +23,9 @@ async def test() -> None:
         show_result(resp)
         resp2 = await google.next_page(resp)
         show_result(resp2)
-        resp3 = await google.pre_page(resp2)  # type: ignore
-        show_result(resp3)
+        if resp2:
+            resp3 = await google.pre_page(resp2)
+            show_result(resp3)
 
 
 @logger.catch()
