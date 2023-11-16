@@ -148,7 +148,7 @@ class TraceMoe(HandOver):
         chinese_title: bool = True,
         cut_borders: bool = True,
     ) -> TraceMoeResponse:
-        """Performs an reverse image search on TraceMoe.
+        """Performs a reverse image search on TraceMoe.
 
         Supports searching by image URL or by uploading an image file.
 
