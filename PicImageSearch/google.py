@@ -11,17 +11,23 @@ class Google(HandOver):
     Used for performing reverse image searches using Google service.
 
     Attributes:
-         url: The base URL for Google search.
+         base_url: The base URL for Google searches, configurable for different regions.
+            Example: `https://www.google.co.jp/searchbyimage` for searches in Japan.
     """
 
-    def __init__(self, **request_kwargs: Any):
+    def __init__(
+        self,
+        base_url: str = "https://www.google.com/searchbyimage",
+        **request_kwargs: Any,
+    ):
         """Initializes a Google API client with specified configurations.
 
         Args:
+            base_url: The base URL for Google searcher, defaults to the international version.
             **request_kwargs: Additional arguments for network requests.
         """
         super().__init__(**request_kwargs)
-        self.url = "https://www.google.com/searchbyimage"
+        self.base_url = base_url
 
     async def _navigate_page(
         self, resp: GoogleResponse, offset: int
@@ -86,12 +92,12 @@ class Google(HandOver):
         params: Dict[str, Any] = {"sbisrc": 1}
         if url:
             params["image_url"] = url
-            resp = await self.get(self.url, params=params)
+            resp = await self.get(self.base_url, params=params)
         elif file:
             files = {
                 "encoded_image": file if isinstance(file, bytes) else open(file, "rb")
             }
-            resp = await self.post(f"{self.url}/upload", data=params, files=files)
+            resp = await self.post(f"{self.base_url}/upload", data=params, files=files)
         else:
             raise ValueError("Either 'url' or 'file' must be provided")
         return GoogleResponse(resp.text, resp.url)
