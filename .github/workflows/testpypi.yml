@@ -28,7 +28,7 @@ jobs:
         run: poetry build --format sdist
 
       - name: Publish package
-        uses: pypa/gh-action-pypi-publish@v1.8.10
+        uses: pypa/gh-action-pypi-publish@v1.8.11
         with:
           user: __token__
           password: ${{ secrets.TESTPYPI_TOKEN }}
