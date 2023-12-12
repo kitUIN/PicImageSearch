@@ -9,7 +9,7 @@ from PicImageSearch.sync import Iqdb as IqdbSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test04.jpg"
-file = "images/test04.jpg"
+file = "../images/test04.jpg"
 
 
 @logger.catch()
@@ -30,17 +30,19 @@ def test_sync() -> None:
 
 
 def show_result(resp: IqdbResponse) -> None:
-    # logger.info(resp.origin)  # html страница
-    logger.info(resp.url) # Ссылка на результат поиска
+    # logger.info(resp.origin)  # Оригинальные данные
+    logger.info(resp.url)  # Ссылка на результаты поиска
     # logger.info(resp.raw[0].origin)
     logger.info(f"Описание: {resp.raw[0].content}")
-    logger.info(f"Источник: {resp.raw[0].url}")
+    logger.info(f"URL источника: {resp.raw[0].url}")
     logger.info(f"Миниатюра: {resp.raw[0].thumbnail}")
-    logger.info(f"Сходство: {resp.raw[0].similarity}")
+    logger.info(f"Степень сходства: {resp.raw[0].similarity}")
     logger.info(f"Размер изображения: {resp.raw[0].size}")
     logger.info(f"Источник изображения: {resp.raw[0].source}")
     logger.info(f"Другие источники изображения: {resp.raw[0].other_source}")
-    logger.info(f"Количество результатов с низким сходством: {len(resp.more)}")
+    logger.info(
+        f"Количество результатов с более низким уровнем сходства: {len(resp.more)}"
+    )
     logger.info("-" * 50)
 
 

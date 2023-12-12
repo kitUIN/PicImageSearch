@@ -9,7 +9,7 @@ from PicImageSearch.sync import BaiDu as BaiDuSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test02.jpg"
-file = "images/test02.jpg"
+file = "../images/test02.jpg"
 
 
 @logger.catch()
@@ -31,7 +31,7 @@ def test_sync() -> None:
 
 def show_result(resp: BaiDuResponse) -> None:
     # logger.info(resp.origin)  # 原始数据
-    logger.info(resp.url)
+    logger.info(resp.url)  # 搜索结果链接
     # logger.info(resp.raw[0].origin)
     # logger.info(resp.raw[0].similarity)  # deprecated
     # logger.info(resp.raw[0].title)  # deprecated

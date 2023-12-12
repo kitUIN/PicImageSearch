@@ -9,7 +9,7 @@ from PicImageSearch.sync import EHentai as EHentaiSync
 proxies = "http://127.0.0.1:1081"
 # proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test06.jpg"
-file = "images/test06.jpg"
+file = "../images/test06.jpg"
 
 # Note: EXHentai search requires cookies if to be used
 cookies = None

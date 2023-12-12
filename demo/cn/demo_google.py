@@ -10,7 +10,7 @@ from PicImageSearch.sync import Google as GoogleSync
 proxies = "http://127.0.0.1:1080"
 # proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test03.jpg"
-file = "images/test03.jpg"
+file = "../images/test03.jpg"
 base_url = "https://www.google.co.jp/searchbyimage"
 
 
@@ -49,8 +49,7 @@ def show_result(resp: Optional[GoogleResponse]) -> None:
     logger.info(len(resp.pages))
     logger.info(resp.url)  # 搜索结果链接
     logger.info(resp.page_number)
-    
-    
+
     # 尝试获取带有缩略图的第一个结果
     selected = next((i for i in resp.raw if i.thumbnail), resp.raw[0])
     logger.info(selected.origin)

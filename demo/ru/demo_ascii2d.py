@@ -9,9 +9,10 @@ from PicImageSearch.sync import Ascii2D as Ascii2DSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-file = "images/test01.jpg"
-bovw = False  # Использовать или нет поиск по описанию изображения
+file = "../images/test01.jpg"
+bovw = False  # Использовать ли поиск по особенностям изображения
 verify_ssl = True  # Проверять ли SSL-сертификаты
+
 
 @logger.catch()
 async def test_async() -> None:
@@ -21,6 +22,7 @@ async def test_async() -> None:
         resp = await ascii2d.search(file=file)
         show_result(resp)
 
+
 @logger.catch()
 def test_sync() -> None:
     ascii2d = Ascii2DSync(proxies=proxies, verify_ssl=verify_ssl, bovw=bovw)
@@ -28,9 +30,10 @@ def test_sync() -> None:
     # resp = ascii2d.search(file=file)
     show_result(resp)  # type: ignore
 
+
 def show_result(resp: Ascii2DResponse) -> None:
-    # logger.info(resp.origin)  # html страница
-    logger.info(resp.url)  # Ссылка на результат поиска
+    # logger.info(resp.origin)  # Оригинальные данные
+    logger.info(resp.url)  # Ссылка на результаты поиска
     selected = next((i for i in resp.raw if i.title or i.url_list), resp.raw[0])
     logger.info(selected.origin)
     logger.info(selected.thumbnail)
@@ -42,6 +45,7 @@ def show_result(resp: Ascii2DResponse) -> None:
     logger.info(selected.hash)
     logger.info(selected.detail)
     logger.info("-" * 50)
+
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

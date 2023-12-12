@@ -9,7 +9,7 @@ from PicImageSearch.sync import SauceNAO as SauceNAOSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-file = "images/test01.jpg"
+file = "../images/test01.jpg"
 api_key = "a4ab3f81009b003528f7e31aed187fa32a063f58"
 
 
@@ -32,7 +32,7 @@ def test_sync() -> None:
 
 def show_result(resp: SauceNAOResponse) -> None:
     logger.info(resp.status_code)  # HTTP status
-    logger.info(resp.origin)  # html страница
+    logger.info(resp.origin)  # Original Data
     logger.info(resp.url)  # Link to search results
     logger.info(resp.raw[0].origin)
     logger.info(resp.long_remaining)

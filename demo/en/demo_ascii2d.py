@@ -9,7 +9,7 @@ from PicImageSearch.sync import Ascii2D as Ascii2DSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-file = "images/test01.jpg"
+file = "../images/test01.jpg"
 bovw = False  # Use feature search or not
 verify_ssl = True  # Whether to verify SSL certificates or not
 

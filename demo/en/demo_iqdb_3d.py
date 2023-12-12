@@ -9,7 +9,7 @@ from PicImageSearch.sync import Iqdb as IqdbSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test04.jpg"
-file = "images/test04.jpg"
+file = "../images/test04.jpg"
 
 
 @logger.catch()
@@ -31,16 +31,16 @@ def test_sync() -> None:
 
 def show_result(resp: IqdbResponse) -> None:
     # logger.info(resp.origin)  # Original Data
-    logger.info(resp.url)
+    logger.info(resp.url)  # Link to search results
     # logger.info(resp.raw[0].origin)
-    logger.info(f"说明: {resp.raw[0].content}")
-    logger.info(f"来源地址: {resp.raw[0].url}")
-    logger.info(f"缩略图: {resp.raw[0].thumbnail}")
-    logger.info(f"相似度: {resp.raw[0].similarity}")
-    logger.info(f"图片大小: {resp.raw[0].size}")
-    logger.info(f"图片来源: {resp.raw[0].source}")
-    logger.info(f"其他图片来源: {resp.raw[0].other_source}")
-    logger.info(f"相似度低的结果有多少: {len(resp.more)}")
+    logger.info(f"Description: {resp.raw[0].content}")
+    logger.info(f"Source URL: {resp.raw[0].url}")
+    logger.info(f"Thumbnail: {resp.raw[0].thumbnail}")
+    logger.info(f"Similarity: {resp.raw[0].similarity}")
+    logger.info(f"Image Size: {resp.raw[0].size}")
+    logger.info(f"Image Source: {resp.raw[0].source}")
+    logger.info(f"Other Image Sources: {resp.raw[0].other_source}")
+    logger.info(f"Number of Results with Lower Similarity: {len(resp.more)}")
     logger.info("-" * 50)
 
 

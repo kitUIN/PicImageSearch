@@ -1,6 +1,7 @@
 <div align="center">
 
 # PicImageSearch
+
 Read this in other languages: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md)
 
 ✨ Reverse Image Search Aggregator ✨
@@ -19,9 +20,9 @@ Read this in other languages: [English](README.md), [中文](README.cn.md), [Р�
     <img src="https://img.shields.io/github/issues/kitUIN/PicImageSearch" alt="issues">
 </a>
 
-<a href="https://pic-image-search.kituin.fun/">📖Documentation</a>
+<a href="https://pic-image-search.kituin.fun/">📖 Documentation</a>
 ·
-<a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛Submit Issue</a>
+<a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 Submit Issue</a>
 
 </div>
 

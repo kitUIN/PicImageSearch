@@ -9,7 +9,7 @@ from PicImageSearch.sync import TraceMoe as TraceMoeSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test05.jpg"
-file = "images/test05.jpg"
+file = "../images/test05.jpg"
 
 
 @logger.catch()
@@ -30,7 +30,7 @@ def test_sync() -> None:
 
 
 def show_result(resp: TraceMoeResponse) -> None:
-    # logger.info(resp.origin)  # html страница
+    # logger.info(resp.origin)  # Оригинальные данные
     logger.info(resp.raw[0].origin)
     logger.info(resp.raw[0].anime_info)
     logger.info(resp.frameCount)

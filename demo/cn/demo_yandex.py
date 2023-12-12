@@ -9,7 +9,7 @@ from PicImageSearch.sync import Yandex as YandexSync
 proxies = "http://127.0.0.1:1081"
 # proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test06.jpg"
-file = "images/test06.jpg"
+file = "../images/test06.jpg"
 
 
 @logger.catch()
