@@ -9,11 +9,11 @@ from PicImageSearch.sync import TraceMoe as TraceMoeSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test05.jpg"
-file = "images/test05.jpg"
+file = "../images/test05.jpg"
 
 
 @logger.catch()
-async def test() -> None:
+async def test_async() -> None:
     async with Network(proxies=proxies) as client:
         tracemoe = TraceMoe(client=client, mute=False, size=None)
         # resp = await tracemoe.search(url=url)
@@ -30,7 +30,7 @@ def test_sync() -> None:
 
 
 def show_result(resp: TraceMoeResponse) -> None:
-    # logger.info(resp.origin)  # 原始数据
+    # logger.info(resp.origin)  # Original Data
     logger.info(resp.raw[0].origin)
     logger.info(resp.raw[0].anime_info)
     logger.info(resp.frameCount)
@@ -58,5 +58,5 @@ def show_result(resp: TraceMoeResponse) -> None:
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(test())
+    loop.run_until_complete(test_async())
     # test_sync()

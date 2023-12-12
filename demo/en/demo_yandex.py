@@ -9,11 +9,11 @@ from PicImageSearch.sync import Yandex as YandexSync
 proxies = "http://127.0.0.1:1081"
 # proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test06.jpg"
-file = "images/test06.jpg"
+file = "../images/test06.jpg"
 
 
 @logger.catch()
-async def test() -> None:
+async def test_async() -> None:
     async with Network(proxies=proxies) as client:
         yandex = Yandex(client=client)
         # resp = await yandex.search(url=url)
@@ -30,8 +30,8 @@ def test_sync() -> None:
 
 
 def show_result(resp: YandexResponse) -> None:
-    # logger.info(resp.origin)  # 原始数据 (Original data)
-    logger.info(resp.url)  # 搜索结果链接 (Link to search results)
+    # logger.info(resp.origin)  # Original data
+    logger.info(resp.url)  # Link to search results
     # logger.info(resp.raw[0].origin)
     logger.info(resp.raw[0].title)
     logger.info(resp.raw[0].url)
@@ -44,5 +44,5 @@ def show_result(resp: YandexResponse) -> None:
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(test())
+    loop.run_until_complete(test_async())
     # test_sync()

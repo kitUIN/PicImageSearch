@@ -2,7 +2,8 @@
 
 # PicImageSearch
 
-✨ 聚合识图引擎 用于以图搜源 ✨  
+Read this in other languages: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md)
+
 ✨ Reverse Image Search Aggregator ✨
 
 <a href="https://raw.githubusercontent.com/kitUIN/PicImageSearch/master/LICENSE">
@@ -19,13 +20,13 @@
     <img src="https://img.shields.io/github/issues/kitUIN/PicImageSearch" alt="issues">
 </a>
 
-<a href="https://pic-image-search.kituin.fun/">📖文档 / Documentation</a>
+<a href="https://pic-image-search.kituin.fun/">📖 Documentation</a>
 ·
-<a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛提交问题 / Submit Issue</a>
+<a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 Submit Issue</a>
 
 </div>
 
-## 支持 / Support
+## Support
 
 | Engine   | Website                          |
 |----------|----------------------------------|
@@ -39,27 +40,14 @@
 | TraceMoe | https://trace.moe/               |
 | Yandex   | https://yandex.com/images/search |
 
-## 简要说明 / Usage
+## Usage
 
-详细见 [文档](https://pic-image-search.kituin.fun/) 或者 [demo 代码](https://github.com/kitUIN/PicImageSearch/tree/main/demo)。  
-`同步`请使用 `from PicImageSearch.sync import ...` 导入。  
-`异步`请使用 `from PicImageSearch import Network,...` 导入。  
-**推荐使用异步。**
-
----
-
-For details, see the [documentation](https://pic-image-search.kituin.fun/) or the [demo codes](https://github.com/kitUIN/PicImageSearch/tree/main/demo).  
+For details, see the [documentation](https://pic-image-search.kituin.fun/) or the [demo codes](demo/en/).  
 For synchronous usage, import with `from PicImageSearch.sync import ...` .  
 For asynchronous usage, import with `from PicImageSearch import Network,...` .  
 **Asynchronous usage is recommended.**
 
-### 安装 / Installation
-
-- 需要 Python 3.8 或更新版本。
-- 安装：`pip install PicImageSearch`
-- 或使用清华镜像：`pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
-
----
+### Installation
 
 - Requires Python 3.8 or later.
 - Install: `pip install PicImageSearch`

@@ -9,12 +9,12 @@ from PicImageSearch.sync import SauceNAO as SauceNAOSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-file = "images/test01.jpg"
+file = "../images/test01.jpg"
 api_key = "a4ab3f81009b003528f7e31aed187fa32a063f58"
 
 
 @logger.catch()
-async def test() -> None:
+async def test_async() -> None:
     async with Network(proxies=proxies) as client:
         saucenao = SauceNAO(client=client, api_key=api_key, hide=3)
         # resp = await saucenao.search(url=url)
@@ -33,7 +33,7 @@ def test_sync() -> None:
 def show_result(resp: SauceNAOResponse) -> None:
     logger.info(resp.status_code)  # HTTP 状态码
     logger.info(resp.origin)  # 原始数据
-    logger.info(resp.url)
+    logger.info(resp.url)  # 搜索结果链接
     logger.info(resp.raw[0].origin)
     logger.info(resp.long_remaining)
     logger.info(resp.short_remaining)
@@ -51,5 +51,5 @@ def show_result(resp: SauceNAOResponse) -> None:
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(test())
+    loop.run_until_complete(test_async())
     # test_sync()

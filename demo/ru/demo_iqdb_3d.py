@@ -9,11 +9,11 @@ from PicImageSearch.sync import Iqdb as IqdbSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test04.jpg"
-file = "images/test04.jpg"
+file = "../images/test04.jpg"
 
 
 @logger.catch()
-async def test() -> None:
+async def test_async() -> None:
     async with Network(proxies=proxies) as client:
         iqdb = Iqdb(client=client)
         # resp = await iqdb.search(url=url, is_3d=True)
@@ -30,21 +30,23 @@ def test_sync() -> None:
 
 
 def show_result(resp: IqdbResponse) -> None:
-    # logger.info(resp.origin)  # 原始数据
-    logger.info(resp.url)
+    # logger.info(resp.origin)  # Оригинальные данные
+    logger.info(resp.url)  # Ссылка на результаты поиска
     # logger.info(resp.raw[0].origin)
-    logger.info(f"说明: {resp.raw[0].content}")
-    logger.info(f"来源地址: {resp.raw[0].url}")
-    logger.info(f"缩略图: {resp.raw[0].thumbnail}")
-    logger.info(f"相似度: {resp.raw[0].similarity}")
-    logger.info(f"图片大小: {resp.raw[0].size}")
-    logger.info(f"图片来源: {resp.raw[0].source}")
-    logger.info(f"其他图片来源: {resp.raw[0].other_source}")
-    logger.info(f"相似度低的结果有多少: {len(resp.more)}")
+    logger.info(f"Описание: {resp.raw[0].content}")
+    logger.info(f"URL источника: {resp.raw[0].url}")
+    logger.info(f"Миниатюра: {resp.raw[0].thumbnail}")
+    logger.info(f"Степень сходства: {resp.raw[0].similarity}")
+    logger.info(f"Размер изображения: {resp.raw[0].size}")
+    logger.info(f"Источник изображения: {resp.raw[0].source}")
+    logger.info(f"Другие источники изображения: {resp.raw[0].other_source}")
+    logger.info(
+        f"Количество результатов с более низким уровнем сходства: {len(resp.more)}"
+    )
     logger.info("-" * 50)
 
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(test())
+    loop.run_until_complete(test_async())
     # test_sync()

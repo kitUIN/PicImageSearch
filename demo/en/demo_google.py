@@ -10,12 +10,12 @@ from PicImageSearch.sync import Google as GoogleSync
 proxies = "http://127.0.0.1:1080"
 # proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test03.jpg"
-file = "images/test03.jpg"
+file = "../images/test03.jpg"
 base_url = "https://www.google.co.jp/searchbyimage"
 
 
 @logger.catch()
-async def test() -> None:
+async def test_async() -> None:
     async with Network(proxies=proxies) as client:
         google = Google(client=client, base_url=base_url)
         # resp = await google.search(url=url)
@@ -47,8 +47,9 @@ def show_result(resp: Optional[GoogleResponse]) -> None:
     # logger.info(resp.origin)  # Original Data
     logger.info(resp.pages)
     logger.info(len(resp.pages))
-    logger.info(resp.url)
+    logger.info(resp.url)  # Link to search results
     logger.info(resp.page_number)
+
     # try to get first result with thumbnail
     selected = next((i for i in resp.raw if i.thumbnail), resp.raw[0])
     logger.info(selected.origin)
@@ -60,5 +61,5 @@ def show_result(resp: Optional[GoogleResponse]) -> None:
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(test())
+    loop.run_until_complete(test_async())
     # test_sync()

@@ -9,13 +9,13 @@ from PicImageSearch.sync import Ascii2D as Ascii2DSync
 # proxies = "http://127.0.0.1:1081"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-file = "images/test01.jpg"
-bovw = False  # 是否使用特征检索 (Use feature search or not)
-verify_ssl = True  # 是否校验 SSL 证书 (Whether to verify SSL certificates or not)
+file = "../images/test01.jpg"
+bovw = False  # Использовать ли поиск по особенностям изображения
+verify_ssl = True  # Проверять ли SSL-сертификаты
 
 
 @logger.catch()
-async def test() -> None:
+async def test_async() -> None:
     async with Network(proxies=proxies, verify_ssl=verify_ssl) as client:
         ascii2d = Ascii2D(client=client, bovw=bovw)
         # resp = await ascii2d.search(url=url)
@@ -32,8 +32,8 @@ def test_sync() -> None:
 
 
 def show_result(resp: Ascii2DResponse) -> None:
-    # logger.info(resp.origin)  # 原始数据 (Original data)
-    logger.info(resp.url)  # 搜索结果链接 (Link to search results)
+    # logger.info(resp.origin)  # Оригинальные данные
+    logger.info(resp.url)  # Ссылка на результаты поиска
     selected = next((i for i in resp.raw if i.title or i.url_list), resp.raw[0])
     logger.info(selected.origin)
     logger.info(selected.thumbnail)
@@ -49,5 +49,5 @@ def show_result(resp: Ascii2DResponse) -> None:
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(test())
+    loop.run_until_complete(test_async())
     # test_sync()
