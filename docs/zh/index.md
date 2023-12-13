@@ -2,10 +2,12 @@
 home: true
 
 heroText: PicImageSearch
-tagline: ✨ Reverse Image Search Aggregator ✨
-actionText: Start Using →
-actionLink: /wiki/picimagesearch/
-bannerBg: none
+tagline: ✨ 聚合识图引擎 用于以图搜源 ✨
+actionText: 开始使用 →
+actionLink: /wiki/picimagesearch/zh/
+bannerBg: none # auto => 网格纹背景 (有 bodyBgImg 时无背景)，默认 | none => 无 | '大图地址' | background: 自定义背景样式       提示：如发现文本颜色不适应你的背景时可以到 palette.styl 修改 $bannerTextColor 变量
+
+# 文章列表显示方式: detailed 默认，显示详细版文章列表（包括作者、分类、标签、摘要、分页等）| simple => 显示简约版文章列表（仅标题和日期）| none 不显示文章列表
 postList: none
 ---
 
@@ -25,12 +27,12 @@ postList: none
   </a>
  </p>
 <p align="center">
-  <a href="https://github.com/kitUIN/PicImageSearch/compare/">✅ Submit PR</a>
+  <a href="https://github.com/kitUIN/PicImageSearch/compare/">✅ 提交 PR </a>
   ·
-  <a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 Submit Issue </a>
+  <a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 提交问题 </a>
 </p>
 
-## 🎉 Supported Reverse Image Search Engines
+## 🎉 已支持的搜索引擎
 
 ::: cardList 3
 
@@ -54,7 +56,7 @@ postList: none
   bgColor: '#0b45c6'
   textColor: '#eed9db'
 - name: Google
-  desc: 'Google Images'
+  desc: 'Google 图片'
   avatar: /img/google.png
   link: https://www.google.com/imghp
   bgColor: '#170134'
@@ -87,43 +89,43 @@ postList: none
 
 :::
 
-## 🎖 Contributors to this project
+## 🎖 项目贡献者
 
 ::: cardList 3
 
 ```yaml
 - name: NekoAria(Neko Aria)
-  desc: Primary Maintainer of the Project
+  desc: 项目主要维护者
   avatar: https://avatars.githubusercontent.com/u/23137034?v=4
   link: https://github.com/NekoAria
   bgColor: '#e0f4b1'
   textColor: '#4b688d'
 - name: kitUIN(Nacho)
-  desc: Project Owner
+  desc: 项目拥有者
   avatar: /img/logo.png
   link: https://github.com/kitUIN
   bgColor: '#5541ec'
   textColor: '#e0dedf'
 - name: lleans
-  desc: Project Contributors
+  desc: 项目贡献者
   avatar: https://avatars.githubusercontent.com/u/68429210?v=4
   link: https://github.com/lleans
   bgColor: '#353047'
   textColor: '#fa8a16'
 - name: chinoll(Chinoll)
-  desc: Project Contributors
+  desc: 项目贡献者
   avatar: https://avatars.githubusercontent.com/u/22575232?v=4
   link: https://github.com/chinoll
   bgColor: '#c40318'
   textColor: '#eed9de'
 - name: Nachtalb
-  desc: Project Contributors
+  desc: 项目贡献者
   avatar: https://avatars.githubusercontent.com/u/9467802?v=4
   link: https://github.com/Nachtalb
   bgColor: '#4cbaaf'
   textColor: '#271015'
 - name: Peloxerat
-  desc: Project Contributors
+  desc: 项目贡献者
   avatar: https://avatars.githubusercontent.com/u/135450017?v=4
   link: https://github.com/Peloxerat
   bgColor: '#071e93'

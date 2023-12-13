@@ -2,35 +2,35 @@
 home: true
 
 heroText: PicImageSearch
-tagline: ✨ Reverse Image Search Aggregator ✨
-actionText: Start Using →
-actionLink: /wiki/picimagesearch/
+tagline: ✨ Агрегатор Обратного Поиска Изображений ✨
+actionText: Начать использование →
+actionLink: /wiki/picimagesearch/ru/
 bannerBg: none
 postList: none
 ---
 
 <p align="center">
   <a href="https://raw.githubusercontent.com/kitUIN/PicImageSearch/master/LICENSE">
-    <img src="https://img.shields.io/github/license/kitUIN/PicImageSearch" alt="license">
+    <img src="https://img.shields.io/github/license/kitUIN/PicImageSearch" alt="лицензия">
   </a>
   <a href="https://pypi.python.org/pypi/PicImageSearch">
     <img src="https://img.shields.io/pypi/v/PicImageSearch" alt="pypi">
   </a>
   <img src="https://img.shields.io/badge/python-3.7+-blue" alt="python">
   <a href="https://github.com/kitUIN/PicImageSearch/releases">
-    <img src="https://img.shields.io/github/v/release/kitUIN/PicImageSearch" alt="release">
+    <img src="https://img.shields.io/github/v/release/kitUIN/PicImageSearch" alt="версия">
   </a>
   <a href="https://github.com/kitUIN/PicImageSearch/issues">
-    <img src="https://img.shields.io/github/issues/kitUIN/PicImageSearch" alt="release">
+    <img src="https://img.shields.io/github/issues/kitUIN/PicImageSearch" alt="проблемы">
   </a>
  </p>
 <p align="center">
-  <a href="https://github.com/kitUIN/PicImageSearch/compare/">✅ Submit PR</a>
+  <a href="https://github.com/kitUIN/PicImageSearch/compare/">✅ Отправить PR</a>
   ·
-  <a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 Submit Issue </a>
+  <a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 Сообщить о Проблеме </a>
 </p>
 
-## 🎉 Supported Reverse Image Search Engines
+## 🎉 Поддерживаемые поисковые системы по обратному поиску изображений
 
 ::: cardList 3
 
@@ -54,7 +54,7 @@ postList: none
   bgColor: '#0b45c6'
   textColor: '#eed9db'
 - name: Google
-  desc: 'Google Images'
+  desc: 'Картинки Google'
   avatar: /img/google.png
   link: https://www.google.com/imghp
   bgColor: '#170134'
@@ -87,43 +87,43 @@ postList: none
 
 :::
 
-## 🎖 Contributors to this project
+## 🎖 Участники этого проекта
 
 ::: cardList 3
 
 ```yaml
 - name: NekoAria(Neko Aria)
-  desc: Primary Maintainer of the Project
+  desc: Основной Сопровождающий Проекта
   avatar: https://avatars.githubusercontent.com/u/23137034?v=4
   link: https://github.com/NekoAria
   bgColor: '#e0f4b1'
   textColor: '#4b688d'
 - name: kitUIN(Nacho)
-  desc: Project Owner
+  desc: Владелец Проекта
   avatar: /img/logo.png
   link: https://github.com/kitUIN
   bgColor: '#5541ec'
   textColor: '#e0dedf'
 - name: lleans
-  desc: Project Contributors
+  desc: Участники Проекта
   avatar: https://avatars.githubusercontent.com/u/68429210?v=4
   link: https://github.com/lleans
   bgColor: '#353047'
   textColor: '#fa8a16'
 - name: chinoll(Chinoll)
-  desc: Project Contributors
+  desc: Участники Проекта
   avatar: https://avatars.githubusercontent.com/u/22575232?v=4
   link: https://github.com/chinoll
   bgColor: '#c40318'
   textColor: '#eed9de'
 - name: Nachtalb
-  desc: Project Contributors
+  desc: Участники Проекта
   avatar: https://avatars.githubusercontent.com/u/9467802?v=4
   link: https://github.com/Nachtalb
   bgColor: '#4cbaaf'
   textColor: '#271015'
 - name: Peloxerat
-  desc: Project Contributors
+  desc: Участники Проекта
   avatar: https://avatars.githubusercontent.com/u/135450017?v=4
   link: https://github.com/Peloxerat
   bgColor: '#071e93'
