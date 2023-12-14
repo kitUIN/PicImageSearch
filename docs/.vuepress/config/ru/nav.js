@@ -1,16 +1,16 @@
 module.exports = [
-    {text: '🏠 Главная страница', link: '/'},
+    {text: '🏠 Главная страница', link: '/ru/'},
     {
-        text: '🔍 API', link: '/wiki/picimagesearch/zh/', items: [
-            {text: 'Ascii2D', link: '/wiki/picimagesearch/zh/Ascii2D/DataStructure/'},
-            {text: 'Baidu', link: '/wiki/picimagesearch/zh/Baidu/DataStructure/'},
-            {text: 'E-Hentai', link: '/wiki/picimagesearch/zh/E-Hentai/DataStructure/'},
-            {text: 'Google', link: '/wiki/picimagesearch/zh/Google/DataStructure/'},
-            {text: 'IQDB', link: '/wiki/picimagesearch/zh/Iqdb/DataStructure/'},
-            {text: 'SauceNAO', link: '/wiki/picimagesearch/zh/SauceNAO/DataStructure/'},
-            {text: 'TraceMoe', link: '/wiki/picimagesearch/zh/TraceMoe/DataStructure/'},
-            {text: 'Yandex', link: '/wiki/picimagesearch/zh/Yandex/DataStructure/'}
+        text: '🔍 API', link: '/ru/wiki/picimagesearch/', items: [
+            {text: 'Ascii2D', link: '/ru/wiki/picimagesearch/Ascii2D/DataStructure/'},
+            {text: 'Baidu', link: '/ru/wiki/picimagesearch/Baidu/DataStructure/'},
+            {text: 'E-Hentai', link: '/ru/wiki/picimagesearch/E-Hentai/DataStructure/'},
+            {text: 'Google', link: '/ru/wiki/picimagesearch/Google/DataStructure/'},
+            {text: 'IQDB', link: '/ru/wiki/picimagesearch/Iqdb/DataStructure/'},
+            {text: 'SauceNAO', link: '/ru/wiki/picimagesearch/SauceNAO/DataStructure/'},
+            {text: 'TraceMoe', link: '/ru/wiki/picimagesearch/TraceMoe/DataStructure/'},
+            {text: 'Yandex', link: '/ru/wiki/picimagesearch/Yandex/DataStructure/'}
         ]
     },
-    {text: '🔖 Журнал изменений', link: '/wiki/picimagesearch/releases'},
+    {text: '🔖 Журнал изменений', link: '/wiki/picimagesearch/releases/'},
 ]

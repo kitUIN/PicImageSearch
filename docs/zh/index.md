@@ -1,14 +1,15 @@
 ---
 home: true
-
 heroText: PicImageSearch
 tagline: ✨ 聚合识图引擎 用于以图搜源 ✨
 actionText: 开始使用 →
-actionLink: /wiki/picimagesearch/zh/
-bannerBg: none # auto => 网格纹背景 (有 bodyBgImg 时无背景)，默认 | none => 无 | '大图地址' | background: 自定义背景样式       提示：如发现文本颜色不适应你的背景时可以到 palette.styl 修改 $bannerTextColor 变量
-
-# 文章列表显示方式: detailed 默认，显示详细版文章列表（包括作者、分类、标签、摘要、分页等）| simple => 显示简约版文章列表（仅标题和日期）| none 不显示文章列表
+actionLink: /zh/wiki/picimagesearch/
+bannerBg: none
 postList: none
+article: false
+permalink: /
+title: index
+date: 2023-12-13
 ---
 
 <p align="center">
@@ -47,7 +48,7 @@ postList: none
   desc: '百度图片'
   avatar: /img/baidu.png
   link: https://image.baidu.com/
-  bgColor: '#1afe0c'
+  bgColor: '#30e3f5'
   textColor: '#272fe3'
 - name: E-hentai
   desc: 'E-Hentai Galleries'

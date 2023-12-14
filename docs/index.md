@@ -1,12 +1,12 @@
 ---
 home: true
-
 heroText: PicImageSearch
 tagline: ✨ Reverse Image Search Aggregator ✨
 actionText: Start Using →
 actionLink: /wiki/picimagesearch/
 bannerBg: none
 postList: none
+article: false
 ---
 
 <p align="center">
@@ -25,7 +25,7 @@ postList: none
   </a>
  </p>
 <p align="center">
-  <a href="https://github.com/kitUIN/PicImageSearch/compare/">✅ Submit PR</a>
+  <a href="https://github.com/kitUIN/PicImageSearch/compare/">✅ Submit PR </a>
   ·
   <a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 Submit Issue </a>
 </p>
@@ -45,7 +45,7 @@ postList: none
   desc: '百度图片'
   avatar: /img/baidu.png
   link: https://image.baidu.com/
-  bgColor: '#1afe0c'
+  bgColor: '#30e3f5'
   textColor: '#272fe3'
 - name: E-hentai
   desc: 'E-Hentai Galleries'

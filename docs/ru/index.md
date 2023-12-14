@@ -1,12 +1,15 @@
 ---
 home: true
-
 heroText: PicImageSearch
 tagline: ✨ Агрегатор Обратного Поиска Изображений ✨
 actionText: Начать использование →
-actionLink: /wiki/picimagesearch/ru/
+actionLink: /ru/wiki/picimagesearch/
 bannerBg: none
 postList: none
+article: false
+permalink: /
+title: index
+date: 2023-12-13
 ---
 
 <p align="center">
@@ -25,7 +28,7 @@ postList: none
   </a>
  </p>
 <p align="center">
-  <a href="https://github.com/kitUIN/PicImageSearch/compare/">✅ Отправить PR</a>
+  <a href="https://github.com/kitUIN/PicImageSearch/compare/">✅ Отправить PR </a>
   ·
   <a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 Сообщить о Проблеме </a>
 </p>
@@ -45,7 +48,7 @@ postList: none
   desc: '百度图片'
   avatar: /img/baidu.png
   link: https://image.baidu.com/
-  bgColor: '#1afe0c'
+  bgColor: '#30e3f5'
   textColor: '#272fe3'
 - name: E-hentai
   desc: 'E-Hentai Galleries'
