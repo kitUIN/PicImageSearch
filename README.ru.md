@@ -28,17 +28,17 @@ Read this in other languages: [English](README.md), [中文](README.cn.md), [Р�
 
 ## Поддерживаемые сервисы
 
-| Поисковик | Веб-сайт                         |
-|-----------|----------------------------------|
-| ASCII2D   | https://ascii2d.net/             |
-| Baidu     | https://graph.baidu.com/         |
-| E-Hentai  | https://e-hentai.org/            |
-| ExHentai  | https://exhentai.org/            |
-| Google    | https://www.google.com/imghp     |
-| IQDB      | https://iqdb.org/                |
-| SauceNAO  | https://saucenao.com/            |
-| TraceMoe  | https://trace.moe/               |
-| Yandex    | https://yandex.com/images/search |
+| Поисковик | Веб-сайт                           |
+|-----------|------------------------------------|
+| ASCII2D   | <https://ascii2d.net/>             |
+| Baidu     | <https://graph.baidu.com/>         |
+| E-Hentai  | <https://e-hentai.org/>            |
+| ExHentai  | <https://exhentai.org/>            |
+| Google    | <https://www.google.com/imghp>     |
+| IQDB      | <https://iqdb.org/>                |
+| SauceNAO  | <https://saucenao.com/>            |
+| TraceMoe  | <https://trace.moe/>               |
+| Yandex    | <https://yandex.com/images/search> |
 
 ## Применение
 
