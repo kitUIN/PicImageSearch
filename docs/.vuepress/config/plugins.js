@@ -5,23 +5,23 @@ module.exports = [
     // }],
 
     ['fulltext-search'], // 全文搜索
-    [
-        'vuepress-plugin-comment-plus',
-        {
-            choosen: 'waline',
-            // options 选项中的所有参数，会传给 Waline 的配置
-            options: {
-                el: '#valine-vuepress-comment',
-                serverURL: 'https://kituin-comments.vercel.app/', //  例如 "https://***.vercel.app/"
-                path: '<%- frontmatter.commentid || frontmatter.permalink %>',
-                emoji: [
-                    'https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/weibo',
-                    'https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/bilibili',
-                ],
-                placeholder: "请留言"
-            }
-        }
-    ],
+    // [
+    //     'vuepress-plugin-comment-plus',
+    //     {
+    //         choosen: 'waline',
+    //         // options 选项中的所有参数，会传给 Waline 的配置
+    //         options: {
+    //             el: '#valine-vuepress-comment',
+    //             serverURL: 'https://kituin-comments.vercel.app/', //  例如 "https://***.vercel.app/"
+    //             path: '<%- frontmatter.commentid || frontmatter.permalink %>',
+    //             emoji: [
+    //                 'https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/weibo',
+    //                 'https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/bilibili',
+    //             ],
+    //             placeholder: "请留言"
+    //         }
+    //     }
+    // ],
     // ['thirdparty-search', { // 可以添加第三方搜索链接的搜索框（原官方搜索框的参数仍可用）
     //   thirdparty: [// 可选，默认 []
     //     {
