@@ -15,6 +15,9 @@
     "poetry",
     "pre-commit"
   ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
   "packageRules": [
     {
       "matchPackagePatterns": [
