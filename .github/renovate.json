@@ -3,10 +3,15 @@
     "config:base",
     "schedule:weekends"
   ],
+  "baseBranches": [
+    "main",
+    "docs"
+  ],
   "dependencyDashboard": false,
   "rangeStrategy": "bump",
   "enabledManagers": [
     "github-actions",
+    "npm",
     "poetry",
     "pre-commit"
   ],
@@ -40,8 +45,12 @@
     },
     {
       "description": "disable python updates for poetry manager",
-      "matchPackageNames": ["python"],
-      "matchManagers": ["poetry"],
+      "matchPackageNames": [
+        "python"
+      ],
+      "matchManagers": [
+        "poetry"
+      ],
       "enabled": false
     }
   ]
