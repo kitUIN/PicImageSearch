@@ -55,6 +55,16 @@
         "poetry"
       ],
       "enabled": false
+    },
+    {
+      "description": "temporarily disable pre-commit updates for poetry manager",
+      "matchPackageNames": [
+        "pre-commit"
+      ],
+      "matchManagers": [
+        "poetry"
+      ],
+      "enabled": false
     }
   ]
 }

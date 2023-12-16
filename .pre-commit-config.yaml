@@ -1,4 +1,4 @@
-minimum_pre_commit_version: "3.2.0"
+minimum_pre_commit_version: "3.5.0"
 files: ^.*\.py$
 repos:
   - repo: https://github.com/charliermarsh/ruff-pre-commit
