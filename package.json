@@ -11,7 +11,7 @@
   "license": "MIT",
   "devDependencies": {
     "dayjs": "^1.11.10",
-    "inquirer": "^9.2.14",
+    "inquirer": "^9.2.15",
     "json2yaml": "^1.1.0",
     "vuepress": "^1.9.10",
     "vuepress-plugin-demo-block": "^0.7.2",
