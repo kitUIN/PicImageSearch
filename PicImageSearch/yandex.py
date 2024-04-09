@@ -40,7 +40,7 @@ class Yandex(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
-        params = {"rpt": "imageview"}
+        params = {"rpt": "imageview", "cbir_page": "sites"}
         if url:
             params["url"] = url
             resp = await self.get(BASE_URL, params=params)
