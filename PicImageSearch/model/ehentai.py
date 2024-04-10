@@ -58,7 +58,7 @@ class EHentaiItem:
         self.type = _type.eq(0).text()
         self.date = data.find("[id^='posted']").eq(0).text()
         self.tags = [
-            i.text() for i in data.find("div[class=gt],div[class=gtl]").items()
+            i.attr("title") for i in data.find("div[class=gt],div[class=gtl]").items()
         ]
 
 
