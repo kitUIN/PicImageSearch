@@ -1,7 +1,9 @@
-import re
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
+
+from lxml.html import HTMLParser, fromstring
+from pyquery import PyQuery
 
 from .model import BaiDuResponse
 from .network import HandOver
@@ -20,6 +22,24 @@ class BaiDu(HandOver):
             **request_kwargs: Additional arguments for network requests.
         """
         super().__init__(**request_kwargs)
+
+    @staticmethod
+    def _extract_card_data(data: PyQuery) -> List[Dict[str, Any]]:
+        """Extract 'window.cardData' from a PyQuery object.
+
+        Args:
+            data: A PyQuery object with page HTML for parsing JavaScript data.
+
+        Returns:
+            List[Dict[str, Any]]: `A list of dictionaries for 'window.cardData' items.`
+        """
+        for script in data("script").items():
+            script_text = script.text()
+            if script_text and "window.cardData" in script_text:
+                start = script_text.find("[")
+                end = script_text.rfind("]") + 1
+                return json_loads(script_text[start:end])
+        return []
 
     async def search(
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
@@ -61,7 +81,15 @@ class BaiDu(HandOver):
         )
         next_url = (json_loads(resp.text))["data"]["url"]
         resp = await self.get(next_url)
-        final_url = resp.url
-        next_url = (re.search(r'"firstUrl":"([^"]+)"', resp.text)[1]).replace(r"\/", "/")  # type: ignore
-        resp = await self.get(next_url)
-        return BaiDuResponse(json_loads(resp.text), final_url)
+
+        utf8_parser = HTMLParser(encoding="utf-8")
+        data = PyQuery(fromstring(resp.text, parser=utf8_parser))
+        card_data = self._extract_card_data(data)
+
+        for card in card_data:
+            if card.get("cardName") == "noresult":
+                return BaiDuResponse({}, resp.url)
+            if card.get("cardName") == "simipic":
+                next_url = card["tplData"]["firstUrl"]
+                resp = await self.get(next_url)
+                return BaiDuResponse(json_loads(resp.text), resp.url)

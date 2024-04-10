@@ -45,5 +45,7 @@ class BaiDuResponse:
             resp_url: URL to the search result page.
         """
         self.origin: Dict[str, Any] = resp_json
-        self.raw: List[BaiDuItem] = [BaiDuItem(i) for i in resp_json["data"]["list"]]
+        self.raw: List[BaiDuItem] = (
+            [BaiDuItem(i) for i in resp_json["data"]["list"]] if resp_json else []
+        )
         self.url: str = resp_url
