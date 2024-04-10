@@ -89,7 +89,7 @@ class Google(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
-        params: Dict[str, Any] = {"sbisrc": 1}
+        params: Dict[str, Any] = {"sbisrc": 1, "safe": "off"}
         if url:
             params["image_url"] = url
             resp = await self.get(self.base_url, params=params)
