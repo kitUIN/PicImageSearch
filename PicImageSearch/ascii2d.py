@@ -11,6 +11,7 @@ class Ascii2D(HandOver):
     Used for performing reverse image searches using Ascii2D service.
 
     Attributes:
+        base_url: The base URL for Ascii2D searches.
         bovw: A flag to use feature search over color combination search.
 
     Note:
@@ -19,14 +20,21 @@ class Ascii2D(HandOver):
         Feature search may not yield accurate results with significantly different images.
     """
 
-    def __init__(self, bovw: bool = False, **request_kwargs: Any):
+    def __init__(
+        self,
+        base_url: str = "https://ascii2d.net",
+        bovw: bool = False,
+        **request_kwargs: Any,
+    ):
         """Initializes an Ascii2D API client with specified configurations.
 
         Args:
+            base_url: The base URL for Ascii2D searches.
             bovw: If True, use feature search; otherwise, use color combination search.
             **request_kwargs: Additional arguments for network requests.
         """
         super().__init__(**request_kwargs)
+        self.base_url = f"{base_url}/search"
         self.bovw = bovw
 
     async def search(
@@ -48,13 +56,12 @@ class Ascii2D(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
+        _url = f"{self.base_url}/uri" if url else f"{self.base_url}/file"
         if url:
-            ascii2d_url = "https://ascii2d.net/search/uri"
-            resp = await self.post(ascii2d_url, data={"uri": url})
+            resp = await self.post(_url, data={"uri": url})
         elif file:
-            ascii2d_url = "https://ascii2d.net/search/file"
             files = {"file": file if isinstance(file, bytes) else open(file, "rb")}
-            resp = await self.post(ascii2d_url, files=files)
+            resp = await self.post(_url, files=files)
         else:
             raise ValueError("Either 'url' or 'file' must be provided")
 

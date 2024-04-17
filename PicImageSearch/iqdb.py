@@ -9,15 +9,28 @@ class Iqdb(HandOver):
     """API client for the Iqdb image search engine.
 
     Used for performing reverse image searches using Iqdb service.
+
+    Attributes:
+        base_url: The base URL for Iqdb searches.
+        base_url_3d: The base URL for Iqdb 3D searches.
     """
 
-    def __init__(self, **request_kwargs: Any):
+    def __init__(
+        self,
+        base_url: str = "https://iqdb.org",
+        base_url_3d: str = "https://3d.iqdb.org",
+        **request_kwargs: Any
+    ):
         """Initializes an Iqdb API client with request configuration.
 
         Args:
+            base_url: The base URL for Iqdb searches.
+            base_url_3d: The base URL for Iqdb 3D searches.
             **request_kwargs: Additional arguments for network requests.
         """
         super().__init__(**request_kwargs)
+        self.base_url = base_url
+        self.base_url_3d = base_url_3d
 
     async def search(
         self,
@@ -47,7 +60,7 @@ class Iqdb(HandOver):
         Note:
             Search can be tailored for anime or real-life images using `is_3d` parameter.
         """
-        iqdb_url = "https://3d.iqdb.org/" if is_3d else "https://iqdb.org/"
+        iqdb_url = self.base_url_3d if is_3d else self.base_url
         data: Dict[str, Any] = {}
         if force_gray:
             data["forcegray"] = "on"

@@ -12,22 +12,22 @@ class Google(HandOver):
 
     Attributes:
          base_url: The base URL for Google searches, configurable for different regions.
-            Example: `https://www.google.co.jp/searchbyimage` for searches in Japan.
+            Example: `https://www.google.co.jp` for searches in Japan.
     """
 
     def __init__(
         self,
-        base_url: str = "https://www.google.com/searchbyimage",
+        base_url: str = "https://www.google.com",
         **request_kwargs: Any,
     ):
         """Initializes a Google API client with specified configurations.
 
         Args:
-            base_url: The base URL for Google searcher, defaults to the international version.
+            base_url: The base URL for Google searches, defaults to the international version.
             **request_kwargs: Additional arguments for network requests.
         """
         super().__init__(**request_kwargs)
-        self.base_url = base_url
+        self.base_url = f"{base_url}/searchbyimage"
 
     async def _navigate_page(
         self, resp: GoogleResponse, offset: int
@@ -89,15 +89,16 @@ class Google(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
+        _url = self.base_url if url else f"{self.base_url}/upload"
         params: Dict[str, Any] = {"sbisrc": 1, "safe": "off"}
         if url:
             params["image_url"] = url
-            resp = await self.get(self.base_url, params=params)
+            resp = await self.get(_url, params=params)
         elif file:
             files = {
                 "encoded_image": file if isinstance(file, bytes) else open(file, "rb")
             }
-            resp = await self.post(f"{self.base_url}/upload", data=params, files=files)
+            resp = await self.post(_url, data=params, files=files)
         else:
             raise ValueError("Either 'url' or 'file' must be provided")
         return GoogleResponse(resp.text, resp.url)

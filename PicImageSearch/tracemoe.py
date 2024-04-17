@@ -44,28 +44,36 @@ class TraceMoe(HandOver):
     Used for performing reverse image searches using TraceMoe service.
 
     Attributes:
+        base_url: The base URL for TraceMoe searches.
         search_url: URL for TraceMoe API endpoint for image search.
         me_url: URL for TraceMoe API endpoint to retrieve user info.
         size: Optional string indicating preview size ('s', 'm', 'l').
         mute: A flag to mute preview video in search results.
     """
 
-    search_url = "https://api.trace.moe/search"
-    me_url = "https://api.trace.moe/me"
-
     def __init__(
-        self, mute: bool = False, size: Optional[str] = None, **request_kwargs: Any
+        self,
+        base_url: str = "https://trace.moe",
+        base_url_api: str = "https://api.trace.moe",
+        mute: bool = False,
+        size: Optional[str] = None,
+        **request_kwargs: Any,
     ):
         """Initializes a TraceMoe API client with specified configurations.
 
         Args:
+            base_url: The base URL for TraceMoe searches.
+            base_url_api: The base URL for TraceMoe API searches.
             mute: If True, mutes preview video in search results.
             size: Specifies preview video size ('s', 'm', 'l').
             **request_kwargs: Additional arguments for network requests.
         """
         super().__init__(**request_kwargs)
-        self.size: Optional[str] = size
+        self.base_url = base_url
+        self.search_url = f"{base_url_api}/search"
+        self.me_url = f"{base_url_api}/me"
         self.mute: bool = mute
+        self.size: Optional[str] = size
 
     async def me(self, key: Optional[str] = None) -> TraceMoeMe:
         """Retrieves information about the user's API key usage from TraceMoe.
@@ -115,7 +123,7 @@ class TraceMoe(HandOver):
             chinese_title: If True, includes Chinese title in item info.
         """
         variables = {"id": item.anilist}
-        url = "https://trace.moe/anilist/"
+        url = f"{self.base_url}/anilist/"
         item.anime_info = json_loads(
             (
                 await self.post(

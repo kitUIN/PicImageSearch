@@ -11,6 +11,8 @@ class EHentai(HandOver):
     Used for performing reverse image searches using EHentai service.
 
     Attributes:
+        base_url: The base URL for EHentai searches.
+        base_url_ex: The base URL for EXHentai searches.
         covers: A flag to search only for covers.
         similar: A flag to enable similarity scanning.
         exp: A flag to include results from expunged galleries.
@@ -18,20 +20,26 @@ class EHentai(HandOver):
 
     def __init__(
         self,
+        base_url: str = "https://e-hentai.org",
+        base_url_ex: str = "https://exhentai.org",
         covers: bool = False,
         similar: bool = True,
         exp: bool = False,
-        **request_kwargs: Any
+        **request_kwargs: Any,
     ):
         """Initializes an EHentai API client with specified configurations.
 
         Args:
+            base_url: The base URL for EHentai searches.
+            base_url_ex: The base URL for EXHentai searches.
             covers: If True, search only for covers; otherwise, False.
             similar: If True, enable similarity scanning; otherwise, False.
             exp: If True, include results from expunged galleries; otherwise, False.
             **request_kwargs: Additional arguments for network requests.
         """
         super().__init__(**request_kwargs)
+        self.base_url = base_url
+        self.base_url_ex = base_url_ex
         self.covers: bool = covers
         self.similar: bool = similar
         self.exp: bool = exp
@@ -63,9 +71,9 @@ class EHentai(HandOver):
             Searching on exhentai.org requires logged-in status via cookies in `EHentai.request_kwargs`.
         """
         _url: str = (
-            "https://exhentai.org/upld/image_lookup.php"
+            f"{self.base_url_ex}/upld/image_lookup.php"
             if ex
-            else "https://upld.e-hentai.org/image_lookup.php"
+            else f"{self.base_url}/upld/image_lookup.php"
         )
         data: Dict[str, Any] = {"f_sfile": "search"}
         if url:

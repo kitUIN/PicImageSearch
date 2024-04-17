@@ -11,7 +11,7 @@ proxies = "http://127.0.0.1:1080"
 # proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test03.jpg"
 file = "../images/test03.jpg"
-base_url = "https://www.google.co.jp/searchbyimage"
+base_url = "https://www.google.co.jp"
 
 
 @logger.catch()
