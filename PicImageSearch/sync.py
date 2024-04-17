@@ -4,6 +4,7 @@ Useful for scripts, with low runtime overhead. Ideal for synchronous calls prefe
 
 Automatically wraps asynchronous methods of specified classes, enabling synchronous calls.
 """
+
 import asyncio
 import functools
 import inspect

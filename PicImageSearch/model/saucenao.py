@@ -104,9 +104,11 @@ class SauceNAOItem:
         return (
             next(
                 (
-                    ", ".join(data[i])
-                    if i == "creator" and isinstance(data[i], list)
-                    else data[i]
+                    (
+                        ", ".join(data[i])
+                        if i == "creator" and isinstance(data[i], list)
+                        else data[i]
+                    )
                     for i in [
                         "author",
                         "member_name",
