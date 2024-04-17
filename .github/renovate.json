@@ -15,6 +15,9 @@
     "poetry",
     "pre-commit"
   ],
+  "pre-commit": {
+    "enabled": true
+  },
   "lockFileMaintenance": {
     "enabled": true
   },
@@ -50,16 +53,6 @@
       "description": "disable python updates for poetry manager",
       "matchPackageNames": [
         "python"
-      ],
-      "matchManagers": [
-        "poetry"
-      ],
-      "enabled": false
-    },
-    {
-      "description": "temporarily disable pre-commit updates for poetry manager",
-      "matchPackageNames": [
-        "pre-commit"
       ],
       "matchManagers": [
         "poetry"
