@@ -20,8 +20,8 @@ class EHentai(HandOver):
 
     def __init__(
         self,
-        base_url: str = "https://e-hentai.org",
-        base_url_ex: str = "https://exhentai.org",
+        base_url: str = "https://upld.e-hentai.org",
+        base_url_ex: str = "https://upld.exhentai.org",
         covers: bool = False,
         similar: bool = True,
         exp: bool = False,
