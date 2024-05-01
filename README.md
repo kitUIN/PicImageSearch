@@ -12,7 +12,7 @@ Read this in other languages: [English](README.md), [中文](README.cn.md), [Р�
 <a href="https://pypi.python.org/pypi/PicImageSearch">
     <img src="https://img.shields.io/pypi/v/PicImageSearch" alt="pypi">
 </a>
-<img src="https://img.shields.io/badge/python-3.8+-blue" alt="python">
+<img src="https://img.shields.io/badge/python-3.9+-blue" alt="python">
 <a href="https://github.com/kitUIN/PicImageSearch/releases">
     <img src="https://img.shields.io/github/v/release/kitUIN/PicImageSearch" alt="release">
 </a>
