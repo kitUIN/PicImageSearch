@@ -768,4 +768,4 @@ socks = ["socksio"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "39b1ace789c11b8334f0afc8049cdd1feb6ce688cc45e4f36cd0cc9b674c8999"
+content-hash = "31d06a2909fa06052457d28855fdf8dc8c77a3d7306e70d58f055de490f76467"

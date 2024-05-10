@@ -47,7 +47,7 @@ strict = true
 
 [tool.ruff]
 select = ["F", "E", "W", "I", "UP"]
-target-version = "py38"
+target-version = "py39"
 line-length = 120
 
 [tool.ruff.per-file-ignores]
