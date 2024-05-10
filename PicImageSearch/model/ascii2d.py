@@ -5,7 +5,15 @@ from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
 BASE_URL = "https://ascii2d.net"
-SUPPORTED_SOURCES = ["pixiv", "twitter", "fanbox", "fantia", "ニコニコ静画", "ニジエ"]
+SUPPORTED_SOURCES = [
+    "fanbox",
+    "fantia",
+    "pixiv",
+    "twitter",
+    "げっちゅ屋",
+    "ニコニコ静画",
+    "ニジエ",
+]
 URL = namedtuple("URL", ["href", "text"])
 
 
