@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "PicImageSearch"
-version = "3.10.1"
+version = "3.10.2"
 description = "PicImageSearch APIs for Python 3.x 适用于 Python 3 以图搜源整合API"
 authors = ["kitUIN <kulujun@gmail.com>"]
 maintainers = ["kitUIN <kulujun@gmail.com>", "lleans", "chinoll", "NekoAria"]
