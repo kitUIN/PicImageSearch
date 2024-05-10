@@ -49,7 +49,7 @@ For asynchronous usage, import with `from PicImageSearch import Network,...` .
 
 ### Installation
 
-- Requires Python 3.8 or later.
+- Requires Python 3.9 or later.
 - Install: `pip install PicImageSearch`
 - Or use Tsinghua mirror: `pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
 

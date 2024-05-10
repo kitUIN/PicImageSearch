@@ -38,7 +38,7 @@ pre-commit = "^3.7.0"
 ruff = "^0.4.3"
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 ignore_missing_imports = true
 implicit_reexport = true
 pretty = true

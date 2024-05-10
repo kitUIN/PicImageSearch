@@ -12,7 +12,7 @@ Read this in other languages: [English](README.md), [中文](README.cn.md), [Р�
 <a href="https://pypi.python.org/pypi/PicImageSearch">
     <img src="https://img.shields.io/pypi/v/PicImageSearch" alt="pypi">
 </a>
-<img src="https://img.shields.io/badge/python-3.8+-blue" alt="python">
+<img src="https://img.shields.io/badge/python-3.9+-blue" alt="python">
 <a href="https://github.com/kitUIN/PicImageSearch/releases">
     <img src="https://img.shields.io/github/v/release/kitUIN/PicImageSearch" alt="release">
 </a>
@@ -49,7 +49,7 @@ Read this in other languages: [English](README.md), [中文](README.cn.md), [Р�
 
 ### 安装
 
-- 需要 Python 3.8 或更新版本。
+- 需要 Python 3.9 或更新版本。
 - 安装：`pip install PicImageSearch`
 - 或使用清华镜像：`pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
 
