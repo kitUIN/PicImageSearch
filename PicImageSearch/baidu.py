@@ -38,7 +38,7 @@ class BaiDu(HandOver):
             if script_text and "window.cardData" in script_text:
                 start = script_text.find("[")
                 end = script_text.rfind("]") + 1
-                return json_loads(script_text[start:end])
+                return json_loads(script_text[start:end])  # type: ignore
         return []
 
     async def search(
@@ -93,3 +93,5 @@ class BaiDu(HandOver):
                 next_url = card["tplData"]["firstUrl"]
                 resp = await self.get(next_url)
                 return BaiDuResponse(json_loads(resp.text), resp.url)
+
+        return BaiDuResponse({}, resp.url)
