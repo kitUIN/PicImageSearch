@@ -1,6 +1,6 @@
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 from httpx import QueryParams
 
@@ -30,7 +30,7 @@ class SauceNAO(HandOver):
         dbmask: Optional[int] = None,
         dbmaski: Optional[int] = None,
         db: int = 999,
-        dbs: Optional[List[int]] = None,
+        dbs: Optional[list[int]] = None,
         **request_kwargs: Any,
     ):
         """Initializes a SauceNAO API client with specified configurations.
@@ -57,7 +57,7 @@ class SauceNAO(HandOver):
         """
         super().__init__(**request_kwargs)
         self.base_url = f"{base_url}/search.php"
-        params: Dict[str, Any] = {
+        params: dict[str, Any] = {
             "testmode": testmode,
             "numres": numres,
             "output_type": output_type,
@@ -97,7 +97,7 @@ class SauceNAO(HandOver):
             ValueError: If neither 'url' nor 'file' is provided.
         """
         params = self.params
-        files: Optional[Dict[str, Any]] = None
+        files: Optional[dict[str, Any]] = None
         if url:
             params = params.add("url", url)
         elif file:

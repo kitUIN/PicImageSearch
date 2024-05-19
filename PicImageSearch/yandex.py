@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from .model import YandexResponse
 from .network import HandOver
@@ -52,7 +52,7 @@ class Yandex(HandOver):
             params["url"] = url
             resp = await self.get(self.base_url, params=params)
         elif file:
-            files: Dict[str, Any] = {
+            files: dict[str, Any] = {
                 "upfile": file if isinstance(file, bytes) else open(file, "rb")
             }
             resp = await self.post(

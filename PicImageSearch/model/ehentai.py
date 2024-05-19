@@ -1,5 +1,3 @@
-from typing import List
-
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
@@ -31,7 +29,7 @@ class EHentaiItem:
         self.title: str = ""
         self.type: str = ""
         self.date: str = ""
-        self.tags: List[str] = []
+        self.tags: list[str] = []
         self._arrange(data)
 
     def _arrange(self, data: PyQuery) -> None:

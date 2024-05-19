@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from .model import EHentaiResponse
 from .network import HandOver
@@ -75,9 +75,9 @@ class EHentai(HandOver):
             if ex
             else f"{self.base_url}/upld/image_lookup.php"
         )
-        data: Dict[str, Any] = {"f_sfile": "search"}
+        data: dict[str, Any] = {"f_sfile": "search"}
         if url:
-            files: Dict[str, Any] = {"sfile": await self.download(url)}
+            files: dict[str, Any] = {"sfile": await self.download(url)}
         elif file:
             files = {"sfile": file if isinstance(file, bytes) else open(file, "rb")}
         else:

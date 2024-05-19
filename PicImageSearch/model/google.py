@@ -1,5 +1,5 @@
 from re import compile
-from typing import Dict, List, Optional
+from typing import Optional
 
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
@@ -63,20 +63,20 @@ class GoogleResponse:
                 index = i + 1
                 self.page_number = int(PyQuery(item).text())
                 break
-        self.pages: List[str] = [
+        self.pages: list[str] = [
             f'https://www.google.com{i.attr("href")}'
             for i in data.find('a[aria-label~="Page"]').items()
         ]
         self.pages.insert(index - 1, resp_url)
         script_list = list(data.find("script").items())
-        thumbnail_dict: Dict[str, str] = self.create_thumbnail_dict(script_list)
-        self.raw: List[GoogleItem] = [
+        thumbnail_dict: dict[str, str] = self.create_thumbnail_dict(script_list)
+        self.raw: list[GoogleItem] = [
             GoogleItem(i, thumbnail_dict.get(i('img[id^="dimg_"]').attr("id")))
             for i in data.find("#search .g").items()
         ]
 
     @staticmethod
-    def create_thumbnail_dict(script_list: List[PyQuery]) -> Dict[str, str]:
+    def create_thumbnail_dict(script_list: list[PyQuery]) -> dict[str, str]:
         """Extracts a dictionary of thumbnail images from the list of script tags.
 
         Parses script tags to extract a mapping of image IDs to their base64 encoded thumbnails.
@@ -98,7 +98,7 @@ class GoogleResponse:
 
             # extract and adjust base64 encoded thumbnails
             base64: str = base_64_match[0]
-            id_list: List[str] = id_regex.findall(script.text())
+            id_list: list[str] = id_regex.findall(script.text())
 
             for _id in id_list:
                 thumbnail_dict[_id] = base64.replace(r"\x3d", "=")

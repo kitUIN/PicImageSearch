@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 class TraceMoeMe:
@@ -12,7 +12,7 @@ class TraceMoeMe:
         quotaUsed: Number of searches already performed in the current month.
     """
 
-    def __init__(self, data: Dict[str, Any]):
+    def __init__(self, data: dict[str, Any]):
         """Initializes a TraceMoeMe with user-related data from TraceMoe response.
 
         Args:
@@ -58,7 +58,7 @@ class TraceMoeItem:
 
     def __init__(
         self,
-        data: Dict[str, Any],
+        data: dict[str, Any],
         mute: bool = False,
         size: Optional[str] = None,
     ):
@@ -69,21 +69,21 @@ class TraceMoeItem:
             mute: Indicates whether to mute the video excerpt.
             size: Size parameter for modifying video and image URLs.
         """
-        self.origin: Dict[str, Any] = data
-        self.anime_info: Dict[str, Any] = {}
+        self.origin: dict[str, Any] = data
+        self.anime_info: dict[str, Any] = {}
         self.idMal: int = 0
-        self.title: Dict[str, str] = {}
+        self.title: dict[str, str] = {}
         self.title_native: str = ""
         self.title_english: str = ""
         self.title_romaji: str = ""
         self.title_chinese: str = ""
         self.anilist: int = data["anilist"]
-        self.synonyms: List[str] = []
+        self.synonyms: list[str] = []
         self.isAdult: bool = False
         self.type: str = ""
         self.format: str = ""
-        self.start_date: Dict[str, Any] = {}
-        self.end_date: Dict[str, Any] = {}
+        self.start_date: dict[str, Any] = {}
+        self.end_date: dict[str, Any] = {}
         self.cover_image: str = ""
         self.filename: str = data["filename"]
         self.episode: int = data["episode"]
@@ -115,7 +115,7 @@ class TraceMoeResponse:
 
     def __init__(
         self,
-        data: Dict[str, Any],
+        data: dict[str, Any],
         mute: bool,
         size: Optional[str],
     ):
@@ -126,8 +126,8 @@ class TraceMoeResponse:
             mute: Flag for muting video excerpts in search results.
             size: Size parameter for modifying video and image URLs.
         """
-        self.origin: Dict[str, Any] = data
-        self.raw: List[TraceMoeItem] = []
+        self.origin: dict[str, Any] = data
+        self.raw: list[TraceMoeItem] = []
         res_docs = data["result"]
         self.raw.extend(
             [

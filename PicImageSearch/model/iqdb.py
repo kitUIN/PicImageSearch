@@ -1,5 +1,3 @@
-from typing import Dict, List
-
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
@@ -30,7 +28,7 @@ class IqdbItem:
         self.content: str = ""
         self.url: str = ""
         self.source: str = ""
-        self.other_source: List[Dict[str, str]] = []
+        self.other_source: list[dict[str, str]] = []
         self.thumbnail: str = ""
         self.size: str = ""
         self.similarity: float = 0
@@ -104,8 +102,8 @@ class IqdbResponse:
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
         self.origin: PyQuery = data
-        self.raw: List[IqdbItem] = []
-        self.more: List[IqdbItem] = []
+        self.raw: list[IqdbItem] = []
+        self.more: list[IqdbItem] = []
         self.saucenao_url: str = ""
         self.ascii2d_url: str = ""
         self.google_url: str = ""

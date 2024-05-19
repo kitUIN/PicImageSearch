@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from .model import IqdbResponse
 from .network import HandOver
@@ -61,7 +61,7 @@ class Iqdb(HandOver):
             Search can be tailored for anime or real-life images using `is_3d` parameter.
         """
         iqdb_url = self.base_url_3d if is_3d else self.base_url
-        data: Dict[str, Any] = {}
+        data: dict[str, Any] = {}
         if force_gray:
             data["forcegray"] = "on"
         if url:

@@ -1,6 +1,6 @@
 from collections import namedtuple
 from types import TracebackType
-from typing import Any, Dict, Optional, Type, Union
+from typing import Any, Optional, Union
 
 from httpx import AsyncClient, QueryParams
 
@@ -27,7 +27,7 @@ class Network:
         self,
         internal: bool = False,
         proxies: Optional[str] = None,
-        headers: Optional[Dict[str, str]] = None,
+        headers: Optional[dict[str, str]] = None,
         cookies: Optional[str] = None,
         timeout: float = 30,
         verify_ssl: bool = True,
@@ -44,7 +44,7 @@ class Network:
         """
         self.internal: bool = internal
         headers = {**DEFAULT_HEADERS, **headers} if headers else DEFAULT_HEADERS
-        self.cookies: Dict[str, str] = {}
+        self.cookies: dict[str, str] = {}
         if cookies:
             for line in cookies.split(";"):
                 key, value = line.strip().split("=", 1)
@@ -81,7 +81,7 @@ class Network:
 
     async def __aexit__(
         self,
-        exc_type: Optional[Type[BaseException]] = None,
+        exc_type: Optional[type[BaseException]] = None,
         exc_val: Optional[BaseException] = None,
         exc_tb: Optional[TracebackType] = None,
     ) -> None:
@@ -100,7 +100,7 @@ class ClientManager:
         self,
         client: Optional[AsyncClient] = None,
         proxies: Optional[str] = None,
-        headers: Optional[Dict[str, str]] = None,
+        headers: Optional[dict[str, str]] = None,
         cookies: Optional[str] = None,
         timeout: float = 30,
     ):
@@ -131,7 +131,7 @@ class ClientManager:
 
     async def __aexit__(
         self,
-        exc_type: Optional[Type[BaseException]] = None,
+        exc_type: Optional[type[BaseException]] = None,
         exc_val: Optional[BaseException] = None,
         exc_tb: Optional[TracebackType] = None,
     ) -> None:
@@ -158,7 +158,7 @@ class HandOver:
         self,
         client: Optional[AsyncClient] = None,
         proxies: Optional[str] = None,
-        headers: Optional[Dict[str, str]] = None,
+        headers: Optional[dict[str, str]] = None,
         cookies: Optional[str] = None,
         timeout: float = 30,
     ):
@@ -173,12 +173,12 @@ class HandOver:
         """
         self.client: Optional[AsyncClient] = client
         self.proxies: Optional[str] = proxies
-        self.headers: Optional[Dict[str, str]] = headers
+        self.headers: Optional[dict[str, str]] = headers
         self.cookies: Optional[str] = cookies
         self.timeout: float = timeout
 
     async def get(
-        self, url: str, params: Optional[Dict[str, str]] = None, **kwargs: Any
+        self, url: str, params: Optional[dict[str, str]] = None, **kwargs: Any
     ) -> RESP:
         """Performs an HTTP GET request.
 
@@ -203,10 +203,10 @@ class HandOver:
     async def post(
         self,
         url: str,
-        params: Union[Dict[str, Any], QueryParams, None] = None,
-        data: Optional[Dict[Any, Any]] = None,
-        files: Optional[Dict[str, Any]] = None,
-        json: Optional[Dict[str, Any]] = None,
+        params: Union[dict[str, Any], QueryParams, None] = None,
+        data: Optional[dict[Any, Any]] = None,
+        files: Optional[dict[str, Any]] = None,
+        json: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ) -> RESP:
         """Performs an HTTP POST request.

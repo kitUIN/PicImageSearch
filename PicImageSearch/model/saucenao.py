@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 class SauceNAOItem:
@@ -21,7 +21,7 @@ class SauceNAOItem:
         source: Specific source of the search result.
     """
 
-    def __init__(self, data: Dict[str, Any]):
+    def __init__(self, data: dict[str, Any]):
         """Initializes a SauceNAOItem with data from a search result.
 
         Args:
@@ -29,7 +29,7 @@ class SauceNAOItem:
         """
         result_header = data["header"]
         result_data = data["data"]
-        self.origin: Dict[str, Any] = data
+        self.origin: dict[str, Any] = data
         self.similarity: float = float(result_header["similarity"])
         self.thumbnail: str = result_header["thumbnail"]
         self.index_id: int = result_header["index_id"]
@@ -37,13 +37,13 @@ class SauceNAOItem:
         self.hidden: int = result_header.get("hidden", 0)
         self.title: str = self._get_title(result_data)
         self.url: str = self._get_url(result_data)
-        self.ext_urls: List[str] = result_data.get("ext_urls", [])
+        self.ext_urls: list[str] = result_data.get("ext_urls", [])
         self.author: str = self._get_author(result_data)
         self.author_url: str = self._get_author_url(result_data)
         self.source: str = result_data.get("source", "")
 
     @staticmethod
-    def _get_title(data: Dict[str, Any]) -> str:
+    def _get_title(data: dict[str, Any]) -> str:
         """Extracts the title from result data.
 
         Args:
@@ -72,7 +72,7 @@ class SauceNAOItem:
         )
 
     @staticmethod
-    def _get_url(data: Dict[str, Any]) -> str:
+    def _get_url(data: dict[str, Any]) -> str:
         """Constructs the URL to the work using the result data.
 
         Args:
@@ -92,7 +92,7 @@ class SauceNAOItem:
         return ""
 
     @staticmethod
-    def _get_author(data: Dict[str, Any]) -> str:
+    def _get_author(data: dict[str, Any]) -> str:
         """Extracts the author information from the result data.
 
         Args:
@@ -128,7 +128,7 @@ class SauceNAOItem:
         )
 
     @staticmethod
-    def _get_author_url(data: Dict[str, Any]) -> str:
+    def _get_author_url(data: dict[str, Any]) -> str:
         """Constructs the URL to the author's profile or page using the result data.
 
         Args:
@@ -175,7 +175,7 @@ class SauceNAOResponse:
         url: URL to the search result page.
     """
 
-    def __init__(self, data: Dict[str, Any]):
+    def __init__(self, data: dict[str, Any]):
         """Initializes with the response data.
 
         Args:
@@ -184,8 +184,8 @@ class SauceNAOResponse:
         self.status_code: int = data["status_code"]
         res_header = data["header"]
         res_results = data.get("results", [])
-        self.raw: List[SauceNAOItem] = [SauceNAOItem(i) for i in res_results]
-        self.origin: Dict[str, Any] = data
+        self.raw: list[SauceNAOItem] = [SauceNAOItem(i) for i in res_results]
+        self.origin: dict[str, Any] = data
         self.short_remaining: Optional[int] = res_header.get("short_remaining")
         self.long_remaining: Optional[int] = res_header.get("long_remaining")
         self.user_id: Optional[int] = res_header.get("user_id")

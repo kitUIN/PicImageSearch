@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from .model import GoogleResponse
 from .network import HandOver
@@ -90,7 +90,7 @@ class Google(HandOver):
             ValueError: If neither 'url' nor 'file' is provided.
         """
         _url = self.base_url if url else f"{self.base_url}/upload"
-        params: Dict[str, Any] = {"sbisrc": 1, "safe": "off"}
+        params: dict[str, Any] = {"sbisrc": 1, "safe": "off"}
         if url:
             params["image_url"] = url
             resp = await self.get(_url, params=params)

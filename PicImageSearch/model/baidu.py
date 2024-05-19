@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any
 
 
 class BaiDuItem:
@@ -12,13 +12,13 @@ class BaiDuItem:
         url: URL of the webpage with the image.
     """
 
-    def __init__(self, data: Dict[str, Any]):
+    def __init__(self, data: dict[str, Any]):
         """Initializes with data from a BaiDu search result.
 
         Args:
             data: A dictionary containing the search result data.
         """
-        self.origin: Dict[str, Any] = data
+        self.origin: dict[str, Any] = data
         # deprecated attributes
         # self.similarity: float = round(float(data["simi"]) * 100, 2)
         # self.title: str = data["fromPageTitle"]
@@ -37,15 +37,15 @@ class BaiDuResponse:
         url: URL to the search result page.
     """
 
-    def __init__(self, resp_json: Dict[str, Any], resp_url: str):
+    def __init__(self, resp_json: dict[str, Any], resp_url: str):
         """Initializes with the JSON response and response URL.
 
         Args:
             resp_json: The response JSON.
             resp_url: URL to the search result page.
         """
-        self.origin: Dict[str, Any] = resp_json
-        self.raw: List[BaiDuItem] = (
+        self.origin: dict[str, Any] = resp_json
+        self.raw: list[BaiDuItem] = (
             [BaiDuItem(i) for i in resp_json["data"]["list"]] if resp_json else []
         )
         self.url: str = resp_url

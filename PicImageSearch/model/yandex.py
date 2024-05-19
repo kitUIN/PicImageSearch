@@ -1,5 +1,3 @@
-from typing import List
-
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
@@ -58,7 +56,7 @@ class YandexResponse:
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
         self.origin: PyQuery = data
-        self.raw: List[YandexItem] = [
+        self.raw: list[YandexItem] = [
             YandexItem(i) for i in data.find("li.CbirSites-Item").items()
         ]
         self.url: str = resp_url

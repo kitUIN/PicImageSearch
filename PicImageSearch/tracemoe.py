@@ -1,7 +1,7 @@
 import asyncio
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 from .model import TraceMoeItem, TraceMoeMe, TraceMoeResponse
 from .network import HandOver
@@ -93,7 +93,7 @@ class TraceMoe(HandOver):
         url: Optional[str],
         anilist_id: Optional[int],
         cut_borders: bool,
-    ) -> Dict[str, Union[bool, int, str]]:
+    ) -> dict[str, Union[bool, int, str]]:
         """Constructs query parameters for TraceMoe API request.
 
         Args:
@@ -102,9 +102,9 @@ class TraceMoe(HandOver):
             cut_borders: If True, trims image borders during search.
 
         Returns:
-            Dict[str, Union[bool, int, str]]: Query parameters for the API request.
+            dict[str, Union[bool, int, str]]: Query parameters for the API request.
         """
-        params: Dict[str, Union[bool, int, str]] = {}
+        params: dict[str, Union[bool, int, str]] = {}
         if cut_borders:
             params["cutBorders"] = "true"
         if anilist_id:
@@ -177,7 +177,7 @@ class TraceMoe(HandOver):
             ValueError: If neither 'url' nor 'file' is provided.
         """
         headers = {"x-trace-key": key} if key else None
-        files: Optional[Dict[str, Any]] = None
+        files: Optional[dict[str, Any]] = None
         if url:
             params = self.set_params(url, anilist_id, cut_borders)
         elif file:

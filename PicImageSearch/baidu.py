@@ -1,6 +1,6 @@
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
@@ -24,14 +24,14 @@ class BaiDu(HandOver):
         super().__init__(**request_kwargs)
 
     @staticmethod
-    def _extract_card_data(data: PyQuery) -> List[Dict[str, Any]]:
+    def _extract_card_data(data: PyQuery) -> list[dict[str, Any]]:
         """Extract 'window.cardData' from a PyQuery object.
 
         Args:
             data: A PyQuery object with page HTML for parsing JavaScript data.
 
         Returns:
-            List[Dict[str, Any]]: `A list of dictionaries for 'window.cardData' items.`
+            list[dict[str, Any]]: `A list of dictionaries for 'window.cardData' items.`
         """
         for script in data("script").items():
             script_text = script.text()
@@ -64,7 +64,7 @@ class BaiDu(HandOver):
             The search process involves multiple HTTP requests to BaiDu's API.
         """
         params = {"from": "pc"}
-        files: Optional[Dict[str, Any]] = None
+        files: Optional[dict[str, Any]] = None
         if url:
             params["image"] = url
         elif file:
