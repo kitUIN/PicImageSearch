@@ -1,5 +1,4 @@
 from collections import namedtuple
-from typing import List
 
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
@@ -8,6 +7,7 @@ BASE_URL = "https://ascii2d.net"
 SUPPORTED_SOURCES = [
     "fanbox",
     "fantia",
+    "misskey",
     "pixiv",
     "twitter",
     "げっちゅ屋",
@@ -45,7 +45,7 @@ class Ascii2DItem:
         self.detail: str = data("small").eq(0).text()
         self.thumbnail: str = BASE_URL + data("img").eq(0).attr("src")
         self.url: str = ""
-        self.url_list: List[URL] = []
+        self.url_list: list[URL] = []
         self.title: str = ""
         self.author: str = ""
         self.author_url: str = ""
@@ -153,7 +153,7 @@ class Ascii2DResponse:
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
         self.origin: PyQuery = data
-        self.raw: List[Ascii2DItem] = [
+        self.raw: list[Ascii2DItem] = [
             Ascii2DItem(i) for i in data.find("div.row.item-box").items()
         ]
         self.url: str = resp_url
