@@ -3,6 +3,7 @@ from typing import Any, Optional, Union
 
 from .model import EHentaiResponse
 from .network import HandOver
+from .utils import read_file
 
 
 class EHentai(HandOver):
@@ -79,7 +80,7 @@ class EHentai(HandOver):
         if url:
             files: dict[str, Any] = {"sfile": await self.download(url)}
         elif file:
-            files = {"sfile": file if isinstance(file, bytes) else open(file, "rb")}
+            files = {"sfile": read_file(file)}
         else:
             raise ValueError("Either 'url' or 'file' must be provided")
         if self.covers:

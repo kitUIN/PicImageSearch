@@ -3,6 +3,7 @@ from typing import Any, Optional, Union
 
 from .model import YandexResponse
 from .network import HandOver
+from .utils import read_file
 
 
 class Yandex(HandOver):
@@ -52,9 +53,7 @@ class Yandex(HandOver):
             params["url"] = url
             resp = await self.get(self.base_url, params=params)
         elif file:
-            files: dict[str, Any] = {
-                "upfile": file if isinstance(file, bytes) else open(file, "rb")
-            }
+            files = {"upfile": read_file(file)}
             resp = await self.post(
                 self.base_url, params=params, data={"prg": 1}, files=files
             )

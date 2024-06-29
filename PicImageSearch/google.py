@@ -3,6 +3,7 @@ from typing import Any, Optional, Union
 
 from .model import GoogleResponse
 from .network import HandOver
+from .utils import read_file
 
 
 class Google(HandOver):
@@ -95,9 +96,7 @@ class Google(HandOver):
             params["image_url"] = url
             resp = await self.get(_url, params=params)
         elif file:
-            files = {
-                "encoded_image": file if isinstance(file, bytes) else open(file, "rb")
-            }
+            files = {"encoded_image": read_file(file)}
             resp = await self.post(_url, data=params, files=files)
         else:
             raise ValueError("Either 'url' or 'file' must be provided")

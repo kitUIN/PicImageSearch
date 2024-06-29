@@ -3,6 +3,7 @@ from typing import Any, Optional, Union
 
 from .model import Ascii2DResponse
 from .network import HandOver
+from .utils import read_file
 
 
 class Ascii2D(HandOver):
@@ -60,7 +61,7 @@ class Ascii2D(HandOver):
         if url:
             resp = await self.post(_url, data={"uri": url})
         elif file:
-            files = {"file": file if isinstance(file, bytes) else open(file, "rb")}
+            files = {"file": read_file(file)}
             resp = await self.post(_url, files=files)
         else:
             raise ValueError("Either 'url' or 'file' must be provided")

@@ -6,6 +6,7 @@ from httpx import QueryParams
 
 from .model import SauceNAOResponse
 from .network import HandOver
+from .utils import read_file
 
 
 class SauceNAO(HandOver):
@@ -101,11 +102,7 @@ class SauceNAO(HandOver):
         if url:
             params = params.add("url", url)
         elif file:
-            files = (
-                {"file": file}
-                if isinstance(file, bytes)
-                else {"file": open(file, "rb")}
-            )
+            files = {"file": read_file(file)}
         else:
             raise ValueError("Either 'url' or 'file' must be provided")
         resp = await self.post(self.base_url, params=params, files=files)

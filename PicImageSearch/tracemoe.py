@@ -5,6 +5,7 @@ from typing import Any, Optional, Union
 
 from .model import TraceMoeItem, TraceMoeMe, TraceMoeResponse
 from .network import HandOver
+from .utils import read_file
 
 ANIME_INFO_QUERY = """
 query ($id: Int) {
@@ -182,11 +183,7 @@ class TraceMoe(HandOver):
             params = self.set_params(url, anilist_id, cut_borders)
         elif file:
             params = self.set_params(None, anilist_id, cut_borders)
-            files = (
-                {"file": file}
-                if isinstance(file, bytes)
-                else {"file": open(file, "rb")}
-            )
+            files = {"file": read_file(file)}
         else:
             raise ValueError("Either 'url' or 'file' must be provided")
         resp = await self.post(

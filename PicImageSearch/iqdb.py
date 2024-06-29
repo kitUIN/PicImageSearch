@@ -3,6 +3,7 @@ from typing import Any, Optional, Union
 
 from .model import IqdbResponse
 from .network import HandOver
+from .utils import read_file
 
 
 class Iqdb(HandOver):
@@ -68,7 +69,7 @@ class Iqdb(HandOver):
             data["url"] = url
             resp = await self.post(iqdb_url, data=data)
         elif file:
-            files = {"file": file if isinstance(file, bytes) else open(file, "rb")}
+            files = {"file": read_file(file)}
             resp = await self.post(iqdb_url, data=data, files=files)
         else:
             raise ValueError("Either 'url' or 'file' must be provided")

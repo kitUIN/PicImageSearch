@@ -7,6 +7,7 @@ from pyquery import PyQuery
 
 from .model import BaiDuResponse
 from .network import HandOver
+from .utils import read_file
 
 
 class BaiDu(HandOver):
@@ -68,11 +69,7 @@ class BaiDu(HandOver):
         if url:
             params["image"] = url
         elif file:
-            files = (
-                {"image": file}
-                if isinstance(file, bytes)
-                else {"image": open(file, "rb")}
-            )
+            files = {"image": read_file(file)}
         else:
             raise ValueError("Either 'url' or 'file' must be provided")
 
