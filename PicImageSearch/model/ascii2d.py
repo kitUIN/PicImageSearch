@@ -66,7 +66,14 @@ class Ascii2DItem:
             self.url_list = (
                 [URL(i.attr("href"), i.text()) for i in links.items()] if links else []
             )
-            mark = infos("small").eq(-1).text() if links else ""
+            mark = next(
+                (
+                    small.text()
+                    for small in infos("small").items()
+                    if small.text() in SUPPORTED_SOURCES
+                ),
+                "",
+            )
             self._arrange_links(infos, links, mark)
             self._arrange_title(infos)
         self._normalize_url_list()
