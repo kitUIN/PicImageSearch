@@ -10,8 +10,8 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "dayjs": "^1.11.11",
-    "inquirer": "^9.3.5",
+    "dayjs": "^1.11.12",
+    "inquirer": "^9.3.6",
     "json2yaml": "^1.1.0",
     "vuepress": "^1.9.10",
     "vuepress-plugin-demo-block": "^0.7.2",
