@@ -2,7 +2,7 @@
 
 # PicImageSearch
 
-Read this in other languages: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md), [日本語](README.ja.md)
+Читать на других языках: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md), [日本語](README.ja.md)
 
 ✨ Агрегатор Обратного Поиска Изображений ✨
 
@@ -55,4 +55,4 @@ Read this in other languages: [English](README.md), [中文](README.cn.md), [Р�
 
 ## История Звёзд
 
-[![Star History](https://starchart.cc/kitUIN/PicImageSearch.svg)](https://starchart.cc/kitUIN/PicImageSearch)
+[![История Звёзд](https://starchart.cc/kitUIN/PicImageSearch.svg)](https://starchart.cc/kitUIN/PicImageSearch)

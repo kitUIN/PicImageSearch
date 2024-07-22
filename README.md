@@ -2,9 +2,9 @@
 
 # PicImageSearch
 
-Read this in other languages: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md), [日本語](README.ja.md)
+Read in other languages: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md), [日本語](README.ja.md)
 
-✨ Reverse Image Search Aggregator ✨
+✨ Aggregated Image Search Engine for Reverse Image Search ✨
 
 <a href="https://raw.githubusercontent.com/kitUIN/PicImageSearch/master/LICENSE">
     <img src="https://img.shields.io/github/license/kitUIN/PicImageSearch" alt="license">
@@ -22,11 +22,11 @@ Read this in other languages: [English](README.md), [中文](README.cn.md), [Р�
 
 <a href="https://pic-image-search.kituin.fun/">📖 Documentation</a>
 ·
-<a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 Submit Issue</a>
+<a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 Submit an Issue</a>
 
 </div>
 
-## Support
+## Supported Search Engines
 
 | Engine   | Website                            |
 |----------|------------------------------------|
@@ -42,16 +42,16 @@ Read this in other languages: [English](README.md), [中文](README.cn.md), [Р�
 
 ## Usage
 
-For details, see the [documentation](https://pic-image-search.kituin.fun/) or the [demo codes](demo/en/).  
-For synchronous usage, import with `from PicImageSearch.sync import ...` .  
-For asynchronous usage, import with `from PicImageSearch import Network,...` .  
+For detailed information, please refer to the [documentation](https://pic-image-search.kituin.fun/) or [example code](demo/en/).  
+For `synchronous` usage, import using `from PicImageSearch.sync import ...` .  
+For `asynchronous` usage, import using `from PicImageSearch import Network,...` .  
 **Asynchronous usage is recommended.**
 
 ### Installation
 
-- Requires Python 3.9 or later.
-- Install: `pip install PicImageSearch`
-- Or use Tsinghua mirror: `pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
+- Requires Python 3.9 and above.
+- Installation command: `pip install PicImageSearch`
+- Or use the Tsinghua mirror: `pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
 
 ## Star History
 

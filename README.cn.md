@@ -2,7 +2,7 @@
 
 # PicImageSearch
 
-Read this in other languages: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md), [日本語](README.ja.md)
+阅读其他语言版本： [English](README.md), [中文](README.cn.md), [Русский](README.ru.md), [日本語](README.ja.md)
 
 ✨ 聚合识图引擎 用于以图搜源 ✨
 
@@ -26,7 +26,7 @@ Read this in other languages: [English](README.md), [中文](README.cn.md), [Р�
 
 </div>
 
-## 支持
+## 支持的搜索引擎
 
 | 引擎       | 网站                                 |
 |----------|------------------------------------|
@@ -40,19 +40,19 @@ Read this in other languages: [English](README.md), [中文](README.cn.md), [Р�
 | TraceMoe | <https://trace.moe/>               |
 | Yandex   | <https://yandex.com/images/search> |
 
-## 用法
+## 使用方法
 
-详细见 [文档](https://pic-image-search.kituin.fun/) 或者 [demo 代码](demo/cn/)。  
+详细信息请参阅 [文档](https://pic-image-search.kituin.fun/) 或者 [示例代码](demo/cn/)。  
 `同步`请使用 `from PicImageSearch.sync import ...` 导入。  
 `异步`请使用 `from PicImageSearch import Network,...` 导入。  
 **推荐使用异步。**
 
 ### 安装
 
-- 需要 Python 3.9 或更新版本。
-- 安装：`pip install PicImageSearch`
+- 需要 Python 3.9 及以上版本。
+- 安装命令：`pip install PicImageSearch`
 - 或使用清华镜像：`pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
 
-## Star History
+## 星标历史
 
-[![Star History](https://starchart.cc/kitUIN/PicImageSearch.svg)](https://starchart.cc/kitUIN/PicImageSearch)
+[![星标历史](https://starchart.cc/kitUIN/PicImageSearch.svg)](https://starchart.cc/kitUIN/PicImageSearch)
