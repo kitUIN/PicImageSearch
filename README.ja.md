@@ -28,7 +28,7 @@
 
 ## サポート
 
-| エンジン   | ウェブサイト                            |
+| エンジン     | ウェブサイト                             |
 |----------|------------------------------------|
 | ASCII2D  | <https://ascii2d.net/>             |
 | Baidu    | <https://graph.baidu.com/>         |
@@ -55,4 +55,4 @@
 
 ## スター履歴
 
-[![Star History](https://starchart.cc/kitUIN/PicImageSearch.svg)](https://starchart.cc/kitUIN/PicImageSearch)
+[![スター履歴](https://starchart.cc/kitUIN/PicImageSearch.svg)](https://starchart.cc/kitUIN/PicImageSearch)
