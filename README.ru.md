@@ -2,7 +2,7 @@
 
 # PicImageSearch
 
-Read this in other languages: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md)
+Read this in other languages: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md), [日本語](README.ja.md)
 
 ✨ Агрегатор Обратного Поиска Изображений ✨
 

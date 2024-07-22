@@ -2,7 +2,7 @@
 
 # PicImageSearch
 
-Read this in other languages: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md)
+Read this in other languages: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md), [日本語](README.ja.md)
 
 ✨ 聚合识图引擎 用于以图搜源 ✨
 
