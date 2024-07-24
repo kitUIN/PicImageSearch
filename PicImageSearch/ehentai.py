@@ -74,9 +74,9 @@ class EHentai(HandOver):
         _url: str = (
             f"{self.base_url_ex}/upld/image_lookup.php"
             if ex
-            else f"{self.base_url}/upld/image_lookup.php"
+            else f"{self.base_url}/image_lookup.php"
         )
-        data: dict[str, Any] = {"f_sfile": "search"}
+        data: dict[str, Any] = {"f_sfile": "File Search"}
         if url:
             files: dict[str, Any] = {"sfile": await self.download(url)}
         elif file:
