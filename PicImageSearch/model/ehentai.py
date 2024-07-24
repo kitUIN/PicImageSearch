@@ -81,7 +81,7 @@ class EHentaiResponse:
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
         self.origin: PyQuery = data
-        if "No unfiltered results found." in resp_text:
+        if "No unfiltered results" in resp_text:
             self.raw = []
         elif tr_items := data.find(".itg").children("tr").items():
             self.raw = [EHentaiItem(i) for i in tr_items if i.children("td")]
