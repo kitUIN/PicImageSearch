@@ -35,7 +35,7 @@ black = "^24.4.2"
 loguru = "^0.7.2"
 mypy = "^1.11.0"
 pre-commit = "^3.7.1"
-ruff = "^0.5.4"
+ruff = "^0.5.5"
 
 [tool.mypy]
 python_version = "3.9"
