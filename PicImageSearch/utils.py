@@ -30,12 +30,12 @@ def deep_get(dictionary: dict[str, Any], keys: str) -> Optional[Any]:
     return dictionary
 
 
-def read_file(file: Union[str, bytes]) -> bytes:
+def read_file(file: Union[str, bytes, Path]) -> bytes:
     """
     Read the file content and return as bytes. If the input is already bytes, return it directly.
 
     Args:
-        file (Union[str, bytes]): The file path or bytes object.
+        file (Union[str, bytes, Path]): The file path or bytes object.
 
     Returns:
         bytes: The file content as bytes.
