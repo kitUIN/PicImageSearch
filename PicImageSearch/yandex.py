@@ -48,7 +48,11 @@ class Yandex(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
+        if not url and not file:
+            raise ValueError("Either 'url' or 'file' must be provided")
+
         params = {"rpt": "imageview", "cbir_page": "sites"}
+
         if url:
             params["url"] = url
             resp = await self.get(self.base_url, params=params)
@@ -57,7 +61,5 @@ class Yandex(HandOver):
             resp = await self.post(
                 self.base_url, params=params, data={"prg": 1}, files=files
             )
-        else:
-            raise ValueError("Either 'url' or 'file' must be provided")
 
         return YandexResponse(resp.text, resp.url)

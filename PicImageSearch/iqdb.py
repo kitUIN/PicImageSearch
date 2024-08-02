@@ -61,8 +61,12 @@ class Iqdb(HandOver):
         Note:
             Search can be tailored for anime or real-life images using `is_3d` parameter.
         """
+        if not url and not file:
+            raise ValueError("Either 'url' or 'file' must be provided")
+
         iqdb_url = self.base_url_3d if is_3d else self.base_url
         data: dict[str, Any] = {}
+
         if force_gray:
             data["forcegray"] = "on"
         if url:
@@ -71,6 +75,5 @@ class Iqdb(HandOver):
         elif file:
             files = {"file": read_file(file)}
             resp = await self.post(iqdb_url, data=data, files=files)
-        else:
-            raise ValueError("Either 'url' or 'file' must be provided")
+
         return IqdbResponse(resp.text)

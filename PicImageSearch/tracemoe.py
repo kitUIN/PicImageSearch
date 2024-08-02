@@ -177,15 +177,18 @@ class TraceMoe(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
+        if not url and not file:
+            raise ValueError("Either 'url' or 'file' must be provided")
+
         headers = {"x-trace-key": key} if key else None
         files: Optional[dict[str, Any]] = None
+
         if url:
             params = self.set_params(url, anilist_id, cut_borders)
         elif file:
             params = self.set_params(None, anilist_id, cut_borders)
             files = {"file": read_file(file)}
-        else:
-            raise ValueError("Either 'url' or 'file' must be provided")
+
         resp = await self.post(
             self.search_url, headers=headers, params=params, files=files
         )
@@ -193,4 +196,5 @@ class TraceMoe(HandOver):
         await asyncio.gather(
             *[self.update_anime_info(item, chinese_title) for item in result.raw]
         )
+
         return result

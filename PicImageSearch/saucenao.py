@@ -97,15 +97,19 @@ class SauceNAO(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
+        if not url and not file:
+            raise ValueError("Either 'url' or 'file' must be provided")
+
         params = self.params
         files: Optional[dict[str, Any]] = None
+
         if url:
             params = params.add("url", url)
         elif file:
             files = {"file": read_file(file)}
-        else:
-            raise ValueError("Either 'url' or 'file' must be provided")
+
         resp = await self.post(self.base_url, params=params, files=files)
         resp_json = json_loads(resp.text)
         resp_json.update({"status_code": resp.status_code})
+
         return SauceNAOResponse(resp_json)

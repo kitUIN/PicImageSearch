@@ -57,14 +57,15 @@ class Ascii2D(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
+        if not url and not file:
+            raise ValueError("Either 'url' or 'file' must be provided")
+
         _url = f"{self.base_url}/uri" if url else f"{self.base_url}/file"
         if url:
             resp = await self.post(_url, data={"uri": url})
         elif file:
             files = {"file": read_file(file)}
             resp = await self.post(_url, files=files)
-        else:
-            raise ValueError("Either 'url' or 'file' must be provided")
 
         # If 'bovw' is enabled, switch to feature search mode.
         if self.bovw:

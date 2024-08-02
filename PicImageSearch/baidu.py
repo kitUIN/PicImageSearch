@@ -64,14 +64,15 @@ class BaiDu(HandOver):
         Note:
             The search process involves multiple HTTP requests to BaiDu's API.
         """
+        if not url and not file:
+            raise ValueError("Either 'url' or 'file' must be provided")
+
         params = {"from": "pc"}
         files: Optional[dict[str, Any]] = None
         if url:
             params["image"] = url
         elif file:
             files = {"image": read_file(file)}
-        else:
-            raise ValueError("Either 'url' or 'file' must be provided")
 
         resp = await self.post(
             "https://graph.baidu.com/upload", params=params, files=files

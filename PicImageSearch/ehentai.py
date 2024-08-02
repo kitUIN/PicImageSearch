@@ -71,23 +71,27 @@ class EHentai(HandOver):
         Note:
             Searching on exhentai.org requires logged-in status via cookies in `EHentai.request_kwargs`.
         """
+        if not url and not file:
+            raise ValueError("Either 'url' or 'file' must be provided")
+
         _url: str = (
             f"{self.base_url_ex}/upld/image_lookup.php"
             if ex
             else f"{self.base_url}/image_lookup.php"
         )
         data: dict[str, Any] = {"f_sfile": "File Search"}
+
         if url:
             files: dict[str, Any] = {"sfile": await self.download(url)}
         elif file:
             files = {"sfile": read_file(file)}
-        else:
-            raise ValueError("Either 'url' or 'file' must be provided")
+
         if self.covers:
             data["fs_covers"] = "on"
         if self.similar:
             data["fs_similar"] = "on"
         if self.exp:
             data["fs_exp"] = "on"
+
         resp = await self.post(url=_url, data=data, files=files)
         return EHentaiResponse(resp.text, resp.url)

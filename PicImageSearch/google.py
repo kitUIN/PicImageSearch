@@ -90,14 +90,17 @@ class Google(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
+        if not url and not file:
+            raise ValueError("Either 'url' or 'file' must be provided")
+
         _url = self.base_url if url else f"{self.base_url}/upload"
         params: dict[str, Any] = {"sbisrc": 1, "safe": "off"}
+
         if url:
             params["image_url"] = url
             resp = await self.get(_url, params=params)
         elif file:
             files = {"encoded_image": read_file(file)}
             resp = await self.post(_url, data=params, files=files)
-        else:
-            raise ValueError("Either 'url' or 'file' must be provided")
+
         return GoogleResponse(resp.text, resp.url)
