@@ -7,7 +7,7 @@ from pyquery import PyQuery
 
 from .model import BaiDuResponse
 from .network import HandOver
-from .utils import read_file
+from .utils import deep_get, read_file
 
 
 class BaiDu(HandOver):
@@ -76,8 +76,11 @@ class BaiDu(HandOver):
         resp = await self.post(
             "https://graph.baidu.com/upload", params=params, files=files
         )
-        next_url = (json_loads(resp.text))["data"]["url"]
-        resp = await self.get(next_url)
+        data_url = deep_get(json_loads(resp.text), "data.url")
+        if not data_url:
+            return BaiDuResponse({}, resp.url)
+
+        resp = await self.get(data_url)
 
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp.text, parser=utf8_parser))
@@ -85,10 +88,10 @@ class BaiDu(HandOver):
 
         for card in card_data:
             if card.get("cardName") == "noresult":
-                return BaiDuResponse({}, resp.url)
+                return BaiDuResponse({}, data_url)
             if card.get("cardName") == "simipic":
                 next_url = card["tplData"]["firstUrl"]
                 resp = await self.get(next_url)
-                return BaiDuResponse(json_loads(resp.text), resp.url)
+                return BaiDuResponse(json_loads(resp.text), data_url)
 
-        return BaiDuResponse({}, resp.url)
+        return BaiDuResponse({}, data_url)
