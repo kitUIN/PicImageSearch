@@ -31,11 +31,11 @@ socksio = { version = "^1.0.0", optional = true }
 socks = ["socksio"]
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.4.2"
+black = "^24.8.0"
 loguru = "^0.7.2"
-mypy = "^1.11.0"
-pre-commit = "^3.7.1"
-ruff = "^0.5.5"
+mypy = "^1.11.1"
+pre-commit = "^3.8.0"
+ruff = "^0.5.6"
 
 [tool.mypy]
 python_version = "3.9"
