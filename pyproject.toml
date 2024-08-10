@@ -21,7 +21,7 @@ keywords = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.12.5"
 httpx = "^0.27.0"
 lxml = "^5.2.2"
 pyquery = "^2.0.0"
