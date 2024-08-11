@@ -1,5 +1,6 @@
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
+import json
 
 
 class YandexItem:
@@ -16,24 +17,24 @@ class YandexItem:
         size: Displayed dimensions or size information of the image.
     """
 
-    def __init__(self, data: PyQuery):
+    def __init__(self, data: dict):
         """Initializes a YandexItem with data from a search result.
 
         Args:
             data: A PyQuery instance containing the search result item's data.
         """
-        self.origin: PyQuery = data
-        self.url: str = data.find("div.CbirSites-ItemTitle a").attr("href")
-        self.title: str = data.find("div.CbirSites-ItemTitle").text()
-        self.thumbnail: str = data.find("div.CbirSites-ItemThumb img").attr("src")
-        if not self.thumbnail:
-            self.thumbnail = data.find("div.CbirSites-ItemThumb a").attr("href")
+
+        self.origin: dict = data
         # Add https to thumbnail URL if protocol is missing
-        if self.thumbnail and self.thumbnail.startswith("//"):
-            self.thumbnail = f"https:{self.thumbnail}"
-        self.source: str = data.find("a.CbirSites-ItemDomain").text()
-        self.content: str = data.find("div.CbirSites-ItemDescription").text() or ""
-        self.size: str = data.find("div.Thumb-Mark").text()
+        if data["thumb"]["url"].startswith("//"):
+            data["thumb"]["url"] = "https:" + data["thumb"]["url"]
+
+        self.url: str = data["url"]
+        self.title: str = data["title"]
+        self.thumbnail: str = data["thumb"]["url"]
+        self.source: str = data["domain"]
+        self.content: str = data["description"]
+        self.size: str = f"{data['originalImage']['width']}x{data['originalImage']['height']}"
 
 
 class YandexResponse:
@@ -56,7 +57,11 @@ class YandexResponse:
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
         self.origin: PyQuery = data
-        self.raw: list[YandexItem] = [
-            YandexItem(i) for i in data.find("li.CbirSites-Item").items()
-        ]
+        self.raw: list[YandexItem] = []
+        data_json = json.loads(
+            data.find('div.Root[id^="CbirSites_infinite"]').attr("data-state")
+        )
+        sites = data_json["sites"]
+        for site in sites:
+            self.raw.append(YandexItem(site))
         self.url: str = resp_url
