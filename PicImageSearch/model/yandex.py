@@ -1,6 +1,7 @@
+from json import loads as json_loads
+
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
-import json
 
 
 class YandexItem:
@@ -21,20 +22,19 @@ class YandexItem:
         """Initializes a YandexItem with data from a search result.
 
         Args:
-            data: A PyQuery instance containing the search result item's data.
+            data: A dictionary containing the search result data.
         """
-
         self.origin: dict = data
-        # Add https to thumbnail URL if protocol is missing
-        if data["thumb"]["url"].startswith("//"):
-            data["thumb"]["url"] = "https:" + data["thumb"]["url"]
-
         self.url: str = data["url"]
         self.title: str = data["title"]
-        self.thumbnail: str = data["thumb"]["url"]
+        thumb_url: str = data["thumb"]["url"]
+        self.thumbnail: str = (
+            f"https:{thumb_url}" if thumb_url.startswith("//") else thumb_url
+        )
         self.source: str = data["domain"]
         self.content: str = data["description"]
-        self.size: str = f"{data['originalImage']['width']}x{data['originalImage']['height']}"
+        original_image = data["originalImage"]
+        self.size: str = f"{original_image['width']}x{original_image['height']}"
 
 
 class YandexResponse:
@@ -57,11 +57,8 @@ class YandexResponse:
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
         self.origin: PyQuery = data
-        self.raw: list[YandexItem] = []
-        data_json = json.loads(
-            data.find('div.Root[id^="CbirSites_infinite"]').attr("data-state")
-        )
+        data_div = data.find('div.Root[id^="CbirSites_infinite"]')
+        data_json = json_loads(data_div.attr("data-state"))
         sites = data_json["sites"]
-        for site in sites:
-            self.raw.append(YandexItem(site))
+        self.raw: list[YandexItem] = [YandexItem(site) for site in sites]
         self.url: str = resp_url
