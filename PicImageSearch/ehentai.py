@@ -83,7 +83,7 @@ class EHentai(HandOver):
 
         if url:
             files: dict[str, Any] = {"sfile": await self.download(url)}
-        elif file:
+        else:
             files = {"sfile": read_file(file)}
 
         if self.covers:

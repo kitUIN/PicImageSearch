@@ -99,7 +99,7 @@ class Google(HandOver):
         if url:
             params["image_url"] = url
             resp = await self.get(_url, params=params)
-        elif file:
+        else:
             files = {"encoded_image": read_file(file)}
             resp = await self.post(_url, data=params, files=files)
 

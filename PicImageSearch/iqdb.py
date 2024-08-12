@@ -72,7 +72,7 @@ class Iqdb(HandOver):
         if url:
             data["url"] = url
             resp = await self.post(iqdb_url, data=data)
-        elif file:
+        else:
             files = {"file": read_file(file)}
             resp = await self.post(iqdb_url, data=data, files=files)
 

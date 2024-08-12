@@ -105,7 +105,7 @@ class SauceNAO(HandOver):
 
         if url:
             params = params.add("url", url)
-        elif file:
+        else:
             files = {"file": read_file(file)}
 
         resp = await self.post(self.base_url, params=params, files=files)

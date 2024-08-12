@@ -56,7 +56,7 @@ class Yandex(HandOver):
         if url:
             params["url"] = url
             resp = await self.get(self.base_url, params=params)
-        elif file:
+        else:
             files = {"upfile": read_file(file)}
             resp = await self.post(
                 self.base_url, params=params, data={"prg": 1}, files=files

@@ -71,7 +71,7 @@ class BaiDu(HandOver):
         files: Optional[dict[str, Any]] = None
         if url:
             params["image"] = url
-        elif file:
+        else:
             files = {"image": read_file(file)}
 
         resp = await self.post(

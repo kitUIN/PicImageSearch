@@ -185,7 +185,7 @@ class TraceMoe(HandOver):
 
         if url:
             params = self.set_params(url, anilist_id, cut_borders)
-        elif file:
+        else:
             params = self.set_params(None, anilist_id, cut_borders)
             files = {"file": read_file(file)}
 

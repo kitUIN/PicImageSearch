@@ -63,7 +63,7 @@ class Ascii2D(HandOver):
         _url = f"{self.base_url}/uri" if url else f"{self.base_url}/file"
         if url:
             resp = await self.post(_url, data={"uri": url})
-        elif file:
+        else:
             files = {"file": read_file(file)}
             resp = await self.post(_url, files=files)
 
