@@ -12,7 +12,7 @@
   "enabledManagers": [
     "github-actions",
     "npm",
-    "poetry",
+    "pep621",
     "pre-commit"
   ],
   "pre-commit": {
@@ -48,16 +48,6 @@
         "dependencies",
         "breaking"
       ]
-    },
-    {
-      "description": "disable python updates for poetry manager",
-      "matchPackageNames": [
-        "python"
-      ],
-      "matchManagers": [
-        "poetry"
-      ],
-      "enabled": false
     }
   ]
 }
