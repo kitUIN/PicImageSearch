@@ -7,3 +7,5 @@ from .network import Network
 from .saucenao import SauceNAO
 from .tracemoe import TraceMoe
 from .yandex import Yandex
+
+__version__ = "3.10.8"
