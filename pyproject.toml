@@ -51,7 +51,7 @@ includes = ["PicImageSearch"]
 dev = [
     "black>=24.8.0",
     "loguru>=0.7.2",
-    "mypy>=1.11.1",
+    "mypy>=1.11.2",
     "pre-commit>=3.8.0",
     "ruff>=0.6.2",
 ]
