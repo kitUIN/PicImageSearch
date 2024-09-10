@@ -43,7 +43,12 @@ class Ascii2DItem:
         self.origin: PyQuery = data
         self.hash: str = data("div.hash").eq(0).text()
         self.detail: str = data("small").eq(0).text()
-        self.thumbnail: str = BASE_URL + data("img").eq(0).attr("src")
+        image_source = data("img").eq(0).attr("src")
+        self.thumbnail = (
+            f"{BASE_URL}{image_source}"
+            if image_source.startswith("/")
+            else image_source
+        )
         self.url: str = ""
         self.url_list: list[URL] = []
         self.title: str = ""
