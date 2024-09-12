@@ -89,7 +89,7 @@ class GoogleResponse:
         """
         thumbnail_dict = {}
         base_64_regex = compile(r"data:image/(?:jpeg|jpg|png|gif);base64,[^'\"]+")
-        id_regex = compile(r"dimg_\d+")
+        id_regex = compile(r"dimg_[^']+")
 
         for script in script_list:
             base_64_match = base_64_regex.findall(script.text())
