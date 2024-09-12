@@ -8,4 +8,4 @@ from .saucenao import SauceNAO
 from .tracemoe import TraceMoe
 from .yandex import Yandex
 
-__version__ = "3.10.9"
+__version__ = "3.10.10"
