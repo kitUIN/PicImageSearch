@@ -10,7 +10,6 @@ SUPPORTED_SOURCES = [
     "misskey",
     "pixiv",
     "twitter",
-    "げっちゅ屋",
     "ニコニコ静画",
     "ニジエ",
 ]
