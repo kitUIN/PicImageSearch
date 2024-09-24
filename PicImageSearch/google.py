@@ -71,6 +71,24 @@ class Google(HandOver):
         """
         return await self._navigate_page(resp, 1)
 
+    async def _ensure_thumbnail_data(self, resp: GoogleResponse) -> GoogleResponse:
+        """Ensures the response contains thumbnail data.
+
+        If the initial response lacks thumbnail data, an additional request is made to fetch complete data.
+
+        Args:
+            resp: The initial GoogleResponse instance.
+
+        Returns:
+            GoogleResponse: A response containing thumbnail data.
+        """
+        if resp and resp.raw:
+            selected = next((i for i in resp.raw if i.thumbnail), resp.raw[0])
+            if not selected.thumbnail and len(resp.raw) > 1:
+                _resp = await self.get(resp.url)
+                return GoogleResponse(_resp.text, _resp.url)
+        return resp
+
     async def search(
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
     ) -> GoogleResponse:
@@ -103,4 +121,5 @@ class Google(HandOver):
             files = {"encoded_image": read_file(file)}
             resp = await self.post(_url, data=params, files=files)
 
-        return GoogleResponse(resp.text, resp.url)
+        initial_resp = GoogleResponse(resp.text, resp.url)
+        return await self._ensure_thumbnail_data(initial_resp)
