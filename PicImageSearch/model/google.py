@@ -43,31 +43,36 @@ class GoogleResponse:
         raw: List of GoogleItem instances for each search result.
     """
 
-    def __init__(self, resp_text: str, resp_url: str):
+    def __init__(
+        self,
+        resp_text: str,
+        resp_url: str,
+        page_number: int = 1,
+        pages: Optional[list[str]] = None,
+    ):
         """Initializes with the response text and URL.
 
         Args:
             resp_text: The text of the response.
             resp_url: URL to the search result page.
+            page_number: The current page number in the search results.
+            pages: List of URLs to pages of search results.
         """
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp_text, parser=utf8_parser))
         self.origin: PyQuery = data
-        self.page_number: int = 1
+        self.page_number: int = page_number
         self.url: str = resp_url
-        index = 1
-        for i, item in enumerate(
-            list(data.find('div[role="navigation"] td').items())[1:-1]
-        ):
-            if not PyQuery(item).find("a"):
-                index = i + 1
-                self.page_number = int(PyQuery(item).text())
-                break
-        self.pages: list[str] = [
-            f'https://www.google.com{i.attr("href")}'
-            for i in data.find('a[aria-label~="Page"]').items()
-        ]
-        self.pages.insert(index - 1, resp_url)
+
+        if pages:
+            self.pages: list[str] = pages
+        else:
+            self.pages = [
+                f'https://www.google.com{i.attr("href")}'
+                for i in data.find('a[aria-label~="Page"]').items()
+            ]
+            self.pages.insert(0, resp_url)
+
         script_list = list(data.find("script").items())
         thumbnail_dict: dict[str, str] = self.create_thumbnail_dict(script_list)
         self.raw: list[GoogleItem] = [
@@ -89,7 +94,7 @@ class GoogleResponse:
         """
         thumbnail_dict = {}
         base_64_regex = compile(r"data:image/(?:jpeg|jpg|png|gif);base64,[^'\"]+")
-        id_regex = compile(r"dimg_[^']+")
+        id_regex = compile(r"dimg_[^'\"]+")
 
         for script in script_list:
             base_64_match = base_64_regex.findall(script.text())

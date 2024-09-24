@@ -42,7 +42,7 @@ def test_sync() -> None:
 
 
 def show_result(resp: Optional[GoogleResponse]) -> None:
-    if not resp:
+    if not resp or not resp.raw:
         return
     # logger.info(resp.origin)  # Оригинальные данные
     logger.info(resp.pages)

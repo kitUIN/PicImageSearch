@@ -47,7 +47,7 @@ class Google(HandOver):
         if new_index < 0 or new_index >= len(resp.pages):
             return None
         _resp = await self.get(resp.pages[new_index])
-        return GoogleResponse(_resp.text, _resp.url)
+        return GoogleResponse(_resp.text, _resp.url, new_index + 1, resp.pages)
 
     async def pre_page(self, resp: GoogleResponse) -> Optional[GoogleResponse]:
         """Navigates to the previous page in Google search results.
