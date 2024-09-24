@@ -42,12 +42,11 @@ class Google(HandOver):
         Returns:
             GoogleResponse: Updated response after navigating to the specified page, or None if out of range.
         """
-        index = resp.pages.index(resp.url)
-        new_index = index + offset
-        if new_index < 0 or new_index >= len(resp.pages):
+        next_page_number = resp.page_number + offset
+        if next_page_number < 1 or next_page_number > len(resp.pages):
             return None
-        _resp = await self.get(resp.pages[new_index])
-        return GoogleResponse(_resp.text, _resp.url, new_index + 1, resp.pages)
+        _resp = await self.get(resp.pages[next_page_number - 1])
+        return GoogleResponse(_resp.text, _resp.url, next_page_number, resp.pages)
 
     async def pre_page(self, resp: GoogleResponse) -> Optional[GoogleResponse]:
         """Navigates to the previous page in Google search results.
