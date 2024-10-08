@@ -1,11 +1,4 @@
-from .ascii2d import Ascii2D
-from .baidu import BaiDu
-from .ehentai import EHentai
-from .google import Google
-from .iqdb import Iqdb
+from .engines import *  # noqa: F403
 from .network import Network
-from .saucenao import SauceNAO
-from .tracemoe import TraceMoe
-from .yandex import Yandex
 
 __version__ = "3.10.13"

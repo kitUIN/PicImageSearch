@@ -3,9 +3,9 @@ from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from .model import TraceMoeItem, TraceMoeMe, TraceMoeResponse
-from .network import HandOver
-from .utils import read_file
+from ..model import TraceMoeItem, TraceMoeMe, TraceMoeResponse
+from ..network import HandOver
+from ..utils import read_file
 
 ANIME_INFO_QUERY = """
 query ($id: Int) {

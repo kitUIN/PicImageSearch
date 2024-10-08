@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from .model import IqdbResponse
-from .network import HandOver
-from .utils import read_file
+from ..model import IqdbResponse
+from ..network import HandOver
+from ..utils import read_file
 
 
 class Iqdb(HandOver):
@@ -20,7 +20,7 @@ class Iqdb(HandOver):
         self,
         base_url: str = "https://iqdb.org",
         base_url_3d: str = "https://3d.iqdb.org",
-        **request_kwargs: Any
+        **request_kwargs: Any,
     ):
         """Initializes an Iqdb API client with request configuration.
 

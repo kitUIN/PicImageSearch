@@ -4,9 +4,9 @@ from typing import Any, Optional, Union
 
 from httpx import QueryParams
 
-from .model import SauceNAOResponse
-from .network import HandOver
-from .utils import read_file
+from ..model import SauceNAOResponse
+from ..network import HandOver
+from ..utils import read_file
 
 
 class SauceNAO(HandOver):

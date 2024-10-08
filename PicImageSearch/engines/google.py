@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from .model import GoogleResponse
-from .network import HandOver
-from .utils import read_file
+from ..model import GoogleResponse
+from ..network import HandOver
+from ..utils import read_file
 
 
 class Google(HandOver):

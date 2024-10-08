@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from .model import Ascii2DResponse
-from .network import HandOver
-from .utils import read_file
+from ..model import Ascii2DResponse
+from ..network import HandOver
+from ..utils import read_file
 
 
 class Ascii2D(HandOver):

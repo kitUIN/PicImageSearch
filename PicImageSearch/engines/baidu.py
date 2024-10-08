@@ -5,9 +5,9 @@ from typing import Any, Optional, Union
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
-from .model import BaiDuResponse
-from .network import HandOver
-from .utils import deep_get, read_file
+from ..model import BaiDuResponse
+from ..network import HandOver
+from ..utils import deep_get, read_file
 
 
 class BaiDu(HandOver):
