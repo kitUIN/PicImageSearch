@@ -2,11 +2,11 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 from ..model import YandexResponse
-from ..network import HandOver
 from ..utils import read_file
+from .base import BaseSearchEngine
 
 
-class Yandex(HandOver):
+class Yandex(BaseSearchEngine):
     """API client for the Yandex image search engine.
 
     Used for performing reverse image searches using Yandex service.
@@ -26,11 +26,14 @@ class Yandex(HandOver):
             base_url: The base URL for Yandex searches.
             **request_kwargs: Additional arguments for network requests.
         """
-        super().__init__(**request_kwargs)
-        self.base_url = f"{base_url}/images/search"
+        base_url = f"{base_url}/images/search"
+        super().__init__(base_url, **request_kwargs)
 
     async def search(
-        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
+        self,
+        url: Optional[str] = None,
+        file: Union[str, bytes, Path, None] = None,
+        **kwargs: Any,
     ) -> YandexResponse:
         """Performs a reverse image search on Yandex.
 
@@ -48,18 +51,20 @@ class Yandex(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
-        if not url and not file:
-            raise ValueError("Either 'url' or 'file' must be provided")
+        await super().search(url, file, **kwargs)
 
         params = {"rpt": "imageview", "cbir_page": "sites"}
 
         if url:
             params["url"] = url
-            resp = await self.get(self.base_url, params=params)
+            resp = await self._make_request(method="get", params=params)
         else:
             files = {"upfile": read_file(file)}
-            resp = await self.post(
-                self.base_url, params=params, data={"prg": 1}, files=files
+            resp = await self._make_request(
+                method="post",
+                params=params,
+                data={"prg": 1},
+                files=files,
             )
 
         return YandexResponse(resp.text, resp.url)

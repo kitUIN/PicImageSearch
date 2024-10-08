@@ -2,18 +2,18 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 from ..model import EHentaiResponse
-from ..network import HandOver
 from ..utils import read_file
+from .base import BaseSearchEngine
 
 
-class EHentai(HandOver):
+class EHentai(BaseSearchEngine):
     """API client for the EHentai image search engine.
 
     Used for performing reverse image searches using EHentai service.
 
     Attributes:
         base_url: The base URL for EHentai searches.
-        base_url_ex: The base URL for EXHentai searches.
+        is_ex: If True, search on exhentai.org; otherwise, use e-hentai.org.
         covers: A flag to search only for covers.
         similar: A flag to enable similarity scanning.
         exp: A flag to include results from expunged galleries.
@@ -21,8 +21,7 @@ class EHentai(HandOver):
 
     def __init__(
         self,
-        base_url: str = "https://upld.e-hentai.org",
-        base_url_ex: str = "https://upld.exhentai.org",
+        is_ex: bool = False,
         covers: bool = False,
         similar: bool = True,
         exp: bool = False,
@@ -32,24 +31,24 @@ class EHentai(HandOver):
 
         Args:
             base_url: The base URL for EHentai searches.
-            base_url_ex: The base URL for EXHentai searches.
+            is_ex: If True, search on exhentai.org; otherwise, use e-hentai.org.
             covers: If True, search only for covers; otherwise, False.
             similar: If True, enable similarity scanning; otherwise, False.
             exp: If True, include results from expunged galleries; otherwise, False.
             **request_kwargs: Additional arguments for network requests.
         """
-        super().__init__(**request_kwargs)
-        self.base_url = base_url
-        self.base_url_ex = base_url_ex
-        self.covers: bool = covers
-        self.similar: bool = similar
-        self.exp: bool = exp
+        base_url = "https://upld.exhentai.org" if is_ex else "https://upld.e-hentai.org"
+        super().__init__(base_url, **request_kwargs)
+        self.is_ex = is_ex
+        self.covers = covers
+        self.similar = similar
+        self.exp = exp
 
     async def search(
         self,
         url: Optional[str] = None,
         file: Union[str, bytes, Path, None] = None,
-        ex: bool = False,
+        **kwargs: Any,
     ) -> EHentaiResponse:
         """Performs a reverse image search on EHentai.
 
@@ -60,7 +59,6 @@ class EHentai(HandOver):
         Args:
             url: URL of the image to search.
             file: Local image file (path or bytes) to search.
-            ex: If True, search on exhentai.org; otherwise, use e-hentai.org.
 
         Returns:
             EHentaiResponse: Contains search results and additional information.
@@ -71,14 +69,9 @@ class EHentai(HandOver):
         Note:
             Searching on exhentai.org requires logged-in status via cookies in `EHentai.request_kwargs`.
         """
-        if not url and not file:
-            raise ValueError("Either 'url' or 'file' must be provided")
+        await super().search(url, file, **kwargs)
 
-        _url: str = (
-            f"{self.base_url_ex}/upld/image_lookup.php"
-            if ex
-            else f"{self.base_url}/image_lookup.php"
-        )
+        endpoint = "upld/image_lookup.php" if self.is_ex else "image_lookup.php"
         data: dict[str, Any] = {"f_sfile": "File Search"}
 
         if url:
@@ -93,5 +86,11 @@ class EHentai(HandOver):
         if self.exp:
             data["fs_exp"] = "on"
 
-        resp = await self.post(url=_url, data=data, files=files)
+        resp = await self._make_request(
+            method="post",
+            endpoint=endpoint,
+            data=data,
+            files=files,
+        )
+
         return EHentaiResponse(resp.text, resp.url)

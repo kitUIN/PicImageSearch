@@ -5,11 +5,11 @@ from typing import Any, Optional, Union
 from httpx import QueryParams
 
 from ..model import SauceNAOResponse
-from ..network import HandOver
 from ..utils import read_file
+from .base import BaseSearchEngine
 
 
-class SauceNAO(HandOver):
+class SauceNAO(BaseSearchEngine):
     """API client for the SauceNAO image search engine.
 
     Used for performing reverse image searches using SauceNAO service.
@@ -56,8 +56,8 @@ class SauceNAO(HandOver):
             For specific details on `dbmask`, `dbmaski`, `db`, and `dbs`, refer to:
             https://saucenao.com/tools/examples/api/index_details.txt
         """
-        super().__init__(**request_kwargs)
-        self.base_url = f"{base_url}/search.php"
+        base_url = f"{base_url}/search.php"
+        super().__init__(base_url, **request_kwargs)
         params: dict[str, Any] = {
             "testmode": testmode,
             "numres": numres,
@@ -79,7 +79,10 @@ class SauceNAO(HandOver):
                 self.params = self.params.add("dbs[]", i)
 
     async def search(
-        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
+        self,
+        url: Optional[str] = None,
+        file: Union[str, bytes, Path, None] = None,
+        **kwargs: Any,
     ) -> SauceNAOResponse:
         """Performs a reverse image search on SauceNAO.
 
@@ -97,8 +100,7 @@ class SauceNAO(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
-        if not url and not file:
-            raise ValueError("Either 'url' or 'file' must be provided")
+        await super().search(url, file, **kwargs)
 
         params = self.params
         files: Optional[dict[str, Any]] = None
@@ -108,7 +110,12 @@ class SauceNAO(HandOver):
         else:
             files = {"file": read_file(file)}
 
-        resp = await self.post(self.base_url, params=params, files=files)
+        resp = await self._make_request(
+            method="post",
+            params=params,
+            files=files,
+        )
+
         resp_json = json_loads(resp.text)
         resp_json.update({"status_code": resp.status_code})
 

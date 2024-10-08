@@ -15,9 +15,9 @@ file = "../images/test04.jpg"
 @logger.catch()
 async def test_async() -> None:
     async with Network(proxies=proxies) as client:
-        iqdb = Iqdb(client=client)
-        # resp = await iqdb.search(url=url, is_3d=True)
-        resp = await iqdb.search(file=file, is_3d=True)
+        iqdb = Iqdb(client=client, is_3d=True)
+        # resp = await iqdb.search(url=url)
+        resp = await iqdb.search(file=file)
         show_result(resp)
 
 

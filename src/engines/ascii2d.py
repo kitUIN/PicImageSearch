@@ -2,11 +2,11 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 from ..model import Ascii2DResponse
-from ..network import HandOver
 from ..utils import read_file
+from .base import BaseSearchEngine
 
 
-class Ascii2D(HandOver):
+class Ascii2D(BaseSearchEngine):
     """API client for the Ascii2D image search engine.
 
     Used for performing reverse image searches using Ascii2D service.
@@ -34,12 +34,15 @@ class Ascii2D(HandOver):
             bovw: If True, use feature search; otherwise, use color combination search.
             **request_kwargs: Additional arguments for network requests.
         """
-        super().__init__(**request_kwargs)
-        self.base_url = f"{base_url}/search"
+        base_url = f"{base_url}/search"
+        super().__init__(base_url, **request_kwargs)
         self.bovw = bovw
 
     async def search(
-        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
+        self,
+        url: Optional[str] = None,
+        file: Union[str, bytes, Path, None] = None,
+        **kwargs: Any,
     ) -> Ascii2DResponse:
         """Performs a reverse image search on Ascii2D.
 
@@ -57,15 +60,24 @@ class Ascii2D(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
-        if not url and not file:
-            raise ValueError("Either 'url' or 'file' must be provided")
+        await super().search(url, file, **kwargs)
 
-        _url = f"{self.base_url}/uri" if url else f"{self.base_url}/file"
+        data: Optional[dict[str, Any]] = None
+        files: Optional[dict[str, Any]] = None
+
         if url:
-            resp = await self.post(_url, data={"uri": url})
+            endpoint = "uri"
+            data = {"uri": url}
         else:
+            endpoint = "file"
             files = {"file": read_file(file)}
-            resp = await self.post(_url, files=files)
+
+        resp = await self._make_request(
+            method="post",
+            endpoint=endpoint,
+            data=data,
+            files=files,
+        )
 
         # If 'bovw' is enabled, switch to feature search mode.
         if self.bovw:

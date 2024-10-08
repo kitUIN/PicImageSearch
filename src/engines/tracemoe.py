@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 from ..model import TraceMoeItem, TraceMoeMe, TraceMoeResponse
-from ..network import HandOver
 from ..utils import read_file
+from .base import BaseSearchEngine
 
 ANIME_INFO_QUERY = """
 query ($id: Int) {
@@ -39,14 +39,14 @@ query ($id: Int) {
 """
 
 
-class TraceMoe(HandOver):
+class TraceMoe(BaseSearchEngine):
     """API Client for the TraceMoe image search engine.
 
     Used for performing reverse image searches using TraceMoe service.
 
     Attributes:
+        anilist_url: URL for TraceMoe endpoint to retrieve anime info.
         base_url: The base URL for TraceMoe searches.
-        search_url: URL for TraceMoe API endpoint for image search.
         me_url: URL for TraceMoe API endpoint to retrieve user info.
         size: Optional string indicating preview size ('s', 'm', 'l').
         mute: A flag to mute preview video in search results.
@@ -69,9 +69,9 @@ class TraceMoe(HandOver):
             size: Specifies preview video size ('s', 'm', 'l').
             **request_kwargs: Additional arguments for network requests.
         """
-        super().__init__(**request_kwargs)
-        self.base_url = base_url
-        self.search_url = f"{base_url_api}/search"
+        self.anilist_url = f"{base_url}/anilist"
+        base_url = f"{base_url_api}/search"
+        super().__init__(base_url, **request_kwargs)
         self.me_url = f"{base_url_api}/me"
         self.mute: bool = mute
         self.size: Optional[str] = size
@@ -124,11 +124,11 @@ class TraceMoe(HandOver):
             chinese_title: If True, includes Chinese title in item info.
         """
         variables = {"id": item.anilist}
-        url = f"{self.base_url}/anilist/"
         item.anime_info = json_loads(
             (
                 await self.post(
-                    url=url, json={"query": ANIME_INFO_QUERY, "variables": variables}
+                    url=self.anilist_url,
+                    json={"query": ANIME_INFO_QUERY, "variables": variables},
                 )
             )[0]
         )["data"]["Media"]
@@ -156,6 +156,7 @@ class TraceMoe(HandOver):
         anilist_id: Optional[int] = None,
         chinese_title: bool = True,
         cut_borders: bool = True,
+        **kwargs: Any,
     ) -> TraceMoeResponse:
         """Performs a reverse image search on TraceMoe.
 
@@ -177,8 +178,7 @@ class TraceMoe(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
-        if not url and not file:
-            raise ValueError("Either 'url' or 'file' must be provided")
+        await super().search(url, file, **kwargs)
 
         headers = {"x-trace-key": key} if key else None
         files: Optional[dict[str, Any]] = None
@@ -189,9 +189,13 @@ class TraceMoe(HandOver):
             params = self.set_params(None, anilist_id, cut_borders)
             files = {"file": read_file(file)}
 
-        resp = await self.post(
-            self.search_url, headers=headers, params=params, files=files
+        resp = await self._make_request(
+            method="post",
+            headers=headers,
+            params=params,
+            files=files,
         )
+
         result = TraceMoeResponse(json_loads(resp.text), self.mute, self.size)
         await asyncio.gather(
             *[self.update_anime_info(item, chinese_title) for item in result.raw]

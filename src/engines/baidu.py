@@ -6,14 +6,17 @@ from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
 from ..model import BaiDuResponse
-from ..network import HandOver
 from ..utils import deep_get, read_file
+from .base import BaseSearchEngine
 
 
-class BaiDu(HandOver):
+class BaiDu(BaseSearchEngine):
     """API client for the BaiDu image search engine.
 
     Used for performing reverse image searches using BaiDu service.
+
+    Attributes:
+        base_url: The base URL for BaiDu searches.
     """
 
     def __init__(self, **request_kwargs: Any):
@@ -22,7 +25,8 @@ class BaiDu(HandOver):
         Args:
             **request_kwargs: Additional arguments for network requests.
         """
-        super().__init__(**request_kwargs)
+        base_url = "https://graph.baidu.com"
+        super().__init__(base_url, **request_kwargs)
 
     @staticmethod
     def _extract_card_data(data: PyQuery) -> list[dict[str, Any]]:
@@ -43,7 +47,10 @@ class BaiDu(HandOver):
         return []
 
     async def search(
-        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
+        self,
+        url: Optional[str] = None,
+        file: Union[str, bytes, Path, None] = None,
+        **kwargs: Any,
     ) -> BaiDuResponse:
         """Performs a reverse image search on BaiDu.
 
@@ -64,18 +71,21 @@ class BaiDu(HandOver):
         Note:
             The search process involves multiple HTTP requests to BaiDu's API.
         """
-        if not url and not file:
-            raise ValueError("Either 'url' or 'file' must be provided")
+        await super().search(url, file, **kwargs)
 
         params = {"from": "pc"}
         files: Optional[dict[str, Any]] = None
+
         if url:
             params["image"] = url
         else:
             files = {"image": read_file(file)}
 
-        resp = await self.post(
-            "https://graph.baidu.com/upload", params=params, files=files
+        resp = await self._make_request(
+            method="post",
+            endpoint="upload",
+            params=params,
+            files=files,
         )
         data_url = deep_get(json_loads(resp.text), "data.url")
         if not data_url:

@@ -16,7 +16,7 @@ cookies = None
 
 # Использовать поиск на EXHentai или нет, рекомендуется применять bool(cookies), то есть использовать поиск EXHentai,
 # если cookies настроены
-ex = False
+is_ex = False
 
 # По возможности избегайте тайм-аутов, приводящих к возвращению пустого документа
 timeout = 60
@@ -25,17 +25,22 @@ timeout = 60
 @logger.catch()
 async def test_async() -> None:
     async with Network(proxies=proxies, cookies=cookies, timeout=timeout) as client:
-        ehentai = EHentai(client=client)
-        # resp = await ehentai.search(url=url, ex=ex)
-        resp = await ehentai.search(file=file, ex=ex)
+        ehentai = EHentai(client=client, is_ex=is_ex)
+        # resp = await ehentai.search(url=url)
+        resp = await ehentai.search(file=file)
         show_result(resp)
 
 
 @logger.catch()
 def test_sync() -> None:
-    ehentai = EHentaiSync(proxies=proxies, cookies=cookies, timeout=timeout)
-    resp = ehentai.search(url=url, ex=ex)
-    # resp = ehentai.search(file=file, ex=ex)
+    ehentai = EHentaiSync(
+        proxies=proxies,
+        is_ex=is_ex,
+        cookies=cookies,
+        timeout=timeout,
+    )
+    resp = ehentai.search(url=url)
+    # resp = ehentai.search(file=file)
     show_result(resp)  # type: ignore
 
 

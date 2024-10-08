@@ -2,11 +2,11 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 from ..model import GoogleResponse
-from ..network import HandOver
 from ..utils import read_file
+from .base import BaseSearchEngine
 
 
-class Google(HandOver):
+class Google(BaseSearchEngine):
     """API client for the Google image search engine.
 
     Used for performing reverse image searches using Google service.
@@ -27,8 +27,8 @@ class Google(HandOver):
             base_url: The base URL for Google searches, defaults to the international version.
             **request_kwargs: Additional arguments for network requests.
         """
-        super().__init__(**request_kwargs)
-        self.base_url = f"{base_url}/searchbyimage"
+        base_url = f"{base_url}/searchbyimage"
+        super().__init__(base_url, **request_kwargs)
 
     async def _navigate_page(
         self, resp: GoogleResponse, offset: int
@@ -89,7 +89,10 @@ class Google(HandOver):
         return resp
 
     async def search(
-        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
+        self,
+        url: Optional[str] = None,
+        file: Union[str, bytes, Path, None] = None,
+        **kwargs: Any,
     ) -> GoogleResponse:
         """Performs a reverse image search on Google.
 
@@ -107,18 +110,21 @@ class Google(HandOver):
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
-        if not url and not file:
-            raise ValueError("Either 'url' or 'file' must be provided")
+        await super().search(url, file, **kwargs)
 
-        _url = self.base_url if url else f"{self.base_url}/upload"
         params: dict[str, Any] = {"sbisrc": 1, "safe": "off"}
 
         if url:
             params["image_url"] = url
-            resp = await self.get(_url, params=params)
+            resp = await self._make_request(method="get", params=params)
         else:
             files = {"encoded_image": read_file(file)}
-            resp = await self.post(_url, data=params, files=files)
+            resp = await self._make_request(
+                method="post",
+                endpoint="upload",
+                data=params,
+                files=files,
+            )
 
         initial_resp = GoogleResponse(resp.text, resp.url)
         return await self._ensure_thumbnail_data(initial_resp)
