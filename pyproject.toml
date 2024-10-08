@@ -42,10 +42,10 @@ requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
 [tool.pdm]
-version = { source = "file", path = "PicImageSearch/__init__.py" }
+version = { source = "file", path = "src/__init__.py" }
 
 [tool.pdm.build]
-includes = ["PicImageSearch"]
+includes = ["src"]
 
 [tool.pdm.dev-dependencies]
 dev = [

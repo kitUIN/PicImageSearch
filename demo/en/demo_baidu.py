@@ -2,9 +2,9 @@ import asyncio
 
 from loguru import logger
 
-from PicImageSearch import BaiDu, Network
-from PicImageSearch.model import BaiDuResponse
-from PicImageSearch.sync import BaiDu as BaiDuSync
+from src import BaiDu, Network
+from src.model import BaiDuResponse
+from src.sync import BaiDu as BaiDuSync
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None

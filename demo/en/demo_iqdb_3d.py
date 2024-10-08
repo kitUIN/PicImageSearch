@@ -2,9 +2,9 @@ import asyncio
 
 from loguru import logger
 
-from PicImageSearch import Iqdb, Network
-from PicImageSearch.model import IqdbResponse
-from PicImageSearch.sync import Iqdb as IqdbSync
+from src import Iqdb, Network
+from src.model import IqdbResponse
+from src.sync import Iqdb as IqdbSync
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None
