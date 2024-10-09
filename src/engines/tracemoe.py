@@ -196,7 +196,12 @@ class TraceMoe(BaseSearchEngine):
             files=files,
         )
 
-        result = TraceMoeResponse(json_loads(resp.text), self.mute, self.size)
+        result = TraceMoeResponse(
+            resp_data=json_loads(resp.text),
+            resp_url=resp.url,
+            mute=self.mute,
+            size=self.size,
+        )
         await asyncio.gather(
             *[self.update_anime_info(item, chinese_title) for item in result.raw]
         )

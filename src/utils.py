@@ -2,6 +2,9 @@ import re
 from pathlib import Path
 from typing import Any, Optional, Union
 
+from lxml.html import HTMLParser, fromstring
+from pyquery import PyQuery
+
 
 def deep_get(dictionary: dict[str, Any], keys: str) -> Optional[Any]:
     """
@@ -57,3 +60,16 @@ def read_file(file: Union[str, bytes, Path]) -> bytes:
         raise OSError(
             f"An I/O error occurred while reading the file {file}: {e}"
         ) from e
+
+
+def parse_html(html: str) -> PyQuery:
+    """Parse HTML content and return a PyQuery object.
+
+    Args:
+        html (str): The HTML content to parse.
+
+    Returns:
+        PyQuery: A PyQuery object representing the parsed HTML.
+    """
+    utf8_parser = HTMLParser(encoding="utf-8")
+    return PyQuery(fromstring(html, parser=utf8_parser))

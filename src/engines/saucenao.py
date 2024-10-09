@@ -119,4 +119,4 @@ class SauceNAO(BaseSearchEngine):
         resp_json = json_loads(resp.text)
         resp_json.update({"status_code": resp.status_code})
 
-        return SauceNAOResponse(resp_json)
+        return SauceNAOResponse(resp_json, resp.url)

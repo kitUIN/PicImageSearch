@@ -1,10 +1,13 @@
 from json import loads as json_loads
+from typing import Any
 
-from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
+from ..utils import parse_html
+from .base import BaseSearchItem, BaseSearchResponse
 
-class YandexItem:
+
+class YandexItem(BaseSearchItem):
     """Represents a single Yandex search result item.
 
     Holds details of a result from a Yandex reverse image search.
@@ -18,13 +21,16 @@ class YandexItem:
         size: Displayed dimensions or size information of the image.
     """
 
-    def __init__(self, data: dict):
+    def __init__(self, data: dict[str, Any], **kwargs: Any):
         """Initializes a YandexItem with data from a search result.
 
         Args:
             data: A dictionary containing the search result data.
         """
-        self.origin: dict = data
+        super().__init__(data, **kwargs)
+
+    def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
+        """Parse search result data."""
         self.url: str = data["url"]
         self.title: str = data["title"]
         thumb_url: str = data["thumb"]["url"]
@@ -37,7 +43,7 @@ class YandexItem:
         self.size: str = f"{original_image['width']}x{original_image['height']}"
 
 
-class YandexResponse:
+class YandexResponse(BaseSearchResponse):
     """Encapsulates a Yandex reverse image search response.
 
     Contains the complete response from a Yandex reverse image search operation.
@@ -47,18 +53,20 @@ class YandexResponse:
         url: URL to the search results page.
     """
 
-    def __init__(self, resp_text: str, resp_url: str):
+    def __init__(self, resp_data: str, resp_url: str, **kwargs: Any):
         """Initializes with the response text and URL.
 
         Args:
-            resp_text: the text of the response.
+            resp_data: the text of the response.
             resp_url: URL to the search result page.
         """
-        utf8_parser = HTMLParser(encoding="utf-8")
-        data = PyQuery(fromstring(resp_text, parser=utf8_parser))
+        super().__init__(resp_data, resp_url, **kwargs)
+
+    def _parse_response(self, resp_data: str, **kwargs) -> None:
+        """Parse search response data."""
+        data = parse_html(resp_data)
         self.origin: PyQuery = data
         data_div = data.find('div.Root[id^="CbirSites_infinite"]')
         data_json = json_loads(data_div.attr("data-state"))
         sites = data_json["sites"]
         self.raw: list[YandexItem] = [YandexItem(site) for site in sites]
-        self.url: str = resp_url

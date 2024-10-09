@@ -1,8 +1,12 @@
-from lxml.html import HTMLParser, fromstring
+from typing import Any
+
 from pyquery import PyQuery
 
+from ..utils import parse_html
+from .base import BaseSearchItem, BaseSearchResponse
 
-class EHentaiItem:
+
+class EHentaiItem(BaseSearchItem):
     """Represents a single e-hentai gallery item.
 
     Holds details of a gallery from an e-hentai reverse image search.
@@ -17,16 +21,16 @@ class EHentaiItem:
         tags: List of tags associated with the gallery.
     """
 
-    def __init__(self, data: PyQuery):
+    def __init__(self, data: PyQuery, **kwargs: Any):
         """Initializes an EHentaiItem with data from a search result.
 
         Args:
             data: A PyQuery instance containing the search result item's data.
         """
-        self.origin: PyQuery = data
-        self.thumbnail: str = ""
-        self.url: str = ""
-        self.title: str = ""
+        super().__init__(data, **kwargs)
+
+    def _parse_data(self, data: PyQuery, **kwargs) -> None:
+        """Parse search result data."""
         self.type: str = ""
         self.date: str = ""
         self.tags: list[str] = []
@@ -60,7 +64,7 @@ class EHentaiItem:
         ]
 
 
-class EHentaiResponse:
+class EHentaiResponse(BaseSearchResponse):
     """Encapsulates an e-hentai reverse image search response.
 
     Contains the complete response from an e-hentai reverse image search operation.
@@ -71,21 +75,23 @@ class EHentaiResponse:
         url: URL to the search result page.
     """
 
-    def __init__(self, resp_text: str, resp_url: str):
+    def __init__(self, resp_data: str, resp_url: str, **kwargs: Any):
         """Initializes with the response text and URL.
 
         Args:
             resp_text: The text of the response.
             resp_url: URL to the search result page.
         """
-        utf8_parser = HTMLParser(encoding="utf-8")
-        data = PyQuery(fromstring(resp_text, parser=utf8_parser))
+        super().__init__(resp_data, resp_url, **kwargs)
+
+    def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
+        """Parse search response data."""
+        data = parse_html(resp_data)
         self.origin: PyQuery = data
-        if "No unfiltered results" in resp_text:
+        if "No unfiltered results" in resp_data:
             self.raw = []
         elif tr_items := data.find(".itg").children("tr").items():
             self.raw = [EHentaiItem(i) for i in tr_items if i.children("td")]
         else:
             gl1t_items = data.find(".itg").children(".gl1t").items()
             self.raw = [EHentaiItem(i) for i in gl1t_items]
-        self.url: str = resp_url

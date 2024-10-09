@@ -1,7 +1,9 @@
 from typing import Any, Optional
 
+from .base import BaseSearchItem, BaseSearchResponse
 
-class SauceNAOItem:
+
+class SauceNAOItem(BaseSearchItem):
     """Represents a single SauceNAO search result item.
 
     Holds details of a result from a SauceNAO reverse image search.
@@ -21,26 +23,28 @@ class SauceNAOItem:
         source: Specific source of the search result.
     """
 
-    def __init__(self, data: dict[str, Any]):
+    def __init__(self, data: dict[str, Any], **kwargs: Any):
         """Initializes a SauceNAOItem with data from a search result.
 
         Args:
             data: A dictionary containing the search result data.
         """
-        result_header = data["header"]
-        result_data = data["data"]
-        self.origin: dict[str, Any] = data
-        self.similarity: float = float(result_header["similarity"])
-        self.thumbnail: str = result_header["thumbnail"]
-        self.index_id: int = result_header["index_id"]
-        self.index_name: str = result_header["index_name"]
-        self.hidden: int = result_header.get("hidden", 0)
-        self.title: str = self._get_title(result_data)
-        self.url: str = self._get_url(result_data)
-        self.ext_urls: list[str] = result_data.get("ext_urls", [])
-        self.author: str = self._get_author(result_data)
-        self.author_url: str = self._get_author_url(result_data)
-        self.source: str = result_data.get("source", "")
+        super().__init__(data, **kwargs)
+
+    def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
+        """Parse search result data."""
+        header = data["header"]
+        self.similarity = float(header["similarity"])
+        self.thumbnail = header["thumbnail"]
+        self.index_id = header["index_id"]
+        self.index_name = header["index_name"]
+        self.hidden = header.get("hidden", 0)
+        self.title = self._get_title(data["data"])
+        self.url = self._get_url(data["data"])
+        self.ext_urls = data["data"].get("ext_urls", [])
+        self.author = self._get_author(data["data"])
+        self.author_url = self._get_author_url(data["data"])
+        self.source = data["data"].get("source", "")
 
     @staticmethod
     def _get_title(data: dict[str, Any]) -> str:
@@ -152,7 +156,7 @@ class SauceNAOItem:
         return str(data.get("author_url", ""))
 
 
-class SauceNAOResponse:
+class SauceNAOResponse(BaseSearchResponse):
     """Encapsulates a SauceNAO reverse image search response.
 
     Contains the complete response from a SauceNAO reverse image search operation.
@@ -175,29 +179,33 @@ class SauceNAOResponse:
         url: URL to the search result page.
     """
 
-    def __init__(self, data: dict[str, Any]):
+    def __init__(self, resp_data: dict[str, Any], resp_url: str, **kwargs):
         """Initializes with the response data.
 
         Args:
-            data: A dictionary containing the parsed response data from SauceNAO.
+            resp_data: A dictionary containing the parsed response data from SauceNAO.
+            resp_url: URL to the search result page.
         """
-        self.status_code: int = data["status_code"]
-        res_header = data["header"]
-        res_results = data.get("results", [])
-        self.raw: list[SauceNAOItem] = [SauceNAOItem(i) for i in res_results]
-        self.origin: dict[str, Any] = data
-        self.short_remaining: Optional[int] = res_header.get("short_remaining")
-        self.long_remaining: Optional[int] = res_header.get("long_remaining")
-        self.user_id: Optional[int] = res_header.get("user_id")
-        self.account_type: Optional[int] = res_header.get("account_type")
-        self.short_limit: Optional[str] = res_header.get("short_limit")
-        self.long_limit: Optional[str] = res_header.get("long_limit")
-        self.status: Optional[int] = res_header.get("status")
-        self.results_requested: Optional[int] = res_header.get("results_requested")
-        self.search_depth: Optional[int] = res_header.get("search_depth")
-        self.minimum_similarity: Optional[float] = res_header.get("minimum_similarity")
-        self.results_returned: Optional[int] = res_header.get("results_returned")
+        super().__init__(resp_data, resp_url, **kwargs)
+
+    def _parse_response(self, resp_data: dict[str, Any], **kwargs) -> None:
+        """Parse search response data."""
+        self.status_code: int = resp_data["status_code"]
+        header = resp_data["header"]
+        results = resp_data.get("results", [])
+        self.raw: list[SauceNAOItem] = [SauceNAOItem(i) for i in results]
+        self.short_remaining: Optional[int] = header.get("short_remaining")
+        self.long_remaining: Optional[int] = header.get("long_remaining")
+        self.user_id: Optional[int] = header.get("user_id")
+        self.account_type: Optional[int] = header.get("account_type")
+        self.short_limit: Optional[str] = header.get("short_limit")
+        self.long_limit: Optional[str] = header.get("long_limit")
+        self.status: Optional[int] = header.get("status")
+        self.results_requested: Optional[int] = header.get("results_requested")
+        self.search_depth: Optional[int] = header.get("search_depth")
+        self.minimum_similarity: Optional[float] = header.get("minimum_similarity")
+        self.results_returned: Optional[int] = header.get("results_returned")
         self.url: str = (
             f"https://saucenao.com/search.php?url="
-            f'https://saucenao.com{res_header.get("query_image_display")}'
+            f'https://saucenao.com{header.get("query_image_display")}'
         )

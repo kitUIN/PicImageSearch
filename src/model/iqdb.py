@@ -1,8 +1,12 @@
-from lxml.html import HTMLParser, fromstring
+from typing import Any
+
 from pyquery import PyQuery
 
+from ..utils import parse_html
+from .base import BaseSearchItem, BaseSearchResponse
 
-class IqdbItem:
+
+class IqdbItem(BaseSearchItem):
     """Represents a single IQDB search result item.
 
     Holds details of a result from an IQDB reverse image search.
@@ -18,20 +22,20 @@ class IqdbItem:
         similarity: Percentage similarity between the search image and the result.
     """
 
-    def __init__(self, data: PyQuery):
+    def __init__(self, data: PyQuery, **kwargs: Any):
         """Initializes an IqdbItem with data from a search result.
 
         Args:
             data: A PyQuery instance containing the search result item's data.
         """
-        self.origin: PyQuery = data
+        super().__init__(data, **kwargs)
+
+    def _parse_data(self, data: PyQuery, **kwargs) -> None:
+        """Parse search result data."""
         self.content: str = ""
-        self.url: str = ""
         self.source: str = ""
         self.other_source: list[dict[str, str]] = []
-        self.thumbnail: str = ""
         self.size: str = ""
-        self.similarity: float = 0
         self._arrange(data)
 
     def _arrange(self, data: PyQuery) -> None:
@@ -62,7 +66,7 @@ class IqdbItem:
             )
         self.size = tr_list[2]("td").text()
         similarity_raw = tr_list[3]("td").text()
-        self.similarity = float(similarity_raw.rstrip("% similarity"))
+        self.similarity = float(similarity_raw.removesuffix("% similarity"))
 
     @staticmethod
     def _get_url(url: str) -> str:
@@ -77,7 +81,7 @@ class IqdbItem:
         return url if url.startswith("http") else f"https:{url}"
 
 
-class IqdbResponse:
+class IqdbResponse(BaseSearchResponse):
     """Encapsulates an IQDB reverse image search response.
 
     Contains the complete response from an IQDB reverse image search operation.
@@ -93,22 +97,24 @@ class IqdbResponse:
         url: URL to the original IQDB search result page.
     """
 
-    def __init__(self, resp_text: str):
+    def __init__(self, resp_data: str, resp_url: str, **kwargs: Any):
         """Initializes with the response text.
 
         Args:
-            resp_text: The text of the response.
+            resp_data: The text of the response.
+            resp_url: URL to the search result page.
         """
-        utf8_parser = HTMLParser(encoding="utf-8")
-        data = PyQuery(fromstring(resp_text, parser=utf8_parser))
+        super().__init__(resp_data, resp_url, **kwargs)
+
+    def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
+        """Parse search response data."""
+        data = parse_html(resp_data)
         self.origin: PyQuery = data
-        self.raw: list[IqdbItem] = []
         self.more: list[IqdbItem] = []
         self.saucenao_url: str = ""
         self.ascii2d_url: str = ""
         self.google_url: str = ""
         self.tineye_url: str = ""
-        self.url: str = ""
         self._arrange(data)
 
     def _arrange(self, data: PyQuery) -> None:

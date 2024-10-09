@@ -1,5 +1,7 @@
 from typing import Any, Optional
 
+from .base import BaseSearchItem, BaseSearchResponse
+
 
 class TraceMoeMe:
     """Encapsulates user-related data from the TraceMoe API.
@@ -25,7 +27,7 @@ class TraceMoeMe:
         self.quotaUsed: int = data["quotaUsed"]
 
 
-class TraceMoeItem:
+class TraceMoeItem(BaseSearchItem):
     """Represents a single TraceMoe search result item.
 
     Holds details of a result from a TraceMoe reverse image search.
@@ -69,7 +71,10 @@ class TraceMoeItem:
             mute: Indicates whether to mute the video excerpt.
             size: Size parameter for modifying video and image URLs.
         """
-        self.origin: dict[str, Any] = data
+        super().__init__(data, mute=mute, size=size)
+
+    def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
+        """Parse search result data."""
         self.anime_info: dict[str, Any] = {}
         self.idMal: int = 0
         self.title: dict[str, str] = {}
@@ -93,15 +98,16 @@ class TraceMoeItem:
         self.video: str = data["video"]
         self.image: str = data["image"]
         # Modify video and image URLs based on size
+        size = kwargs.get("size")
         if size in ["l", "s", "m"]:
             self.video += f"&size={size}"
             self.image += f"&size={size}"
         # If muted, add mute parameter to video URL
-        if mute:
+        if kwargs.get("mute"):
             self.video += "&mute"
 
 
-class TraceMoeResponse:
+class TraceMoeResponse(BaseSearchResponse):
     """Encapsulates a TraceMoe reverse image search response.
 
     Contains the complete response from a TraceMoe reverse image search operation.
@@ -115,29 +121,34 @@ class TraceMoeResponse:
 
     def __init__(
         self,
-        data: dict[str, Any],
+        resp_data: dict[str, Any],
+        resp_url: str,
         mute: bool,
         size: Optional[str],
     ):
         """Initializes with the response data.
 
         Args:
-            data: A dictionary containing parsed response data from TraceMoe.
+            resp_data: A dictionary containing parsed response data from TraceMoe.
+            resp_url: URL to the search result page.
             mute: Flag for muting video excerpts in search results.
             size: Size parameter for modifying video and image URLs.
         """
-        self.origin: dict[str, Any] = data
+        super().__init__(resp_data, resp_url, mute=mute, size=size)
+
+    def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
+        """Parse search response data."""
         self.raw: list[TraceMoeItem] = []
-        res_docs = data["result"]
+        res_docs = resp_data["result"]
         self.raw.extend(
             [
                 TraceMoeItem(
                     i,
-                    mute=mute,
-                    size=size,
+                    mute=kwargs.get("mute"),
+                    size=kwargs.get("size"),
                 )
                 for i in res_docs
             ]
         )
-        self.frameCount: int = data["frameCount"]
-        self.error: str = data["error"]
+        self.frameCount: int = resp_data["frameCount"]
+        self.error: str = resp_data["error"]

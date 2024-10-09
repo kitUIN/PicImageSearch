@@ -1,7 +1,10 @@
 from collections import namedtuple
+from typing import Any
 
-from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
+
+from ..utils import parse_html
+from .base import BaseSearchItem, BaseSearchResponse
 
 BASE_URL = "https://ascii2d.net"
 SUPPORTED_SOURCES = [
@@ -16,7 +19,7 @@ SUPPORTED_SOURCES = [
 URL = namedtuple("URL", ["href", "text"])
 
 
-class Ascii2DItem:
+class Ascii2DItem(BaseSearchItem):
     """Represents a single Ascii2D search result item.
 
     Holds details of a result from an Ascii2D reverse image search.
@@ -33,13 +36,16 @@ class Ascii2DItem:
         author_url: URL to the author's page or profile.
     """
 
-    def __init__(self, data: PyQuery):
+    def __init__(self, data: PyQuery, **kwargs):
         """Initializes an Ascii2DItem with data from a search result.
 
         Args:
             data: A PyQuery instance containing the search result item's data.
         """
-        self.origin: PyQuery = data
+        super().__init__(data, **kwargs)
+
+    def _parse_data(self, data: PyQuery, **kwargs) -> None:
+        """Parse search result data."""
         self.hash: str = data("div.hash").eq(0).text()
         self.detail: str = data("small").eq(0).text()
         image_source = data("img").eq(0).attr("src")
@@ -48,9 +54,7 @@ class Ascii2DItem:
             if image_source.startswith("/")
             else image_source
         )
-        self.url: str = ""
         self.url_list: list[URL] = []
-        self.title: str = ""
         self.author: str = ""
         self.author_url: str = ""
         self._arrange(data)
@@ -143,7 +147,7 @@ class Ascii2DItem:
             self.url_list = [URL(self.url, links.eq(0).text())]
 
 
-class Ascii2DResponse:
+class Ascii2DResponse(BaseSearchResponse):
     """Encapsulates an Ascii2D reverse image search response.
 
     Contains the complete response from an Ascii2D reverse image search operation.
@@ -154,17 +158,19 @@ class Ascii2DResponse:
         url: URL to the search result page.
     """
 
-    def __init__(self, resp_text: str, resp_url: str):
+    def __init__(self, resp_data: str, resp_url: str, **kwargs: Any):
         """Initializes with the response text and URL.
 
         Args:
-            resp_text: The text of the response.
+            resp_data: The data of the response.
             resp_url: URL to the search result page.
         """
-        utf8_parser = HTMLParser(encoding="utf-8")
-        data = PyQuery(fromstring(resp_text, parser=utf8_parser))
+        super().__init__(resp_data, resp_url, **kwargs)
+
+    def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
+        """Parse search response data."""
+        data = parse_html(resp_data)
         self.origin: PyQuery = data
         self.raw: list[Ascii2DItem] = [
             Ascii2DItem(i) for i in data.find("div.row.item-box").items()
         ]
-        self.url: str = resp_url

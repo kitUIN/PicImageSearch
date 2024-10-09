@@ -75,4 +75,4 @@ class Iqdb(BaseSearchEngine):
             files=files,
         )
 
-        return IqdbResponse(resp.text)
+        return IqdbResponse(resp.text, resp.url)

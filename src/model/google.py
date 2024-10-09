@@ -1,11 +1,13 @@
 from re import compile
-from typing import Optional
+from typing import Any, Optional
 
-from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
 
+from ..utils import parse_html
+from .base import BaseSearchItem, BaseSearchResponse
 
-class GoogleItem:
+
+class GoogleItem(BaseSearchItem):
     """Represents a single Google search result item.
 
     Holds details of a result from a Google reverse image search.
@@ -24,13 +26,16 @@ class GoogleItem:
             data: A PyQuery instance containing the search result item's data.
             thumbnail: Optional base64 encoded thumbnail image.
         """
-        self.origin: PyQuery = data
+        super().__init__(data, thumbnail=thumbnail)
+
+    def _parse_data(self, data: PyQuery, **kwargs) -> None:
+        """Parse search result data."""
         self.title: str = data("h3").text()
         self.url: str = data("a").eq(0).attr("href")
-        self.thumbnail: Optional[str] = thumbnail
+        self.thumbnail: Optional[str] = kwargs.get("thumbnail")
 
 
-class GoogleResponse:
+class GoogleResponse(BaseSearchResponse):
     """Encapsulates a Google reverse image search response.
 
     Contains the complete response from a Google reverse image search operation.
@@ -45,7 +50,7 @@ class GoogleResponse:
 
     def __init__(
         self,
-        resp_text: str,
+        resp_data: str,
         resp_url: str,
         page_number: int = 1,
         pages: Optional[list[str]] = None,
@@ -53,25 +58,27 @@ class GoogleResponse:
         """Initializes with the response text and URL.
 
         Args:
-            resp_text: The text of the response.
+            resp_data: The text of the response.
             resp_url: URL to the search result page.
             page_number: The current page number in the search results.
             pages: List of URLs to pages of search results.
         """
-        utf8_parser = HTMLParser(encoding="utf-8")
-        data = PyQuery(fromstring(resp_text, parser=utf8_parser))
-        self.origin: PyQuery = data
-        self.page_number: int = page_number
-        self.url: str = resp_url
+        super().__init__(resp_data, resp_url, page_number=page_number, pages=pages)
 
-        if pages:
+    def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
+        """Parse search response data."""
+        data = parse_html(resp_data)
+        self.origin: PyQuery = data
+        self.page_number: int = kwargs.get("page_number")
+
+        if pages := kwargs.get("pages"):
             self.pages: list[str] = pages
         else:
             self.pages = [
                 f'https://www.google.com{i.attr("href")}'
                 for i in data.find('a[aria-label~="Page"]').items()
             ]
-            self.pages.insert(0, resp_url)
+            self.pages.insert(0, kwargs.get("resp_url"))
 
         script_list = list(data.find("script").items())
         thumbnail_dict: dict[str, str] = self.create_thumbnail_dict(script_list)
