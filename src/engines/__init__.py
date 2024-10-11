@@ -6,6 +6,7 @@ from .iqdb import Iqdb
 from .saucenao import SauceNAO
 from .tracemoe import TraceMoe
 from .yandex import Yandex
+from .copyseeker import Copyseeker
 
 __all__ = [
     "Ascii2D",
@@ -16,4 +17,5 @@ __all__ = [
     "SauceNAO",
     "TraceMoe",
     "Yandex",
+    "Copyseeker",
 ]

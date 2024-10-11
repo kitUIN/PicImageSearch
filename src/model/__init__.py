@@ -6,3 +6,4 @@ from .iqdb import IqdbItem, IqdbResponse
 from .saucenao import SauceNAOItem, SauceNAOResponse
 from .tracemoe import TraceMoeItem, TraceMoeMe, TraceMoeResponse
 from .yandex import YandexItem, YandexResponse
+from .copyseeker import CopyseekerItem, CopyseekerResponse
