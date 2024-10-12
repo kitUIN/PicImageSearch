@@ -49,7 +49,7 @@ includes = ["src"]
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "black>=24.8.0",
+    "black>=24.10.0",
     "loguru>=0.7.2",
     "mypy>=1.11.2",
     "pre-commit>=4.0.1",
