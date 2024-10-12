@@ -1,6 +1,6 @@
 from typing import Any, Optional
-from .base import BaseSearchItem, BaseSearchResponse
 
+from .base import BaseSearchItem, BaseSearchResponse
 
 
 class CopyseekerItem(BaseSearchItem):
@@ -12,10 +12,11 @@ class CopyseekerItem(BaseSearchItem):
         origin: The raw data of the search result item.
         url: URL of the webpage with the image.
         title: Title of the webpage.
-        mainImage: URL of the main image on the page.
-        otherImages: List of URLs of other images on the page.
-        rank: Rank or similarity score of the result.
+        thumbnail: URL of the thumbnail image.
+        thumbnail_list: List of URLs of thumbnail images.
+        website_rank: Website rank of the result.
     """
+
     def __init__(self, data: dict[str, Any], **kwargs: Any):
         """Initializes a CopyseekerItem with data from a search result.
 
@@ -23,15 +24,14 @@ class CopyseekerItem(BaseSearchItem):
             data: A dictionary containing the search result data.
         """
         super().__init__(data, **kwargs)
-        
+
     def _parse_data(self, data: dict[str, Any], **kwargs) -> None:
 
         self.url: str = data["url"]
         self.title: str = data["title"]
-        self.mainImage: str = data.get("mainImage", "")
-        self.otherImages: list[str] = data.get("otherImages", []) # Corrected type hint
-        self.rank: float = data.get("rank", 0.0)
-
+        self.thumbnail: str = data.get("mainImage", "")
+        self.thumbnail_list: list[str] = data.get("otherImages", [])
+        self.website_rank: float = data.get("rank", 0.0)
 
 
 class CopyseekerResponse(BaseSearchResponse):
@@ -41,13 +41,13 @@ class CopyseekerResponse(BaseSearchResponse):
 
     Attributes:
         id: Unique identifier for the search request.
-        imageUrl: URL of the image searched.
-        bestGuessLabel: Copyseeker's best guess for the image category.
+        image_url: URL of the image searched.
+        best_guess_label: Copyseeker's best guess for the image category.
         entities: Entities detected in the image.
-        totalLinksFound: Total number of links found.
+        total: Total number of links found.
         exif: EXIF data extracted from the image.
         raw: List of CopyseekerItem objects, each representing a search result.
-        visuallySimilarImages: List of URLs of visually similar images.
+        similar_image_urls: List of URLs of visually similar images.
         url: URL of the Copyseeker search results page.
     """
 
@@ -63,10 +63,12 @@ class CopyseekerResponse(BaseSearchResponse):
     def _parse_response(self, resp_data: dict[str, Any], **kwargs) -> None:
         """Parse search response data."""
         self.id: str = resp_data["id"]
-        self.imageUrl: str = resp_data["imageUrl"]
-        self.bestGuessLabel: Optional[str] = resp_data.get("bestGuessLabel")
+        self.image_url: str = resp_data["imageUrl"]
+        self.best_guess_label: Optional[str] = resp_data.get("bestGuessLabel")
         self.entities: Optional[str] = resp_data.get("entities")
-        self.totalLinksFound: int = resp_data["totalLinksFound"]
+        self.total: int = resp_data["totalLinksFound"]
         self.exif: dict[str, Any] = resp_data.get("exif", {})
-        self.raw: list[CopyseekerItem] = [CopyseekerItem(page) for page in resp_data.get("pages", [])]
-        self.visuallySimilarImages: list[str] = resp_data.get("visuallySimilarImages", [])
+        self.raw: list[CopyseekerItem] = [
+            CopyseekerItem(page) for page in resp_data.get("pages", [])
+        ]
+        self.similar_image_urls: list[str] = resp_data.get("visuallySimilarImages", [])
