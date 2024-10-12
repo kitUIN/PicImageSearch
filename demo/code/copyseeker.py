@@ -2,9 +2,9 @@ import asyncio
 
 from loguru import logger
 
-from src import Copyseeker, Network
-from src.model import CopyseekerResponse
-from src.sync import Copyseeker as CopyseekerSync
+from PicImageSearch import Copyseeker, Network
+from PicImageSearch.model import CopyseekerResponse
+from PicImageSearch.sync import Copyseeker as CopyseekerSync
 
 # proxies = "http://127.0.0.1:1081"
 proxies = None

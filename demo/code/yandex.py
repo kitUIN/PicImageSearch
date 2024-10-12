@@ -2,9 +2,9 @@ import asyncio
 
 from loguru import logger
 
-from src import Network, Yandex
-from src.model import YandexResponse
-from src.sync import Yandex as YandexSync
+from PicImageSearch import Network, Yandex
+from PicImageSearch.model import YandexResponse
+from PicImageSearch.sync import Yandex as YandexSync
 
 proxies = "http://127.0.0.1:1081"
 # proxies = None

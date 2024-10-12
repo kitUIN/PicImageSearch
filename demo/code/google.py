@@ -3,9 +3,9 @@ from typing import Optional
 
 from loguru import logger
 
-from src import Google, Network
-from src.model import GoogleResponse
-from src.sync import Google as GoogleSync
+from PicImageSearch import Google, Network
+from PicImageSearch.model import GoogleResponse
+from PicImageSearch.sync import Google as GoogleSync
 
 proxies = "http://127.0.0.1:1080"
 # proxies = None
