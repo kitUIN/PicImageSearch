@@ -9,7 +9,18 @@ import asyncio
 import functools
 import inspect
 
-from . import Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe, Yandex
+from . import (
+    Ascii2D,
+    BaiDu,
+    Copyseeker,
+    EHentai,
+    Google,
+    Iqdb,
+    Network,
+    SauceNAO,
+    TraceMoe,
+    Yandex,
+)
 
 
 def _syncify_wrap(class_type, method_name):  # type: ignore
@@ -55,11 +66,12 @@ def syncify(*classes):  # type: ignore
                 _syncify_wrap(c, name)  # type: ignore
 
 
-syncify(Ascii2D, BaiDu, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe, Yandex)  # type: ignore
+syncify(Ascii2D, BaiDu, Copyseeker, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe, Yandex)  # type: ignore
 
 __all__ = [
     "Ascii2D",
     "BaiDu",
+    "Copyseeker",
     "EHentai",
     "Google",
     "Iqdb",
