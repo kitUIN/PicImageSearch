@@ -28,21 +28,22 @@
 
 ## 支持的搜索引擎
 
-| 引擎       | 网站                                 |
-|----------|------------------------------------|
-| ASCII2D  | <https://ascii2d.net/>             |
-| Baidu    | <https://graph.baidu.com/>         |
-| E-Hentai | <https://e-hentai.org/>            |
-| ExHentai | <https://exhentai.org/>            |
-| Google   | <https://www.google.com/imghp>     |
-| IQDB     | <https://iqdb.org/>                |
-| SauceNAO | <https://saucenao.com/>            |
-| TraceMoe | <https://trace.moe/>               |
-| Yandex   | <https://yandex.com/images/search> |
+| 引擎         | 网站                                 |
+|------------|------------------------------------|
+| ASCII2D    | <https://ascii2d.net/>             |
+| Baidu      | <https://graph.baidu.com/>         |
+| Copyseeker | <https://copyseeker.net/>          |
+| E-Hentai   | <https://e-hentai.org/>            |
+| ExHentai   | <https://exhentai.org/>            |
+| Google     | <https://www.google.com/imghp>     |
+| IQDB       | <https://iqdb.org/>                |
+| SauceNAO   | <https://saucenao.com/>            |
+| TraceMoe   | <https://trace.moe/>               |
+| Yandex     | <https://yandex.com/images/search> |
 
 ## 使用方法
 
-详细信息请参阅 [文档](https://pic-image-search.kituin.fun/) 或者 [示例代码](demo/cn/)。  
+详细信息请参阅 [文档](https://pic-image-search.kituin.fun/) 或者 [示例代码](demo/code/)。  
 `同步`请使用 `from PicImageSearch.sync import ...` 导入。  
 `异步`请使用 `from PicImageSearch import Network,...` 导入。  
 **推荐使用异步。**
