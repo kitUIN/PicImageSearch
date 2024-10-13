@@ -28,10 +28,11 @@
 
 ## 支持的搜索引擎
 
-| 引擎       | 网站                                |
+| 引擎         | 网站                                 |
 |------------|------------------------------------|
 | ASCII2D    | <https://ascii2d.net/>             |
 | Baidu      | <https://graph.baidu.com/>         |
+| Copyseeker | <https://copyseeker.net/>          |
 | E-Hentai   | <https://e-hentai.org/>            |
 | ExHentai   | <https://exhentai.org/>            |
 | Google     | <https://www.google.com/imghp>     |
@@ -39,7 +40,6 @@
 | SauceNAO   | <https://saucenao.com/>            |
 | TraceMoe   | <https://trace.moe/>               |
 | Yandex     | <https://yandex.com/images/search> |
-| Copyseeker | <https://copyseeker.net/>          |
 
 ## 使用方法
 

@@ -32,6 +32,7 @@ Read in other languages: [English](README.md), [中文](README.cn.md), [Русс
 |------------|------------------------------------|
 | ASCII2D    | <https://ascii2d.net/>             |
 | Baidu      | <https://graph.baidu.com/>         |
+| Copyseeker | <https://copyseeker.net/>          |
 | E-Hentai   | <https://e-hentai.org/>            |
 | ExHentai   | <https://exhentai.org/>            |
 | Google     | <https://www.google.com/imghp>     |
@@ -39,7 +40,6 @@ Read in other languages: [English](README.md), [中文](README.cn.md), [Русс
 | SauceNAO   | <https://saucenao.com/>            |
 | TraceMoe   | <https://trace.moe/>               |
 | Yandex     | <https://yandex.com/images/search> |
-| Copyseeker | <https://copyseeker.net/>          |
 
 ## Usage
 
