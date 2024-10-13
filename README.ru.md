@@ -28,21 +28,22 @@
 
 ## Поддерживаемые сервисы
 
-| Поисковик | Веб-сайт                           |
-|-----------|------------------------------------|
-| ASCII2D   | <https://ascii2d.net/>             |
-| Baidu     | <https://graph.baidu.com/>         |
-| E-Hentai  | <https://e-hentai.org/>            |
-| ExHentai  | <https://exhentai.org/>            |
-| Google    | <https://www.google.com/imghp>     |
-| IQDB      | <https://iqdb.org/>                |
-| SauceNAO  | <https://saucenao.com/>            |
-| TraceMoe  | <https://trace.moe/>               |
-| Yandex    | <https://yandex.com/images/search> |
+| Поисковик  | Веб-сайт                           |
+|------------|------------------------------------|
+| ASCII2D    | <https://ascii2d.net/>             |
+| Baidu      | <https://graph.baidu.com/>         |
+| E-Hentai   | <https://e-hentai.org/>            |
+| ExHentai   | <https://exhentai.org/>            |
+| Google     | <https://www.google.com/imghp>     |
+| IQDB       | <https://iqdb.org/>                |
+| SauceNAO   | <https://saucenao.com/>            |
+| TraceMoe   | <https://trace.moe/>               |
+| Yandex     | <https://yandex.com/images/search> |
+| Copyseeker | <https://copyseeker.net/>          |
 
 ## Применение
 
-Подробности см. в [документации](https://pic-image-search.kituin.fun/) или в [демонстрационных примерах](demo/ru/).  
+Подробности см. в [документации](https://pic-image-search.kituin.fun/) или в [демонстрационных примерах](demo/code/).  
 Для `синхронного` использования импортируйте `from PicImageSearch.sync import ...` .  
 Для `асинхронного` использования импортируйте `from PicImageSearch import Network,...` .  
 **Рекомендуется использовать асинхронный режим.**

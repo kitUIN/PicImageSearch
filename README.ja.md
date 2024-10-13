@@ -28,21 +28,22 @@
 
 ## サポート
 
-| エンジン     | ウェブサイト                             |
-|----------|------------------------------------|
-| ASCII2D  | <https://ascii2d.net/>             |
-| Baidu    | <https://graph.baidu.com/>         |
-| E-Hentai | <https://e-hentai.org/>            |
-| ExHentai | <https://exhentai.org/>            |
-| Google   | <https://www.google.com/imghp>     |
-| IQDB     | <https://iqdb.org/>                |
-| SauceNAO | <https://saucenao.com/>            |
-| TraceMoe | <https://trace.moe/>               |
-| Yandex   | <https://yandex.com/images/search> |
+| エンジン    | ウェブサイト                        |
+|------------|------------------------------------|
+| ASCII2D    | <https://ascii2d.net/>             |
+| Baidu      | <https://graph.baidu.com/>         |
+| E-Hentai   | <https://e-hentai.org/>            |
+| ExHentai   | <https://exhentai.org/>            |
+| Google     | <https://www.google.com/imghp>     |
+| IQDB       | <https://iqdb.org/>                |
+| SauceNAO   | <https://saucenao.com/>            |
+| TraceMoe   | <https://trace.moe/>               |
+| Yandex     | <https://yandex.com/images/search> |
+| Copyseeker | <https://copyseeker.net/>          |
 
 ## 使用方法
 
-詳細は [ドキュメント](https://pic-image-search.kituin.fun/) または [デモコード](demo/ja/) を参照してください。  
+詳細は [ドキュメント](https://pic-image-search.kituin.fun/) または [デモコード](demo/code/) を参照してください。  
 `同期`を使用する場合は `from PicImageSearch.sync import ...` をインポートしてください。  
 `非同期`を使用する場合は `from PicImageSearch import Network,...` をインポートしてください。  
 **非同期の使用を推奨します。**
