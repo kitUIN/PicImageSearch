@@ -51,9 +51,9 @@ includes = ["PicImageSearch"]
 dev = [
     "black>=24.10.0",
     "loguru>=0.7.2",
-    "mypy>=1.11.2",
+    "mypy>=1.12.1",
     "pre-commit>=4.0.1",
-    "ruff>=0.6.9",
+    "ruff>=0.7.0",
 ]
 
 [tool.mypy]
