@@ -12,6 +12,7 @@ import inspect
 from . import (
     Ascii2D,
     BaiDu,
+    Bing,
     Copyseeker,
     EHentai,
     Google,
@@ -71,6 +72,7 @@ syncify(Ascii2D, BaiDu, Copyseeker, EHentai, Google, Iqdb, Network, SauceNAO, Tr
 __all__ = [
     "Ascii2D",
     "BaiDu",
+    "Bing",
     "Copyseeker",
     "EHentai",
     "Google",
