@@ -6,14 +6,12 @@ from .base import BaseSearchItem, BaseSearchResponse
 class BingItem(BaseSearchItem):
     """Represents a single Bing search result item.
 
-    Holds details of a result from a Bing reverse image search.
-
     Attributes:
-        origin: The raw data of the search result item.
-        title: Title of the search result.
-        url: URL of the webpage with the image.
-        thumbnail: URL of the thumbnail image.
-        image_url: URL of the page hosting the image.
+        origin (dict): The raw JSON data of the search result item.
+        title (str): Title or name of the search result.
+        url (str): URL of the webpage containing the image.
+        thumbnail (str): URL of the thumbnail version of the image.
+        image_url (str): Direct URL to the full-size image.
     """
 
     def _parse_data(self, data: dict[str, Any], **kwargs) -> None:
@@ -25,11 +23,11 @@ class BingItem(BaseSearchItem):
 
 
 class RelatedSearchItem:
-    """Represents a related search item suggested by Bing.
+    """Represents a related search suggestion from Bing's image search.
 
     Attributes:
-        text: Text of the related search query.
-        thumbnail: URL of the thumbnail image associated with the related search.
+        text (str): The suggested search query text.
+        thumbnail (str): URL of the thumbnail image associated with this suggestion.
     """
 
     def __init__(self, data: dict[str, Any]):
@@ -38,13 +36,13 @@ class RelatedSearchItem:
 
 
 class PagesIncludingItem:
-    """Represents a page that includes the searched image.
+    """Represents a webpage that contains the searched image.
 
     Attributes:
-        name: Title of the page including the image.
-        thumbnail: URL of the page's thumbnail.
-        url: URL of the page.
-        image_url: URL of the image on the page.
+        name (str): Title of the webpage.
+        thumbnail (str): URL of the thumbnail image from this page.
+        url (str): URL of the webpage containing the image.
+        image_url (str): Direct URL to the image on this page.
     """
 
     def __init__(self, data: dict[str, Any]):
@@ -55,14 +53,13 @@ class PagesIncludingItem:
 
 
 class VisualSearchItem:
-    """Represents a visually similar image found by Bing.
+    """Represents a visually similar image found by Bing's visual search.
 
     Attributes:
-        name: Title or description of the visually similar image.
-        thumbnail: URL of the thumbnail for the visually similar image.
-        url: URL of the visually similar image.
-        image_url: URL of the page hosting the visually similar image.
-
+        name (str): Title or description of the similar image.
+        thumbnail (str): URL of the thumbnail version.
+        url (str): URL of the webpage containing this similar image.
+        image_url (str): Direct URL to the full-size similar image.
     """
 
     def __init__(self, data: dict[str, Any]):
@@ -73,13 +70,13 @@ class VisualSearchItem:
 
 
 class Attraction:
-    """Represents a travel attraction suggested by Bing.
+    """Represents a tourist attraction identified in the image.
 
     Attributes:
-        url: URL for information about the attraction.
-        title: Name of the attraction.
-        search_url: URL for querying again on Bing about the attraction.
-        interest_types: List of interest types associated with the attraction.
+        url (str): URL to the attraction's information page.
+        title (str): Name of the attraction.
+        search_url (str): URL for performing a new Bing search about this attraction.
+        interest_types (list[str]): Categories or types of interest for this attraction.
     """
 
     def __init__(self, data: dict[str, Any]):
@@ -90,14 +87,14 @@ class Attraction:
 
 
 class TravelCard:
-    """Represents a travel card with information related to the image.
+    """Represents a travel-related information card from Bing.
 
     Attributes:
-        card_type: Type of the travel card.
-        title: Title of the travel card.
-        url: URL associated with the travel card.
-        image_url: Image URL on the travel card.
-        image_source_url: Source URL of the image on the travel card.
+        card_type (str): Type or category of the travel card.
+        title (str): Title or heading of the card.
+        url (str): URL for more information about this travel topic.
+        image_url (str): URL of the main image on the card.
+        image_source_url (str): Source URL of the image used in the card.
     """
 
     def __init__(self, data: dict[str, Any]):
@@ -109,13 +106,13 @@ class TravelCard:
 
 
 class TravelInfo:
-    """Represents travel-related information extracted by Bing.
+    """Contains comprehensive travel information related to the image.
 
     Attributes:
-        destination_name: Name of the travel destination.
-        travel_guide_url: URL to a travel guide related to the destination.
-        attractions: List of Attraction objects representing points of interest.
-        travel_cards: List of TravelCard objects with related travel info.
+        destination_name (str): Name of the identified travel destination.
+        travel_guide_url (str): URL to Bing's travel guide for this destination.
+        attractions (list[Attraction]): List of related tourist attractions.
+        travel_cards (list[TravelCard]): Collection of related travel information cards.
     """
 
     def __init__(self, data: dict[str, Any]):
@@ -130,14 +127,16 @@ class TravelInfo:
 
 
 class EntityItem:
-    """Represents an entity identified in the image by Bing.
+    """Represents an entity (person, place, or thing) identified in the image.
 
     Attributes:
-        name: Name of the entity.
-        thumbnail: URL of the entity's thumbnail image.
-        description: Description of the entity.
-        profiles: List of social media profiles associated with the entity.
-        short_description: Short description or entity type hint.
+        name (str): Name of the identified entity.
+        thumbnail (str): URL to the entity's thumbnail image.
+        description (str): Detailed description of the entity.
+        profiles (list[dict]): List of social media profiles, each containing:
+            - url (str): Profile URL
+            - social_network (str): Name of the social network
+        short_description (str): Brief description or entity type.
     """
 
     def __init__(self, data: dict[str, Any]):
@@ -161,19 +160,26 @@ class EntityItem:
 
 
 class BingResponse(BaseSearchResponse):
-    """Encapsulates a Bing reverse image search response.
+    """Encapsulates the complete response from a Bing reverse image search.
 
-    Contains the complete response from a Bing reverse image search operation.
+    This class processes and organizes various types of information returned by Bing's
+    image search API, including similar images, related pages, entity information,
+    and travel-related data.
 
     Attributes:
-        origin: The raw response data.
-        pages_including: List of PagesIncludingItem objects.
-        visual_search: List of VisualSearchItem objects.
-        related_searches: List of RelatedSearchItem objects.
-        best_guess: Bing's best guess for the image query.
-        travel: TravelInfo object if travel-related information is found.
-        entities: List of EntityItem objects representing identified entities.
-        url: URL to the search results page.
+        origin (dict): The raw JSON response data.
+        pages_including (list[PagesIncludingItem]): Pages containing the searched image.
+        visual_search (list[VisualSearchItem]): Visually similar images.
+        related_searches (list[RelatedSearchItem]): Related search suggestions.
+        best_guess (Optional[str]): Bing's best guess for what the image represents.
+        travel (Optional[TravelInfo]): Travel-related information if applicable.
+        entities (list[EntityItem]): Entities identified in the image.
+        url (str): URL to the Bing search results page.
+
+    Note:
+        The actual content available in the response depends on what Bing's API
+        identifies in the searched image. Not all attributes will contain data
+        for every search.
     """
 
     def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:

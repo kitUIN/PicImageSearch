@@ -67,7 +67,7 @@ def syncify(*classes):  # type: ignore
                 _syncify_wrap(c, name)  # type: ignore
 
 
-syncify(Ascii2D, BaiDu, Copyseeker, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe, Yandex)  # type: ignore
+syncify(Ascii2D, BaiDu, Bing, Copyseeker, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe, Yandex)  # type: ignore
 
 __all__ = [
     "Ascii2D",

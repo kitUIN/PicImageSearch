@@ -6,21 +6,22 @@ from .base import BaseSearchItem, BaseSearchResponse
 class SauceNAOItem(BaseSearchItem):
     """Represents a single SauceNAO search result item.
 
-    Holds details of a result from a SauceNAO reverse image search.
+    This class processes and structures individual search results from SauceNAO,
+    providing easy access to various metadata about the found image.
 
     Attributes:
-        origin: The raw data of the search result item.
-        similarity: Similarity score of the search result to the query image.
-        thumbnail: URL of the thumbnail image.
-        index_id: Index number of the result source on SauceNAO.
-        index_name: Name of the result source index.
-        hidden: Indicator of NSFW content; non-zero values indicate hidden content.
-        title: Title of the work associated with the image.
-        url: Direct URL to the work, when available.
-        ext_urls: External URLs for additional information or resources related to the image.
-        author: Author/creator/name of the user responsible for the work.
-        author_url: URL to the profile or page of the author/creator.
-        source: Specific source of the search result.
+        origin (dict): The raw JSON data of the search result.
+        similarity (float): Similarity percentage between the query and result image.
+        thumbnail (str): URL of the result's thumbnail image.
+        index_id (int): Numerical identifier of the source database index.
+        index_name (str): Human-readable name of the source database.
+        hidden (int): NSFW content flag (0 for safe, non-zero for NSFW).
+        title (str): Title of the artwork or content.
+        url (str): Direct URL to the source content.
+        ext_urls (list[str]): List of related URLs for the content.
+        author (str): Creator or uploader of the content.
+        author_url (str): URL to the author's profile page.
+        source (str): Original source platform or website.
     """
 
     def __init__(self, data: dict[str, Any], **kwargs: Any):
@@ -48,13 +49,16 @@ class SauceNAOItem(BaseSearchItem):
 
     @staticmethod
     def _get_title(data: dict[str, Any]) -> str:
-        """Extracts the title from result data.
+        """Extracts the most appropriate title from the result data.
+
+        Attempts to find a title by checking multiple possible fields in order of preference:
+        title -> material -> jp_name -> eng_name -> source -> created_at
 
         Args:
-            data: A dictionary containing the parsed data for an individual result.
+            data: Dictionary containing the parsed result data.
 
         Returns:
-            The title of the work as derived from the result data.
+            str: The most appropriate title found, or empty string if none found.
         """
         return (
             next(
@@ -77,13 +81,19 @@ class SauceNAOItem(BaseSearchItem):
 
     @staticmethod
     def _get_url(data: dict[str, Any]) -> str:
-        """Constructs the URL to the work using the result data.
+        """Constructs the source URL based on the platform-specific identifiers.
+
+        Handles URL generation for various platforms including:
+        - Pixiv
+        - Pawoo
+        - Getchu
+        - Generic external URLs
 
         Args:
-            data: A dictionary containing the search result data.
+            data: Dictionary containing the parsed result data.
 
         Returns:
-            The URL to the work referenced in the search result.
+            str: The constructed URL to the source content, or empty string if no URL can be built.
         """
         if "pixiv_id" in data:
             return f'https://www.pixiv.net/artworks/{data["pixiv_id"]}'
@@ -97,13 +107,18 @@ class SauceNAOItem(BaseSearchItem):
 
     @staticmethod
     def _get_author(data: dict[str, Any]) -> str:
-        """Extracts the author information from the result data.
+        """Extracts the author information from multiple possible fields.
+
+        Checks multiple fields in order of preference:
+        author -> member_name -> creator -> twitter_user_handle -> pawoo_user_display_name ->
+        author_name -> user_name -> artist -> company
 
         Args:
-            data: A dictionary containing the parsed data for an individual result.
+            data: Dictionary containing the parsed result data.
 
         Returns:
-            The name of the author or the user handle associated with the work.
+            str: The author name or empty string if none found. For multiple creators,
+                 returns them joined by commas.
         """
         return (
             next(
@@ -133,13 +148,21 @@ class SauceNAOItem(BaseSearchItem):
 
     @staticmethod
     def _get_author_url(data: dict[str, Any]) -> str:
-        """Constructs the URL to the author's profile or page using the result data.
+        """Constructs the author's profile URL based on the platform.
+
+        Handles URL generation for various platforms including:
+        - Pixiv
+        - Nicovideo Seiga
+        - Nijie
+        - BCY
+        - Twitter
+        - Pawoo
 
         Args:
-            data: A dictionary containing the parsed data for an individual result.
+            data: Dictionary containing the parsed result data.
 
         Returns:
-            The URL to the author's profile or related page.
+            str: The constructed URL to the author's profile, or empty string if no URL can be built.
         """
         if "pixiv_id" in data:
             return f'https://www.pixiv.net/users/{data["member_id"]}'
@@ -157,26 +180,27 @@ class SauceNAOItem(BaseSearchItem):
 
 
 class SauceNAOResponse(BaseSearchResponse):
-    """Encapsulates a SauceNAO reverse image search response.
+    """Encapsulates a complete SauceNAO API response.
 
-    Contains the complete response from a SauceNAO reverse image search operation.
+    This class processes and structures the full response from a SauceNAO search,
+    including rate limit information and search results.
 
     Attributes:
-        status_code: HTTP status code received from SauceNAO.
-        raw: List of SauceNAOItem instances for each search result.
-        origin: The raw response data.
-        short_remaining: Queries remaining under the 30-second rate limit.
-        long_remaining: Queries remaining under the daily rate limit.
-        user_id: User ID of the SauceNAO API account used for the request, if any.
-        account_type: Account type of the SauceNAO API account used for the request, if any.
-        short_limit: Maximum queries allowed under the 30-second rate limit.
-        long_limit: Maximum queries allowed under the daily rate limit.
-        status: Status of the response, indicating success or error types.
-        results_requested: Number of results requested in the search query.
-        search_depth: Number of database indexes searched by SauceNAO.
-        minimum_similarity: Minimum similarity score required for results.
-        results_returned: Number of results returned in the search response.
-        url: URL to the search result page.
+        status_code (int): HTTP status code of the response.
+        raw (list[SauceNAOItem]): List of processed search result items.
+        origin (dict): The raw JSON response data.
+        short_remaining (Optional[int]): Remaining queries in 30-second window.
+        long_remaining (Optional[int]): Remaining queries for the day.
+        user_id (Optional[int]): SauceNAO API user identifier.
+        account_type (Optional[int]): Type of SauceNAO account used.
+        short_limit (Optional[str]): Maximum queries allowed per 30 seconds.
+        long_limit (Optional[str]): Maximum queries allowed per day.
+        status (Optional[int]): API response status code.
+        results_requested (Optional[int]): Number of results requested.
+        search_depth (Optional[int]): Number of databases searched.
+        minimum_similarity (Optional[float]): Minimum similarity threshold.
+        results_returned (Optional[int]): Actual number of results returned.
+        url (str): URL to view the search results on SauceNAO website.
     """
 
     def __init__(self, resp_data: dict[str, Any], resp_url: str, **kwargs):

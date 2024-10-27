@@ -26,7 +26,7 @@ async def test_async() -> None:
 def test_sync() -> None:
     iqdb = IqdbSync(is_3d=True, proxies=proxies)
     resp = iqdb.search(url=url)
-    # resp = iqdb.search(file=file, is_3d=True)
+    # resp = iqdb.search(file=file)
     show_result(resp)  # type: ignore
 
 
@@ -46,5 +46,5 @@ def show_result(resp: IqdbResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(test_async())  # type: ignore
+    # test_sync()  # type: ignore

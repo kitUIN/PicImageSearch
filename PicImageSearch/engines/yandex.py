@@ -7,12 +7,17 @@ from .base import BaseSearchEngine
 
 
 class Yandex(BaseSearchEngine):
-    """API client for the Yandex image search engine.
+    """API client for the Yandex reverse image search engine.
 
-    Used for performing reverse image searches using Yandex service.
+    This class provides an interface to perform reverse image searches using Yandex's service.
+    It supports searching by both image URL and local image file upload.
 
     Attributes:
-        base_url: The base URL for Yandex searches.
+        base_url: The base URL for Yandex image search service.
+
+    Note:
+        - The service might be affected by regional restrictions.
+        - Search results may vary based on the user's location and Yandex's algorithms.
     """
 
     def __init__(
@@ -37,19 +42,27 @@ class Yandex(BaseSearchEngine):
     ) -> YandexResponse:
         """Performs a reverse image search on Yandex.
 
-        Supports searching by image URL or by uploading an image file.
-
-        Requires either 'url' or 'file' to be provided.
+        This method supports two ways of searching:
+        1. Search by image URL
+        2. Search by uploading a local image file
 
         Args:
             url: URL of the image to search.
-            file: Local image file (path or bytes) to search.
+            file: Local image file, can be a path string, bytes data, or Path object.
+            **kwargs: Additional arguments passed to the parent class.
 
         Returns:
-            YandexResponse: Contains search results and additional information.
+            YandexResponse: An object containing:
+                - Search results and metadata
+                - The final search URL used by Yandex
 
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
+
+        Note:
+            - Only one of 'url' or 'file' should be provided.
+            - When using file upload, the image will be sent to Yandex's servers.
+            - The search process involves standard Yandex parameters like 'rpt' and 'cbir_page'.
         """
         await super().search(url, file, **kwargs)
 

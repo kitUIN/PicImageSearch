@@ -33,21 +33,23 @@ class Bing(BaseSearchEngine):
         """Uploads an image to Bing and retrieves the BCID.
 
         Args:
-            file: Local image file (path or bytes) to search.
+            file: Local image file, can be a path string, bytes data, or Path object.
 
         Returns:
-            str: The BCID (Bing Correlation ID) associated with the uploaded image.
+            tuple[str, str]: A tuple containing:
+                - The BCID (Bing Correlation ID) associated with the uploaded image
+                - The response URL from Bing's search page
 
         Raises:
-            ValueError: If the BCID cannot be found on the page after upload.
+            ValueError: If the BCID cannot be found in the response page.
         """
-        url = f"{self.base_url}/images/search?view=detailv2&iss=sbiupload"
+        endpoint = "images/search?view=detailv2&iss=sbiupload"
         image_base64 = b64encode(read_file(file)).decode("utf-8")
         files = {
             "cbir": "sbi",
             "imageBin": image_base64,
         }
-        resp = await self.post(url, files=files)
+        resp = await self._make_request(method="post", endpoint=endpoint, files=files)
 
         if match := re.search(r"(bcid_[A-Za-z0-9-.]+)", resp.text):
             return match[1], str(resp.url)
@@ -57,7 +59,11 @@ class Bing(BaseSearchEngine):
     async def _get_insights(
         self, bcid: Optional[str] = None, image_url: Optional[str] = None
     ) -> dict:
-        """Retrieves insights from Bing using the BCID or image URL.
+        """Retrieves image insights from Bing using either BCID or image URL.
+
+        This method handles two search scenarios:
+        1. Search by image URL directly
+        2. Search by BCID (obtained after uploading an image)
 
         Args:
             bcid: The BCID (Bing Correlation ID) retrieved after uploading an image.
@@ -67,11 +73,10 @@ class Bing(BaseSearchEngine):
             dict: The JSON response containing insights about the image.
 
         Raises:
-            ValueError: If neither `bcid` nor `image_url` is provided.
-            httpx.HTTPStatusError: If the HTTP request to Bing fails.
+            ValueError: If neither bcid nor image_url is provided.
         """
-        url = (
-            f"{self.base_url}/images/api/custom/knowledge"
+        endpoint = (
+            "images/api/custom/knowledge"
             "?rshighlight=true&textDecorations=true&internalFeatures=share"
             "&nbl=1&FORM=SBIHMP&safeSearch=off&mkt=en-us&setLang=en-us&IID=idpins&SFX=1"
         )
@@ -90,18 +95,20 @@ class Bing(BaseSearchEngine):
                     json_dumps({"imageInfo": {"url": image_url, "source": "Url"}}),
                 )
             }
-            resp = await self.post(url, headers=headers, files=files)
+            resp = await self._make_request(
+                method="post", endpoint=endpoint, headers=headers, files=files
+            )
 
-        elif bcid:
-            url += f"&insightsToken={bcid}"
+        else:
+            endpoint += f"&insightsToken={bcid}"
             headers = {
                 "Referer": f"{self.base_url}/images/search?insightsToken={bcid}",
             }
             data = {"imageInfo": {"imageInsightsToken": bcid}, "knowledgeRequest": {}}
             self.client.cookies = None
-            resp = await self.post(url, headers=headers, data=data)
-        else:
-            raise ValueError("Either bcid or image_url must be provided")
+            resp = await self._make_request(
+                method="post", endpoint=endpoint, headers=headers, data=data
+            )
 
         return json_loads(resp.text)
 
@@ -113,22 +120,25 @@ class Bing(BaseSearchEngine):
     ) -> BingResponse:
         """Performs a reverse image search on Bing.
 
-        Supports searching by image URL or by uploading an image file.
-
-        Requires either 'url' or 'file' to be provided.
+        This method supports two ways of searching:
+        1. Search by image URL
+        2. Search by uploading a local image file
 
         Args:
             url: URL of the image to search.
-            file: Local image file (path or bytes) to search.
+            file: Local image file, can be a path string, bytes data, or Path object.
+            **kwargs: Additional arguments passed to the parent class.
 
         Returns:
-            BingResponse: Contains search results and additional information.
+            BingResponse: An object containing the search results and metadata.
 
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
+            ValueError: If BCID cannot be found when uploading an image.
 
         Note:
-            The search process involves multiple HTTP requests to Bing's API.
+            - Only one of 'url' or 'file' should be provided.
+            - The search process involves multiple HTTP requests to Bing's API.
         """
         await super().search(url, file, **kwargs)
 

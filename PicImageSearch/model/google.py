@@ -10,13 +10,13 @@ from .base import BaseSearchItem, BaseSearchResponse
 class GoogleItem(BaseSearchItem):
     """Represents a single Google search result item.
 
-    Holds details of a result from a Google reverse image search.
+    A class that processes and stores individual search result data from Google reverse image search.
 
     Attributes:
-        origin: The raw data of the search result item.
-        title: Title of the search result.
-        url: URL to the search result.
-        thumbnail: Optional base64 encoded thumbnail image.
+        origin (PyQuery): The raw PyQuery object containing the search result data.
+        title (str): The title text of the search result.
+        url (str): The URL link to the search result page.
+        thumbnail (Optional[str]): Base64 encoded thumbnail image, if available.
     """
 
     def __init__(self, data: PyQuery, thumbnail: Optional[str]):
@@ -38,14 +38,15 @@ class GoogleItem(BaseSearchItem):
 class GoogleResponse(BaseSearchResponse):
     """Encapsulates a Google reverse image search response.
 
-    Contains the complete response from a Google reverse image search operation.
+    Processes and stores the complete response from a Google reverse image search,
+    including pagination information and individual search results.
 
     Attributes:
-        origin: The raw response data.
-        page_number: The current page number in the search results.
-        url: URL to the search result page.
-        pages: List of URLs to pages of search results.
-        raw: List of GoogleItem instances for each search result.
+        origin (PyQuery): The raw PyQuery object containing the full response data.
+        page_number (int): Current page number in the search results.
+        url (str): URL of the current search result page.
+        pages (list[str]): List of URLs for all available result pages.
+        raw (list[GoogleItem]): List of processed search result items.
     """
 
     def __init__(
@@ -89,15 +90,23 @@ class GoogleResponse(BaseSearchResponse):
 
     @staticmethod
     def create_thumbnail_dict(script_list: list[PyQuery]) -> dict[str, str]:
-        """Extracts a dictionary of thumbnail images from the list of script tags.
+        """Creates a mapping of image IDs to their base64 encoded thumbnails.
 
-        Parses script tags to extract a mapping of image IDs to their base64 encoded thumbnails.
+        Processes script tags from Google's search results to extract thumbnail images
+        and their corresponding IDs.
 
         Args:
-            script_list: A list of PyQuery objects each containing a script element.
+            script_list (list[PyQuery]): List of PyQuery objects containing script elements
+                from the search results page.
 
         Returns:
-            A dictionary where keys are image IDs and values are base64 encoded images.
+            dict[str, str]: A dictionary where:
+                - Keys are image IDs (format: 'dimg_*')
+                - Values are base64 encoded image strings
+
+        Note:
+            - Handles multiple image formats (jpeg, jpg, png, gif)
+            - Automatically fixes escaped base64 strings by replacing '\x3d' with '='
         """
         thumbnail_dict = {}
         base_64_regex = compile(r"data:image/(?:jpeg|jpg|png|gif);base64,[^'\"]+")

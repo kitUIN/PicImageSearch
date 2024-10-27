@@ -22,18 +22,19 @@ URL = namedtuple("URL", ["href", "text"])
 class Ascii2DItem(BaseSearchItem):
     """Represents a single Ascii2D search result item.
 
-    Holds details of a result from an Ascii2D reverse image search.
+    Holds details of a result from an Ascii2D reverse image search, including image metadata,
+    URLs, author information, and related content.
 
     Attributes:
-        origin: The raw data of the search result item.
-        hash: The hash string from the search result.
-        detail: Image details like dimensions, type, and size.
-        thumbnail: URL of the thumbnail image.
-        url: URL of the webpage with the image.
-        url_list: List of URLs with text descriptions.
-        title: Title of the image or related content.
-        author: Author of the image or related content.
-        author_url: URL to the author's page or profile.
+        origin (PyQuery): The raw PyQuery data of the search result item.
+        hash (str): The hash string from the search result.
+        detail (str): Image details including dimensions, type, and size.
+        thumbnail (str): URL of the thumbnail image.
+        url (str): Primary URL of the webpage containing the image.
+        url_list (list[URL]): List of related URLs with their text descriptions.
+        title (str): Title of the image or related content.
+        author (str): Name of the image author/creator.
+        author_url (str): URL to the author's profile page.
     """
 
     def __init__(self, data: PyQuery, **kwargs):
@@ -45,7 +46,15 @@ class Ascii2DItem(BaseSearchItem):
         super().__init__(data, **kwargs)
 
     def _parse_data(self, data: PyQuery, **kwargs) -> None:
-        """Parse search result data."""
+        """Parses raw search result data into structured attributes.
+
+        Extracts and processes various pieces of information from the PyQuery data,
+        including hash, image details, thumbnail URL, and other metadata.
+
+        Args:
+            data: PyQuery object containing the search result HTML.
+            **kwargs: Additional keyword arguments (unused).
+        """
         self.hash: str = data("div.hash").eq(0).text()
         self.detail: str = data("small").eq(0).text()
         image_source = data("img").eq(0).attr("src")
@@ -60,14 +69,13 @@ class Ascii2DItem(BaseSearchItem):
         self._arrange(data)
 
     def _arrange(self, data: PyQuery) -> None:
-        """Organize search result data.
+        """Organizes and processes the search result data.
 
-        Extracts and sets the URL list, title, author, and author URL from the provided data.
-
-        Also normalizes the URL list and sets backup links if necessary.
+        Coordinates the extraction of URLs, title, author information, and other metadata.
+        Handles the normalization of URLs and sets backup links if necessary.
 
         Args:
-            data: A PyQuery instance containing the search result item's data.
+            data: PyQuery object containing the detail box information.
         """
         if infos := data.find("div.detail-box.gray-link"):
             links = infos.find("a")
@@ -89,12 +97,15 @@ class Ascii2DItem(BaseSearchItem):
             self._arrange_backup_links(data)
 
     def _arrange_links(self, infos: PyQuery, links: PyQuery, mark: str) -> None:
-        """Extract and set the primary and author URLs, along with the title and author name for the search result item.
+        """Processes and organizes the URLs found in the search result.
+
+        Extracts primary URL, author URL, title, and author name based on the source type.
+        Handles different link patterns based on the source platform.
 
         Args:
-            infos: A PyQuery instance containing additional information about the search result.
-            links: A PyQuery instance containing the URL links.
-            mark: A string identifier used to determine the source of the link.
+            infos: PyQuery object containing the detail box information.
+            links: PyQuery object containing all URL links.
+            mark: Source identifier string (e.g., "pixiv", "twitter").
         """
         if links:
             link_items = list(links.items())
@@ -109,12 +120,13 @@ class Ascii2DItem(BaseSearchItem):
                 self.title = infos.text()
 
     def _arrange_title(self, infos: PyQuery) -> None:
-        """Extract and refine the title of the search result.
+        """Extracts and processes the title from the search result.
 
-        The method removes certain predefined keywords from the title if they are present.
+        Handles various title formats and removes unwanted text patterns.
+        Falls back to external text or h6 content if primary title is not found.
 
         Args:
-            infos: A PyQuery instance to extract the title from.
+            infos: PyQuery object containing the title information.
         """
         if not self.title:
             self.title = self._extract_external_text(infos) or infos.find("h6").text()
@@ -125,22 +137,38 @@ class Ascii2DItem(BaseSearchItem):
 
     @staticmethod
     def _extract_external_text(infos: PyQuery) -> str:
+        """Extracts text from external elements in the search result.
+
+        Removes link elements and combines remaining text content.
+
+        Args:
+            infos: PyQuery object containing external text elements.
+
+        Returns:
+            str: Combined text from external elements, or empty string if none found.
+        """
         external = infos.find(".external")
         external.remove("a")
         return "\n".join(i.text() for i in external.items() if i.text()) or ""
 
     def _normalize_url_list(self) -> None:
-        """Normalize the URL list to absolute paths."""
+        """Normalizes all URLs in the url_list to absolute paths.
+
+        Converts relative URLs to absolute URLs by prepending the BASE_URL when necessary.
+        Modifies the url_list attribute in place.
+        """
         self.url_list = [
             URL(BASE_URL + url.href, url.text) if url.href.startswith("/") else url
             for url in self.url_list
         ]
 
     def _arrange_backup_links(self, data: PyQuery) -> None:
-        """Set backup links if the main URL list is empty.
+        """Sets backup URLs when primary URL list is empty.
+
+        Extracts URLs from alternative locations in the HTML structure.
 
         Args:
-            data: A PyQuery instance to search for backup links.
+            data: PyQuery object to search for backup links.
         """
         if links := data.find("div.pull-xs-right > a"):
             self.url = links.eq(0).attr("href")
@@ -148,14 +176,14 @@ class Ascii2DItem(BaseSearchItem):
 
 
 class Ascii2DResponse(BaseSearchResponse):
-    """Encapsulates an Ascii2D reverse image search response.
+    """Represents a complete Ascii2D reverse image search response.
 
-    Contains the complete response from an Ascii2D reverse image search operation.
+    Processes and contains all search results from an Ascii2D search operation.
 
     Attributes:
-        origin: The raw response data.
-        raw: List of Ascii2DItem instances for each search result.
-        url: URL to the search result page.
+        origin (PyQuery): The raw PyQuery data of the complete response.
+        raw (list[Ascii2DItem]): List of processed search result items.
+        url (str): URL of the search results page.
     """
 
     def __init__(self, resp_data: str, resp_url: str, **kwargs: Any):
@@ -168,7 +196,14 @@ class Ascii2DResponse(BaseSearchResponse):
         super().__init__(resp_data, resp_url, **kwargs)
 
     def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
-        """Parse search response data."""
+        """Parses the raw response data into structured search results.
+
+        Converts HTML response into PyQuery object and extracts individual search items.
+
+        Args:
+            resp_data: Raw HTML response string from Ascii2D.
+            **kwargs: Additional keyword arguments (unused).
+        """
         data = parse_html(resp_data)
         self.origin: PyQuery = data
         self.raw: list[Ascii2DItem] = [

@@ -26,8 +26,8 @@ async def test_async() -> None:
 @logger.catch()
 def test_sync() -> None:
     bing = BingSync(proxies=proxies, http2=http2)
-    # resp = bing.search(url=url)
-    resp = bing.search(file=file)
+    resp = bing.search(url=url)
+    # resp = bing.search(file=file)
     show_result(resp)  # type: ignore
 
 
@@ -106,5 +106,5 @@ def show_result(resp: BingResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(test_async())  # type: ignore
+    # test_sync()  # type: ignore

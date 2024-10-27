@@ -6,15 +6,15 @@ from .base import BaseSearchItem, BaseSearchResponse
 class CopyseekerItem(BaseSearchItem):
     """Represents a single Copyseeker search result item.
 
-    Holds details of a result from a Copyseeker reverse image search.
+    A structured representation of an individual search result from Copyseeker's API.
 
     Attributes:
-        origin: The raw data of the search result item.
-        url: URL of the webpage with the image.
-        title: Title of the webpage.
-        thumbnail: URL of the thumbnail image.
-        thumbnail_list: List of URLs of thumbnail images.
-        website_rank: Website rank of the result.
+        origin (dict): The raw, unprocessed data of the search result.
+        url (str): Direct URL to the webpage containing the matched image.
+        title (str): Title of the webpage where the image was found.
+        thumbnail (str): URL of the main thumbnail image.
+        thumbnail_list (list[str]): List of URLs for additional related thumbnail images.
+        website_rank (float): Numerical ranking score of the website (0.0 to 1.0).
     """
 
     def __init__(self, data: dict[str, Any], **kwargs: Any):
@@ -35,20 +35,27 @@ class CopyseekerItem(BaseSearchItem):
 
 
 class CopyseekerResponse(BaseSearchResponse):
-    """Encapsulates a Copyseeker reverse image search response.
+    """Encapsulates a complete Copyseeker reverse image search response.
 
-    Contains the complete response from a Copyseeker reverse image search operation.
+    Provides a structured interface to access and analyze the search results
+    and metadata returned by Copyseeker's API.
 
     Attributes:
-        id: Unique identifier for the search request.
-        image_url: URL of the image searched.
-        best_guess_label: Copyseeker's best guess for the image category.
-        entities: Entities detected in the image.
-        total: Total number of links found.
-        exif: EXIF data extracted from the image.
-        raw: List of CopyseekerItem objects, each representing a search result.
-        similar_image_urls: List of URLs of visually similar images.
-        url: URL of the Copyseeker search results page.
+        id (str): Unique identifier for this search request.
+        image_url (str): URL of the image that was searched.
+        best_guess_label (Optional[str]): AI-generated label describing the image content.
+        entities (Optional[str]): Detected objects or concepts in the image.
+        total (int): Total number of matching results found.
+        exif (dict[str, Any]): EXIF metadata extracted from the searched image.
+        raw (list[CopyseekerItem]): List of individual search results, each as a CopyseekerItem.
+        similar_image_urls (list[str]): URLs of visually similar images found.
+        url (str): URL to view these search results on Copyseeker's website.
+
+    Note:
+        - The 'raw' attribute contains the detailed search results, each parsed into
+          a CopyseekerItem object for easier access.
+        - EXIF data is only available when searching with an actual image file,
+          not when searching with an image URL.
     """
 
     def __init__(self, resp_data: dict[str, Any], resp_url: str, **kwargs):

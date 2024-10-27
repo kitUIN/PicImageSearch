@@ -33,14 +33,24 @@ class Google(BaseSearchEngine):
     async def _navigate_page(
         self, resp: GoogleResponse, offset: int
     ) -> Optional[GoogleResponse]:
-        """Navigates to a specific page in search results based on the given offset.
+        """Navigates to a specific page in search results.
+
+        This method handles both forward and backward navigation through search results.
 
         Args:
-            resp: The current GoogleResponse instance.
-            offset: Integer for page navigation, positive for forward and negative for backward.
+            resp: The current GoogleResponse instance containing page information.
+            offset: Integer indicating navigation direction and distance:
+                   - Positive values move forward
+                   - Negative values move backward
+                   - Magnitude indicates number of pages to move
 
         Returns:
-            GoogleResponse: Updated response after navigating to the specified page, or None if out of range.
+            Optional[GoogleResponse]:
+                - New GoogleResponse instance after navigation
+                - None if target page is out of valid range (< 1 or > total pages)
+
+        Note:
+            The method maintains page history and updates page numbers automatically.
         """
         next_page_number = resp.page_number + offset
         if next_page_number < 1 or next_page_number > len(resp.pages):
@@ -71,15 +81,24 @@ class Google(BaseSearchEngine):
         return await self._navigate_page(resp, 1)
 
     async def _ensure_thumbnail_data(self, resp: GoogleResponse) -> GoogleResponse:
-        """Ensures the response contains thumbnail data.
+        """Ensures the response contains valid thumbnail data by making additional requests if needed.
 
-        If the initial response lacks thumbnail data, an additional request is made to fetch complete data.
+        This method performs the following:
+        1. Checks if response contains raw data
+        2. Attempts to find first result with thumbnail
+        3. Makes an additional request if no thumbnail is found
 
         Args:
-            resp: The initial GoogleResponse instance.
+            resp: The initial GoogleResponse instance to check for thumbnail data
 
         Returns:
-            GoogleResponse: A response containing thumbnail data.
+            GoogleResponse:
+                - Original response if thumbnail data exists
+                - New response with thumbnail data after additional request
+                - Original response if no thumbnail data can be found
+
+        Note:
+            This is an internal method used by the search method to ensure complete results.
         """
         if resp and resp.raw:
             selected = next((i for i in resp.raw if i.thumbnail), resp.raw[0])
@@ -96,19 +115,32 @@ class Google(BaseSearchEngine):
     ) -> GoogleResponse:
         """Performs a reverse image search on Google.
 
-        Supports searching by image URL or by uploading an image file.
-
-        Requires either 'url' or 'file' to be provided.
+        This method supports two ways of searching:
+        1. Search by image URL
+        2. Search by uploading a local image file
 
         Args:
-            url: URL of the image to search.
-            file: Local image file (path or bytes) to search.
+            url: URL of the image to search
+            file: Local image file, which can be:
+                  - Path string
+                  - Bytes data
+                  - Path object
+            **kwargs: Additional arguments passed to the parent class
 
         Returns:
-            GoogleResponse: Contains search results and additional information.
+            GoogleResponse: A response object containing:
+                - Search results
+                - Thumbnail data
+                - Page navigation information
+                - Raw response data
 
         Raises:
-            ValueError: If neither 'url' nor 'file' is provided.
+            ValueError: If neither 'url' nor 'file' is provided
+
+        Note:
+            - Only one of 'url' or 'file' should be provided
+            - The method automatically ensures thumbnail data is present in results
+            - Safe search is disabled by default
         """
         await super().search(url, file, **kwargs)
 

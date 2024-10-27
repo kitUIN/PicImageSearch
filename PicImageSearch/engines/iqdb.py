@@ -9,10 +9,15 @@ from .base import BaseSearchEngine
 class Iqdb(BaseSearchEngine):
     """API client for the Iqdb image search engine.
 
-    Used for performing reverse image searches using Iqdb service.
+    A client implementation for performing reverse image searches using Iqdb's services.
+    Supports both anime-style images (iqdb.org) and real-life images (3d.iqdb.org).
 
     Attributes:
-        base_url: The base URL for Iqdb searches.
+        base_url (str): The base URL for Iqdb searches, determined by is_3d parameter.
+
+    Note:
+        - For anime/artwork images, uses iqdb.org
+        - For real-life/3D images, uses 3d.iqdb.org
     """
 
     def __init__(
@@ -38,23 +43,32 @@ class Iqdb(BaseSearchEngine):
     ) -> IqdbResponse:
         """Performs a reverse image search on Iqdb.
 
-        Supports searching by image URL or by uploading an image file.
-
-        Requires either 'url' or 'file' to be provided.
+        This method supports two ways of searching:
+        1. Search by image URL
+        2. Search by uploading a local image file
 
         Args:
             url: URL of the image to search.
-            file: Local image file (path or bytes) to search.
-            force_gray: If True, ignores color information in the image.
+            file: Local image file, can be a path string, bytes data, or Path object.
+            force_gray: If True, ignores color information during search, useful for
+                       finding similar images with different color schemes.
+            **kwargs: Additional arguments passed to the parent class.
 
         Returns:
-            IqdbResponse: Contains search results and additional information.
+            IqdbResponse: An object containing:
+                - Search results from various supported image databases
+                - Additional metadata about the search
+                - The final search URL
 
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
 
         Note:
-            Search can be tailored for anime or real-life images using `is_3d` parameter.
+            - Only one of 'url' or 'file' should be provided.
+            - The search behavior differs based on the is_3d parameter set during initialization:
+                - is_3d=False: Searches anime/artwork images on iqdb.org
+                - is_3d=True: Searches real-life images on 3d.iqdb.org
+            - The force_gray option can help find visually similar images regardless of coloring
         """
         await super().search(url, file, **kwargs)
 

@@ -37,24 +37,31 @@ class SauceNAO(BaseSearchEngine):
         """Initializes a SauceNAO API client with specified configurations.
 
         Args:
-            base_url: The base URL for SauceNAO searches.
-            api_key: API key for SauceNAO API access.
-            numres: Number of results to return from search.
-            hide: Option to hide results based on content rating.
-            minsim: Minimum similarity percentage for results.
-            output_type: Output format of search results.
-            testmode: If 1, performs a dry-run search.
+            base_url: The base URL for SauceNAO searches, defaults to 'https://saucenao.com'.
+            api_key: API key for SauceNAO API access, required for full API functionality.
+            numres: Number of results to return (1-40), defaults to 5.
+            hide: Content filtering level (0-3), defaults to 0.
+                0: Show all results
+                1: Hide expected explicit results
+                2: Hide expected questionable results
+                3: Hide all but expected safe results
+            minsim: Minimum similarity percentage for results (0-100), defaults to 30.
+            output_type: Output format of search results, defaults to 2.
+                0: HTML
+                1: XML
+                2: JSON
+            testmode: If 1, performs a dry-run search without using search quota.
             dbmask: Bitmask for enabling specific databases.
             dbmaski: Bitmask for disabling specific databases.
-            db: Specifies database index(es) for search.
-            dbs: List of database indices for search.
-            **request_kwargs: Additional arguments for network requests.
+            db: Database index to search from (0-999), defaults to 999 (all databases).
+            dbs: List of specific database indices to search from.
+            **request_kwargs: Additional arguments passed to the HTTP client.
 
         Note:
-            Detailed API documentation is available at:
-            https://saucenao.com/user.php?page=search-api (requires login).
-            For specific details on `dbmask`, `dbmaski`, `db`, and `dbs`, refer to:
-            https://saucenao.com/tools/examples/api/index_details.txt
+            - API documentation: https://saucenao.com/user.php?page=search-api
+            - Database indices: https://saucenao.com/tools/examples/api/index_details.txt
+            - Using API key is recommended to avoid rate limits and access more features.
+            - When `dbs` is provided, it takes precedence over `db` parameter.
         """
         base_url = f"{base_url}/search.php"
         super().__init__(base_url, **request_kwargs)
@@ -86,19 +93,32 @@ class SauceNAO(BaseSearchEngine):
     ) -> SauceNAOResponse:
         """Performs a reverse image search on SauceNAO.
 
-        Supports searching by image URL or by uploading an image file.
-
-        Requires either 'url' or 'file' to be provided.
+        This method supports two ways of searching:
+        1. Search by image URL
+        2. Search by uploading a local image file
 
         Args:
             url: URL of the image to search.
-            file: Local image file (path or bytes) to search.
+            file: Local image file, can be a path string, bytes data, or Path object.
+            **kwargs: Additional arguments passed to the parent class.
 
         Returns:
-            SauceNAOResponse: Contains search results and additional information.
+            SauceNAOResponse: An object containing:
+                - Search results with similarity scores
+                - Source information and thumbnails
+                - Additional metadata (status code, search quotas)
 
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
+            HTTPError: If the API request fails or returns an error status.
+
+        Note:
+            - Only one of 'url' or 'file' should be provided.
+            - API limits vary based on account type and API key usage.
+            - Free accounts are limited to:
+                * 150 searches per day
+                * 4 searches per 30 seconds
+            - Results are sorted by similarity score in descending order.
         """
         await super().search(url, file, **kwargs)
 

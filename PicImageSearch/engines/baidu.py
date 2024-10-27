@@ -30,13 +30,22 @@ class BaiDu(BaseSearchEngine):
 
     @staticmethod
     def _extract_card_data(data: PyQuery) -> list[dict[str, Any]]:
-        """Extract 'window.cardData' from a PyQuery object.
+        """Extracts 'window.cardData' from the BaiDu search response page.
+
+        This method parses the JavaScript content in the page to find and extract
+        the 'window.cardData' object, which contains the search results.
 
         Args:
-            data: A PyQuery object with page HTML for parsing JavaScript data.
+            data: A PyQuery object containing the parsed HTML page.
 
         Returns:
-            list[dict[str, Any]]: `A list of dictionaries for 'window.cardData' items.`
+            list[dict[str, Any]]: A list of card data dictionaries, where each dictionary
+                contains information about a search result. Returns an empty list if
+                no card data is found.
+
+        Note:
+            The method searches for specific script tags containing 'window.cardData'
+            and extracts the JSON data between the first '[' and last ']' characters.
         """
         for script in data("script").items():
             script_text = script.text()
@@ -54,22 +63,33 @@ class BaiDu(BaseSearchEngine):
     ) -> BaiDuResponse:
         """Performs a reverse image search on BaiDu.
 
-        Supports searching by image URL or by uploading an image file.
+        This method supports two ways of searching:
+        1. Search by image URL
+        2. Search by uploading a local image file
 
-        Requires either 'url' or 'file' to be provided.
+        The search process involves multiple steps:
+        1. Upload the image or submit the URL to BaiDu
+        2. Follow the returned URL to get the search results page
+        3. Extract and parse the card data from the page
+        4. If similar images are found, fetch the detailed results
 
         Args:
             url: URL of the image to search.
-            file: Local image file (path or bytes) to search.
+            file: Local image file, can be a path string, bytes data, or Path object.
+            **kwargs: Additional arguments passed to the parent class.
 
         Returns:
-            BaiDuResponse: Contains search results and additional information.
+            BaiDuResponse: An object containing the search results and metadata.
+                Returns empty results if no matches are found or if the 'noresult'
+                card is present.
 
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
 
         Note:
-            The search process involves multiple HTTP requests to BaiDu's API.
+            - Only one of 'url' or 'file' should be provided.
+            - The search process involves multiple HTTP requests to BaiDu's API.
+            - The response format varies depending on whether matches are found.
         """
         await super().search(url, file, **kwargs)
 
