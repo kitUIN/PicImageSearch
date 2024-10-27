@@ -19,13 +19,14 @@ class Bing(BaseSearchEngine):
         base_url: The base URL for Bing searches.
     """
 
-    def __init__(self, base_url: str = "https://www.bing.com", **request_kwargs: Any):
+    def __init__(self, **request_kwargs: Any):
         """Initializes a Bing API client with specified configurations.
 
         Args:
             base_url: The base URL for Bing searches.
             **request_kwargs: Additional arguments for network requests.
         """
+        base_url = "https://www.bing.com"
         super().__init__(base_url, **request_kwargs)
 
     async def _upload_image(self, file: Union[str, bytes, Path]) -> tuple[str, str]:
@@ -46,10 +47,10 @@ class Bing(BaseSearchEngine):
             "cbir": "sbi",
             "imageBin": image_base64,
         }
-        response = await self.post(url, files=files)
+        resp = await self.post(url, files=files)
 
-        if match := re.search(r"(bcid_[A-Za-z0-9-.]+)", response.text):
-            return match[1], str(response.url)
+        if match := re.search(r"(bcid_[A-Za-z0-9-.]+)", resp.text):
+            return match[1], str(resp.url)
         else:
             raise ValueError("BCID not found on page.")
 
@@ -69,14 +70,14 @@ class Bing(BaseSearchEngine):
             ValueError: If neither `bcid` nor `image_url` is provided.
             httpx.HTTPStatusError: If the HTTP request to Bing fails.
         """
-        insights_url = (
+        url = (
             f"{self.base_url}/images/api/custom/knowledge"
             "?rshighlight=true&textDecorations=true&internalFeatures=share"
             "&nbl=1&FORM=SBIHMP&safeSearch=off&mkt=en-us&setLang=en-us&IID=idpins&SFX=1"
         )
 
         if image_url:
-            insights_headers = {
+            headers = {
                 "Referer": (
                     f"{self.base_url}/images/search?"
                     f"view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste"
@@ -89,24 +90,20 @@ class Bing(BaseSearchEngine):
                     json_dumps({"imageInfo": {"url": image_url, "source": "Url"}}),
                 )
             }
-            response = await self.post(
-                insights_url, headers=insights_headers, files=files
-            )
+            resp = await self.post(url, headers=headers, files=files)
 
         elif bcid:
-            insights_url += f"&insightsToken={bcid}"
-            insights_headers = {
+            url += f"&insightsToken={bcid}"
+            headers = {
                 "Referer": f"{self.base_url}/images/search?insightsToken={bcid}",
             }
             data = {"imageInfo": {"imageInsightsToken": bcid}, "knowledgeRequest": {}}
             self.client.cookies = None
-            response = await self.post(
-                insights_url, headers=insights_headers, data=data
-            )
+            resp = await self.post(url, headers=headers, data=data)
         else:
             raise ValueError("Either bcid or image_url must be provided")
 
-        return json_loads(response.text)
+        return json_loads(resp.text)
 
     async def search(
         self,
@@ -141,10 +138,10 @@ class Bing(BaseSearchEngine):
                 f"view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste"
                 f"&q=imgurl:{url}&idpbck=1"
             )
-            json_response = await self._get_insights(image_url=url)
+            resp_json = await self._get_insights(image_url=url)
 
         else:
             bcid, resp_url = await self._upload_image(file)
-            json_response = await self._get_insights(bcid=bcid)
+            resp_json = await self._get_insights(bcid=bcid)
 
-        return BingResponse(json_response, resp_url)
+        return BingResponse(resp_json, resp_url)
