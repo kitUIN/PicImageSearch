@@ -25,7 +25,7 @@ timeout = 60
 @logger.catch()
 async def test_async() -> None:
     async with Network(proxies=proxies, cookies=cookies, timeout=timeout) as client:
-        ehentai = EHentai(client=client, is_ex=is_ex)
+        ehentai = EHentai(is_ex=is_ex, client=client)
         # resp = await ehentai.search(url=url)
         resp = await ehentai.search(file=file)
         show_result(resp)
@@ -34,8 +34,8 @@ async def test_async() -> None:
 @logger.catch()
 def test_sync() -> None:
     ehentai = EHentaiSync(
-        proxies=proxies,
         is_ex=is_ex,
+        proxies=proxies,
         cookies=cookies,
         timeout=timeout,
     )

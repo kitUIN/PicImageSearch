@@ -16,7 +16,7 @@ file = Path(__file__).parent.parent / "images" / "test04.jpg"
 @logger.catch()
 async def test_async() -> None:
     async with Network(proxies=proxies) as client:
-        iqdb = Iqdb(client=client, is_3d=True)
+        iqdb = Iqdb(is_3d=True, client=client)
         # resp = await iqdb.search(url=url)
         resp = await iqdb.search(file=file)
         show_result(resp)
@@ -24,8 +24,8 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    iqdb = IqdbSync(proxies=proxies)
-    resp = iqdb.search(url=url, is_3d=True)
+    iqdb = IqdbSync(is_3d=True, proxies=proxies)
+    resp = iqdb.search(url=url)
     # resp = iqdb.search(file=file, is_3d=True)
     show_result(resp)  # type: ignore
 

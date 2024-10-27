@@ -18,7 +18,7 @@ base_url = "https://www.google.co.jp"
 @logger.catch()
 async def test_async() -> None:
     async with Network(proxies=proxies) as client:
-        google = Google(client=client, base_url=base_url)
+        google = Google(base_url=base_url, client=client)
         # resp = await google.search(url=url)
         resp = await google.search(file=file)
         show_result(resp)
@@ -31,7 +31,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    google = GoogleSync(proxies=proxies, base_url=base_url)
+    google = GoogleSync(base_url=base_url, proxies=proxies)
     resp = google.search(url=url)
     # resp = google.search(file=file)
     show_result(resp)  # type: ignore

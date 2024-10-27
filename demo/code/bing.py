@@ -25,7 +25,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    bing = BingSync(proxies=proxies)
+    bing = BingSync(proxies=proxies, http2=http2)
     # resp = bing.search(url=url)
     resp = bing.search(file=file)
     show_result(resp)  # type: ignore

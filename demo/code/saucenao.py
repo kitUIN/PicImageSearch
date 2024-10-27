@@ -17,7 +17,7 @@ api_key = "a4ab3f81009b003528f7e31aed187fa32a063f58"
 @logger.catch()
 async def test_async() -> None:
     async with Network(proxies=proxies) as client:
-        saucenao = SauceNAO(client=client, api_key=api_key, hide=3)
+        saucenao = SauceNAO(api_key=api_key, hide=3, client=client)
         # resp = await saucenao.search(url=url)
         resp = await saucenao.search(file=file)
         show_result(resp)
@@ -25,7 +25,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    saucenao = SauceNAOSync(proxies=proxies, api_key=api_key, hide=3)
+    saucenao = SauceNAOSync(api_key=api_key, hide=3, proxies=proxies)
     resp = saucenao.search(url=url)
     # resp = saucenao.search(file=file)
     show_result(resp)  # type: ignore

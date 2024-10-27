@@ -20,6 +20,7 @@ verify_ssl = True  # Whether to verify SSL certificates or not
 async def test_async() -> None:
     async with Network(proxies=proxies, verify_ssl=verify_ssl) as client:
         ascii2d = Ascii2D(base_url=base_url, client=client, bovw=bovw)
+        ascii2d = Ascii2D(base_url=base_url, bovw=bovw, client=client)
         # resp = await ascii2d.search(url=url)
         resp = await ascii2d.search(file=file)
         show_result(resp)
@@ -27,7 +28,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    ascii2d = Ascii2DSync(proxies=proxies, verify_ssl=verify_ssl, bovw=bovw)
+    ascii2d = Ascii2DSync(base_url=base_url, bovw=bovw, proxies=proxies, verify_ssl=verify_ssl)
     resp = ascii2d.search(url=url)
     # resp = ascii2d.search(file=file)
     show_result(resp)  # type: ignore

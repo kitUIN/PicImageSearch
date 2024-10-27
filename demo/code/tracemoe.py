@@ -16,7 +16,7 @@ file = Path(__file__).parent.parent / "images" / "test05.jpg"
 @logger.catch()
 async def test_async() -> None:
     async with Network(proxies=proxies) as client:
-        tracemoe = TraceMoe(client=client, mute=False, size=None)
+        tracemoe = TraceMoe(mute=False, size=None, client=client)
         # resp = await tracemoe.search(url=url)
         resp = await tracemoe.search(file=file)
         show_result(resp)
@@ -24,7 +24,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    tracemoe = TraceMoeSync(proxies=proxies, mute=False, size=None)
+    tracemoe = TraceMoeSync(mute=False, size=None, proxies=proxies)
     resp = tracemoe.search(url=url)
     # resp = tracemoe.search(file=file)
     show_result(resp)  # type: ignore
