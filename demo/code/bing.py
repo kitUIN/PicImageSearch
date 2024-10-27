@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 
 from loguru import logger
 
@@ -6,15 +7,16 @@ from PicImageSearch import Bing, Network
 from PicImageSearch.model import BingResponse
 from PicImageSearch.sync import Bing as BingSync
 
-# proxies = "http://127.0.0.1:1081"
+# proxies = "http://127.0.0.1:1080"
 proxies = None
-url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-file = "../images/test08.jpg"
+http2 = True
+url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test08.jpg"
+file = Path(__file__).parent.parent / "images" / "test08.jpg"
 
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=proxies) as client:
+    async with Network(proxies=proxies, http2=http2) as client:
         bing = Bing(client=client)
         # resp = await bing.search(url=url)
         resp = await bing.search(file=file)
@@ -26,7 +28,7 @@ def test_sync() -> None:
     bing = BingSync(proxies=proxies)
     # resp = bing.search(url=url)
     resp = bing.search(file=file)
-    show_result(resp)
+    show_result(resp)  # type: ignore
 
 
 def show_result(resp: BingResponse) -> None:
@@ -68,7 +70,9 @@ def show_result(resp: BingResponse) -> None:
                 logger.info(f"    Title: {attraction.title}")
                 logger.info(f"    URL: {attraction.url}")
                 logger.info(f"    Requery URL: {attraction.search_url}")
-                logger.info(f"    Interest Types: {', '.join(attraction.interest_types)}")
+                logger.info(
+                    f"    Interest Types: {', '.join(attraction.interest_types)}"
+                )
                 logger.info("-" * 20)
 
         if resp.travel.travel_cards:
@@ -91,7 +95,9 @@ def show_result(resp: BingResponse) -> None:
             if entity.profiles:
                 logger.info("  Profiles:")
                 for profile in entity.profiles:
-                    logger.info(f"     {profile.get('social_network')}: {profile.get('url')}")
+                    logger.info(
+                        f"     {profile.get('social_network')}: {profile.get('url')}"
+                    )
 
             logger.info("-" * 20)
 
@@ -100,6 +106,5 @@ def show_result(resp: BingResponse) -> None:
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(test_async())
+    asyncio.run(test_async())
     # test_sync()

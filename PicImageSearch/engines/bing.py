@@ -1,9 +1,9 @@
-import base64
 import re
+from base64 import b64encode
+from json import dumps as json_dumps
+from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Optional, Union
-
-import httpx
 
 from ..model import BingResponse
 from ..utils import read_file
@@ -28,7 +28,7 @@ class Bing(BaseSearchEngine):
         """
         super().__init__(base_url, **request_kwargs)
 
-    async def _upload_image(self, file: Union[str, bytes, Path]) -> str:
+    async def _upload_image(self, file: Union[str, bytes, Path]) -> tuple[str, str]:
         """Uploads an image to Bing and retrieves the BCID.
 
         Args:
@@ -41,23 +41,21 @@ class Bing(BaseSearchEngine):
             ValueError: If the BCID cannot be found on the page after upload.
         """
         url = f"{self.base_url}/images/search?view=detailv2&iss=sbiupload"
-        image_base64 = base64.b64encode(read_file(file)).decode("utf-8")
+        image_base64 = b64encode(read_file(file)).decode("utf-8")
         files = {
-            "imgurl": (None, ""),
-            "cbir": (None, "sbi"),
-            "imageBin": (None, image_base64),
+            "cbir": "sbi",
+            "imageBin": image_base64,
         }
-        async with httpx.AsyncClient(http2=True, follow_redirects=True) as client:
-            response = await client.post(url, files=files)
-            response.raise_for_status()
+        response = await self.post(url, files=files)
 
-        match = re.search(r"(bcid_[A-Za-z0-9-.]+)", response.text)
-        if match:
-            return match.group(1)
+        if match := re.search(r"(bcid_[A-Za-z0-9-.]+)", response.text):
+            return match[1], str(response.url)
         else:
             raise ValueError("BCID not found on page.")
 
-    async def _get_insights(self, bcid: str, image_url: Optional[str] = None) -> dict:
+    async def _get_insights(
+        self, bcid: Optional[str] = None, image_url: Optional[str] = None
+    ) -> dict:
         """Retrieves insights from Bing using the BCID or image URL.
 
         Args:
@@ -71,40 +69,44 @@ class Bing(BaseSearchEngine):
             ValueError: If neither `bcid` nor `image_url` is provided.
             httpx.HTTPStatusError: If the HTTP request to Bing fails.
         """
-        insights_url = f"{self.base_url}/images/api/custom/knowledge?rshighlight=true&textDecorations=true&internalFeatures=share&nbl=1&FORM=SBIHMP&safeSearch=off&mkt=en-us&setLang=en-us&IID=idpins&SFX=1"
+        insights_url = (
+            f"{self.base_url}/images/api/custom/knowledge"
+            "?rshighlight=true&textDecorations=true&internalFeatures=share"
+            "&nbl=1&FORM=SBIHMP&safeSearch=off&mkt=en-us&setLang=en-us&IID=idpins&SFX=1"
+        )
 
         if image_url:
-            ref = f"{self.base_url}/images/search?view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste&q=imgurl:{image_url}&idpbck=1"
             insights_headers = {
-                "Referer": ref,
-                "Content-Type": "multipart/form-data; boundary=boundary",
+                "Referer": (
+                    f"{self.base_url}/images/search?"
+                    f"view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste"
+                    f"&q=imgurl:{image_url}&idpbck=1"
+                )
             }
-            body = (
-                "--boundary\r\n"
-                'Content-Disposition: form-data; name="knowledgeRequest"\r\n\r\n'
-                '{"imageInfo": {"url": "' + image_url + '"}}\r\n'
-                "--boundary--"
+            files = {
+                "knowledgeRequest": (
+                    None,
+                    json_dumps({"imageInfo": {"url": image_url, "source": "Url"}}),
+                )
+            }
+            response = await self.post(
+                insights_url, headers=insights_headers, files=files
             )
 
         elif bcid:
             insights_url += f"&insightsToken={bcid}"
             insights_headers = {
                 "Referer": f"{self.base_url}/images/search?insightsToken={bcid}",
-                "Content-Type": "multipart/form-data; boundary=boundary",
             }
-            body = (
-                "--boundary\r\n"
-                'Content-Disposition: form-data; name="knowledgeRequest"\r\n\r\n'
-                '{"imageInfo": {"imageInsightsToken": "' + bcid + '"}, "knowledgeRequest": {}}\r\n'
-                "--boundary--"
+            data = {"imageInfo": {"imageInsightsToken": bcid}, "knowledgeRequest": {}}
+            self.client.cookies = None
+            response = await self.post(
+                insights_url, headers=insights_headers, data=data
             )
         else:
             raise ValueError("Either bcid or image_url must be provided")
 
-        async with httpx.AsyncClient(http2=True) as client:
-            response = await client.post(insights_url, headers=insights_headers, data=body.encode('utf-8'))
-            response.raise_for_status()
-            return response.json()
+        return json_loads(response.text)
 
     async def search(
         self,
@@ -127,23 +129,22 @@ class Bing(BaseSearchEngine):
 
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
-        
+
         Note:
             The search process involves multiple HTTP requests to Bing's API.
         """
         await super().search(url, file, **kwargs)
-        insights_url = "" 
 
         if url:
-            insights_url = f"{self.base_url}/images/api/custom/knowledge?rshighlight=true&textDecorations=true&internalFeatures=share&nbl=1&FORM=SBIHMP&safeSearch=off&mkt=en-us&setLang=en-us&IID=idpins&SFX=1"
-            json_response = await self._get_insights(bcid=None, image_url=url)
+            resp_url = (
+                f"{self.base_url}/images/search?"
+                f"view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste"
+                f"&q=imgurl:{url}&idpbck=1"
+            )
+            json_response = await self._get_insights(image_url=url)
 
-        elif file:
-            bcid = await self._upload_image(file)
-            insights_url = f"{self.base_url}/images/api/custom/knowledge?rshighlight=true&textDecorations=true&internalFeatures=share&nbl=1&FORM=SBIHMP&safeSearch=off&mkt=en-us&setLang=en-us&IID=idpins&SFX=1&insightsToken={bcid}"
-
-            json_response = await self._get_insights(bcid=bcid)
         else:
-            raise ValueError("Either url or file must be provided")
+            bcid, resp_url = await self._upload_image(file)
+            json_response = await self._get_insights(bcid=bcid)
 
-        return BingResponse(json_response, insights_url)
+        return BingResponse(json_response, resp_url)

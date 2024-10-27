@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 
 from loguru import logger
 
@@ -6,10 +7,10 @@ from PicImageSearch import Iqdb, Network
 from PicImageSearch.model import IqdbResponse
 from PicImageSearch.sync import Iqdb as IqdbSync
 
-# proxies = "http://127.0.0.1:1081"
+# proxies = "http://127.0.0.1:1080"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test04.jpg"
-file = "../images/test04.jpg"
+file = Path(__file__).parent.parent / "images" / "test04.jpg"
 
 
 @logger.catch()
@@ -45,6 +46,5 @@ def show_result(resp: IqdbResponse) -> None:
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(test_async())
+    asyncio.run(test_async())
     # test_sync()

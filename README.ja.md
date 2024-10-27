@@ -2,7 +2,7 @@
 
 # PicImageSearch
 
-他の言語で読む: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md), [日本語](README.ja.md)
+他の言語で読む: [English](README.md), [简体中文](README.cn.md), [Русский](README.ru.md)
 
 ✨ 画像検索アグリゲーター ✨
 
@@ -28,18 +28,19 @@
 
 ## サポート
 
-| エンジン       | ウェブサイト                             |
-|------------|------------------------------------|
-| ASCII2D    | <https://ascii2d.net/>             |
-| Baidu      | <https://graph.baidu.com/>         |
-| Copyseeker | <https://copyseeker.net/>          |
-| E-Hentai   | <https://e-hentai.org/>            |
-| ExHentai   | <https://exhentai.org/>            |
-| Google     | <https://www.google.com/imghp>     |
-| IQDB       | <https://iqdb.org/>                |
-| SauceNAO   | <https://saucenao.com/>            |
-| TraceMoe   | <https://trace.moe/>               |
-| Yandex     | <https://yandex.com/images/search> |
+| エンジン       | ウェブサイト                               |
+|------------|--------------------------------------|
+| ASCII2D    | <https://ascii2d.net/>               |
+| Baidu      | <https://graph.baidu.com/>           |
+| Bing       | <https://www.bing.com/images/search> |
+| Copyseeker | <https://copyseeker.net/>            |
+| E-Hentai   | <https://e-hentai.org/>              |
+| ExHentai   | <https://exhentai.org/>              |
+| Google     | <https://www.google.com/imghp>       |
+| IQDB       | <https://iqdb.org/>                  |
+| SauceNAO   | <https://saucenao.com/>              |
+| TraceMoe   | <https://trace.moe/>                 |
+| Yandex     | <https://yandex.com/images/search>   |
 
 ## 使用方法
 

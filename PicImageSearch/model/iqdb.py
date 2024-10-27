@@ -110,6 +110,7 @@ class IqdbResponse(BaseSearchResponse):
         """Parse search response data."""
         data = parse_html(resp_data)
         self.origin: PyQuery = data
+        self.raw: list[IqdbItem] = []
         self.more: list[IqdbItem] = []
         self.saucenao_url: str = ""
         self.ascii2d_url: str = ""

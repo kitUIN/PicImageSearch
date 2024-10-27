@@ -31,6 +31,7 @@ class Network:
         cookies: Optional[str] = None,
         timeout: float = 30,
         verify_ssl: bool = True,
+        http2: bool = False,
     ):
         """Initializes Network with configuration for HTTP requests.
 
@@ -41,6 +42,7 @@ class Network:
             cookies: Cookies in string format for the HTTP client.
             timeout: Timeout duration for the HTTP client.
             verify_ssl: If True, verifies SSL certificates.
+            http2: If True, enables HTTP/2 support.
         """
         self.internal: bool = internal
         headers = {**DEFAULT_HEADERS, **headers} if headers else DEFAULT_HEADERS
@@ -54,6 +56,7 @@ class Network:
             headers=headers,
             cookies=self.cookies,
             verify=verify_ssl,
+            http2=http2,
             proxies=proxies,
             timeout=timeout,
             follow_redirects=True,
@@ -103,6 +106,8 @@ class ClientManager:
         headers: Optional[dict[str, str]] = None,
         cookies: Optional[str] = None,
         timeout: float = 30,
+        verify_ssl: bool = True,
+        http2: bool = False,
     ):
         """Initializes ClientManager with an existing HTTP client or creates a new one.
 
@@ -112,6 +117,8 @@ class ClientManager:
             headers: Custom headers for the new client.
             cookies: Cookies in ';' separated string format for the new client.
             timeout: Timeout setting for the new client.
+            verify_ssl: If True, verifies SSL certificates.
+            http2: If True, enables HTTP/2 support.
         """
         self.client: Union[Network, AsyncClient] = client or Network(
             internal=True,
@@ -119,6 +126,8 @@ class ClientManager:
             headers=headers,
             cookies=cookies,
             timeout=timeout,
+            verify_ssl=verify_ssl,
+            http2=http2,
         )
 
     async def __aenter__(self) -> AsyncClient:
@@ -178,13 +187,18 @@ class HandOver:
         self.timeout: float = timeout
 
     async def get(
-        self, url: str, params: Optional[dict[str, str]] = None, **kwargs: Any
+        self,
+        url: str,
+        params: Optional[dict[str, str]] = None,
+        headers: Optional[dict[str, str]] = None,
+        **kwargs: Any,
     ) -> RESP:
         """Performs an HTTP GET request.
 
         Args:
             url: URL for the GET request.
             params: Optional query parameters.
+            headers: Optional custom headers.
             **kwargs: Additional arguments for the GET request.
 
         Returns:
@@ -197,13 +211,14 @@ class HandOver:
             self.cookies,
             self.timeout,
         ) as client:
-            resp = await client.get(url, params=params, **kwargs)
+            resp = await client.get(url, params=params, headers=headers, **kwargs)
             return RESP(resp.text, str(resp.url), resp.status_code)
 
     async def post(
         self,
         url: str,
         params: Union[dict[str, Any], QueryParams, None] = None,
+        headers: Optional[dict[str, str]] = None,
         data: Optional[dict[Any, Any]] = None,
         files: Optional[dict[str, Any]] = None,
         json: Optional[dict[str, Any]] = None,
@@ -214,6 +229,7 @@ class HandOver:
         Args:
             url: URL for the POST request.
             params: Optional query or QueryParams object.
+            headers: Optional custom headers.
             data: Optional data for the request body.
             files: Optional file-like objects for multipart submissions.
             json: Optional JSON payload for the request body.
@@ -230,15 +246,24 @@ class HandOver:
             self.timeout,
         ) as client:
             resp = await client.post(
-                url, params=params, data=data, files=files, json=json, **kwargs
+                url,
+                params=params,
+                headers=headers,
+                data=data,
+                files=files,
+                json=json,
+                **kwargs,
             )
             return RESP(resp.text, str(resp.url), resp.status_code)
 
-    async def download(self, url: str) -> bytes:
+    async def download(
+        self, url: str, headers: Optional[dict[str, str]] = None
+    ) -> bytes:
         """Downloads content from a URL.
 
         Args:
             url: URL to download content from.
+            headers: Optional custom headers.
 
         Returns:
             bytes: Downloaded content.
@@ -250,5 +275,5 @@ class HandOver:
             self.cookies,
             self.timeout,
         ) as client:
-            resp = await client.get(url)
+            resp = await client.get(url, headers=headers)
             return resp.read()

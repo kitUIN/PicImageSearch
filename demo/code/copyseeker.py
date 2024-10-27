@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 
 from loguru import logger
 
@@ -6,12 +7,12 @@ from PicImageSearch import Copyseeker, Network
 from PicImageSearch.model import CopyseekerResponse
 from PicImageSearch.sync import Copyseeker as CopyseekerSync
 
-# proxies = "http://127.0.0.1:1081"
+# proxies = "http://127.0.0.1:1080"
 proxies = None
 url = (
     "https://github.com/kitUIN/PicImageSearch/blob/main/demo/images/test05.jpg?raw=true"
 )
-file = "../images/test05.jpg"
+file = Path(__file__).parent.parent / "images" / "test05.jpg"
 
 
 @logger.catch()
@@ -50,6 +51,5 @@ def show_result(resp: CopyseekerResponse) -> None:
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(test_async())
+    asyncio.run(test_async())
     # test_sync()

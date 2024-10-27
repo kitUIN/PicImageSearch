@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 from typing import Optional
 
 from loguru import logger
@@ -10,7 +11,7 @@ from PicImageSearch.sync import Google as GoogleSync
 proxies = "http://127.0.0.1:1080"
 # proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test03.jpg"
-file = "../images/test03.jpg"
+file = Path(__file__).parent.parent / "images" / "test03.jpg"
 base_url = "https://www.google.co.jp"
 
 
@@ -60,6 +61,5 @@ def show_result(resp: Optional[GoogleResponse]) -> None:
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(test_async())
+    asyncio.run(test_async())
     # test_sync()

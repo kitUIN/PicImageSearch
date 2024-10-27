@@ -2,7 +2,7 @@
 
 # PicImageSearch
 
-阅读其他语言版本： [English](README.md), [中文](README.cn.md), [Русский](README.ru.md), [日本語](README.ja.md)
+阅读其他语言版本： [English](README.md), [Русский](README.ru.md), [日本語](README.ja.md)
 
 ✨ 聚合识图引擎 用于以图搜源 ✨
 
@@ -28,18 +28,19 @@
 
 ## 支持的搜索引擎
 
-| 引擎         | 网站                                 |
-|------------|------------------------------------|
-| ASCII2D    | <https://ascii2d.net/>             |
-| Baidu      | <https://graph.baidu.com/>         |
-| Copyseeker | <https://copyseeker.net/>          |
-| E-Hentai   | <https://e-hentai.org/>            |
-| ExHentai   | <https://exhentai.org/>            |
-| Google     | <https://www.google.com/imghp>     |
-| IQDB       | <https://iqdb.org/>                |
-| SauceNAO   | <https://saucenao.com/>            |
-| TraceMoe   | <https://trace.moe/>               |
-| Yandex     | <https://yandex.com/images/search> |
+| 引擎         | 网站                                   |
+|------------|--------------------------------------|
+| ASCII2D    | <https://ascii2d.net/>               |
+| Baidu      | <https://graph.baidu.com/>           |
+| Bing       | <https://www.bing.com/images/search> |
+| Copyseeker | <https://copyseeker.net/>            |
+| E-Hentai   | <https://e-hentai.org/>              |
+| ExHentai   | <https://exhentai.org/>              |
+| Google     | <https://www.google.com/imghp>       |
+| IQDB       | <https://iqdb.org/>                  |
+| SauceNAO   | <https://saucenao.com/>              |
+| TraceMoe   | <https://trace.moe/>                 |
+| Yandex     | <https://yandex.com/images/search>   |
 
 ## 使用方法
 
