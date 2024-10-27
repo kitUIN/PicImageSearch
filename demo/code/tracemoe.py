@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 
 from loguru import logger
 
@@ -6,16 +7,16 @@ from PicImageSearch import Network, TraceMoe
 from PicImageSearch.model import TraceMoeResponse
 from PicImageSearch.sync import TraceMoe as TraceMoeSync
 
-# proxies = "http://127.0.0.1:1081"
+# proxies = "http://127.0.0.1:1080"
 proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test05.jpg"
-file = "../images/test05.jpg"
+file = Path(__file__).parent.parent / "images" / "test05.jpg"
 
 
 @logger.catch()
 async def test_async() -> None:
     async with Network(proxies=proxies) as client:
-        tracemoe = TraceMoe(client=client, mute=False, size=None)
+        tracemoe = TraceMoe(mute=False, size=None, client=client)
         # resp = await tracemoe.search(url=url)
         resp = await tracemoe.search(file=file)
         show_result(resp)
@@ -23,7 +24,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    tracemoe = TraceMoeSync(proxies=proxies, mute=False, size=None)
+    tracemoe = TraceMoeSync(mute=False, size=None, proxies=proxies)
     resp = tracemoe.search(url=url)
     # resp = tracemoe.search(file=file)
     show_result(resp)  # type: ignore
@@ -57,6 +58,5 @@ def show_result(resp: TraceMoeResponse) -> None:
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(test_async())
-    # test_sync()
+    asyncio.run(test_async())  # type: ignore
+    # test_sync()  # type: ignore

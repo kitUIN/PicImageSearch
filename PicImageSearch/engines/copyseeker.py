@@ -29,7 +29,24 @@ class Copyseeker(BaseSearchEngine):
 
     async def _get_discovery_id(
         self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
-    ):
+    ) -> Optional[str]:
+        """Retrieves a discovery ID from Copyseeker for image search.
+
+        This method handles two search scenarios:
+        1. Search by image URL
+        2. Search by uploading a local image file
+
+        Args:
+            url: URL of the image to search.
+            file: Local image file, can be a path string, bytes data, or Path object.
+
+        Returns:
+            Optional[str]: The discovery ID if successful, None otherwise.
+
+        Note:
+            - Only one of 'url' or 'file' should be provided.
+            - The discovery ID is required for retrieving search results.
+        """
 
         data = {"discoveryType": "ReverseImageSearch"}
 
@@ -60,22 +77,29 @@ class Copyseeker(BaseSearchEngine):
     ) -> CopyseekerResponse:
         """Performs a reverse image search on Copyseeker.
 
-        Supports searching by image URL or by uploading an image file.
+        This method supports two ways of searching:
+        1. Search by image URL
+        2. Search by uploading a local image file
 
-        Requires either 'url' or 'file' to be provided.
+        The search process involves two steps:
+        1. Obtaining a discovery ID
+        2. Retrieving search results using the discovery ID
 
         Args:
             url: URL of the image to search.
-            file: Local image file (path or bytes) to search.
+            file: Local image file, can be a path string, bytes data, or Path object.
+            **kwargs: Additional arguments passed to the parent class.
 
         Returns:
-            CopyseekerResponse: Contains search results and additional information.
+            CopyseekerResponse: An object containing search results and metadata.
+                Returns an empty response if discovery ID cannot be obtained.
 
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
 
         Note:
-            The search process involves multiple HTTP requests to Copyseeker's API.
+            - Only one of 'url' or 'file' should be provided.
+            - The search process involves multiple HTTP requests to Copyseeker's API.
         """
         await super().search(url, file, **kwargs)
 

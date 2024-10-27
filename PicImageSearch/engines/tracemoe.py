@@ -77,13 +77,20 @@ class TraceMoe(BaseSearchEngine):
         self.size: Optional[str] = size
 
     async def me(self, key: Optional[str] = None) -> TraceMoeMe:
-        """Retrieves information about the user's API key usage from TraceMoe.
+        """Retrieves user account information and API usage statistics from TraceMoe.
 
         Args:
-            key: Optional API key for authentication.
+            key: Optional API key for authentication. If not provided, uses anonymous access.
 
         Returns:
-            TraceMoeMe: Information about the user's API key usage.
+            TraceMoeMe: An object containing:
+                - User's API quota information
+                - Search quota limits
+                - Priority status
+                - API key validity status
+
+        Note:
+            Response data includes search quota reset time and remaining searches.
         """
         params = {"key": key} if key else None
         resp = await self.get(self.me_url, params=params)
@@ -98,12 +105,18 @@ class TraceMoe(BaseSearchEngine):
         """Constructs query parameters for TraceMoe API request.
 
         Args:
-            url: URL of the image to search.
-            anilist_id: Anilist ID for specific anime focus.
-            cut_borders: If True, trims image borders during search.
+            url: URL of the image to search. Optional if uploading a file.
+            anilist_id: Anilist ID to limit search scope to a specific anime.
+            cut_borders: If True, removes black borders from image before searching.
 
         Returns:
-            dict[str, Union[bool, int, str]]: Query parameters for the API request.
+            dict[str, Union[bool, int, str]]: A dictionary containing:
+                - 'url': Image URL if provided
+                - 'cutBorders': Border cutting preference
+                - 'anilistID': Specific anime ID if provided
+
+        Note:
+            Parameters are only included in the result if they have valid values.
         """
         params: dict[str, Union[bool, int, str]] = {}
         if cut_borders:
@@ -117,11 +130,20 @@ class TraceMoe(BaseSearchEngine):
     async def update_anime_info(
         self, item: TraceMoeItem, chinese_title: bool = True
     ) -> None:
-        """Updates TraceMoeItem with detailed anime information from TraceMoe API.
+        """Updates a TraceMoeItem with detailed anime information from AniList API.
 
         Args:
-            item: TraceMoeItem to update with anime information.
-            chinese_title: If True, includes Chinese title in item info.
+            item: TraceMoeItem instance to be updated with detailed information.
+            chinese_title: If True, attempts to fetch Chinese title if available.
+
+        Note:
+            Updates multiple fields including:
+            - MAL and AniList IDs
+            - Titles (native, romaji, english, chinese)
+            - Anime metadata (type, format, dates)
+            - Cover image URL
+            - Adult content flag
+            - Alternative titles (synonyms)
         """
         variables = {"id": item.anilist}
         item.anime_info = json_loads(
@@ -158,25 +180,36 @@ class TraceMoe(BaseSearchEngine):
         cut_borders: bool = True,
         **kwargs: Any,
     ) -> TraceMoeResponse:
-        """Performs a reverse image search on TraceMoe.
+        """Performs a reverse image search for anime scenes using TraceMoe.
 
-        Supports searching by image URL or by uploading an image file.
-
-        Requires either 'url' or 'file' to be provided.
+        This method supports two ways of searching:
+        1. Search by image URL
+        2. Search by uploading a local image file
 
         Args:
             url: URL of the image to search.
-            file: Local image file (path or bytes) to search.
-            key: Optional API key for authentication.
-            anilist_id: Anilist ID to limit search scope.
+            file: Local image file (path string, bytes data, or Path object).
+            key: Optional API key for authentication and higher quotas.
+            anilist_id: Optional AniList ID to limit search scope.
             chinese_title: If True, includes Chinese titles in results.
-            cut_borders: If True, trims image borders for search.
+            cut_borders: If True, removes black borders before searching.
+            **kwargs: Additional arguments passed to the parent class.
 
         Returns:
-            TraceMoeResponse: Search results and additional metadata.
+            TraceMoeResponse: Search results containing:
+                - List of matching anime scenes
+                - Confidence scores
+                - Time stamps
+                - Preview URLs
+                - Detailed anime information
 
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
+
+        Note:
+            - Only one of 'url' or 'file' should be provided
+            - Using an API key increases search quota and priority
+            - Results are automatically enriched with detailed anime information
         """
         await super().search(url, file, **kwargs)
 

@@ -4,14 +4,17 @@ from .base import BaseSearchItem, BaseSearchResponse
 
 
 class TraceMoeMe:
-    """Encapsulates user-related data from the TraceMoe API.
+    """Represents user account information from the TraceMoe API.
+
+    This class encapsulates user-specific data including quotas, priorities, and usage statistics
+    returned by the TraceMoe API.
 
     Attributes:
-        id: User identification, either visitor's IP or user's email.
-        priority: Priority level for the user's requests.
-        concurrency: Maximum number of simultaneous search requests.
-        quota: Total number of searches allowed in the current month.
-        quotaUsed: Number of searches already performed in the current month.
+        id (str): User identifier (IP address for visitors or email for registered users).
+        priority (int): User's priority level for request processing.
+        concurrency (int): Maximum number of concurrent search requests allowed.
+        quota (int): Total search quota allocated for the current month.
+        quotaUsed (int): Number of searches consumed in the current month.
     """
 
     def __init__(self, data: dict[str, Any]):
@@ -28,34 +31,35 @@ class TraceMoeMe:
 
 
 class TraceMoeItem(BaseSearchItem):
-    """Represents a single TraceMoe search result item.
+    """Represents a single search result from the TraceMoe API.
 
-    Holds details of a result from a TraceMoe reverse image search.
+    This class contains detailed information about a matched anime scene, including
+    metadata about the anime and specific timing information for the matched scene.
 
     Attributes:
-        origin: The raw data of the search result item.
-        anime_info: Detailed anime information related to the result.
-        idMal: MyAnimeList ID of the matched anime.
-        title: Various localizations of the anime's title.
-        title_native: Native language title of the anime.
-        title_english: English title of the anime.
-        title_romaji: Romaji title of the anime.
-        title_chinese: Chinese title of the anime.
-        anilist: Anilist ID of the matched anime.
-        synonyms: Alternative English titles for the anime.
-        isAdult: Indicates if the anime is adult-themed.
-        type: Type of the anime (e.g., "TV", "Movie").
-        format: Format of the anime content (e.g., "TV", "Movie", "OVA").
-        start_date: Start date of the anime in various formats.
-        end_date: End date of the anime in various formats.
-        cover_image: Image URL of the anime's cover.
-        filename: Filename of the matching anime excerpt.
-        episode: Episode number of the matching excerpt.
-        From: Start time of the matched excerpt in the anime episode.
-        To: End time of the matched excerpt in the anime episode.
-        similarity: Similarity percentage between the search image and the matched excerpt.
-        video: Video URL of the excerpt.
-        image: Thumbnail image URL of the matched scene.
+        origin (dict): Raw response data from the API.
+        anime_info (dict): Comprehensive anime metadata.
+        idMal (int): MyAnimeList database ID.
+        title (dict): Dictionary containing titles in various languages.
+        title_native (str): Title in the original language.
+        title_english (str): English title.
+        title_romaji (str): Romanized title.
+        title_chinese (str): Chinese title.
+        anilist (int): AniList database ID.
+        synonyms (list[str]): Alternative titles.
+        isAdult (bool): Whether the content is adult-oriented.
+        type (str): Media type classification.
+        format (str): Content format (TV, Movie, OVA, etc.).
+        start_date (dict): Anime start date information.
+        end_date (dict): Anime end date information.
+        cover_image (str): URL to the anime cover image.
+        filename (str): Name of the file containing the matched scene.
+        episode (int): Episode number of the match.
+        From (float): Start timestamp of the matched scene.
+        To (float): End timestamp of the matched scene.
+        similarity (float): Match confidence percentage (0-100).
+        video (str): URL to the preview video of the matched scene.
+        image (str): URL to the preview image of the matched scene.
     """
 
     def __init__(
@@ -74,7 +78,21 @@ class TraceMoeItem(BaseSearchItem):
         super().__init__(data, mute=mute, size=size)
 
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
-        """Parse search result data."""
+        """Parses raw API response data into structured attributes.
+
+        Processes the raw JSON response and initializes all class attributes.
+        Handles URL modifications for video and image previews based on size and mute preferences.
+
+        Args:
+            data: Raw response dictionary from the TraceMoe API.
+            **kwargs: Additional parameters including:
+                - size (str): Preview size modifier ('l', 'm', 's')
+                - mute (bool): Whether to mute video previews
+
+        Note:
+            - Size parameter affects both video and image preview URLs
+            - Mute parameter only affects video preview URLs
+        """
         self.anime_info: dict[str, Any] = {}
         self.idMal: int = 0
         self.title: dict[str, str] = {}
@@ -108,15 +126,17 @@ class TraceMoeItem(BaseSearchItem):
 
 
 class TraceMoeResponse(BaseSearchResponse):
-    """Encapsulates a TraceMoe reverse image search response.
+    """Represents the complete response from a TraceMoe search operation.
 
-    Contains the complete response from a TraceMoe reverse image search operation.
+    Encapsulates the entire search response including all matched scenes and metadata
+    about the search operation itself.
 
     Attributes:
-        origin: The raw response data.
-        raw: List of TraceMoeItem instances for each search result.
-        frameCount: Total number of frames searched in the query.
-        error: Error message, if any, from the TraceMoe API.
+        origin (dict): Raw API response data.
+        raw (list[TraceMoeItem]): List of processed search results.
+        frameCount (int): Total number of frames analyzed during search.
+        error (str): Error message if the search encountered issues.
+        url (str): URL to the search results page.
     """
 
     def __init__(
@@ -137,7 +157,20 @@ class TraceMoeResponse(BaseSearchResponse):
         super().__init__(resp_data, resp_url, mute=mute, size=size)
 
     def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
-        """Parse search response data."""
+        """Processes the raw API response into structured data.
+
+        Converts raw JSON response into TraceMoeItem instances and extracts
+        metadata about the search operation.
+
+        Args:
+            resp_data: Raw response dictionary from the TraceMoe API.
+            **kwargs: Additional parameters including:
+                - mute (bool): Whether to mute video previews
+                - size (str): Preview size modifier
+
+        Note:
+            The parsed results are stored in the `raw` attribute as TraceMoeItem instances.
+        """
         self.raw: list[TraceMoeItem] = []
         res_docs = resp_data["result"]
         self.raw.extend(

@@ -1,5 +1,6 @@
 from .ascii2d import Ascii2DItem, Ascii2DResponse
 from .baidu import BaiDuItem, BaiDuResponse
+from .bing import BingItem, BingResponse
 from .copyseeker import CopyseekerItem, CopyseekerResponse
 from .ehentai import EHentaiItem, EHentaiResponse
 from .google import GoogleItem, GoogleResponse

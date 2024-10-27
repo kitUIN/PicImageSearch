@@ -15,12 +15,15 @@ RESP = namedtuple("RESP", ["text", "url", "status_code"])
 
 
 class Network:
-    """Manages HTTP client for network operations.
+    """A class that manages HTTP client lifecycle and configuration.
+
+    This class provides a wrapper around httpx.AsyncClient with support for
+    cookies parsing, proxy configuration, and custom headers management.
 
     Attributes:
-        internal: Indicates if the object manages its own client lifecycle.
-        cookies: Dictionary of parsed cookies, provided in string format upon initialization.
-        client: Instance of an HTTP client.
+        internal (bool): Controls whether the client lifecycle is managed internally.
+        cookies (dict[str, str]): Parsed cookies from the input string.
+        client (AsyncClient): The underlying HTTP client instance.
     """
 
     def __init__(
@@ -31,16 +34,18 @@ class Network:
         cookies: Optional[str] = None,
         timeout: float = 30,
         verify_ssl: bool = True,
+        http2: bool = False,
     ):
-        """Initializes Network with configuration for HTTP requests.
+        """Initialize a new Network instance with custom configuration.
 
         Args:
-            internal: If True, Network manages its own HTTP client lifecycle.
-            proxies: Proxy settings for the HTTP client.
-            headers: Custom headers for the HTTP client.
-            cookies: Cookies in string format for the HTTP client.
-            timeout: Timeout duration for the HTTP client.
+            internal: If True, manages its own client lifecycle.
+            proxies: Proxy URL string (e.g., "http://proxy.example.com:8080").
+            headers: Custom HTTP headers to merge with defaults.
+            cookies: Cookies in string format (e.g., "key1=value1; key2=value2").
+            timeout: Request timeout in seconds.
             verify_ssl: If True, verifies SSL certificates.
+            http2: If True, enables HTTP/2 support.
         """
         self.internal: bool = internal
         headers = {**DEFAULT_HEADERS, **headers} if headers else DEFAULT_HEADERS
@@ -54,6 +59,7 @@ class Network:
             headers=headers,
             cookies=self.cookies,
             verify=verify_ssl,
+            http2=http2,
             proxies=proxies,
             timeout=timeout,
             follow_redirects=True,
@@ -90,10 +96,13 @@ class Network:
 
 
 class ClientManager:
-    """Manages an HTTP client for network requests, handling lifecycle if created internally.
+    """A context manager for HTTP client lifecycle management.
+
+    This class provides a convenient way to manage HTTP client instances,
+    either using an existing client or creating a new one with custom configuration.
 
     Attributes:
-        client: Managed instance of the HTTP client.
+        client (Union[Network, AsyncClient]): The managed HTTP client instance.
     """
 
     def __init__(
@@ -103,15 +112,22 @@ class ClientManager:
         headers: Optional[dict[str, str]] = None,
         cookies: Optional[str] = None,
         timeout: float = 30,
+        verify_ssl: bool = True,
+        http2: bool = False,
     ):
-        """Initializes ClientManager with an existing HTTP client or creates a new one.
+        """Initialize a ClientManager with an existing client or create a new one.
 
         Args:
             client: An existing AsyncClient instance or None to create a new one.
-            proxies: Proxy settings for the new client.
+            proxies: Proxy URL string for the new client.
             headers: Custom headers for the new client.
-            cookies: Cookies in ';' separated string format for the new client.
-            timeout: Timeout setting for the new client.
+            cookies: Cookies string for the new client.
+            timeout: Request timeout in seconds.
+            verify_ssl: If True, verifies SSL certificates.
+            http2: If True, enables HTTP/2 support.
+
+        Note:
+            If client is provided, other parameters are ignored.
         """
         self.client: Union[Network, AsyncClient] = client or Network(
             internal=True,
@@ -119,6 +135,8 @@ class ClientManager:
             headers=headers,
             cookies=cookies,
             timeout=timeout,
+            verify_ssl=verify_ssl,
+            http2=http2,
         )
 
     async def __aenter__(self) -> AsyncClient:
@@ -141,17 +159,19 @@ class ClientManager:
 
 
 class HandOver:
-    """Facilitates network operations like GET, POST, and download, managing an HTTP client.
+    """A high-level interface for making HTTP requests.
 
-    Provides methods for HTTP GET, POST requests, and download operations,
-    managing the lifecycle of an HTTP client.
+    This class provides convenient methods for making HTTP requests with automatic
+    client lifecycle management. It supports GET, POST, and download operations.
 
     Attributes:
-        client: Optional pre-configured AsyncClient instance.
-        proxies: Proxy settings for requests.
-        headers: Custom HTTP headers for requests.
-        cookies: Cookies for requests in string format.
-        timeout: Timeout duration for requests.
+        client (Optional[AsyncClient]): An optional pre-configured client.
+        proxies (Optional[str]): Proxy settings for requests.
+        headers (Optional[dict]): Default headers for requests.
+        cookies (Optional[str]): Default cookies for requests.
+        timeout (float): Default timeout for requests.
+        verify_ssl (bool): If True, verifies SSL certificates.
+        http2 (bool): If True, enables HTTP/2 support.
     """
 
     def __init__(
@@ -161,6 +181,8 @@ class HandOver:
         headers: Optional[dict[str, str]] = None,
         cookies: Optional[str] = None,
         timeout: float = 30,
+        verify_ssl: bool = True,
+        http2: bool = False,
     ):
         """Initializes HandOver with an existing AsyncClient or creates a new one.
 
@@ -170,25 +192,40 @@ class HandOver:
             headers: Custom headers.
             cookies: Cookies in ';' separated string format.
             timeout: Timeout duration.
+            verify_ssl: If True, verifies SSL certificates.
+            http2: If True, enables HTTP/2 support.
         """
         self.client: Optional[AsyncClient] = client
         self.proxies: Optional[str] = proxies
         self.headers: Optional[dict[str, str]] = headers
         self.cookies: Optional[str] = cookies
         self.timeout: float = timeout
+        self.verify_ssl: bool = verify_ssl
+        self.http2: bool = http2
 
     async def get(
-        self, url: str, params: Optional[dict[str, str]] = None, **kwargs: Any
+        self,
+        url: str,
+        params: Optional[dict[str, str]] = None,
+        headers: Optional[dict[str, str]] = None,
+        **kwargs: Any,
     ) -> RESP:
-        """Performs an HTTP GET request.
+        """Perform an HTTP GET request with automatic client management.
 
         Args:
-            url: URL for the GET request.
-            params: Optional query parameters.
-            **kwargs: Additional arguments for the GET request.
+            url: The target URL for the GET request.
+            params: Optional query parameters to append to the URL.
+            headers: Optional headers to override defaults.
+            **kwargs: Additional arguments passed to httpx.AsyncClient.get().
 
         Returns:
-            RESP: Response with text, URL, and status code.
+            RESP: A named tuple containing:
+                - text: The response body as text
+                - url: The final URL after any redirects
+                - status_code: The HTTP status code
+
+        Note:
+            The client is automatically managed within a context manager.
         """
         async with ClientManager(
             self.client,
@@ -196,31 +233,42 @@ class HandOver:
             self.headers,
             self.cookies,
             self.timeout,
+            self.verify_ssl,
+            self.http2,
         ) as client:
-            resp = await client.get(url, params=params, **kwargs)
+            resp = await client.get(url, params=params, headers=headers, **kwargs)
             return RESP(resp.text, str(resp.url), resp.status_code)
 
     async def post(
         self,
         url: str,
         params: Union[dict[str, Any], QueryParams, None] = None,
+        headers: Optional[dict[str, str]] = None,
         data: Optional[dict[Any, Any]] = None,
         files: Optional[dict[str, Any]] = None,
         json: Optional[dict[str, Any]] = None,
         **kwargs: Any,
     ) -> RESP:
-        """Performs an HTTP POST request.
+        """Perform an HTTP POST request with automatic client management.
 
         Args:
-            url: URL for the POST request.
-            params: Optional query or QueryParams object.
-            data: Optional data for the request body.
-            files: Optional file-like objects for multipart submissions.
-            json: Optional JSON payload for the request body.
-            **kwargs: Additional arguments for the POST request.
+            url: The target URL for the POST request.
+            params: Query parameters or QueryParams object.
+            headers: Optional headers to override defaults.
+            data: Optional form data for the request body.
+            files: Optional files for multipart/form-data requests.
+            json: Optional JSON data for the request body.
+            **kwargs: Additional arguments passed to httpx.AsyncClient.post().
 
         Returns:
-            RESP: Response with text, URL, and status code.
+            RESP: A named tuple containing:
+                - text: The response body as text
+                - url: The final URL after any redirects
+                - status_code: The HTTP status code
+
+        Note:
+            - Only one of data, files, or json should be provided.
+            - The client is automatically managed within a context manager.
         """
         async with ClientManager(
             self.client,
@@ -228,20 +276,34 @@ class HandOver:
             self.headers,
             self.cookies,
             self.timeout,
+            self.verify_ssl,
+            self.http2,
         ) as client:
             resp = await client.post(
-                url, params=params, data=data, files=files, json=json, **kwargs
+                url,
+                params=params,
+                headers=headers,
+                data=data,
+                files=files,
+                json=json,
+                **kwargs,
             )
             return RESP(resp.text, str(resp.url), resp.status_code)
 
-    async def download(self, url: str) -> bytes:
-        """Downloads content from a URL.
+    async def download(
+        self, url: str, headers: Optional[dict[str, str]] = None
+    ) -> bytes:
+        """Download content from a URL with automatic client management.
 
         Args:
-            url: URL to download content from.
+            url: The URL to download content from.
+            headers: Optional headers to override defaults.
 
         Returns:
-            bytes: Downloaded content.
+            bytes: The downloaded content as bytes.
+
+        Note:
+            The client is automatically managed within a context manager.
         """
         async with ClientManager(
             self.client,
@@ -249,6 +311,8 @@ class HandOver:
             self.headers,
             self.cookies,
             self.timeout,
+            self.verify_ssl,
+            self.http2,
         ) as client:
-            resp = await client.get(url)
+            resp = await client.get(url, headers=headers)
             return resp.read()

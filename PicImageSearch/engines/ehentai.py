@@ -30,12 +30,15 @@ class EHentai(BaseSearchEngine):
         """Initializes an EHentai API client with specified configurations.
 
         Args:
-            base_url: The base URL for EHentai searches.
             is_ex: If True, search on exhentai.org; otherwise, use e-hentai.org.
-            covers: If True, search only for covers; otherwise, False.
-            similar: If True, enable similarity scanning; otherwise, False.
-            exp: If True, include results from expunged galleries; otherwise, False.
-            **request_kwargs: Additional arguments for network requests.
+            covers: If True, search only for covers; otherwise, search all images.
+            similar: If True, enable similarity scanning for more results.
+            exp: If True, include results from expunged galleries.
+            **request_kwargs: Additional arguments for network requests (e.g., cookies, proxies).
+
+        Note:
+            - For exhentai.org searches (is_ex=True), valid cookies must be provided in request_kwargs.
+            - The base URL is automatically selected based on the is_ex parameter.
         """
         base_url = "https://upld.exhentai.org" if is_ex else "https://upld.e-hentai.org"
         super().__init__(base_url, **request_kwargs)
@@ -50,24 +53,32 @@ class EHentai(BaseSearchEngine):
         file: Union[str, bytes, Path, None] = None,
         **kwargs: Any,
     ) -> EHentaiResponse:
-        """Performs a reverse image search on EHentai.
+        """Performs a reverse image search on EHentai/ExHentai.
 
-        Supports searching by image URL or by uploading an image file.
-
-        Requires either 'url' or 'file' to be provided.
+        This method supports two ways of searching:
+        1. Search by image URL
+        2. Search by uploading a local image file
 
         Args:
             url: URL of the image to search.
-            file: Local image file (path or bytes) to search.
+            file: Local image file, can be a path string, bytes data, or Path object.
+            **kwargs: Additional arguments passed to the parent class.
 
         Returns:
-            EHentaiResponse: Contains search results and additional information.
+            EHentaiResponse: Contains search results and metadata, including:
+                - Similar gallery entries
+                - Gallery URLs and titles
+                - Similarity scores
+                - Additional metadata from the search results
 
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
+            RuntimeError: If searching on ExHentai without proper authentication.
 
         Note:
-            Searching on exhentai.org requires logged-in status via cookies in `EHentai.request_kwargs`.
+            - Only one of 'url' or 'file' should be provided.
+            - For ExHentai searches, valid cookies must be provided in the request_kwargs.
+            - Search behavior is affected by the covers, similar, and exp flags set during initialization.
         """
         await super().search(url, file, **kwargs)
 

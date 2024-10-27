@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 
 from loguru import logger
 
@@ -6,11 +7,11 @@ from PicImageSearch import Ascii2D, Network
 from PicImageSearch.model import Ascii2DResponse
 from PicImageSearch.sync import Ascii2D as Ascii2DSync
 
-# proxies = "http://127.0.0.1:1081"
+# proxies = "http://127.0.0.1:1080"
 proxies = None
 base_url = "https://ascii2d.net"
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-file = "../images/test01.jpg"
+file = Path(__file__).parent.parent / "images" / "test01.jpg"
 bovw = False  # Use feature search or not
 verify_ssl = True  # Whether to verify SSL certificates or not
 
@@ -18,7 +19,7 @@ verify_ssl = True  # Whether to verify SSL certificates or not
 @logger.catch()
 async def test_async() -> None:
     async with Network(proxies=proxies, verify_ssl=verify_ssl) as client:
-        ascii2d = Ascii2D(base_url=base_url, client=client, bovw=bovw)
+        ascii2d = Ascii2D(base_url=base_url, bovw=bovw, client=client)
         # resp = await ascii2d.search(url=url)
         resp = await ascii2d.search(file=file)
         show_result(resp)
@@ -26,7 +27,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    ascii2d = Ascii2DSync(proxies=proxies, verify_ssl=verify_ssl, bovw=bovw)
+    ascii2d = Ascii2DSync(base_url=base_url, bovw=bovw, proxies=proxies, verify_ssl=verify_ssl)
     resp = ascii2d.search(url=url)
     # resp = ascii2d.search(file=file)
     show_result(resp)  # type: ignore
@@ -49,6 +50,5 @@ def show_result(resp: Ascii2DResponse) -> None:
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(test_async())
-    # test_sync()
+    asyncio.run(test_async())  # type: ignore
+    # test_sync()  # type: ignore

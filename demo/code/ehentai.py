@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 
 from loguru import logger
 
@@ -6,10 +7,10 @@ from PicImageSearch import EHentai, Network
 from PicImageSearch.model import EHentaiResponse
 from PicImageSearch.sync import EHentai as EHentaiSync
 
-proxies = "http://127.0.0.1:1081"
+proxies = "http://127.0.0.1:1080"
 # proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test06.jpg"
-file = "../images/test06.jpg"
+file = Path(__file__).parent.parent / "images" / "test06.jpg"
 
 # Note: EXHentai search requires cookies if to be used
 cookies = None
@@ -24,7 +25,7 @@ timeout = 60
 @logger.catch()
 async def test_async() -> None:
     async with Network(proxies=proxies, cookies=cookies, timeout=timeout) as client:
-        ehentai = EHentai(client=client, is_ex=is_ex)
+        ehentai = EHentai(is_ex=is_ex, client=client)
         # resp = await ehentai.search(url=url)
         resp = await ehentai.search(file=file)
         show_result(resp)
@@ -33,8 +34,8 @@ async def test_async() -> None:
 @logger.catch()
 def test_sync() -> None:
     ehentai = EHentaiSync(
-        proxies=proxies,
         is_ex=is_ex,
+        proxies=proxies,
         cookies=cookies,
         timeout=timeout,
     )
@@ -59,6 +60,5 @@ def show_result(resp: EHentaiResponse) -> None:
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(test_async())
-    # test_sync()
+    asyncio.run(test_async())  # type: ignore
+    # test_sync()  # type: ignore

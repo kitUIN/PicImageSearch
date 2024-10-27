@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 
 from loguru import logger
 
@@ -6,10 +7,10 @@ from PicImageSearch import Network, Yandex
 from PicImageSearch.model import YandexResponse
 from PicImageSearch.sync import Yandex as YandexSync
 
-proxies = "http://127.0.0.1:1081"
+proxies = "http://127.0.0.1:1080"
 # proxies = None
 url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test06.jpg"
-file = "../images/test06.jpg"
+file = Path(__file__).parent.parent / "images" / "test06.jpg"
 
 
 @logger.catch()
@@ -43,6 +44,5 @@ def show_result(resp: YandexResponse) -> None:
 
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(test_async())
-    # test_sync()
+    asyncio.run(test_async())  # type: ignore
+    # test_sync()  # type: ignore

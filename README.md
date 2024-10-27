@@ -2,7 +2,7 @@
 
 # PicImageSearch
 
-Read in other languages: [English](README.md), [中文](README.cn.md), [Русский](README.ru.md), [日本語](README.ja.md)
+Read in other languages: [简体中文](README.cn.md), [Русский](README.ru.md), [日本語](README.ja.md)
 
 ✨ Aggregated Image Search Engine for Reverse Image Search ✨
 
@@ -28,18 +28,19 @@ Read in other languages: [English](README.md), [中文](README.cn.md), [Русс
 
 ## Supported Search Engines
 
-| Engine     | Website                            |
-|------------|------------------------------------|
-| ASCII2D    | <https://ascii2d.net/>             |
-| Baidu      | <https://graph.baidu.com/>         |
-| Copyseeker | <https://copyseeker.net/>          |
-| E-Hentai   | <https://e-hentai.org/>            |
-| ExHentai   | <https://exhentai.org/>            |
-| Google     | <https://www.google.com/imghp>     |
-| IQDB       | <https://iqdb.org/>                |
-| SauceNAO   | <https://saucenao.com/>            |
-| TraceMoe   | <https://trace.moe/>               |
-| Yandex     | <https://yandex.com/images/search> |
+| Engine     | Website                              |
+|------------|--------------------------------------|
+| ASCII2D    | <https://ascii2d.net/>               |
+| Baidu      | <https://graph.baidu.com/>           |
+| Bing       | <https://www.bing.com/images/search> |
+| Copyseeker | <https://copyseeker.net/>            |
+| E-Hentai   | <https://e-hentai.org/>              |
+| ExHentai   | <https://exhentai.org/>              |
+| Google     | <https://www.google.com/imghp>       |
+| IQDB       | <https://iqdb.org/>                  |
+| SauceNAO   | <https://saucenao.com/>              |
+| TraceMoe   | <https://trace.moe/>                 |
+| Yandex     | <https://yandex.com/images/search>   |
 
 ## Usage
 

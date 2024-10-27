@@ -7,18 +7,16 @@ from .base import BaseSearchItem, BaseSearchResponse
 
 
 class EHentaiItem(BaseSearchItem):
-    """Represents a single e-hentai gallery item.
-
-    Holds details of a gallery from an e-hentai reverse image search.
+    """Represents a single e-hentai gallery item from search results.
 
     Attributes:
-        origin: The raw data of the search result item.
-        thumbnail: URL of the gallery's thumbnail.
-        url: URL of the gallery.
-        title: Title of the gallery.
-        type: Category of the gallery.
-        date: Date when the gallery was posted.
-        tags: List of tags associated with the gallery.
+        origin (PyQuery): The raw PyQuery data of the search result item.
+        thumbnail (str): URL of the gallery's thumbnail image.
+        url (str): Direct URL to the gallery page.
+        title (str): Title of the gallery.
+        type (str): Category/type of the gallery (e.g., 'Doujinshi', 'Manga', etc.).
+        date (str): Upload date of the gallery.
+        tags (list[str]): List of tags associated with the gallery.
     """
 
     def __init__(self, data: PyQuery, **kwargs: Any):
@@ -30,19 +28,29 @@ class EHentaiItem(BaseSearchItem):
         super().__init__(data, **kwargs)
 
     def _parse_data(self, data: PyQuery, **kwargs) -> None:
-        """Parse search result data."""
+        """Initialize and parse the gallery data from search results.
+
+        Args:
+            data: PyQuery object containing the gallery's HTML data.
+            **kwargs: Additional keyword arguments (unused).
+        """
         self.type: str = ""
         self.date: str = ""
         self.tags: list[str] = []
         self._arrange(data)
 
     def _arrange(self, data: PyQuery) -> None:
-        """Organize gallery data.
+        """Extract and organize gallery information from the PyQuery data.
 
-        Extracts and sets the gallery's title, URL, thumbnail, type, date and tags.
+        Processes the HTML data to extract various gallery attributes including:
+        - Title and URL
+        - Thumbnail image URL
+        - Gallery type/category
+        - Upload date
+        - Associated tags
 
         Args:
-            data: A PyQuery instance containing the gallery's data.
+            data: PyQuery object containing the gallery's HTML data.
         """
         glink = data.find(".glink")
         self.title = glink.text()
@@ -65,14 +73,15 @@ class EHentaiItem(BaseSearchItem):
 
 
 class EHentaiResponse(BaseSearchResponse):
-    """Encapsulates an e-hentai reverse image search response.
+    """Represents the complete response from an e-hentai reverse image search.
 
-    Contains the complete response from an e-hentai reverse image search operation.
+    This class processes and organizes the search results from e-hentai,
+    handling both filtered and unfiltered results in different HTML layouts.
 
     Attributes:
-        origin: The raw response data.
-        raw: List of EHentaiItem instances for each gallery item.
-        url: URL to the search result page.
+        origin (PyQuery): The raw PyQuery data of the entire response.
+        raw (list[EHentaiItem]): List of parsed gallery items from the search.
+        url (str): URL of the search results page.
     """
 
     def __init__(self, resp_data: str, resp_url: str, **kwargs: Any):
@@ -85,7 +94,17 @@ class EHentaiResponse(BaseSearchResponse):
         super().__init__(resp_data, resp_url, **kwargs)
 
     def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
-        """Parse search response data."""
+        """Parse the HTML response data from e-hentai search.
+
+        Handles different result layouts:
+        - Table layout (.itg > tr)
+        - Grid layout (.itg > .gl1t)
+        - No results case
+
+        Args:
+            resp_data: Raw HTML string from the search response.
+            **kwargs: Additional keyword arguments (unused).
+        """
         data = parse_html(resp_data)
         self.origin: PyQuery = data
         if "No unfiltered results" in resp_data:
