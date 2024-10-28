@@ -27,6 +27,7 @@ module.exports = {
         '.vuepress/config/nav.js',
         '.vuepress/config/plugins.js',
         '.vuepress/config/themeConfig.js',
+        '.vuepress/config/jp/nav.js',
         '.vuepress/config/ru/nav.js',
         '.vuepress/config/zh/nav.js',
     ],
@@ -46,6 +47,11 @@ module.exports = {
             lang: 'ru-RU',
             title: "PicImageSearch",
             description: '✨ Агрегатор Обратного Поиска Изображений ✨',
+        },
+        '/jp/': {
+            lang: 'ja-JP',
+            title: "PicImageSearch",
+            description: '✨ 逆画像検索エンジンの集大成 ✨',
         }
     }
 }

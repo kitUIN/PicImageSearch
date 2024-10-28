@@ -1,11 +1,12 @@
 const htmlModules = require("./htmlModules");
 const nav = require("./nav.js");
+const jpNav = require("./jp/nav.js");
 const ruNav = require("./ru/nav.js");
 const zhNav = require("./zh/nav.js");
 
 module.exports = {
     sidebarDepth: 2, // 侧边栏显示深度，默认 1，最大 2（显示到 h3 标题）
-    logo: '/img/logo.png', // 导航栏 logo
+    logo: 'https://avatars.githubusercontent.com/u/68675068?v=4', // 导航栏 logo
     repo: 'kitUIN/PicImageSearch', // 导航栏右侧生成 Github 链接
     searchMaxSuggestions: 10, // 搜索结果显示最大数
     lastUpdated: '上次更新', // 更新的时间，及前缀文字   string | boolean (取值为 git 提交时间)
@@ -84,6 +85,12 @@ module.exports = {
             selectText: '🌐 Выберите язык',
             label: 'Русский',
             editLinkText: 'Редактировать эту страницу на GitHub',
+        },
+        '/jp/': {
+            nav: jpNav,
+            selectText: '🌐 言語を選択',
+            label: '日本語',
+            editLinkText: 'このページを GitHub で編集',
         }
     }
 }

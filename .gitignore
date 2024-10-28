@@ -17,3 +17,6 @@ urls.txt
 
 # mac
 .DS_Store
+
+# JetBrains IDEs
+.idea

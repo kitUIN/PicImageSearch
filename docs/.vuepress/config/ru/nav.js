@@ -12,5 +12,4 @@ module.exports = [
             {text: 'Yandex', link: '/ru/wiki/picimagesearch/Yandex/DataStructure/'}
         ]
     },
-    {text: '🔖 Журнал изменений', link: '/wiki/picimagesearch/releases/'},
 ]

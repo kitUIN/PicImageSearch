@@ -2,17 +2,20 @@
   "name": "theme-vdoing-doc",
   "version": "1.0.0",
   "scripts": {
-    "dev": "export NODE_OPTIONS=--openssl-legacy-provider && node --max_old_space_size=4096 ./node_modules/vuepress/cli.js dev docs",
-    "build": "export NODE_OPTIONS=--openssl-legacy-provider && node --max_old_space_size=4096 ./node_modules/vuepress/cli.js build docs",
+    "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider && node --max_old_space_size=4096 ./node_modules/vuepress/cli.js dev docs",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider && node --max_old_space_size=4096 ./node_modules/vuepress/cli.js build docs",
     "deploy": "bash deploy.sh",
     "updateTheme": "yarn remove vuepress-theme-vdoing && rm -rf node_modules && yarn && yarn add vuepress-theme-vdoing -D",
     "editFm": "node utils/editFrontmatter.js"
   },
   "license": "MIT",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "dayjs": "^1.11.13",
     "inquirer": "^12.0.1",
     "json2yaml": "^1.1.0",
+    "vue": "^2.7.16",
+    "vue-template-compiler": "^2.7.16",
     "vuepress": "^1.9.10",
     "vuepress-plugin-demo-block": "^0.7.2",
     "vuepress-plugin-fulltext-search": "^2.2.1",
