@@ -1,23 +1,71 @@
 site_name: PicImageSearch
+site_url: https://pic-image-search.kituin.fun
+site_description: >-
+  PicImageSearch is an aggregated image search engine for reverse image search.
+
+repo_url: https://github.com/kitUIN/PicImageSearch
+repo_name: kitUIN/PicImageSearch
+edit_uri: edit/main/docs/
+
 theme:
   name: material
+  icon:
+    edit: material/pencil
+  features:
+    - content.action.edit
+    - content.action.view
+    - content.code.copy
+    - navigation.expand
+    - navigation.footer
+    - navigation.top
   palette:
-    - media: "(prefers-color-scheme)"
+    - media: (prefers-color-scheme)
       toggle:
         icon: material/brightness-auto
         name: Switch to light mode
-
-    - media: "(prefers-color-scheme: light)"
+    - media: '(prefers-color-scheme: light)'
       scheme: default
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-
-    - media: "(prefers-color-scheme: dark)"
+    - media: '(prefers-color-scheme: dark)'
       scheme: slate
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+
+nav:
+  - Introduction: index.md
+  - Docs:
+    - Engines:
+        - Ascii2D: engines/ascii2d.md
+        - Baidu: engines/baidu.md
+        - Bing: engines/bing.md
+        - Copyseeker: engines/copyseeker.md
+        - EHentai: engines/ehentai.md
+        - Google: engines/google.md
+        - IQDB: engines/iqdb.md
+        - SauceNAO: engines/saucenao.md
+        - TraceMoe: engines/tracemoe.md
+        - Yandex: engines/yandex.md
+    - Model:
+        - Ascii2D: model/ascii2d.md
+        - Baidu: model/baidu.md
+        - Bing: model/bing.md
+        - Copyseeker: model/copyseeker.md
+        - EHentai: model/ehentai.md
+        - Google: model/google.md
+        - IQDB: model/iqdb.md
+        - SauceNAO: model/saucenao.md
+        - TraceMoe: model/tracemoe.md
+        - Yandex: model/yandex.md
 
 plugins:
   - search
@@ -25,37 +73,37 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [.]
           options:
             show_category_heading: true
             show_if_no_docstring: true
             show_root_heading: false
             show_source: true
-
-nav:
-  - Home: index.md
-  - Engines:
-      - Ascii2D: engines/ascii2d.md
-      - Baidu: engines/baidu.md
-      - Bing: engines/bing.md
-      - Copyseeker: engines/copyseeker.md
-      - EHentai: engines/ehentai.md
-      - Google: engines/google.md
-      - IQDB: engines/iqdb.md
-      - SauceNAO: engines/saucenao.md
-      - TraceMoe: engines/tracemoe.md
-      - Yandex: engines/yandex.md
-  - Model:
-      - Ascii2D: model/ascii2d.md
-      - Baidu: model/baidu.md
-      - Bing: model/bing.md
-      - Copyseeker: model/copyseeker.md
-      - EHentai: model/ehentai.md
-      - Google: model/google.md
-      - IQDB: model/iqdb.md
-      - SauceNAO: model/saucenao.md
-      - TraceMoe: model/tracemoe.md
-      - Yandex: model/yandex.md
+          paths: [.]
+  - i18n:
+      docs_structure: folder
+      languages:
+        - name: English
+          locale: en
+          build: true
+          default: true
+        - name: 简体中文
+          locale: zh
+          build: true
+          nav_translations:
+            Introduction: 介绍
+            Docs: 文档
+        - name: Русский
+          locale: ru
+          build: true
+          nav_translations:
+            Introduction: Введение
+            Docs: Документация
+        - name: 日本語
+          locale: ja
+          build: true
+          nav_translations:
+            Introduction: 紹介
+            Docs: ドキュメント
 
 watch:
   - PicImageSearch

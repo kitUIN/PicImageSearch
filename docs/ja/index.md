@@ -1,6 +1,6 @@
 # PicImageSearch
 
-**Aggregated Image Search Engine for Reverse Image Search**
+**逆画像検索エンジンの集大成**
 
 <a href="https://raw.githubusercontent.com/kitUIN/PicImageSearch/master/LICENSE">
 <img
@@ -25,25 +25,25 @@
 />
 </a>
 
-## What is PicImageSearch?
+## PicImageSearch とは何ですか？
 
-PicImageSearch is a powerful Python image search library that integrates multiple mainstream reverse image search engines, providing developers with a unified and concise API interface, making the development of image search functions more convenient.
+PicImageSearch は強力な Python 画像検索ライブラリで、複数の主要な画像逆検索エンジンを統合し、開発者に統一かつ簡潔な API インターフェースを提供し、画像検索機能の開発をより便利にします。
 
-## Project History
+## プロジェクトの歴史
 
-### Project Origin
+### プロジェクトの起源
 
-This project initially originated from my need to develop an image search function on the [OPQ](https://github.com/opq-osc/OPQ) QQ robot platform.  
-At that time, I found that the image search service APIs on the market were relatively scattered and implemented in different ways, which brought many inconveniences to development.  
-To solve this problem, I developed PicImageSearch, which integrates multiple excellent image search engines into a unified interface, greatly simplifying the development process.
+このプロジェクトは、私が [OPQ](https://github.com/opq-osc/OPQ) QQ ロボットプラットフォームで画像検索機能を開発する必要があったことから始まりました。  
+当時、市場に出回っている画像検索サービス API は比較的分散しており、それぞれの実装方法が異なり、開発に多くの不便をもたらしていました。  
+この問題を解決するために、私は PicImageSearch を開発し、複数の優れた画像検索エンジンを統一インターフェースに統合し、開発プロセスを大幅に簡素化しました。
 
-### Project Development
+### プロジェクトの発展
 
-During the development of the project, [Neko Aria](https://github.com/NekoAria) joined the development team after being introduced to the [NoneBot2](https://github.com/nonebot/nonebot2) platform.  
-He comprehensively refactored the code, introducing more modern design concepts, significantly improving the maintainability and scalability of the project.  
-Currently, the project is mainly maintained by Neko Aria, continuously providing the community with better image search solutions.
+プロジェクトの発展過程で、[Neko Aria](https://github.com/NekoAria) は [NoneBot2](https://github.com/nonebot/nonebot2) プラットフォームに触れた後、開発チームに参加しました。  
+彼はコードを全面的にリファクタリングし、より現代的な設計理念を導入し、プロジェクトの保守性と拡張性を大幅に向上させました。  
+現在、プロジェクトは主に Neko Aria によって維持されており、コミュニティにより良い画像検索ソリューションを提供し続けています。
 
-## Supported Reverse Image Search Engines
+## サポートされている逆画像検索エンジン
 
 <div class="grid cards" markdown>
 
@@ -109,7 +109,7 @@ Currently, the project is mainly maintained by Neko Aria, continuously providing
 
 </div>
 
-## Contributors to this project
+## このプロジェクトの貢献者
 
 <div class="grid cards" markdown>
 
@@ -117,36 +117,36 @@ Currently, the project is mainly maintained by Neko Aria, continuously providing
 
     ---
 
-    Project Maintainer
+    プロジェクトのメイン管理者
 
 - ![kitUIN](https://github.com/kitUIN.png){ .lg .middle } kitUIN
 
     ---
 
-    Project Owner
+    プロジェクトオーナー
 
 - ![Peloxerat](https://github.com/Peloxerat.png){ .lg .middle } Peloxerat
 
     ---
 
-    Project Contributor
+    プロジェクト貢献者
 
 - ![lleans](https://github.com/lleans.png){ .lg .middle } lleans
 
     ---
 
-    Project Contributor
+    プロジェクト貢献者
 
 - ![chinoll](https://github.com/chinoll.png){ .lg .middle } chinoll
 
     ---
 
-    Project Contributor
+    プロジェクト貢献者
 
 - ![Nachtalb](https://github.com/Nachtalb.png){ .lg .middle } Nachtalb
 
     ---
 
-    Project Contributor
+    プロジェクト貢献者
 
 </div>

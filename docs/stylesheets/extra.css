@@ -1,0 +1,8 @@
+.grid.cards {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)) !important;
+}
+
+.grid.cards img {
+    max-width: 2rem;
+    max-height: 2rem;
+}
