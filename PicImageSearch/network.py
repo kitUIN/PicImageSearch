@@ -39,13 +39,13 @@ class Network:
         """Initialize a new Network instance with custom configuration.
 
         Args:
-            internal: If True, manages its own client lifecycle.
-            proxies: Proxy URL string (e.g., "http://proxy.example.com:8080").
-            headers: Custom HTTP headers to merge with defaults.
-            cookies: Cookies in string format (e.g., "key1=value1; key2=value2").
-            timeout: Request timeout in seconds.
-            verify_ssl: If True, verifies SSL certificates.
-            http2: If True, enables HTTP/2 support.
+            internal (bool): If True, manages its own client lifecycle.
+            proxies (Optional[str]): Proxy URL string (e.g., "http://proxy.example.com:8080").
+            headers (Optional[dict[str, str]]): Custom HTTP headers to merge with defaults.
+            cookies (Optional[str]): Cookies in string format (e.g., "key1=value1; key2=value2").
+            timeout (float): Request timeout in seconds.
+            verify_ssl (bool): If True, verifies SSL certificates.
+            http2 (bool): If True, enables HTTP/2 support.
         """
         self.internal: bool = internal
         headers = {**DEFAULT_HEADERS, **headers} if headers else DEFAULT_HEADERS
@@ -118,13 +118,13 @@ class ClientManager:
         """Initialize a ClientManager with an existing client or create a new one.
 
         Args:
-            client: An existing AsyncClient instance or None to create a new one.
-            proxies: Proxy URL string for the new client.
-            headers: Custom headers for the new client.
-            cookies: Cookies string for the new client.
-            timeout: Request timeout in seconds.
-            verify_ssl: If True, verifies SSL certificates.
-            http2: If True, enables HTTP/2 support.
+            client (Optional[AsyncClient]): An existing AsyncClient instance or None to create a new one.
+            proxies (Optional[str]): Proxy URL string for the new client.
+            headers (Optional[dict[str, str]]): Custom headers for the new client.
+            cookies (Optional[str]): Cookies string for the new client.
+            timeout (float): Request timeout in seconds.
+            verify_ssl (bool): If True, verifies SSL certificates.
+            http2 (bool): If True, enables HTTP/2 support.
 
         Note:
             If client is provided, other parameters are ignored.
@@ -187,13 +187,13 @@ class HandOver:
         """Initializes HandOver with an existing AsyncClient or creates a new one.
 
         Args:
-            client: An existing AsyncClient or None for a new client.
-            proxies: Proxy settings.
-            headers: Custom headers.
-            cookies: Cookies in ';' separated string format.
-            timeout: Timeout duration.
-            verify_ssl: If True, verifies SSL certificates.
-            http2: If True, enables HTTP/2 support.
+            client (Optional[AsyncClient]): An existing AsyncClient instance or None for a new client.
+            proxies (Optional[str]): Proxy settings.
+            headers (Optional[dict[str, str]]): Custom headers.
+            cookies (Optional[str]): Cookies in ';' separated string format.
+            timeout (float): Timeout duration.
+            verify_ssl (bool): If True, verifies SSL certificates.
+            http2 (bool): If True, enables HTTP/2 support.
         """
         self.client: Optional[AsyncClient] = client
         self.proxies: Optional[str] = proxies
@@ -213,10 +213,10 @@ class HandOver:
         """Perform an HTTP GET request with automatic client management.
 
         Args:
-            url: The target URL for the GET request.
-            params: Optional query parameters to append to the URL.
-            headers: Optional headers to override defaults.
-            **kwargs: Additional arguments passed to httpx.AsyncClient.get().
+            url (str): The target URL for the GET request.
+            params (Optional[dict[str, str]]): Optional query parameters to append to the URL.
+            headers (Optional[dict[str, str]]): Optional headers to override defaults.
+            **kwargs (Any): Additional arguments passed to httpx.AsyncClient.get().
 
         Returns:
             RESP: A named tuple containing:
@@ -252,13 +252,13 @@ class HandOver:
         """Perform an HTTP POST request with automatic client management.
 
         Args:
-            url: The target URL for the POST request.
-            params: Query parameters or QueryParams object.
-            headers: Optional headers to override defaults.
-            data: Optional form data for the request body.
-            files: Optional files for multipart/form-data requests.
-            json: Optional JSON data for the request body.
-            **kwargs: Additional arguments passed to httpx.AsyncClient.post().
+            url (str): The target URL for the POST request.
+            params (Union[dict[str, Any], QueryParams, None]): Query parameters or QueryParams object.
+            headers (Optional[dict[str, str]]): Optional headers to override defaults.
+            data (Optional[dict[Any, Any]]): Optional form data for the request body.
+            files (Optional[dict[str, Any]]): Optional files for multipart/form-data requests.
+            json (Optional[dict[str, Any]]): Optional JSON data for the request body.
+            **kwargs (Any): Additional arguments passed to httpx.AsyncClient.post().
 
         Returns:
             RESP: A named tuple containing:
@@ -267,7 +267,7 @@ class HandOver:
                 - status_code: The HTTP status code
 
         Note:
-            - Only one of data, files, or json should be provided.
+            - Only one of `data`, `files`, or `json` should be provided.
             - The client is automatically managed within a context manager.
         """
         async with ClientManager(
@@ -296,8 +296,8 @@ class HandOver:
         """Download content from a URL with automatic client management.
 
         Args:
-            url: The URL to download content from.
-            headers: Optional headers to override defaults.
+            url (str): The URL to download content from.
+            headers (Optional[dict[str, str]]): Optional headers to override defaults.
 
         Returns:
             bytes: The downloaded content as bytes.

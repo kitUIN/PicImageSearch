@@ -1,0 +1,3 @@
+# Yandex
+
+::: PicImageSearch.engines.yandex

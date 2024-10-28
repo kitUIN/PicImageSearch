@@ -41,7 +41,7 @@ class Ascii2DItem(BaseSearchItem):
         """Initializes an Ascii2DItem with data from a search result.
 
         Args:
-            data: A PyQuery instance containing the search result item's data.
+            data (PyQuery): A PyQuery instance containing the search result item's data.
         """
         super().__init__(data, **kwargs)
 
@@ -52,8 +52,8 @@ class Ascii2DItem(BaseSearchItem):
         including hash, image details, thumbnail URL, and other metadata.
 
         Args:
-            data: PyQuery object containing the search result HTML.
-            **kwargs: Additional keyword arguments (unused).
+            data (PyQuery): PyQuery object containing the search result HTML.
+            **kwargs (Any): Additional keyword arguments (unused).
         """
         self.hash: str = data("div.hash").eq(0).text()
         self.detail: str = data("small").eq(0).text()
@@ -75,7 +75,7 @@ class Ascii2DItem(BaseSearchItem):
         Handles the normalization of URLs and sets backup links if necessary.
 
         Args:
-            data: PyQuery object containing the detail box information.
+            data (PyQuery): PyQuery object containing the detail box information.
         """
         if infos := data.find("div.detail-box.gray-link"):
             links = infos.find("a")
@@ -103,9 +103,9 @@ class Ascii2DItem(BaseSearchItem):
         Handles different link patterns based on the source platform.
 
         Args:
-            infos: PyQuery object containing the detail box information.
-            links: PyQuery object containing all URL links.
-            mark: Source identifier string (e.g., "pixiv", "twitter").
+            infos (PyQuery): PyQuery object containing the detail box information.
+            links (PyQuery): PyQuery object containing all URL links.
+            mark (str): Source identifier string (e.g., "pixiv", "twitter").
         """
         if links:
             link_items = list(links.items())
@@ -126,7 +126,7 @@ class Ascii2DItem(BaseSearchItem):
         Falls back to external text or h6 content if primary title is not found.
 
         Args:
-            infos: PyQuery object containing the title information.
+            infos (PyQuery): PyQuery object containing the title information.
         """
         if not self.title:
             self.title = self._extract_external_text(infos) or infos.find("h6").text()
@@ -142,7 +142,7 @@ class Ascii2DItem(BaseSearchItem):
         Removes link elements and combines remaining text content.
 
         Args:
-            infos: PyQuery object containing external text elements.
+            infos (PyQuery): PyQuery object containing external text elements.
 
         Returns:
             str: Combined text from external elements, or empty string if none found.
@@ -168,7 +168,7 @@ class Ascii2DItem(BaseSearchItem):
         Extracts URLs from alternative locations in the HTML structure.
 
         Args:
-            data: PyQuery object to search for backup links.
+            data (PyQuery): PyQuery object to search for backup links.
         """
         if links := data.find("div.pull-xs-right > a"):
             self.url = links.eq(0).attr("href")
@@ -190,8 +190,8 @@ class Ascii2DResponse(BaseSearchResponse):
         """Initializes with the response text and URL.
 
         Args:
-            resp_data: The data of the response.
-            resp_url: URL to the search result page.
+            resp_data (str): The data of the response.
+            resp_url (str): URL to the search result page.
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
@@ -201,8 +201,8 @@ class Ascii2DResponse(BaseSearchResponse):
         Converts HTML response into PyQuery object and extracts individual search items.
 
         Args:
-            resp_data: Raw HTML response string from Ascii2D.
-            **kwargs: Additional keyword arguments (unused).
+            resp_data (str): Raw HTML response string from Ascii2D.
+            **kwargs (Any): Additional keyword arguments (unused).
         """
         data = parse_html(resp_data)
         self.origin: PyQuery = data

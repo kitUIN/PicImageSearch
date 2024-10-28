@@ -1,0 +1,61 @@
+site_name: PicImageSearch
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [.]
+          options:
+            show_category_heading: true
+            show_if_no_docstring: true
+            show_root_heading: false
+            show_source: true
+
+nav:
+  - Home: index.md
+  - Engines:
+      - Ascii2D: engines/ascii2d.md
+      - Baidu: engines/baidu.md
+      - Bing: engines/bing.md
+      - Copyseeker: engines/copyseeker.md
+      - EHentai: engines/ehentai.md
+      - Google: engines/google.md
+      - IQDB: engines/iqdb.md
+      - SauceNAO: engines/saucenao.md
+      - TraceMoe: engines/tracemoe.md
+      - Yandex: engines/yandex.md
+  - Model:
+      - Ascii2D: model/ascii2d.md
+      - Baidu: model/baidu.md
+      - Bing: model/bing.md
+      - Copyseeker: model/copyseeker.md
+      - EHentai: model/ehentai.md
+      - Google: model/google.md
+      - IQDB: model/iqdb.md
+      - SauceNAO: model/saucenao.md
+      - TraceMoe: model/tracemoe.md
+      - Yandex: model/yandex.md
+
+watch:
+  - PicImageSearch

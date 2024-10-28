@@ -1,0 +1,3 @@
+# Baidu
+
+::: PicImageSearch.engines.baidu

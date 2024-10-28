@@ -16,14 +16,14 @@ class BaiDu(BaseSearchEngine):
     Used for performing reverse image searches using BaiDu service.
 
     Attributes:
-        base_url: The base URL for BaiDu searches.
+        base_url (str): The base URL for BaiDu searches.
     """
 
     def __init__(self, **request_kwargs: Any):
         """Initializes a BaiDu API client with specified configurations.
 
         Args:
-            **request_kwargs: Additional arguments for network requests.
+            **request_kwargs (Any): Additional arguments for network requests.
         """
         base_url = "https://graph.baidu.com"
         super().__init__(base_url, **request_kwargs)
@@ -36,7 +36,7 @@ class BaiDu(BaseSearchEngine):
         the 'window.cardData' object, which contains the search results.
 
         Args:
-            data: A PyQuery object containing the parsed HTML page.
+            data (PyQuery): A PyQuery object containing the parsed HTML page.
 
         Returns:
             list[dict[str, Any]]: A list of card data dictionaries, where each dictionary
@@ -64,19 +64,19 @@ class BaiDu(BaseSearchEngine):
         """Performs a reverse image search on BaiDu.
 
         This method supports two ways of searching:
-        1. Search by image URL
-        2. Search by uploading a local image file
+            1. Search by image URL
+            2. Search by uploading a local image file
 
         The search process involves multiple steps:
-        1. Upload the image or submit the URL to BaiDu
-        2. Follow the returned URL to get the search results page
-        3. Extract and parse the card data from the page
-        4. If similar images are found, fetch the detailed results
+            1. Upload the image or submit the URL to BaiDu
+            2. Follow the returned URL to get the search results page
+            3. Extract and parse the card data from the page
+            4. If similar images are found, fetch the detailed results
 
         Args:
-            url: URL of the image to search.
-            file: Local image file, can be a path string, bytes data, or Path object.
-            **kwargs: Additional arguments passed to the parent class.
+            url (Optional[str]): URL of the image to search.
+            file (Union[str, bytes, Path, None]): Local image file, can be a path string, bytes data, or Path object.
+            **kwargs (Any): Additional arguments passed to the parent class.
 
         Returns:
             BaiDuResponse: An object containing the search results and metadata.
@@ -84,10 +84,10 @@ class BaiDu(BaseSearchEngine):
                 card is present.
 
         Raises:
-            ValueError: If neither 'url' nor 'file' is provided.
+            ValueError: If neither `url` nor `file` is provided.
 
         Note:
-            - Only one of 'url' or 'file' should be provided.
+            - Only one of `url` or `file` should be provided.
             - The search process involves multiple HTTP requests to BaiDu's API.
             - The response format varies depending on whether matches are found.
         """

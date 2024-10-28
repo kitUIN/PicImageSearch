@@ -21,7 +21,7 @@ class TraceMoeMe:
         """Initializes a TraceMoeMe with user-related data from TraceMoe response.
 
         Args:
-            data: A dictionary containing user-related data from TraceMoe.
+            data (dict[str, Any]): A dictionary containing user-related data from TraceMoe.
         """
         self.id: str = data["id"]
         self.priority: int = data["priority"]
@@ -71,9 +71,9 @@ class TraceMoeItem(BaseSearchItem):
         """Initializes a TraceMoeItem with data from a search result.
 
         Args:
-            data: A dictionary containing parsed response data for an individual result.
-            mute: Indicates whether to mute the video excerpt.
-            size: Size parameter for modifying video and image URLs.
+            data (dict[str, Any]): A dictionary containing parsed response data for an individual result.
+            mute (bool): Indicates whether to mute the video excerpt.
+            size (Optional[str]): Size parameter for modifying video and image URLs.
         """
         super().__init__(data, mute=mute, size=size)
 
@@ -84,8 +84,8 @@ class TraceMoeItem(BaseSearchItem):
         Handles URL modifications for video and image previews based on size and mute preferences.
 
         Args:
-            data: Raw response dictionary from the TraceMoe API.
-            **kwargs: Additional parameters including:
+            data (dict[str, Any]): Raw response dictionary from the TraceMoe API.
+            **kwargs (Any): Additional parameters including:
                 - size (str): Preview size modifier ('l', 'm', 's')
                 - mute (bool): Whether to mute video previews
 
@@ -149,10 +149,10 @@ class TraceMoeResponse(BaseSearchResponse):
         """Initializes with the response data.
 
         Args:
-            resp_data: A dictionary containing parsed response data from TraceMoe.
-            resp_url: URL to the search result page.
-            mute: Flag for muting video excerpts in search results.
-            size: Size parameter for modifying video and image URLs.
+            resp_data (dict[str, Any]): A dictionary containing parsed response data from TraceMoe.
+            resp_url (str): URL to the search result page.
+            mute (bool): Flag for muting video excerpts in search results.
+            size (Optional[str]): Size parameter for modifying video and image URLs.
         """
         super().__init__(resp_data, resp_url, mute=mute, size=size)
 
@@ -163,8 +163,8 @@ class TraceMoeResponse(BaseSearchResponse):
         metadata about the search operation.
 
         Args:
-            resp_data: Raw response dictionary from the TraceMoe API.
-            **kwargs: Additional parameters including:
+            resp_data (dict[str, Any]): Raw response dictionary from the TraceMoe API.
+            **kwargs (Any): Additional parameters including:
                 - mute (bool): Whether to mute video previews
                 - size (str): Preview size modifier
 

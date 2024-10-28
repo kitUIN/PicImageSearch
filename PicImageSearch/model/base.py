@@ -9,19 +9,19 @@ class BaseSearchItem(ABC):
     Each search engine should implement its own subclass with specific parsing logic.
 
     Attributes:
-        origin: The raw data from the search engine.
-        url: The URL of the found image or page.
-        thumbnail: The URL of the thumbnail image.
-        title: The title or description of the search result.
-        similarity: A float value indicating the similarity score (0.0 to 100.0).
+        origin (Any): The raw data from the search engine.
+        url (str): The URL of the found image or page.
+        thumbnail (str): The URL of the thumbnail image.
+        title (str): The title or description of the search result.
+        similarity (float): A float value indicating the similarity score (0.0 to 100.0).
     """
 
     def __init__(self, data: Any, **kwargs: Any):
         """Initialize a search result item.
 
         Args:
-            data: Raw data from the search engine response.
-            **kwargs: Additional keyword arguments for specific search engines.
+            data (Any): Raw data from the search engine response.
+            **kwargs (Any): Additional keyword arguments for specific search engines.
         """
         self.origin: Any = data
         self.url: str = ""
@@ -38,8 +38,8 @@ class BaseSearchItem(ABC):
         from the raw data and populate the instance attributes.
 
         Args:
-            data: Raw data from the search engine response.
-            **kwargs: Additional keyword arguments for specific search engines.
+            data (Any): Raw data from the search engine response.
+            **kwargs (Any): Additional keyword arguments for specific search engines.
         """
         pass
 
@@ -51,18 +51,18 @@ class BaseSearchResponse(ABC):
     from various search engines.
 
     Attributes:
-        origin: The original response data from the search engine.
-        url: The URL of the search request.
-        raw: A list of BaseSearchItem objects representing individual search results.
+        origin (Any): The original response data from the search engine.
+        url (str): The URL of the search request.
+        raw (list[BaseSearchItem]): A list of BaseSearchItem objects representing individual search results.
     """
 
     def __init__(self, resp_data: Any, resp_url: str, **kwargs: Any):
         """Initialize a search response.
 
         Args:
-            resp_data: Raw response data from the search engine.
-            resp_url: The URL of the search request.
-            **kwargs: Additional keyword arguments for specific search engines.
+            resp_data (Any): Raw response data from the search engine.
+            resp_url (str): The URL of the search request.
+            **kwargs (Any): Additional keyword arguments for specific search engines.
         """
         self.origin: Any = resp_data
         self.url: str = resp_url
@@ -77,7 +77,7 @@ class BaseSearchResponse(ABC):
         and populate the raw results list.
 
         Args:
-            resp_data: Raw response data from the search engine.
-            **kwargs: Additional keyword arguments for specific search engines.
+            resp_data (Any): Raw response data from the search engine.
+            **kwargs (Any): Additional keyword arguments for specific search engines.
         """
         pass

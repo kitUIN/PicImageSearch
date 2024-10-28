@@ -16,15 +16,14 @@ class Bing(BaseSearchEngine):
     Used for performing reverse image searches using Bing's API.
 
     Attributes:
-        base_url: The base URL for Bing searches.
+        base_url (str): The base URL for Bing searches.
     """
 
     def __init__(self, **request_kwargs: Any):
         """Initializes a Bing API client with specified configurations.
 
         Args:
-            base_url: The base URL for Bing searches.
-            **request_kwargs: Additional arguments for network requests.
+            **request_kwargs (Any): Additional arguments for network requests.
         """
         base_url = "https://www.bing.com"
         super().__init__(base_url, **request_kwargs)
@@ -33,7 +32,7 @@ class Bing(BaseSearchEngine):
         """Uploads an image to Bing and retrieves the BCID.
 
         Args:
-            file: Local image file, can be a path string, bytes data, or Path object.
+            file (Union[str, bytes, Path]): Local image file, can be a path string, bytes data, or Path object.
 
         Returns:
             tuple[str, str]: A tuple containing:
@@ -62,12 +61,12 @@ class Bing(BaseSearchEngine):
         """Retrieves image insights from Bing using either BCID or image URL.
 
         This method handles two search scenarios:
-        1. Search by image URL directly
-        2. Search by BCID (obtained after uploading an image)
+            1. Search by image URL directly
+            2. Search by BCID (obtained after uploading an image)
 
         Args:
-            bcid: The BCID (Bing Correlation ID) retrieved after uploading an image.
-            image_url: The URL of the image to search for.
+            bcid (Optional[str]): The BCID (Bing Correlation ID) retrieved after uploading an image.
+            image_url (Optional[str]): The URL of the image to search for.
 
         Returns:
             dict: The JSON response containing insights about the image.
@@ -121,23 +120,23 @@ class Bing(BaseSearchEngine):
         """Performs a reverse image search on Bing.
 
         This method supports two ways of searching:
-        1. Search by image URL
-        2. Search by uploading a local image file
+            1. Search by image URL
+            2. Search by uploading a local image file
 
         Args:
-            url: URL of the image to search.
-            file: Local image file, can be a path string, bytes data, or Path object.
-            **kwargs: Additional arguments passed to the parent class.
+            url (Optional[str]): URL of the image to search.
+            file (Union[str, bytes, Path, None]): Local image file, can be a path string, bytes data, or Path object.
+            **kwargs (Any): Additional arguments passed to the parent class.
 
         Returns:
             BingResponse: An object containing the search results and metadata.
 
         Raises:
-            ValueError: If neither 'url' nor 'file' is provided.
+            ValueError: If neither `url` nor `file` is provided.
             ValueError: If BCID cannot be found when uploading an image.
 
         Note:
-            - Only one of 'url' or 'file' should be provided.
+            - Only one of `url` or `file` should be provided.
             - The search process involves multiple HTTP requests to Bing's API.
         """
         await super().search(url, file, **kwargs)

@@ -21,7 +21,7 @@ class CopyseekerItem(BaseSearchItem):
         """Initializes a CopyseekerItem with data from a search result.
 
         Args:
-            data: A dictionary containing the search result data.
+            data (dict[str, Any]): A dictionary containing the search result data.
         """
         super().__init__(data, **kwargs)
 
@@ -53,17 +53,17 @@ class CopyseekerResponse(BaseSearchResponse):
 
     Note:
         - The 'raw' attribute contains the detailed search results, each parsed into
-          a CopyseekerItem object for easier access.
+            a CopyseekerItem object for easier access.
         - EXIF data is only available when searching with an actual image file,
-          not when searching with an image URL.
+            not when searching with an image URL.
     """
 
     def __init__(self, resp_data: dict[str, Any], resp_url: str, **kwargs):
         """Initializes with the response data.
 
         Args:
-            resp_data: A dictionary containing the parsed response data from Copyseeker.
-            resp_url: URL to the search result page.
+            resp_data (dict[str, Any]): A dictionary containing the parsed response data from Copyseeker.
+            resp_url (str): URL to the search result page.
         """
         super().__init__(resp_data, resp_url, **kwargs)
 

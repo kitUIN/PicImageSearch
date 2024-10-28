@@ -15,8 +15,8 @@ class SauceNAO(BaseSearchEngine):
     Used for performing reverse image searches using SauceNAO service.
 
     Attributes:
-        base_url: The base URL for SauceNAO searches.
-        params: The query parameters for SauceNAO search.
+        base_url (str): The base URL for SauceNAO searches.
+        params (dict[str, Any]): The query parameters for SauceNAO search.
     """
 
     def __init__(
@@ -37,25 +37,25 @@ class SauceNAO(BaseSearchEngine):
         """Initializes a SauceNAO API client with specified configurations.
 
         Args:
-            base_url: The base URL for SauceNAO searches, defaults to 'https://saucenao.com'.
-            api_key: API key for SauceNAO API access, required for full API functionality.
-            numres: Number of results to return (1-40), defaults to 5.
-            hide: Content filtering level (0-3), defaults to 0.
+            base_url (str): The base URL for SauceNAO searches, defaults to 'https://saucenao.com'.
+            api_key (Optional[str]): API key for SauceNAO API access, required for full API functionality.
+            numres (int): Number of results to return (1-40), defaults to 5.
+            hide (int): Content filtering level (0-3), defaults to 0.
                 0: Show all results
                 1: Hide expected explicit results
                 2: Hide expected questionable results
                 3: Hide all but expected safe results
-            minsim: Minimum similarity percentage for results (0-100), defaults to 30.
-            output_type: Output format of search results, defaults to 2.
+            minsim (int): Minimum similarity percentage for results (0-100), defaults to 30.
+            output_type (int): Output format of search results, defaults to 2.
                 0: HTML
                 1: XML
                 2: JSON
-            testmode: If 1, performs a dry-run search without using search quota.
-            dbmask: Bitmask for enabling specific databases.
-            dbmaski: Bitmask for disabling specific databases.
-            db: Database index to search from (0-999), defaults to 999 (all databases).
-            dbs: List of specific database indices to search from.
-            **request_kwargs: Additional arguments passed to the HTTP client.
+            testmode (int): If 1, performs a dry-run search without using search quota.
+            dbmask (Optional[int]): Bitmask for enabling specific databases.
+            dbmaski (Optional[int]): Bitmask for disabling specific databases.
+            db (int): Database index to search from (0-999), defaults to 999 (all databases).
+            dbs (Optional[list[int]]): List of specific database indices to search from.
+            **request_kwargs (Any): Additional arguments passed to the HTTP client.
 
         Note:
             - API documentation: https://saucenao.com/user.php?page=search-api
@@ -94,13 +94,13 @@ class SauceNAO(BaseSearchEngine):
         """Performs a reverse image search on SauceNAO.
 
         This method supports two ways of searching:
-        1. Search by image URL
-        2. Search by uploading a local image file
+            1. Search by image URL
+            2. Search by uploading a local image file
 
         Args:
-            url: URL of the image to search.
-            file: Local image file, can be a path string, bytes data, or Path object.
-            **kwargs: Additional arguments passed to the parent class.
+            url (Optional[str]): URL of the image to search.
+            file (Union[str, bytes, Path, None]): Local image file, can be a path string, bytes data, or Path object.
+            **kwargs (Any): Additional arguments passed to the parent class.
 
         Returns:
             SauceNAOResponse: An object containing:
@@ -109,11 +109,10 @@ class SauceNAO(BaseSearchEngine):
                 - Additional metadata (status code, search quotas)
 
         Raises:
-            ValueError: If neither 'url' nor 'file' is provided.
-            HTTPError: If the API request fails or returns an error status.
+            ValueError: If neither `url` nor `file` is provided.
 
         Note:
-            - Only one of 'url' or 'file' should be provided.
+            - Only one of `url` or `file` should be provided.
             - API limits vary based on account type and API key usage.
             - Free accounts are limited to:
                 * 150 searches per day

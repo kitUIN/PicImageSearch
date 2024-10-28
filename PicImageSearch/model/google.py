@@ -23,8 +23,8 @@ class GoogleItem(BaseSearchItem):
         """Initializes a GoogleItem with data from a search result.
 
         Args:
-            data: A PyQuery instance containing the search result item's data.
-            thumbnail: Optional base64 encoded thumbnail image.
+            data (PyQuery): A PyQuery instance containing the search result item's data.
+            thumbnail (Optional[str]): Optional base64 encoded thumbnail image.
         """
         super().__init__(data, thumbnail=thumbnail)
 
@@ -59,10 +59,10 @@ class GoogleResponse(BaseSearchResponse):
         """Initializes with the response text and URL.
 
         Args:
-            resp_data: The text of the response.
-            resp_url: URL to the search result page.
-            page_number: The current page number in the search results.
-            pages: List of URLs to pages of search results.
+            resp_data (str): The text of the response.
+            resp_url (str): URL to the search result page.
+            page_number (int): The current page number in the search results.
+            pages (Optional[list[str]]): List of URLs to pages of search results.
         """
         super().__init__(resp_data, resp_url, page_number=page_number, pages=pages)
 

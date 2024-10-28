@@ -24,7 +24,7 @@ class IqdbItem(BaseSearchItem):
         """Initializes an IqdbItem with data from a search result.
 
         Args:
-            data: A PyQuery instance containing the search result item's data.
+            data (PyQuery): A PyQuery instance containing the search result item's data.
         """
         super().__init__(data, **kwargs)
 
@@ -32,8 +32,8 @@ class IqdbItem(BaseSearchItem):
         """Initialize and parse the search result data.
 
         Args:
-            data: PyQuery object containing the HTML data for this result item.
-            **kwargs: Additional keyword arguments passed from parent class.
+            data (PyQuery): PyQuery object containing the HTML data for this result item.
+            **kwargs (Any): Additional keyword arguments passed from parent class.
         """
         self.content: str = ""
         self.source: str = ""
@@ -52,7 +52,7 @@ class IqdbItem(BaseSearchItem):
         - Similarity percentage
 
         Args:
-            data: PyQuery object containing the table structure of the result.
+            data (PyQuery): PyQuery object containing the table structure of the result.
 
         Note:
             Handles special case for "No relevant matches" results.
@@ -83,7 +83,7 @@ class IqdbItem(BaseSearchItem):
         """Convert a URL to its absolute form with proper protocol.
 
         Args:
-            url: A URL string that may be protocol-relative (starting with //).
+            url (str): A URL string that may be protocol-relative (starting with //).
 
         Returns:
             str: Complete URL with 'https' protocol if necessary.
@@ -113,8 +113,8 @@ class IqdbResponse(BaseSearchResponse):
         """Initializes with the response text.
 
         Args:
-            resp_data: The text of the response.
-            resp_url: URL to the search result page.
+            resp_data (str): The text of the response.
+            resp_url (str): URL to the search result page.
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
@@ -122,8 +122,8 @@ class IqdbResponse(BaseSearchResponse):
         """Initialize and parse the complete search response.
 
         Args:
-            resp_data: Raw HTML response string from IQDB.
-            **kwargs: Additional keyword arguments passed from parent class.
+            resp_data (str): Raw HTML response string from IQDB.
+            **kwargs (Any): Additional keyword arguments passed from parent class.
         """
         data = parse_html(resp_data)
         self.origin: PyQuery = data
@@ -146,7 +146,7 @@ class IqdbResponse(BaseSearchResponse):
         - Handles cases with no relevant matches
 
         Args:
-            data: PyQuery object containing the complete search response.
+            data (PyQuery): PyQuery object containing the complete search response.
         """
         host = (
             "https://iqdb.org"
@@ -168,7 +168,7 @@ class IqdbResponse(BaseSearchResponse):
         """Extract additional lower-similarity search results.
 
         Args:
-            data: PyQuery object containing the 'more results' section.
+            data (PyQuery): PyQuery object containing the 'more results' section.
         """
         self.more.extend([IqdbItem(i) for i in data.items()])
 
@@ -179,7 +179,7 @@ class IqdbResponse(BaseSearchResponse):
         Handles protocol-relative URLs by adding 'https:' prefix when needed.
 
         Args:
-            data: PyQuery object containing the external search links.
+            data (PyQuery): PyQuery object containing the external search links.
 
         Note:
             Supports links to SauceNao, ascii2d.net, Google Images, and TinEye.

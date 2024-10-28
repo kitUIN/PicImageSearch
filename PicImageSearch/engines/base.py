@@ -13,15 +13,15 @@ class BaseSearchEngine(HandOver, ABC):
     including network request handling and basic parameter validation.
 
     Attributes:
-        base_url: The base URL endpoint for the search engine's API.
+        base_url (str): The base URL endpoint for the search engine's API.
     """
 
     def __init__(self, base_url: str, **request_kwargs: Any):
         """Initialize the base search engine.
 
         Args:
-            base_url: The base URL for the search engine's API endpoint.
-            **request_kwargs: Additional parameters for network requests, such as:
+            base_url (str): The base URL for the search engine's API endpoint.
+            **request_kwargs (Any): Additional parameters for network requests, such as:
                 - headers: Custom HTTP headers
                 - proxies: Proxy settings
                 - timeout: Request timeout settings
@@ -43,12 +43,12 @@ class BaseSearchEngine(HandOver, ABC):
         Supports searching by either image URL or local file.
 
         Args:
-            url: URL of the image to search. Must be a valid HTTP/HTTPS URL.
-            file: Local image file to search. Can be:
+            url (Optional[str]): URL of the image to search. Must be a valid HTTP/HTTPS URL.
+            file (Union[str, bytes, Path, None]): Local image file to search. Can be:
                 - A string path to the image
                 - Raw bytes of the image
                 - A Path object pointing to the image
-            **kwargs: Additional search parameters specific to each search engine.
+            **kwargs (Any): Additional search parameters specific to each search engine.
 
         Returns:
             BaseSearchResponse: Search results. The specific return type depends on the implementing class.
@@ -68,9 +68,9 @@ class BaseSearchEngine(HandOver, ABC):
         A utility method that handles both GET and POST requests to the search engine's API.
 
         Args:
-            method: HTTP method, must be either 'get' or 'post' (case-insensitive).
-            endpoint: API endpoint to append to the base URL. If empty, uses base_url directly.
-            **kwargs: Additional parameters for the request, such as:
+            method (str): HTTP method, must be either 'get' or 'post' (case-insensitive).
+            endpoint (str): API endpoint to append to the base URL. If empty, uses base_url directly.
+            **kwargs (Any): Additional parameters for the request, such as:
                 - params: URL parameters for GET requests
                 - data: Form data for POST requests
                 - files: Files to upload

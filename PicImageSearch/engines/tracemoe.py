@@ -45,11 +45,11 @@ class TraceMoe(BaseSearchEngine):
     Used for performing reverse image searches using TraceMoe service.
 
     Attributes:
-        anilist_url: URL for TraceMoe endpoint to retrieve anime info.
-        base_url: The base URL for TraceMoe searches.
-        me_url: URL for TraceMoe API endpoint to retrieve user info.
-        size: Optional string indicating preview size ('s', 'm', 'l').
-        mute: A flag to mute preview video in search results.
+        anilist_url (str): URL for TraceMoe endpoint to retrieve anime info.
+        base_url (str): The base URL for TraceMoe searches.
+        me_url (str): URL for TraceMoe API endpoint to retrieve user info.
+        size (Optional[str]): Optional string indicating preview size ('s', 'm', 'l').
+        mute (bool): A flag to mute preview video in search results.
     """
 
     def __init__(
@@ -63,11 +63,11 @@ class TraceMoe(BaseSearchEngine):
         """Initializes a TraceMoe API client with specified configurations.
 
         Args:
-            base_url: The base URL for TraceMoe searches.
-            base_url_api: The base URL for TraceMoe API searches.
-            mute: If True, mutes preview video in search results.
-            size: Specifies preview video size ('s', 'm', 'l').
-            **request_kwargs: Additional arguments for network requests.
+            base_url (str): The base URL for TraceMoe searches.
+            base_url_api (str): The base URL for TraceMoe API searches.
+            mute (bool): If True, mutes preview video in search results.
+            size (Optional[str]): Specifies preview video size ('s', 'm', 'l').
+            **request_kwargs (Any): Additional arguments for network requests.
         """
         self.anilist_url = f"{base_url}/anilist"
         base_url = f"{base_url_api}/search"
@@ -80,7 +80,7 @@ class TraceMoe(BaseSearchEngine):
         """Retrieves user account information and API usage statistics from TraceMoe.
 
         Args:
-            key: Optional API key for authentication. If not provided, uses anonymous access.
+            key (Optional[str]): Optional API key for authentication. If not provided, uses anonymous access.
 
         Returns:
             TraceMoeMe: An object containing:
@@ -105,9 +105,9 @@ class TraceMoe(BaseSearchEngine):
         """Constructs query parameters for TraceMoe API request.
 
         Args:
-            url: URL of the image to search. Optional if uploading a file.
-            anilist_id: Anilist ID to limit search scope to a specific anime.
-            cut_borders: If True, removes black borders from image before searching.
+            url (Optional[str]): URL of the image to search. Optional if uploading a file.
+            anilist_id (Optional[int]): Anilist ID to limit search scope to a specific anime.
+            cut_borders (bool): If True, removes black borders from image before searching.
 
         Returns:
             dict[str, Union[bool, int, str]]: A dictionary containing:
@@ -133,8 +133,8 @@ class TraceMoe(BaseSearchEngine):
         """Updates a TraceMoeItem with detailed anime information from AniList API.
 
         Args:
-            item: TraceMoeItem instance to be updated with detailed information.
-            chinese_title: If True, attempts to fetch Chinese title if available.
+            item (TraceMoeItem): TraceMoeItem instance to be updated with detailed information.
+            chinese_title (bool): If True, attempts to fetch Chinese title if available.
 
         Note:
             Updates multiple fields including:
@@ -183,17 +183,17 @@ class TraceMoe(BaseSearchEngine):
         """Performs a reverse image search for anime scenes using TraceMoe.
 
         This method supports two ways of searching:
-        1. Search by image URL
-        2. Search by uploading a local image file
+            1. Search by image URL
+            2. Search by uploading a local image file
 
         Args:
-            url: URL of the image to search.
-            file: Local image file (path string, bytes data, or Path object).
-            key: Optional API key for authentication and higher quotas.
-            anilist_id: Optional AniList ID to limit search scope.
-            chinese_title: If True, includes Chinese titles in results.
-            cut_borders: If True, removes black borders before searching.
-            **kwargs: Additional arguments passed to the parent class.
+            url (Optional[str]): URL of the image to search.
+            file (Union[str, bytes, Path, None]): Local image file (path string, bytes data, or Path object).
+            key (Optional[str]): Optional API key for authentication and higher quotas.
+            anilist_id (Optional[int]): Optional AniList ID to limit search scope.
+            chinese_title (bool): If True, includes Chinese titles in results.
+            cut_borders (bool): If True, removes black borders before searching.
+            **kwargs (Any): Additional arguments passed to the parent class.
 
         Returns:
             TraceMoeResponse: Search results containing:
@@ -204,10 +204,10 @@ class TraceMoe(BaseSearchEngine):
                 - Detailed anime information
 
         Raises:
-            ValueError: If neither 'url' nor 'file' is provided.
+            ValueError: If neither `url` nor `file` is provided.
 
         Note:
-            - Only one of 'url' or 'file' should be provided
+            - Only one of `url` or `file` should be provided
             - Using an API key increases search quota and priority
             - Results are automatically enriched with detailed anime information
         """

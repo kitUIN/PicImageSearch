@@ -23,7 +23,7 @@ class EHentaiItem(BaseSearchItem):
         """Initializes an EHentaiItem with data from a search result.
 
         Args:
-            data: A PyQuery instance containing the search result item's data.
+            data (PyQuery): A PyQuery instance containing the search result item's data.
         """
         super().__init__(data, **kwargs)
 
@@ -31,8 +31,8 @@ class EHentaiItem(BaseSearchItem):
         """Initialize and parse the gallery data from search results.
 
         Args:
-            data: PyQuery object containing the gallery's HTML data.
-            **kwargs: Additional keyword arguments (unused).
+            data (PyQuery): PyQuery object containing the gallery's HTML data.
+            **kwargs (Any): Additional keyword arguments (unused).
         """
         self.type: str = ""
         self.date: str = ""
@@ -50,7 +50,7 @@ class EHentaiItem(BaseSearchItem):
         - Associated tags
 
         Args:
-            data: PyQuery object containing the gallery's HTML data.
+            data (PyQuery): PyQuery object containing the gallery's HTML data.
         """
         glink = data.find(".glink")
         self.title = glink.text()
@@ -88,8 +88,8 @@ class EHentaiResponse(BaseSearchResponse):
         """Initializes with the response text and URL.
 
         Args:
-            resp_text: The text of the response.
-            resp_url: URL to the search result page.
+            resp_data (str): The text of the response.
+            resp_url (str): URL to the search result page.
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
@@ -102,8 +102,8 @@ class EHentaiResponse(BaseSearchResponse):
         - No results case
 
         Args:
-            resp_data: Raw HTML string from the search response.
-            **kwargs: Additional keyword arguments (unused).
+            resp_data (str): Raw HTML string from the search response.
+            **kwargs (Any): Additional keyword arguments (unused).
         """
         data = parse_html(resp_data)
         self.origin: PyQuery = data

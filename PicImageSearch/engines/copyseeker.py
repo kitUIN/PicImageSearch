@@ -13,7 +13,7 @@ class Copyseeker(BaseSearchEngine):
     Used for performing reverse image searches using Copyseeker service.
 
     Attributes:
-        base_url: The base URL for Copyseeker searches.
+        base_url (str): The base URL for Copyseeker searches.
     """
 
     def __init__(
@@ -22,8 +22,8 @@ class Copyseeker(BaseSearchEngine):
         """Initializes a Copyseeker API client.
 
         Args:
-            base_url: The base URL for Copyseeker searches.
-            **request_kwargs: Additional arguments for network requests.
+            base_url (str): The base URL for Copyseeker searches.
+            **request_kwargs (Any): Additional arguments for network requests.
         """
         super().__init__(base_url, **request_kwargs)
 
@@ -33,18 +33,17 @@ class Copyseeker(BaseSearchEngine):
         """Retrieves a discovery ID from Copyseeker for image search.
 
         This method handles two search scenarios:
-        1. Search by image URL
-        2. Search by uploading a local image file
+            1. Search by image URL
+            2. Search by uploading a local image file
 
         Args:
-            url: URL of the image to search.
-            file: Local image file, can be a path string, bytes data, or Path object.
+            url (Optional[str]): URL of the image to search.
+            file (Union[str, bytes, Path, None]): Local image file, can be a path string, bytes data, or Path object.
 
         Returns:
             Optional[str]: The discovery ID if successful, None otherwise.
 
         Note:
-            - Only one of 'url' or 'file' should be provided.
             - The discovery ID is required for retrieving search results.
         """
 
@@ -57,7 +56,7 @@ class Copyseeker(BaseSearchEngine):
                 endpoint="OnTriggerDiscoveryByUrl",
                 json=data,
             )
-        elif file:
+        else:
             files = {"file": read_file(file)}
             resp = await self._make_request(
                 method="post",
@@ -78,27 +77,27 @@ class Copyseeker(BaseSearchEngine):
         """Performs a reverse image search on Copyseeker.
 
         This method supports two ways of searching:
-        1. Search by image URL
-        2. Search by uploading a local image file
+            1. Search by image URL
+            2. Search by uploading a local image file
 
         The search process involves two steps:
-        1. Obtaining a discovery ID
-        2. Retrieving search results using the discovery ID
+            1. Obtaining a discovery ID
+            2. Retrieving search results using the discovery ID
 
         Args:
-            url: URL of the image to search.
-            file: Local image file, can be a path string, bytes data, or Path object.
-            **kwargs: Additional arguments passed to the parent class.
+            url (Optional[str]): URL of the image to search.
+            file (Union[str, bytes, Path, None]): Local image file, can be a path string, bytes data, or Path object.
+            **kwargs (Any): Additional arguments passed to the parent class.
 
         Returns:
             CopyseekerResponse: An object containing search results and metadata.
                 Returns an empty response if discovery ID cannot be obtained.
 
         Raises:
-            ValueError: If neither 'url' nor 'file' is provided.
+            ValueError: If neither `url` nor `file` is provided.
 
         Note:
-            - Only one of 'url' or 'file' should be provided.
+            - Only one of `url` or `file` should be provided.
             - The search process involves multiple HTTP requests to Copyseeker's API.
         """
         await super().search(url, file, **kwargs)

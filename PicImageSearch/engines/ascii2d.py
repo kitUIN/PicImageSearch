@@ -10,12 +10,12 @@ class Ascii2D(BaseSearchEngine):
     """API client for the Ascii2D image search engine.
 
     Ascii2D provides two search modes:
-    1. Color search: Finds images with similar color combinations (default mode)
-    2. Feature search: Finds images with similar visual features (bovw mode)
+        1. Color search: Finds images with similar color combinations (default mode)
+        2. Feature search: Finds images with similar visual features (bovw mode)
 
     Attributes:
-        base_url: The base URL for Ascii2D searches.
-        bovw: A flag to enable feature search mode.
+        base_url (str): The base URL for Ascii2D searches.
+        bovw (bool): A flag to enable feature search mode.
 
     Note:
         - Color search (bovw=False) is recommended for finding visually similar images
@@ -35,9 +35,9 @@ class Ascii2D(BaseSearchEngine):
         """Initializes an Ascii2D API client with specified configurations.
 
         Args:
-            base_url: The base URL for Ascii2D searches.
-            bovw: If True, use feature search; otherwise, use color combination search.
-            **request_kwargs: Additional arguments for network requests.
+            base_url (str): The base URL for Ascii2D searches.
+            bovw (bool): If True, use feature search; otherwise, use color combination search.
+            **request_kwargs (Any): Additional arguments for network requests.
         """
         base_url = f"{base_url}/search"
         super().__init__(base_url, **request_kwargs)
@@ -52,18 +52,18 @@ class Ascii2D(BaseSearchEngine):
         """Performs a reverse image search on Ascii2D.
 
         This method supports two ways of searching:
-        1. Search by image URL
-        2. Search by uploading a local image file
+            1. Search by image URL
+            2. Search by uploading a local image file
 
         The search process involves:
-        1. Initial submission of the image (URL or file)
-        2. Optional switch to feature search mode if bovw=True
-        3. Parsing and returning the search results
+            1. Initial submission of the image (URL or file)
+            2. Optional switch to feature search mode if bovw=True
+            3. Parsing and returning the search results
 
         Args:
-            url: URL of the image to search.
-            file: Local image file, can be a path string, bytes data, or Path object.
-            **kwargs: Additional arguments passed to the parent class.
+            url (Optional[str]): URL of the image to search.
+            file (Union[str, bytes, Path, None]): Local image file, can be a path string, bytes data, or Path object.
+            **kwargs (Any): Additional arguments passed to the parent class.
 
         Returns:
             Ascii2DResponse: An object containing:
@@ -72,10 +72,10 @@ class Ascii2D(BaseSearchEngine):
                 - The final search URL
 
         Raises:
-            ValueError: If neither 'url' nor 'file' is provided.
+            ValueError: If neither `url` nor `file` is provided.
 
         Note:
-            - Only one of 'url' or 'file' should be provided
+            - Only one of `url` or `file` should be provided
             - Feature search (bovw) may take longer to process
         """
         await super().search(url, file, **kwargs)

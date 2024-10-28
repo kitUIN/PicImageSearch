@@ -12,7 +12,7 @@ class Google(BaseSearchEngine):
     Used for performing reverse image searches using Google service.
 
     Attributes:
-         base_url: The base URL for Google searches, configurable for different regions.
+        base_url (str): The base URL for Google searches, configurable for different regions.
             Example: `https://www.google.co.jp` for searches in Japan.
     """
 
@@ -24,8 +24,8 @@ class Google(BaseSearchEngine):
         """Initializes a Google API client with specified configurations.
 
         Args:
-            base_url: The base URL for Google searches, defaults to the international version.
-            **request_kwargs: Additional arguments for network requests.
+            base_url (str): The base URL for Google searches, defaults to the international version.
+            **request_kwargs (Any): Additional arguments for network requests.
         """
         base_url = f"{base_url}/searchbyimage"
         super().__init__(base_url, **request_kwargs)
@@ -38,11 +38,11 @@ class Google(BaseSearchEngine):
         This method handles both forward and backward navigation through search results.
 
         Args:
-            resp: The current GoogleResponse instance containing page information.
-            offset: Integer indicating navigation direction and distance:
-                   - Positive values move forward
-                   - Negative values move backward
-                   - Magnitude indicates number of pages to move
+            resp (GoogleResponse): The current GoogleResponse instance containing page information.
+            offset (int): Integer indicating navigation direction and distance:
+                - Positive values move forward
+                - Negative values move backward
+                - Magnitude indicates number of pages to move
 
         Returns:
             Optional[GoogleResponse]:
@@ -62,7 +62,7 @@ class Google(BaseSearchEngine):
         """Navigates to the previous page in Google search results.
 
         Args:
-            resp: The current GoogleResponse instance.
+            resp (GoogleResponse): The current GoogleResponse instance.
 
         Returns:
             GoogleResponse: Updated response after navigating to the previous page, or None if out of range.
@@ -73,7 +73,7 @@ class Google(BaseSearchEngine):
         """Navigates to the next page in Google search results.
 
         Args:
-            resp: The current GoogleResponse instance.
+            resp (GoogleResponse): The current GoogleResponse instance.
 
         Returns:
             GoogleResponse: Updated response after navigating to the next page, or None if out of range.
@@ -84,12 +84,12 @@ class Google(BaseSearchEngine):
         """Ensures the response contains valid thumbnail data by making additional requests if needed.
 
         This method performs the following:
-        1. Checks if response contains raw data
-        2. Attempts to find first result with thumbnail
-        3. Makes an additional request if no thumbnail is found
+            1. Checks if response contains raw data
+            2. Attempts to find first result with thumbnail
+            3. Makes an additional request if no thumbnail is found
 
         Args:
-            resp: The initial GoogleResponse instance to check for thumbnail data
+            resp (GoogleResponse): The initial GoogleResponse instance to check for thumbnail data
 
         Returns:
             GoogleResponse:
@@ -116,16 +116,16 @@ class Google(BaseSearchEngine):
         """Performs a reverse image search on Google.
 
         This method supports two ways of searching:
-        1. Search by image URL
-        2. Search by uploading a local image file
+            1. Search by image URL
+            2. Search by uploading a local image file
 
         Args:
-            url: URL of the image to search
-            file: Local image file, which can be:
-                  - Path string
-                  - Bytes data
-                  - Path object
-            **kwargs: Additional arguments passed to the parent class
+            url (Optional[str]): URL of the image to search
+            file (Union[str, bytes, Path, None]): Local image file, which can be:
+                - Path string
+                - Bytes data
+                - Path object
+            **kwargs (Any): Additional arguments passed to the parent class
 
         Returns:
             GoogleResponse: A response object containing:
@@ -135,10 +135,10 @@ class Google(BaseSearchEngine):
                 - Raw response data
 
         Raises:
-            ValueError: If neither 'url' nor 'file' is provided
+            ValueError: If neither `url` nor `file` is provided
 
         Note:
-            - Only one of 'url' or 'file' should be provided
+            - Only one of `url` or `file` should be provided
             - The method automatically ensures thumbnail data is present in results
             - Safe search is disabled by default
         """

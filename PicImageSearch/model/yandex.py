@@ -26,7 +26,7 @@ class YandexItem(BaseSearchItem):
         """Initializes a YandexItem with data from a search result.
 
         Args:
-            data: A dictionary containing the search result data.
+            data (dict[str, Any]): A dictionary containing the search result data.
         """
         super().__init__(data, **kwargs)
 
@@ -37,8 +37,8 @@ class YandexItem(BaseSearchItem):
         into instance attributes.
 
         Args:
-            data: Dictionary containing the raw search result data from Yandex.
-            **kwargs: Additional keyword arguments (unused).
+            data (dict[str, Any]): Dictionary containing the raw search result data from Yandex.
+            **kwargs (Any): Additional keyword arguments (unused).
 
         Note:
             The thumbnail URL is automatically prefixed with 'https:' if it starts
@@ -72,8 +72,8 @@ class YandexResponse(BaseSearchResponse):
         """Initializes with the response text and URL.
 
         Args:
-            resp_data: the text of the response.
-            resp_url: URL to the search result page.
+            resp_data (str): the text of the response.
+            resp_url (str): URL to the search result page.
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
@@ -85,7 +85,7 @@ class YandexResponse(BaseSearchResponse):
 
         Args:
             resp_data (str): Raw HTML response from Yandex search.
-            **kwargs: Additional keyword arguments (unused).
+            **kwargs (Any): Additional keyword arguments (unused).
 
         Note:
             The method looks for a specific div element containing the search results

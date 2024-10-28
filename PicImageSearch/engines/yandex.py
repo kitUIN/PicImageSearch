@@ -13,7 +13,7 @@ class Yandex(BaseSearchEngine):
     It supports searching by both image URL and local image file upload.
 
     Attributes:
-        base_url: The base URL for Yandex image search service.
+        base_url (str): The base URL for Yandex image search service.
 
     Note:
         - The service might be affected by regional restrictions.
@@ -28,8 +28,8 @@ class Yandex(BaseSearchEngine):
         """Initializes a Yandex API client with specified configurations.
 
         Args:
-            base_url: The base URL for Yandex searches.
-            **request_kwargs: Additional arguments for network requests.
+            base_url (str): The base URL for Yandex searches.
+            **request_kwargs (Any): Additional arguments for network requests.
         """
         base_url = f"{base_url}/images/search"
         super().__init__(base_url, **request_kwargs)
@@ -43,13 +43,13 @@ class Yandex(BaseSearchEngine):
         """Performs a reverse image search on Yandex.
 
         This method supports two ways of searching:
-        1. Search by image URL
-        2. Search by uploading a local image file
+            1. Search by image URL
+            2. Search by uploading a local image file
 
         Args:
-            url: URL of the image to search.
-            file: Local image file, can be a path string, bytes data, or Path object.
-            **kwargs: Additional arguments passed to the parent class.
+            url (Optional[str]): URL of the image to search.
+            file (Union[str, bytes, Path, None]): Local image file, can be a path string, bytes data, or Path object.
+            **kwargs (Any): Additional arguments passed to the parent class.
 
         Returns:
             YandexResponse: An object containing:
@@ -57,12 +57,12 @@ class Yandex(BaseSearchEngine):
                 - The final search URL used by Yandex
 
         Raises:
-            ValueError: If neither 'url' nor 'file' is provided.
+            ValueError: If neither `url` nor `file` is provided.
 
         Note:
-            - Only one of 'url' or 'file' should be provided.
+            - Only one of `url` or `file` should be provided.
             - When using file upload, the image will be sent to Yandex's servers.
-            - The search process involves standard Yandex parameters like 'rpt' and 'cbir_page'.
+            - The search process involves standard Yandex parameters like `rpt` and `cbir_page`.
         """
         await super().search(url, file, **kwargs)
 

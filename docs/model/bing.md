@@ -1,0 +1,3 @@
+# Bing
+
+::: PicImageSearch.model.bing

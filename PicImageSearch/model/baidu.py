@@ -18,8 +18,8 @@ class BaiDuItem(BaseSearchItem):
         """Initialize a BaiDu search result item.
 
         Args:
-            data: A dictionary containing the raw search result data from BaiDu.
-            **kwargs: Additional keyword arguments passed to the parent class.
+            data (dict[str, Any]): A dictionary containing the raw search result data from BaiDu.
+            **kwargs (Any): Additional keyword arguments passed to the parent class.
         """
         super().__init__(data, **kwargs)
 
@@ -27,8 +27,8 @@ class BaiDuItem(BaseSearchItem):
         """Parse the raw search result data into structured attributes.
 
         Args:
-            data: Raw dictionary data from BaiDu search result.
-            **kwargs: Additional keyword arguments (unused).
+            data (dict[str, Any]): Raw dictionary data from BaiDu search result.
+            **kwargs (Any): Additional keyword arguments (unused).
 
         Note:
             Some previously supported attributes have been deprecated:
@@ -58,9 +58,9 @@ class BaiDuResponse(BaseSearchResponse):
         """Initialize a BaiDu search response.
 
         Args:
-            resp_data: The raw JSON response from BaiDu's API.
-            resp_url: The URL of the search results page.
-            **kwargs: Additional keyword arguments passed to the parent class.
+            resp_data (dict[str, Any]): The raw JSON response from BaiDu's API.
+            resp_url (str): The URL of the search results page.
+            **kwargs (Any): Additional keyword arguments passed to the parent class.
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
@@ -68,8 +68,8 @@ class BaiDuResponse(BaseSearchResponse):
         """Parse the raw response data into a list of search result items.
 
         Args:
-            resp_data: Raw response dictionary from BaiDu's API.
-            **kwargs: Additional keyword arguments (unused).
+            resp_data (dict[str, Any]): Raw response dictionary from BaiDu's API.
+            **kwargs (Any): Additional keyword arguments (unused).
 
         Note:
             If resp_data is empty or invalid, an empty list will be returned.

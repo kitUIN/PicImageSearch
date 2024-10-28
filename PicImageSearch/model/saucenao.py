@@ -28,7 +28,7 @@ class SauceNAOItem(BaseSearchItem):
         """Initializes a SauceNAOItem with data from a search result.
 
         Args:
-            data: A dictionary containing the search result data.
+            data (dict[str, Any]): A dictionary containing the search result data.
         """
         super().__init__(data, **kwargs)
 
@@ -55,7 +55,7 @@ class SauceNAOItem(BaseSearchItem):
         title -> material -> jp_name -> eng_name -> source -> created_at
 
         Args:
-            data: Dictionary containing the parsed result data.
+            data (dict[str, Any]): Dictionary containing the parsed result data.
 
         Returns:
             str: The most appropriate title found, or empty string if none found.
@@ -90,7 +90,7 @@ class SauceNAOItem(BaseSearchItem):
         - Generic external URLs
 
         Args:
-            data: Dictionary containing the parsed result data.
+            data (dict[str, Any]): Dictionary containing the parsed result data.
 
         Returns:
             str: The constructed URL to the source content, or empty string if no URL can be built.
@@ -114,11 +114,11 @@ class SauceNAOItem(BaseSearchItem):
         author_name -> user_name -> artist -> company
 
         Args:
-            data: Dictionary containing the parsed result data.
+            data (dict[str, Any]): Dictionary containing the parsed result data.
 
         Returns:
             str: The author name or empty string if none found. For multiple creators,
-                 returns them joined by commas.
+                    returns them joined by commas.
         """
         return (
             next(
@@ -159,7 +159,7 @@ class SauceNAOItem(BaseSearchItem):
         - Pawoo
 
         Args:
-            data: Dictionary containing the parsed result data.
+            data (dict[str, Any]): Dictionary containing the parsed result data.
 
         Returns:
             str: The constructed URL to the author's profile, or empty string if no URL can be built.
@@ -207,8 +207,8 @@ class SauceNAOResponse(BaseSearchResponse):
         """Initializes with the response data.
 
         Args:
-            resp_data: A dictionary containing the parsed response data from SauceNAO.
-            resp_url: URL to the search result page.
+            resp_data (dict[str, Any]): A dictionary containing the parsed response data from SauceNAO.
+            resp_url (str): URL to the search result page.
         """
         super().__init__(resp_data, resp_url, **kwargs)
 

@@ -15,8 +15,8 @@ def deep_get(dictionary: dict[str, Any], keys: str) -> Optional[Any]:
     - Combined: 'key1[0].key2'
 
     Args:
-        dictionary: The nested dictionary to search in.
-        keys: A dot-separated string of keys, which can include list indices in square brackets.
+        dictionary (dict[str, Any]): The nested dictionary to search in.
+        keys (str): A dot-separated string of keys, which can include list indices in square brackets.
 
     Returns:
         The value if found, None if any key in the path doesn't exist or if the path is invalid.
@@ -52,7 +52,7 @@ def read_file(file: Union[str, bytes, Path]) -> bytes:
     - Bytes data (returns directly)
 
     Args:
-        file: The input to read from. Can be:
+        file (Union[str, bytes, Path]): The input to read from. Can be:
             - A string path to the file
             - A Path object
             - Bytes data
@@ -89,7 +89,7 @@ def parse_html(html: str) -> PyQuery:
     ensuring proper UTF-8 encoding during parsing.
 
     Args:
-        html: The HTML content to parse as a string.
+        html (str): The HTML content to parse as a string.
 
     Returns:
         A PyQuery object representing the parsed HTML document.
