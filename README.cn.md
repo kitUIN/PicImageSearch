@@ -39,6 +39,7 @@
 | Google     | <https://www.google.com/imghp>       |
 | IQDB       | <https://iqdb.org/>                  |
 | SauceNAO   | <https://saucenao.com/>              |
+| Tineye     | <https://tineye.com/search/>         |
 | TraceMoe   | <https://trace.moe/>                 |
 | Yandex     | <https://yandex.com/images/search>   |
 
