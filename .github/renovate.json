@@ -3,15 +3,11 @@
     "config:base",
     "schedule:weekends"
   ],
-  "baseBranches": [
-    "main",
-    "docs"
-  ],
+  "baseBranches": ["main"],
   "dependencyDashboard": false,
   "rangeStrategy": "bump",
   "enabledManagers": [
     "github-actions",
-    "npm",
     "pep621",
     "pre-commit"
   ],
