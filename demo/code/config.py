@@ -3,7 +3,7 @@ from pathlib import Path
 
 from loguru import logger
 
-USE_SIMPLE_LOGGER = True
+USE_SIMPLE_LOGGER = False
 PROXIES = "http://127.0.0.1:1080"
 # PROXIES = None
 IMAGE_BASE_URL = (
