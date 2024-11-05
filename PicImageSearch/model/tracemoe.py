@@ -95,7 +95,7 @@ class TraceMoeItem(BaseSearchItem):
         """
         self.anime_info: dict[str, Any] = {}
         self.idMal: int = 0
-        self.title: dict[str, str] = {}
+        self.title: dict[str, str] = {}  # type: ignore
         self.title_native: str = ""
         self.title_english: str = ""
         self.title_romaji: str = ""
@@ -125,7 +125,7 @@ class TraceMoeItem(BaseSearchItem):
             self.video += "&mute"
 
 
-class TraceMoeResponse(BaseSearchResponse):
+class TraceMoeResponse(BaseSearchResponse[TraceMoeItem]):
     """Represents the complete response from a TraceMoe search operation.
 
     Encapsulates the entire search response including all matched scenes and metadata
@@ -171,13 +171,12 @@ class TraceMoeResponse(BaseSearchResponse):
         Note:
             The parsed results are stored in the `raw` attribute as TraceMoeItem instances.
         """
-        self.raw: list[TraceMoeItem] = []
         res_docs = resp_data["result"]
         self.raw.extend(
             [
                 TraceMoeItem(
                     i,
-                    mute=kwargs.get("mute"),
+                    mute=kwargs.get("mute", False),
                     size=kwargs.get("size"),
                 )
                 for i in res_docs

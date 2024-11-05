@@ -37,7 +37,7 @@ class Ascii2DItem(BaseSearchItem):
         author_url (str): URL to the author's profile page.
     """
 
-    def __init__(self, data: PyQuery, **kwargs):
+    def __init__(self, data: PyQuery, **kwargs: Any) -> None:
         """Initializes an Ascii2DItem with data from a search result.
 
         Args:
@@ -45,7 +45,7 @@ class Ascii2DItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
-    def _parse_data(self, data: PyQuery, **kwargs) -> None:
+    def _parse_data(self, data: PyQuery, **kwargs: Any) -> None:
         """Parses raw search result data into structured attributes.
 
         Extracts and processes various pieces of information from the PyQuery data,
@@ -175,7 +175,7 @@ class Ascii2DItem(BaseSearchItem):
             self.url_list = [URL(self.url, links.eq(0).text())]
 
 
-class Ascii2DResponse(BaseSearchResponse):
+class Ascii2DResponse(BaseSearchResponse[Ascii2DItem]):
     """Represents a complete Ascii2D reverse image search response.
 
     Processes and contains all search results from an Ascii2D search operation.

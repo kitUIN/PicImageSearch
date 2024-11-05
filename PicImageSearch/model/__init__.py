@@ -6,6 +6,7 @@ from .ehentai import EHentaiItem, EHentaiResponse
 from .google import GoogleItem, GoogleResponse
 from .iqdb import IqdbItem, IqdbResponse
 from .saucenao import SauceNAOItem, SauceNAOResponse
+from .tineye import TineyeItem, TineyeResponse
 from .tracemoe import TraceMoeItem, TraceMoeMe, TraceMoeResponse
 from .yandex import YandexItem, YandexResponse
 
@@ -26,6 +27,8 @@ __all__ = [
     "IqdbResponse",
     "SauceNAOItem",
     "SauceNAOResponse",
+    "TineyeItem",
+    "TineyeResponse",
     "TraceMoeItem",
     "TraceMoeMe",
     "TraceMoeResponse",

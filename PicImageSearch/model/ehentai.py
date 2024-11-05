@@ -27,7 +27,7 @@ class EHentaiItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
-    def _parse_data(self, data: PyQuery, **kwargs) -> None:
+    def _parse_data(self, data: PyQuery, **kwargs: Any) -> None:
         """Initialize and parse the gallery data from search results.
 
         Args:
@@ -72,7 +72,7 @@ class EHentaiItem(BaseSearchItem):
         ]
 
 
-class EHentaiResponse(BaseSearchResponse):
+class EHentaiResponse(BaseSearchResponse[EHentaiItem]):
     """Represents the complete response from an e-hentai reverse image search.
 
     This class processes and organizes the search results from e-hentai,

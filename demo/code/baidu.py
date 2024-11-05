@@ -1,21 +1,17 @@
 import asyncio
-from pathlib import Path
 
-from loguru import logger
-
+from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import BaiDu, Network
 from PicImageSearch.model import BaiDuResponse
 from PicImageSearch.sync import BaiDu as BaiDuSync
 
-# proxies = "http://127.0.0.1:1080"
-proxies = None
-url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test02.jpg"
-file = Path(__file__).parent.parent / "images" / "test02.jpg"
+url = f"{IMAGE_BASE_URL}/test02.jpg"
+file = get_image_path("test02.jpg")
 
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=proxies) as client:
+    async with Network(proxies=PROXIES) as client:
         baidu = BaiDu(client=client)
         # resp = await baidu.search(url=url)
         resp = await baidu.search(file=file)
@@ -24,7 +20,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    baidu = BaiDuSync(proxies=proxies)
+    baidu = BaiDuSync(proxies=PROXIES)
     resp = baidu.search(url=url)
     # resp = baidu.search(file=file)
     show_result(resp)  # type: ignore
@@ -42,5 +38,5 @@ def show_result(resp: BaiDuResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())  # type: ignore
-    # test_sync()  # type: ignore
+    asyncio.run(test_async())
+    # test_sync()

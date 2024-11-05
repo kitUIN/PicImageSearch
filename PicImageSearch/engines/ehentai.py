@@ -6,7 +6,7 @@ from ..utils import read_file
 from .base import BaseSearchEngine
 
 
-class EHentai(BaseSearchEngine):
+class EHentai(BaseSearchEngine[EHentaiResponse]):
     """API client for the EHentai image search engine.
 
     Used for performing reverse image searches using EHentai service.
@@ -80,14 +80,15 @@ class EHentai(BaseSearchEngine):
             - For ExHentai searches, valid cookies must be provided in the request_kwargs.
             - Search behavior is affected by the covers, similar, and exp flags set during initialization.
         """
-        await super().search(url, file, **kwargs)
+        self._validate_args(url, file)
 
         endpoint = "upld/image_lookup.php" if self.is_ex else "image_lookup.php"
         data: dict[str, Any] = {"f_sfile": "File Search"}
+        files: dict[str, Any] = {}
 
         if url:
-            files: dict[str, Any] = {"sfile": await self.download(url)}
-        else:
+            files = {"sfile": await self.download(url)}
+        elif file:
             files = {"sfile": read_file(file)}
 
         if self.covers:

@@ -1,23 +1,19 @@
 import asyncio
-from pathlib import Path
 from typing import Optional
 
-from loguru import logger
-
+from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import Google, Network
 from PicImageSearch.model import GoogleResponse
 from PicImageSearch.sync import Google as GoogleSync
 
-proxies = "http://127.0.0.1:1080"
-# proxies = None
-url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test03.jpg"
-file = Path(__file__).parent.parent / "images" / "test03.jpg"
+url = f"{IMAGE_BASE_URL}/test03.jpg"
+file = get_image_path("test03.jpg")
 base_url = "https://www.google.co.jp"
 
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=proxies) as client:
+    async with Network(proxies=PROXIES) as client:
         google = Google(base_url=base_url, client=client)
         # resp = await google.search(url=url)
         resp = await google.search(file=file)
@@ -31,15 +27,15 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    google = GoogleSync(base_url=base_url, proxies=proxies)
+    google = GoogleSync(base_url=base_url, proxies=PROXIES)
     resp = google.search(url=url)
     # resp = google.search(file=file)
     show_result(resp)  # type: ignore
     resp2 = google.next_page(resp)  # type: ignore
     show_result(resp2)  # type: ignore
-    resp3 = google.pre_page(resp2)  # type: ignore
-    show_result(resp3)  # type: ignore
-    show_result(resp2)  # type: ignore
+    if resp2:
+        resp3 = google.pre_page(resp2)  # type: ignore
+        show_result(resp3)  # type: ignore
 
 
 def show_result(resp: Optional[GoogleResponse]) -> None:
@@ -61,5 +57,5 @@ def show_result(resp: Optional[GoogleResponse]) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())  # type: ignore
-    # test_sync()  # type: ignore
+    asyncio.run(test_async())
+    # test_sync()

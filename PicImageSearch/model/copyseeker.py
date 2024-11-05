@@ -25,7 +25,7 @@ class CopyseekerItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
-    def _parse_data(self, data: dict[str, Any], **kwargs) -> None:
+    def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
 
         self.url: str = data["url"]
         self.title: str = data["title"]
@@ -34,7 +34,7 @@ class CopyseekerItem(BaseSearchItem):
         self.website_rank: float = data.get("rank", 0.0)
 
 
-class CopyseekerResponse(BaseSearchResponse):
+class CopyseekerResponse(BaseSearchResponse[CopyseekerItem]):
     """Encapsulates a complete Copyseeker reverse image search response.
 
     Provides a structured interface to access and analyze the search results
@@ -58,7 +58,7 @@ class CopyseekerResponse(BaseSearchResponse):
             not when searching with an image URL.
     """
 
-    def __init__(self, resp_data: dict[str, Any], resp_url: str, **kwargs):
+    def __init__(self, resp_data: dict[str, Any], resp_url: str, **kwargs: Any) -> None:
         """Initializes with the response data.
 
         Args:
@@ -67,7 +67,7 @@ class CopyseekerResponse(BaseSearchResponse):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
-    def _parse_response(self, resp_data: dict[str, Any], **kwargs) -> None:
+    def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search response data."""
         self.id: str = resp_data["id"]
         self.image_url: str = resp_data["imageUrl"]

@@ -1,21 +1,17 @@
 import asyncio
-from pathlib import Path
 
-from loguru import logger
-
+from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import Network, Yandex
 from PicImageSearch.model import YandexResponse
 from PicImageSearch.sync import Yandex as YandexSync
 
-proxies = "http://127.0.0.1:1080"
-# proxies = None
-url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test06.jpg"
-file = Path(__file__).parent.parent / "images" / "test06.jpg"
+url = f"{IMAGE_BASE_URL}/test06.jpg"
+file = get_image_path("test06.jpg")
 
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=proxies) as client:
+    async with Network(proxies=PROXIES) as client:
         yandex = Yandex(client=client)
         # resp = await yandex.search(url=url)
         resp = await yandex.search(file=file)
@@ -24,7 +20,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    yandex = YandexSync(proxies=proxies)
+    yandex = YandexSync(proxies=PROXIES)
     resp = yandex.search(url=url)
     # resp = yandex.search(file=file)
     show_result(resp)  # type: ignore
@@ -44,5 +40,5 @@ def show_result(resp: YandexResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())  # type: ignore
-    # test_sync()  # type: ignore
+    asyncio.run(test_async())
+    # test_sync()

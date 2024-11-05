@@ -6,7 +6,7 @@ from ..utils import read_file
 from .base import BaseSearchEngine
 
 
-class Ascii2D(BaseSearchEngine):
+class Ascii2D(BaseSearchEngine[Ascii2DResponse]):
     """API client for the Ascii2D image search engine.
 
     Ascii2D provides two search modes:
@@ -78,16 +78,15 @@ class Ascii2D(BaseSearchEngine):
             - Only one of `url` or `file` should be provided
             - Feature search (bovw) may take longer to process
         """
-        await super().search(url, file, **kwargs)
+        self._validate_args(url, file)
 
         data: Optional[dict[str, Any]] = None
         files: Optional[dict[str, Any]] = None
+        endpoint: str = "uri" if url else "file"
 
         if url:
-            endpoint = "uri"
             data = {"uri": url}
-        else:
-            endpoint = "file"
+        elif file:
             files = {"file": read_file(file)}
 
         resp = await self._make_request(

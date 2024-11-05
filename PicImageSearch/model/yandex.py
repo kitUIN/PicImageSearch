@@ -56,7 +56,7 @@ class YandexItem(BaseSearchItem):
         self.size: str = f"{original_image['width']}x{original_image['height']}"
 
 
-class YandexResponse(BaseSearchResponse):
+class YandexResponse(BaseSearchResponse[YandexItem]):
     """Encapsulates a complete Yandex reverse image search response.
 
     Processes and stores the full response from a Yandex reverse image search,
@@ -77,7 +77,7 @@ class YandexResponse(BaseSearchResponse):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
-    def _parse_response(self, resp_data: str, **kwargs) -> None:
+    def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
         """Parses the raw HTML response from Yandex into structured data.
 
         Extracts search results from the HTML response by locating and parsing

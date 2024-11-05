@@ -39,7 +39,7 @@ query ($id: Int) {
 """
 
 
-class TraceMoe(BaseSearchEngine):
+class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
     """API Client for the TraceMoe image search engine.
 
     Used for performing reverse image searches using TraceMoe service.
@@ -95,37 +95,6 @@ class TraceMoe(BaseSearchEngine):
         params = {"key": key} if key else None
         resp = await self.get(self.me_url, params=params)
         return TraceMoeMe(json_loads(resp.text))
-
-    @staticmethod
-    def set_params(
-        url: Optional[str],
-        anilist_id: Optional[int],
-        cut_borders: bool,
-    ) -> dict[str, Union[bool, int, str]]:
-        """Constructs query parameters for TraceMoe API request.
-
-        Args:
-            url (Optional[str]): URL of the image to search. Optional if uploading a file.
-            anilist_id (Optional[int]): Anilist ID to limit search scope to a specific anime.
-            cut_borders (bool): If True, removes black borders from image before searching.
-
-        Returns:
-            dict[str, Union[bool, int, str]]: A dictionary containing:
-                - 'url': Image URL if provided
-                - 'cutBorders': Border cutting preference
-                - 'anilistID': Specific anime ID if provided
-
-        Note:
-            Parameters are only included in the result if they have valid values.
-        """
-        params: dict[str, Union[bool, int, str]] = {}
-        if cut_borders:
-            params["cutBorders"] = "true"
-        if anilist_id:
-            params["anilistID"] = anilist_id
-        if url:
-            params["url"] = url
-        return params
 
     async def update_anime_info(
         self, item: TraceMoeItem, chinese_title: bool = True
@@ -211,15 +180,20 @@ class TraceMoe(BaseSearchEngine):
             - Using an API key increases search quota and priority
             - Results are automatically enriched with detailed anime information
         """
-        await super().search(url, file, **kwargs)
+        self._validate_args(url, file)
 
         headers = {"x-trace-key": key} if key else None
         files: Optional[dict[str, Any]] = None
 
+        params: dict[str, Union[bool, int, str]] = {}
+        if cut_borders:
+            params["cutBorders"] = "true"
+        if anilist_id:
+            params["anilistID"] = anilist_id
+
         if url:
-            params = self.set_params(url, anilist_id, cut_borders)
-        else:
-            params = self.set_params(None, anilist_id, cut_borders)
+            params["url"] = url
+        elif file:
             files = {"file": read_file(file)}
 
         resp = await self._make_request(

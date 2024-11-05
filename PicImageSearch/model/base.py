@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Generic, TypeVar
+
+T = TypeVar("T")
 
 
 class BaseSearchItem(ABC):
@@ -44,7 +46,7 @@ class BaseSearchItem(ABC):
         pass
 
 
-class BaseSearchResponse(ABC):
+class BaseSearchResponse(ABC, Generic[T]):
     """Base class for search response handling.
 
     This class serves as a template for processing and storing search results
@@ -66,7 +68,7 @@ class BaseSearchResponse(ABC):
         """
         self.origin: Any = resp_data
         self.url: str = resp_url
-        self.raw: list[BaseSearchItem] = []
+        self.raw: list[T] = []
         self._parse_response(resp_data, resp_url=resp_url, **kwargs)
 
     @abstractmethod

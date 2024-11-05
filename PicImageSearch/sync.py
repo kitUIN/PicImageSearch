@@ -19,6 +19,7 @@ from . import (
     Iqdb,
     Network,
     SauceNAO,
+    Tineye,
     TraceMoe,
     Yandex,
 )
@@ -67,7 +68,20 @@ def syncify(*classes):  # type: ignore
                 _syncify_wrap(c, name)  # type: ignore
 
 
-syncify(Ascii2D, BaiDu, Bing, Copyseeker, EHentai, Google, Iqdb, Network, SauceNAO, TraceMoe, Yandex)  # type: ignore
+syncify(  # type: ignore
+    Ascii2D,
+    BaiDu,
+    Bing,
+    Copyseeker,
+    EHentai,
+    Google,
+    Iqdb,
+    Network,
+    SauceNAO,
+    Tineye,
+    TraceMoe,
+    Yandex,
+)
 
 __all__ = [
     "Ascii2D",
@@ -79,6 +93,7 @@ __all__ = [
     "Iqdb",
     "Network",
     "SauceNAO",
+    "Tineye",
     "TraceMoe",
     "Yandex",
 ]

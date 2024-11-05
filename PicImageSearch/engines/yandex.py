@@ -6,7 +6,7 @@ from ..utils import read_file
 from .base import BaseSearchEngine
 
 
-class Yandex(BaseSearchEngine):
+class Yandex(BaseSearchEngine[YandexResponse]):
     """API client for the Yandex reverse image search engine.
 
     This class provides an interface to perform reverse image searches using Yandex's service.
@@ -64,14 +64,14 @@ class Yandex(BaseSearchEngine):
             - When using file upload, the image will be sent to Yandex's servers.
             - The search process involves standard Yandex parameters like `rpt` and `cbir_page`.
         """
-        await super().search(url, file, **kwargs)
+        self._validate_args(url, file)
 
         params = {"rpt": "imageview", "cbir_page": "sites"}
 
         if url:
             params["url"] = url
             resp = await self._make_request(method="get", params=params)
-        else:
+        elif file:
             files = {"upfile": read_file(file)}
             resp = await self._make_request(
                 method="post",

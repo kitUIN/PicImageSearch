@@ -1,22 +1,18 @@
 import asyncio
-from pathlib import Path
 
-from loguru import logger
-
+from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import Bing, Network
 from PicImageSearch.model import BingResponse
 from PicImageSearch.sync import Bing as BingSync
 
-# proxies = "http://127.0.0.1:1080"
-proxies = None
 http2 = True
-url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test08.jpg"
-file = Path(__file__).parent.parent / "images" / "test08.jpg"
+url = f"{IMAGE_BASE_URL}/test08.jpg"
+file = get_image_path("test08.jpg")
 
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=proxies, http2=http2) as client:
+    async with Network(proxies=PROXIES, http2=http2) as client:
         bing = Bing(client=client)
         # resp = await bing.search(url=url)
         resp = await bing.search(file=file)
@@ -25,7 +21,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    bing = BingSync(proxies=proxies, http2=http2)
+    bing = BingSync(proxies=PROXIES, http2=http2)
     resp = bing.search(url=url)
     # resp = bing.search(file=file)
     show_result(resp)  # type: ignore
@@ -36,27 +32,27 @@ def show_result(resp: BingResponse) -> None:
 
     if resp.pages_including:
         logger.info("Pages Including:")
-        for item in resp.pages_including:
-            logger.info(f"  Name: {item.name}")
-            logger.info(f"  URL: {item.url}")
-            logger.info(f"  Thumbnail URL: {item.thumbnail}")
-            logger.info(f"  Image URL: {item.image_url}")
+        for page_item in resp.pages_including:
+            logger.info(f"  Name: {page_item.name}")
+            logger.info(f"  URL: {page_item.url}")
+            logger.info(f"  Thumbnail URL: {page_item.thumbnail}")
+            logger.info(f"  Image URL: {page_item.image_url}")
             logger.info("-" * 20)
 
     if resp.visual_search:
         logger.info("Visual Search:")
-        for item in resp.visual_search:
-            logger.info(f"  Name: {item.name}")
-            logger.info(f"  URL: {item.url}")
-            logger.info(f"  Thumbnail URL: {item.thumbnail}")
-            logger.info(f"  Image URL: {item.image_url}")
+        for visual_item in resp.visual_search:
+            logger.info(f"  Name: {visual_item.name}")
+            logger.info(f"  URL: {visual_item.url}")
+            logger.info(f"  Thumbnail URL: {visual_item.thumbnail}")
+            logger.info(f"  Image URL: {visual_item.image_url}")
             logger.info("-" * 20)
 
     if resp.related_searches:
         logger.info("Related Searches:")
-        for item in resp.related_searches:
-            logger.info(f"  Text: {item.text}")
-            logger.info(f"  Thumbnail URL: {item.thumbnail}")
+        for search_item in resp.related_searches:
+            logger.info(f"  Text: {search_item.text}")
+            logger.info(f"  Thumbnail URL: {search_item.thumbnail}")
             logger.info("-" * 20)
 
     if resp.travel:
@@ -106,5 +102,5 @@ def show_result(resp: BingResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())  # type: ignore
-    # test_sync()  # type: ignore
+    asyncio.run(test_async())
+    # test_sync()

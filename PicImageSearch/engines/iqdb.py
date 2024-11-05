@@ -6,7 +6,7 @@ from ..utils import read_file
 from .base import BaseSearchEngine
 
 
-class Iqdb(BaseSearchEngine):
+class Iqdb(BaseSearchEngine[IqdbResponse]):
     """API client for the Iqdb image search engine.
 
     A client implementation for performing reverse image searches using Iqdb's services.
@@ -70,7 +70,7 @@ class Iqdb(BaseSearchEngine):
                 - is_3d=True: Searches real-life images on 3d.iqdb.org
             - The force_gray option can help find visually similar images regardless of coloring
         """
-        await super().search(url, file, **kwargs)
+        self._validate_args(url, file)
 
         data: dict[str, Any] = {}
         files: Optional[dict[str, Any]] = None
@@ -80,7 +80,7 @@ class Iqdb(BaseSearchEngine):
 
         if url:
             data["url"] = url
-        else:
+        elif file:
             files = {"file": read_file(file)}
 
         resp = await self._make_request(
