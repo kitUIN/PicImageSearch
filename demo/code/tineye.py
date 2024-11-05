@@ -3,7 +3,7 @@ from typing import Optional
 
 from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import Network, Tineye
-from PicImageSearch.model import TineyeResponse
+from PicImageSearch.model import TineyeItem, TineyeResponse
 from PicImageSearch.sync import Tineye as TineyeSync
 
 url = f"{IMAGE_BASE_URL}/test07.jpg"
@@ -39,7 +39,7 @@ async def test_async() -> None:
         )
         show_result(resp, "Initial Search")
 
-        if resp.pages and len(resp.pages) > 1:
+        if resp.total_pages > 1:
             resp2 = await tineye.next_page(resp)
             show_result(resp2, "Next Page")
 
@@ -73,7 +73,7 @@ def test_sync() -> None:
     # )
     show_result(resp, "Initial Search")  # type: ignore
 
-    if resp.pages and len(resp.pages) > 1:  # type: ignore
+    if resp.total_pages > 1:  # type: ignore
         resp2 = tineye.next_page(resp)  # type: ignore
         show_result(resp2, "Next Page")  # type: ignore
 
@@ -87,6 +87,9 @@ def test_sync() -> None:
 
 
 def show_result(resp: Optional[TineyeResponse], title: str = "") -> None:
+    if resp and not resp.raw:
+        logger.info(f"Origin Response: {resp.origin}")
+
     if not resp or not resp.raw:
         logger.info(f"{title}: No results found.")
         return
@@ -94,7 +97,7 @@ def show_result(resp: Optional[TineyeResponse], title: str = "") -> None:
     logger.info(f"{title}:")
     logger.info(f"  Status Code: {resp.status_code}")
     logger.info(f"  Query Hash: {resp.query_hash}")  # image hash
-    logger.info(f"  Total Pages: {len(resp.pages)}")  # type: ignore
+    logger.info(f"  Total Pages: {resp.total_pages}")
     logger.info(f"  Current Page: {resp.page_number}")
     logger.info("  Results:")
 
@@ -102,7 +105,7 @@ def show_result(resp: Optional[TineyeResponse], title: str = "") -> None:
         show_match_details(i, item)
 
 
-def show_match_details(match_index: int, match_item) -> None:
+def show_match_details(match_index: int, match_item: TineyeItem) -> None:
     logger.info(f"    Match {match_index + 1}:")
     logger.info(f"      Thumbnail URL: {match_item.thumbnail}")
     logger.info(f"      Image URL: {match_item.image_url}")
@@ -114,5 +117,5 @@ def show_match_details(match_index: int, match_item) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())  # type: ignore
-    # test_sync()  # type: ignore
+    asyncio.run(test_async())
+    # test_sync()
