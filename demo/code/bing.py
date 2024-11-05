@@ -1,22 +1,18 @@
 import asyncio
-from pathlib import Path
 
-from loguru import logger
-
+from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import Bing, Network
 from PicImageSearch.model import BingResponse
 from PicImageSearch.sync import Bing as BingSync
 
-# proxies = "http://127.0.0.1:1080"
-proxies = None
 http2 = True
-url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test08.jpg"
-file = Path(__file__).parent.parent / "images" / "test08.jpg"
+url = f"{IMAGE_BASE_URL}/test08.jpg"
+file = get_image_path("test08.jpg")
 
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=proxies, http2=http2) as client:
+    async with Network(proxies=PROXIES, http2=http2) as client:
         bing = Bing(client=client)
         # resp = await bing.search(url=url)
         resp = await bing.search(file=file)
@@ -25,7 +21,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    bing = BingSync(proxies=proxies, http2=http2)
+    bing = BingSync(proxies=PROXIES, http2=http2)
     resp = bing.search(url=url)
     # resp = bing.search(file=file)
     show_result(resp)  # type: ignore

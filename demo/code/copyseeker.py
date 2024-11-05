@@ -1,23 +1,17 @@
 import asyncio
-from pathlib import Path
 
-from loguru import logger
-
+from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import Copyseeker, Network
 from PicImageSearch.model import CopyseekerResponse
 from PicImageSearch.sync import Copyseeker as CopyseekerSync
 
-# proxies = "http://127.0.0.1:1080"
-proxies = None
-url = (
-    "https://github.com/kitUIN/PicImageSearch/blob/main/demo/images/test05.jpg?raw=true"
-)
-file = Path(__file__).parent.parent / "images" / "test05.jpg"
+url = f"{IMAGE_BASE_URL}/test05.jpg"
+file = get_image_path("test05.jpg")
 
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=proxies) as client:
+    async with Network(proxies=PROXIES) as client:
         copyseeker = Copyseeker(client=client)
         # resp = await copyseeker.search(url=url)
         resp = await copyseeker.search(file=file)
@@ -26,7 +20,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    copyseeker = CopyseekerSync(proxies=proxies)
+    copyseeker = CopyseekerSync(proxies=PROXIES)
     resp = copyseeker.search(url=url)
     # resp = copyseeker.search(file=file)
     show_result(resp)  # type: ignore

@@ -1,21 +1,17 @@
 import asyncio
-from pathlib import Path
 
-from loguru import logger
-
+from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import Iqdb, Network
 from PicImageSearch.model import IqdbResponse
 from PicImageSearch.sync import Iqdb as IqdbSync
 
-# proxies = "http://127.0.0.1:1080"
-proxies = None
-url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-file = Path(__file__).parent.parent / "images" / "test01.jpg"
+url = f"{IMAGE_BASE_URL}/test01.jpg"
+file = get_image_path("test01.jpg")
 
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=proxies) as client:
+    async with Network(proxies=PROXIES) as client:
         iqdb = Iqdb(client=client)
         # resp = await iqdb.search(url=url)
         resp = await iqdb.search(file=file)
@@ -24,7 +20,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    iqdb = IqdbSync(proxies=proxies)
+    iqdb = IqdbSync(proxies=PROXIES)
     resp = iqdb.search(url=url)
     # resp = iqdb.search(file=file)
     show_result(resp)  # type: ignore

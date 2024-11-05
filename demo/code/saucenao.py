@@ -1,22 +1,18 @@
 import asyncio
-from pathlib import Path
 
-from loguru import logger
-
+from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import Network, SauceNAO
 from PicImageSearch.model import SauceNAOResponse
 from PicImageSearch.sync import SauceNAO as SauceNAOSync
 
-# proxies = "http://127.0.0.1:1080"
-proxies = None
-url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images/test01.jpg"
-file = Path(__file__).parent.parent / "images" / "test01.jpg"
+url = f"{IMAGE_BASE_URL}/test01.jpg"
+file = get_image_path("test01.jpg")
 api_key = "a4ab3f81009b003528f7e31aed187fa32a063f58"
 
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=proxies) as client:
+    async with Network(proxies=PROXIES) as client:
         saucenao = SauceNAO(api_key=api_key, hide=3, client=client)
         # resp = await saucenao.search(url=url)
         resp = await saucenao.search(file=file)
@@ -25,7 +21,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    saucenao = SauceNAOSync(api_key=api_key, hide=3, proxies=proxies)
+    saucenao = SauceNAOSync(api_key=api_key, hide=3, proxies=PROXIES)
     resp = saucenao.search(url=url)
     # resp = saucenao.search(file=file)
     show_result(resp)  # type: ignore
