@@ -32,27 +32,27 @@ def show_result(resp: BingResponse) -> None:
 
     if resp.pages_including:
         logger.info("Pages Including:")
-        for item in resp.pages_including:
-            logger.info(f"  Name: {item.name}")
-            logger.info(f"  URL: {item.url}")
-            logger.info(f"  Thumbnail URL: {item.thumbnail}")
-            logger.info(f"  Image URL: {item.image_url}")
+        for page_item in resp.pages_including:
+            logger.info(f"  Name: {page_item.name}")
+            logger.info(f"  URL: {page_item.url}")
+            logger.info(f"  Thumbnail URL: {page_item.thumbnail}")
+            logger.info(f"  Image URL: {page_item.image_url}")
             logger.info("-" * 20)
 
     if resp.visual_search:
         logger.info("Visual Search:")
-        for item in resp.visual_search:
-            logger.info(f"  Name: {item.name}")
-            logger.info(f"  URL: {item.url}")
-            logger.info(f"  Thumbnail URL: {item.thumbnail}")
-            logger.info(f"  Image URL: {item.image_url}")
+        for visual_item in resp.visual_search:
+            logger.info(f"  Name: {visual_item.name}")
+            logger.info(f"  URL: {visual_item.url}")
+            logger.info(f"  Thumbnail URL: {visual_item.thumbnail}")
+            logger.info(f"  Image URL: {visual_item.image_url}")
             logger.info("-" * 20)
 
     if resp.related_searches:
         logger.info("Related Searches:")
-        for item in resp.related_searches:
-            logger.info(f"  Text: {item.text}")
-            logger.info(f"  Thumbnail URL: {item.thumbnail}")
+        for search_item in resp.related_searches:
+            logger.info(f"  Text: {search_item.text}")
+            logger.info(f"  Thumbnail URL: {search_item.thumbnail}")
             logger.info("-" * 20)
 
     if resp.travel:
@@ -102,5 +102,5 @@ def show_result(resp: BingResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())  # type: ignore
-    # test_sync()  # type: ignore
+    asyncio.run(test_async())
+    # test_sync()

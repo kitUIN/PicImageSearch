@@ -14,7 +14,15 @@ class BingItem(BaseSearchItem):
         image_url (str): Direct URL to the full-size image.
     """
 
-    def _parse_data(self, data: dict[str, Any], **kwargs) -> None:
+    def __init__(self, data: dict[str, Any], **kwargs: Any):
+        """Initializes a BingItem with data from a search result.
+
+        Args:
+            data (dict[str, Any]): A dictionary containing the search result data.
+        """
+        super().__init__(data, **kwargs)
+
+    def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search result data."""
         self.title: str = data.get("name", "")
         self.url: str = data.get("hostPageUrl", "")
@@ -159,7 +167,7 @@ class EntityItem:
         )
 
 
-class BingResponse(BaseSearchResponse):
+class BingResponse(BaseSearchResponse[BingItem]):
     """Encapsulates the complete response from a Bing reverse image search.
 
     This class processes and organizes various types of information returned by Bing's
@@ -181,6 +189,16 @@ class BingResponse(BaseSearchResponse):
         identifies in the searched image. Not all attributes will contain data
         for every search.
     """
+
+    def __init__(self, resp_data: dict[str, Any], resp_url: str, **kwargs: Any):
+        """Initialize a Bing search response.
+
+        Args:
+            resp_data (dict[str, Any]): The raw JSON response from Bing's API.
+            resp_url (str): The URL of the search results page.
+            **kwargs (Any): Additional keyword arguments passed to the parent class.
+        """
+        super().__init__(resp_data, resp_url, **kwargs)
 
     def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search response data."""

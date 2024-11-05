@@ -7,7 +7,7 @@ from ..utils import read_file
 from .base import BaseSearchEngine
 
 
-class Copyseeker(BaseSearchEngine):
+class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
     """API client for the Copyseeker image search engine.
 
     Used for performing reverse image searches using Copyseeker service.
@@ -56,7 +56,7 @@ class Copyseeker(BaseSearchEngine):
                 endpoint="OnTriggerDiscoveryByUrl",
                 json=data,
             )
-        else:
+        elif file:
             files = {"file": read_file(file)}
             resp = await self._make_request(
                 method="post",
@@ -65,8 +65,8 @@ class Copyseeker(BaseSearchEngine):
                 files=files,
             )
 
-        resp_json = json_loads(resp.text)  # noqa
-        return resp_json.get("discoveryId")
+        resp_json = json_loads(resp.text)
+        return resp_json.get("discoveryId")  # type: ignore
 
     async def search(
         self,
@@ -100,7 +100,7 @@ class Copyseeker(BaseSearchEngine):
             - Only one of `url` or `file` should be provided.
             - The search process involves multiple HTTP requests to Copyseeker's API.
         """
-        await super().search(url, file, **kwargs)
+        self._validate_args(url, file)
 
         discovery_id = await self._get_discovery_id(url, file)
         if discovery_id is None:

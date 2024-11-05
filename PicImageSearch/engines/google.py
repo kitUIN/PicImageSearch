@@ -6,7 +6,7 @@ from ..utils import read_file
 from .base import BaseSearchEngine
 
 
-class Google(BaseSearchEngine):
+class Google(BaseSearchEngine[GoogleResponse]):
     """API client for the Google image search engine.
 
     Used for performing reverse image searches using Google service.
@@ -55,6 +55,7 @@ class Google(BaseSearchEngine):
         next_page_number = resp.page_number + offset
         if next_page_number < 1 or next_page_number > len(resp.pages):
             return None
+
         _resp = await self.get(resp.pages[next_page_number - 1])
         return GoogleResponse(_resp.text, _resp.url, next_page_number, resp.pages)
 
@@ -142,14 +143,14 @@ class Google(BaseSearchEngine):
             - The method automatically ensures thumbnail data is present in results
             - Safe search is disabled by default
         """
-        await super().search(url, file, **kwargs)
+        self._validate_args(url, file)
 
         params: dict[str, Any] = {"sbisrc": 1, "safe": "off"}
 
         if url:
             params["image_url"] = url
             resp = await self._make_request(method="get", params=params)
-        else:
+        elif file:
             files = {"encoded_image": read_file(file)}
             resp = await self._make_request(
                 method="post",

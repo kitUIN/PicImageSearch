@@ -33,9 +33,9 @@ def test_sync() -> None:
     show_result(resp)  # type: ignore
     resp2 = google.next_page(resp)  # type: ignore
     show_result(resp2)  # type: ignore
-    resp3 = google.pre_page(resp2)  # type: ignore
-    show_result(resp3)  # type: ignore
-    show_result(resp2)  # type: ignore
+    if resp2:
+        resp3 = google.pre_page(resp2)  # type: ignore
+        show_result(resp3)  # type: ignore
 
 
 def show_result(resp: Optional[GoogleResponse]) -> None:
@@ -57,5 +57,5 @@ def show_result(resp: Optional[GoogleResponse]) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())  # type: ignore
-    # test_sync()  # type: ignore
+    asyncio.run(test_async())
+    # test_sync()

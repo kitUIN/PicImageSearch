@@ -14,7 +14,7 @@ class BaiDuItem(BaseSearchItem):
         url (str): URL of the webpage containing the original image.
     """
 
-    def __init__(self, data: dict[str, Any], **kwargs):
+    def __init__(self, data: dict[str, Any], **kwargs: Any) -> None:
         """Initialize a BaiDu search result item.
 
         Args:
@@ -23,7 +23,7 @@ class BaiDuItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
-    def _parse_data(self, data: dict[str, Any], **kwargs) -> None:
+    def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
         """Parse the raw search result data into structured attributes.
 
         Args:
@@ -42,7 +42,7 @@ class BaiDuItem(BaseSearchItem):
         self.url: str = data["fromUrl"]
 
 
-class BaiDuResponse(BaseSearchResponse):
+class BaiDuResponse(BaseSearchResponse[BaiDuItem]):
     """Encapsulates a complete BaiDu reverse image search response.
 
     A class that handles and stores the full response from a BaiDu reverse image search,
@@ -54,7 +54,7 @@ class BaiDuResponse(BaseSearchResponse):
         url (str): URL of the search results page on BaiDu.
     """
 
-    def __init__(self, resp_data: dict[str, Any], resp_url: str, **kwargs):
+    def __init__(self, resp_data: dict[str, Any], resp_url: str, **kwargs: Any):
         """Initialize a BaiDu search response.
 
         Args:
@@ -64,7 +64,7 @@ class BaiDuResponse(BaseSearchResponse):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
-    def _parse_response(self, resp_data: dict[str, Any], **kwargs) -> None:
+    def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Parse the raw response data into a list of search result items.
 
         Args:

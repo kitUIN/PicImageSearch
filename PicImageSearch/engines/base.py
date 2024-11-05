@@ -1,12 +1,15 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Generic, Optional, TypeVar, Union
 
 from ..model.base import BaseSearchResponse
 from ..network import HandOver
 
+ResponseT = TypeVar("ResponseT")
+T = TypeVar("T", bound=BaseSearchResponse[Any])
 
-class BaseSearchEngine(HandOver, ABC):
+
+class BaseSearchEngine(HandOver, ABC, Generic[T]):
     """Base search engine class providing common functionality for all reverse image search engines.
 
     This abstract base class implements the core functionality shared by all image search engines,
@@ -36,7 +39,7 @@ class BaseSearchEngine(HandOver, ABC):
         url: Optional[str] = None,
         file: Union[str, bytes, Path, None] = None,
         **kwargs: Any,
-    ) -> BaseSearchResponse:  # type: ignore
+    ) -> T:
         """Perform a reverse image search.
 
         This abstract method must be implemented by all search engine classes.
@@ -51,11 +54,24 @@ class BaseSearchEngine(HandOver, ABC):
             **kwargs (Any): Additional search parameters specific to each search engine.
 
         Returns:
-            BaseSearchResponse: Search results. The specific return type depends on the implementing class.
+            T: Search results. The specific return type depends on the implementing class.
 
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
             NotImplementedError: If the method is not implemented by the subclass.
+        """
+        raise NotImplementedError
+
+    @staticmethod
+    def _validate_args(url: Optional[str], file: Union[str, bytes, Path, None]) -> None:
+        """Validate the arguments for the search method.
+
+        Args:
+            url (Optional[str]): URL of the image to search.
+            file (Union[str, bytes, Path, None]): Local image file to search.
+
+        Raises:
+            ValueError: If neither 'url' nor 'file' is provided.
         """
         if not url and not file:
             raise ValueError("Either 'url' or 'file' must be provided")

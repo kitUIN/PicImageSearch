@@ -28,7 +28,7 @@ class IqdbItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
-    def _parse_data(self, data: PyQuery, **kwargs) -> None:
+    def _parse_data(self, data: PyQuery, **kwargs: Any) -> None:
         """Initialize and parse the search result data.
 
         Args:
@@ -95,7 +95,7 @@ class IqdbItem(BaseSearchItem):
         return url if url.startswith("http") else f"https:{url}"
 
 
-class IqdbResponse(BaseSearchResponse):
+class IqdbResponse(BaseSearchResponse[IqdbItem]):
     """Represents a complete IQDB reverse image search response.
 
     Attributes:

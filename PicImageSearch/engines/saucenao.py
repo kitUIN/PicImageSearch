@@ -9,7 +9,7 @@ from ..utils import read_file
 from .base import BaseSearchEngine
 
 
-class SauceNAO(BaseSearchEngine):
+class SauceNAO(BaseSearchEngine[SauceNAOResponse]):
     """API client for the SauceNAO image search engine.
 
     Used for performing reverse image searches using SauceNAO service.
@@ -119,14 +119,14 @@ class SauceNAO(BaseSearchEngine):
                 * 4 searches per 30 seconds
             - Results are sorted by similarity score in descending order.
         """
-        await super().search(url, file, **kwargs)
+        self._validate_args(url, file)
 
         params = self.params
         files: Optional[dict[str, Any]] = None
 
         if url:
             params = params.add("url", url)
-        else:
+        elif file:
             files = {"file": read_file(file)}
 
         resp = await self._make_request(

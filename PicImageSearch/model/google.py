@@ -28,14 +28,14 @@ class GoogleItem(BaseSearchItem):
         """
         super().__init__(data, thumbnail=thumbnail)
 
-    def _parse_data(self, data: PyQuery, **kwargs) -> None:
+    def _parse_data(self, data: PyQuery, **kwargs: Any) -> None:
         """Parse search result data."""
         self.title: str = data("h3").text()
         self.url: str = data("a").eq(0).attr("href")
-        self.thumbnail: Optional[str] = kwargs.get("thumbnail")
+        self.thumbnail: Optional[str] = kwargs.get("thumbnail")  # type: ignore
 
 
-class GoogleResponse(BaseSearchResponse):
+class GoogleResponse(BaseSearchResponse[GoogleItem]):
     """Encapsulates a Google reverse image search response.
 
     Processes and stores the complete response from a Google reverse image search,
@@ -70,7 +70,7 @@ class GoogleResponse(BaseSearchResponse):
         """Parse search response data."""
         data = parse_html(resp_data)
         self.origin: PyQuery = data
-        self.page_number: int = kwargs.get("page_number")
+        self.page_number: int = kwargs["page_number"]
 
         if pages := kwargs.get("pages"):
             self.pages: list[str] = pages
@@ -79,7 +79,7 @@ class GoogleResponse(BaseSearchResponse):
                 f'https://www.google.com{i.attr("href")}'
                 for i in data.find('a[aria-label~="Page"]').items()
             ]
-            self.pages.insert(0, kwargs.get("resp_url"))
+            self.pages.insert(0, kwargs["resp_url"])
 
         script_list = list(data.find("script").items())
         thumbnail_dict: dict[str, str] = self.create_thumbnail_dict(script_list)

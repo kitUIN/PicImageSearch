@@ -179,7 +179,7 @@ class SauceNAOItem(BaseSearchItem):
         return str(data.get("author_url", ""))
 
 
-class SauceNAOResponse(BaseSearchResponse):
+class SauceNAOResponse(BaseSearchResponse[SauceNAOItem]):
     """Encapsulates a complete SauceNAO API response.
 
     This class processes and structures the full response from a SauceNAO search,
@@ -203,7 +203,7 @@ class SauceNAOResponse(BaseSearchResponse):
         url (str): URL to view the search results on SauceNAO website.
     """
 
-    def __init__(self, resp_data: dict[str, Any], resp_url: str, **kwargs):
+    def __init__(self, resp_data: dict[str, Any], resp_url: str, **kwargs: Any) -> None:
         """Initializes with the response data.
 
         Args:
@@ -212,7 +212,7 @@ class SauceNAOResponse(BaseSearchResponse):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
-    def _parse_response(self, resp_data: dict[str, Any], **kwargs) -> None:
+    def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search response data."""
         self.status_code: int = resp_data["status_code"]
         header = resp_data["header"]

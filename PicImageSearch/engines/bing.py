@@ -10,7 +10,7 @@ from ..utils import read_file
 from .base import BaseSearchEngine
 
 
-class Bing(BaseSearchEngine):
+class Bing(BaseSearchEngine[BingResponse]):
     """API client for the Bing image search engine.
 
     Used for performing reverse image searches using Bing's API.
@@ -57,7 +57,7 @@ class Bing(BaseSearchEngine):
 
     async def _get_insights(
         self, bcid: Optional[str] = None, image_url: Optional[str] = None
-    ) -> dict:
+    ) -> dict[str, Any]:
         """Retrieves image insights from Bing using either BCID or image URL.
 
         This method handles two search scenarios:
@@ -104,12 +104,13 @@ class Bing(BaseSearchEngine):
                 "Referer": f"{self.base_url}/images/search?insightsToken={bcid}",
             }
             data = {"imageInfo": {"imageInsightsToken": bcid}, "knowledgeRequest": {}}
-            self.client.cookies = None
+            if self.client:
+                self.client.cookies.clear()
             resp = await self._make_request(
                 method="post", endpoint=endpoint, headers=headers, data=data
             )
 
-        return json_loads(resp.text)
+        return json_loads(resp.text)  # type: ignore
 
     async def search(
         self,
@@ -139,7 +140,7 @@ class Bing(BaseSearchEngine):
             - Only one of `url` or `file` should be provided.
             - The search process involves multiple HTTP requests to Bing's API.
         """
-        await super().search(url, file, **kwargs)
+        self._validate_args(url, file)
 
         if url:
             resp_url = (
@@ -149,7 +150,7 @@ class Bing(BaseSearchEngine):
             )
             resp_json = await self._get_insights(image_url=url)
 
-        else:
+        elif file:
             bcid, resp_url = await self._upload_image(file)
             resp_json = await self._get_insights(bcid=bcid)
 

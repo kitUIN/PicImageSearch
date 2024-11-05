@@ -23,7 +23,12 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    ascii2d = Ascii2DSync(base_url=base_url, bovw=bovw, proxies=PROXIES, verify_ssl=verify_ssl)
+    ascii2d = Ascii2DSync(
+        base_url=base_url,
+        bovw=bovw,
+        proxies=PROXIES,
+        verify_ssl=verify_ssl,
+    )
     resp = ascii2d.search(url=url)
     # resp = ascii2d.search(file=file)
     show_result(resp)  # type: ignore
@@ -46,5 +51,5 @@ def show_result(resp: Ascii2DResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())  # type: ignore
-    # test_sync()  # type: ignore
+    asyncio.run(test_async())
+    # test_sync()

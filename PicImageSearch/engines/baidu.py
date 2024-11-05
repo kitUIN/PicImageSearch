@@ -10,7 +10,7 @@ from ..utils import deep_get, read_file
 from .base import BaseSearchEngine
 
 
-class BaiDu(BaseSearchEngine):
+class BaiDu(BaseSearchEngine[BaiDuResponse]):
     """API client for the BaiDu image search engine.
 
     Used for performing reverse image searches using BaiDu service.
@@ -91,14 +91,14 @@ class BaiDu(BaseSearchEngine):
             - The search process involves multiple HTTP requests to BaiDu's API.
             - The response format varies depending on whether matches are found.
         """
-        await super().search(url, file, **kwargs)
+        self._validate_args(url, file)
 
         params = {"from": "pc"}
         files: Optional[dict[str, Any]] = None
 
         if url:
             params["image"] = url
-        else:
+        elif file:
             files = {"image": read_file(file)}
 
         resp = await self._make_request(
