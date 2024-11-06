@@ -95,6 +95,12 @@ PicImageSearch 是一个强大的 Python 图片搜索库，它整合了多个主
 
     SauceNAO Reverse Image Search
 
+- ![Tineye](images/tineye.png){ .lg .middle } Tineye
+
+    ---
+
+    TinEye Reverse Image Search
+
 - ![TraceMoe](images/tracemoe.png){ .lg .middle } TraceMoe
 
     ---

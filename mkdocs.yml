@@ -53,6 +53,7 @@ nav:
         - Google: engines/google.md
         - IQDB: engines/iqdb.md
         - SauceNAO: engines/saucenao.md
+        - Tineye: engines/tineye.md
         - TraceMoe: engines/tracemoe.md
         - Yandex: engines/yandex.md
     - Model:
@@ -64,6 +65,7 @@ nav:
         - Google: model/google.md
         - IQDB: model/iqdb.md
         - SauceNAO: model/saucenao.md
+        - Tineye: model/tineye.md
         - TraceMoe: model/tracemoe.md
         - Yandex: model/yandex.md
 
