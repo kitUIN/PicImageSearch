@@ -2,7 +2,7 @@
 
 # PicImageSearch
 
-Читать на других языках: [English](README.md), [简体中文](README.cn.md), [日本語](README.ja.md)
+Читать на других языках: [English](../../README.md), [简体中文](../zh/README.zh-CN.md), [日本語](../ja/README.ja-JP.md)
 
 ✨ Агрегатор Обратного Поиска Изображений ✨
 
@@ -35,7 +35,6 @@
 | Bing       | <https://www.bing.com/images/search> |
 | Copyseeker | <https://copyseeker.net/>            |
 | E-Hentai   | <https://e-hentai.org/>              |
-| ExHentai   | <https://exhentai.org/>              |
 | Google     | <https://www.google.com/imghp>       |
 | IQDB       | <https://iqdb.org/>                  |
 | SauceNAO   | <https://saucenao.com/>              |

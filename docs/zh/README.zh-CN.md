@@ -2,9 +2,9 @@
 
 # PicImageSearch
 
-他の言語で読む: [English](README.md), [简体中文](README.cn.md), [Русский](README.ru.md)
+阅读其他语言版本： [English](../../README.md), [Русский](../ru/README.ru-RU.md), [日本語](../ja/README.ja-JP.md)
 
-✨ 画像検索アグリゲーター ✨
+✨ 聚合识图引擎 用于以图搜源 ✨
 
 <a href="https://raw.githubusercontent.com/kitUIN/PicImageSearch/master/LICENSE">
     <img src="https://img.shields.io/github/license/kitUIN/PicImageSearch" alt="license">
@@ -20,22 +20,21 @@
     <img src="https://img.shields.io/github/issues/kitUIN/PicImageSearch" alt="issues">
 </a>
 
-<a href="https://pic-image-search.kituin.fun/">📖 ドキュメント</a>
+<a href="https://pic-image-search.kituin.fun/">📖 文档</a>
 ·
-<a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 問題を報告</a>
+<a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 提交问题</a>
 
 </div>
 
-## サポート
+## 支持的搜索引擎
 
-| エンジン       | ウェブサイト                               |
+| 引擎         | 网站                                   |
 |------------|--------------------------------------|
 | ASCII2D    | <https://ascii2d.net/>               |
 | Baidu      | <https://graph.baidu.com/>           |
 | Bing       | <https://www.bing.com/images/search> |
 | Copyseeker | <https://copyseeker.net/>            |
 | E-Hentai   | <https://e-hentai.org/>              |
-| ExHentai   | <https://exhentai.org/>              |
 | Google     | <https://www.google.com/imghp>       |
 | IQDB       | <https://iqdb.org/>                  |
 | SauceNAO   | <https://saucenao.com/>              |
@@ -45,17 +44,17 @@
 
 ## 使用方法
 
-詳細は [ドキュメント](https://pic-image-search.kituin.fun/) または [デモコード](demo/code/) を参照してください。  
-`同期`を使用する場合は `from PicImageSearch.sync import ...` をインポートしてください。  
-`非同期`を使用する場合は `from PicImageSearch import Network,...` をインポートしてください。  
-**非同期の使用を推奨します。**
+详细信息请参阅 [文档](https://pic-image-search.kituin.fun/) 或者 [示例代码](demo/code/)。  
+`同步`请使用 `from PicImageSearch.sync import ...` 导入。  
+`异步`请使用 `from PicImageSearch import Network,...` 导入。  
+**推荐使用异步。**
 
-### インストール
+### 安装
 
-- Python 3.9 以降が必要です。
-- インストール: `pip install PicImageSearch`
-- または Tsinghua ミラーを使用: `pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
+- 需要 Python 3.9 及以上版本。
+- 安装命令：`pip install PicImageSearch`
+- 或使用清华镜像：`pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
 
-## スター履歴
+## 星标历史
 
-[![スター履歴](https://starchart.cc/kitUIN/PicImageSearch.svg)](https://starchart.cc/kitUIN/PicImageSearch)
+[![星标历史](https://starchart.cc/kitUIN/PicImageSearch.svg)](https://starchart.cc/kitUIN/PicImageSearch)

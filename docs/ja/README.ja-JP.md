@@ -2,9 +2,9 @@
 
 # PicImageSearch
 
-Read in other languages: [简体中文](docs/zh/README.zh-CN.md), [Русский](docs/ru/README.ru-RU.md), [日本語](docs/ja/README.ja-JP.md)
+他の言語で読む: [English](../../README.md), [简体中文](../zh/README.zh-CN.md), [Русский](../ru/README.ru-RU.md)
 
-✨ Aggregated Image Search Engine for Reverse Image Search ✨
+✨ 画像検索アグリゲーター ✨
 
 <a href="https://raw.githubusercontent.com/kitUIN/PicImageSearch/master/LICENSE">
     <img src="https://img.shields.io/github/license/kitUIN/PicImageSearch" alt="license">
@@ -20,15 +20,15 @@ Read in other languages: [简体中文](docs/zh/README.zh-CN.md), [Русски�
     <img src="https://img.shields.io/github/issues/kitUIN/PicImageSearch" alt="issues">
 </a>
 
-<a href="https://pic-image-search.kituin.fun/">📖 Documentation</a>
+<a href="https://pic-image-search.kituin.fun/">📖 ドキュメント</a>
 ·
-<a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 Submit an Issue</a>
+<a href="https://github.com/kitUIN/PicImageSearch/issues/new">🐛 問題を報告</a>
 
 </div>
 
-## Supported Search Engines
+## サポート
 
-| Engine     | Website                              |
+| エンジン       | ウェブサイト                               |
 |------------|--------------------------------------|
 | ASCII2D    | <https://ascii2d.net/>               |
 | Baidu      | <https://graph.baidu.com/>           |
@@ -42,19 +42,19 @@ Read in other languages: [简体中文](docs/zh/README.zh-CN.md), [Русски�
 | TraceMoe   | <https://trace.moe/>                 |
 | Yandex     | <https://yandex.com/images/search>   |
 
-## Usage
+## 使用方法
 
-For detailed information, please refer to the [documentation](https://pic-image-search.kituin.fun/) or [example code](demo/code/).  
-For `synchronous` usage, import using `from PicImageSearch.sync import ...` .  
-For `asynchronous` usage, import using `from PicImageSearch import Network,...` .  
-**Asynchronous usage is recommended.**
+詳細は [ドキュメント](https://pic-image-search.kituin.fun/) または [デモコード](demo/code/) を参照してください。  
+`同期`を使用する場合は `from PicImageSearch.sync import ...` をインポートしてください。  
+`非同期`を使用する場合は `from PicImageSearch import Network,...` をインポートしてください。  
+**非同期の使用を推奨します。**
 
-### Installation
+### インストール
 
-- Requires Python 3.9 and above.
-- Installation command: `pip install PicImageSearch`
-- Or use the Tsinghua mirror: `pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
+- Python 3.9 以降が必要です。
+- インストール: `pip install PicImageSearch`
+- または Tsinghua ミラーを使用: `pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
 
-## Star History
+## スター履歴
 
-[![Star History](https://starchart.cc/kitUIN/PicImageSearch.svg)](https://starchart.cc/kitUIN/PicImageSearch)
+[![スター履歴](https://starchart.cc/kitUIN/PicImageSearch.svg)](https://starchart.cc/kitUIN/PicImageSearch)
