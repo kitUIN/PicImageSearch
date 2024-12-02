@@ -16,9 +16,4 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Update dependencies
-        uses: pdm-project/update-deps-action@v1
-        with:
-          commit-message: "chore(deps): Update pdm.lock"
-          pr-title: "chore(deps): Update PDM dependencies"
-          update-strategy: "reuse"
-          save-strategy: "compatible"
+        uses: pdm-project/update-deps-action@main
