@@ -60,7 +60,7 @@ class Network:
             cookies=self.cookies,
             verify=verify_ssl,
             http2=http2,
-            proxies=proxies,
+            proxy=proxies,
             timeout=timeout,
             follow_redirects=True,
         )

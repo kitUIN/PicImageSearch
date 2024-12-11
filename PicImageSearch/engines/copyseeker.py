@@ -107,9 +107,13 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
             return CopyseekerResponse({}, "")
 
         data = {"discoveryId": discovery_id, "hasBlocker": False}
-
+        headers = {
+            "Origin": "https://copyseeker.net",
+            "Referer": "https://copyseeker.net/"
+        }
+        
         resp = await self._make_request(
-            method="post", endpoint="OnProvideDiscovery", json=data
+            method="post", endpoint="OnProvideDiscovery", json=data, headers=headers
         )
         resp_json = json_loads(resp.text)
         return CopyseekerResponse(resp_json, resp.url)
