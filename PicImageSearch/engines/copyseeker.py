@@ -1,4 +1,6 @@
 from json import loads as json_loads
+from json import dumps as json_dumps
+import os
 from pathlib import Path
 from typing import Any, Optional, Union
 
@@ -17,7 +19,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
     """
 
     def __init__(
-        self, base_url: str = "https://api.copyseeker.net", **request_kwargs: Any
+        self, base_url: str = "https://copyseeker.net", **request_kwargs: Any
     ):
         """Initializes a Copyseeker API client.
 
@@ -51,22 +53,43 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
 
         if url:
             data["imageUrl"] = url
+            headers = {
+                    "next-action": "408936c3bdf458fbec6cf3c1253f56aefbcb4cf509",
+                    "content-type": "text/plain;charset=UTF-8"
+            }
+
             resp = await self._make_request(
                 method="post",
-                endpoint="OnTriggerDiscoveryByUrl",
-                json=data,
+                endpoint="",
+                data=json_dumps([data]),
+                headers=headers,
             )
         elif file:
-            files = {"file": read_file(file)}
+            headers = {
+                "next-action": "40dc303bfd320afd703a1a0a159464be4d64117f96",
+                "content-type": "multipart/form-data; boundary=-"
+            }
+            files = {
+                "1_file": (os.path.basename(file), read_file(file), "image/jpeg"),
+                "1_discoveryType": (None, "ReverseImageSearch"),
+                "0": (None, '["$K1"]')
+            }
+            files["1_discoveryType"] = (None, "ReverseImageSearch")
+            files["0"] = (None, '["$K1"]')
+
             resp = await self._make_request(
                 method="post",
-                endpoint="OnTriggerDiscoveryByFile",
-                data=data,
+                endpoint="",
                 files=files,
+                headers=headers
             )
 
-        resp_json = json_loads(resp.text)
-        return resp_json.get("discoveryId")  # type: ignore
+            for line in resp.text.splitlines():
+                line = line.strip()
+                if line.startswith("1:{"):
+                    return json_loads(line[2:]).get("discoveryId")
+            return None
+
 
     async def search(
         self,
@@ -106,14 +129,18 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
         if discovery_id is None:
             return CopyseekerResponse({}, "")
 
-        data = {"discoveryId": discovery_id, "hasBlocker": False}
+        data = [{"discoveryId": discovery_id, "hasBlocker": "False"}]
         headers = {
-            "Origin": "https://copyseeker.net",
-            "Referer": "https://copyseeker.net/"
+             "next-action": "4084b9ef4e0e6922ef12b23a4b8517be790fa67b88",
+             "content-type": "text/plain;charset=UTF-8"
         }
-        
+
         resp = await self._make_request(
-            method="post", endpoint="OnProvideDiscovery", json=data, headers=headers
+            method="post", endpoint="discovery",data=json_dumps(data), headers=headers
         )
-        resp_json = json_loads(resp.text)
+        
+        for line in resp.text.splitlines():
+            line = line.strip()
+            if line.startswith("1:{"):
+                resp_json = json_loads(line[2:])
         return CopyseekerResponse(resp_json, resp.url)
