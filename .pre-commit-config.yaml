@@ -2,7 +2,7 @@ minimum_pre_commit_version: "3.5.0"
 files: ^.*\.py$
 repos:
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 'v0.8.6'
+    rev: 'v0.9.1'
     hooks:
       - id: ruff
         args: [ --fix ]
