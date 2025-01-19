@@ -53,7 +53,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
         if url:
             data = {"discoveryType": "ReverseImageSearch", "imageUrl": url}
             headers = {
-                "next-action": "408936c3bdf458fbec6cf3c1253f56aefbcb4cf509",
+                "next-action": "4004c826c84c7592d782ef3648ac6da33ae40f0893",
                 "content-type": "text/plain;charset=UTF-8",
             }
 
@@ -69,7 +69,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
                 "0": (None, '["$K1"]'),
             }
             headers = {
-                "next-action": "40dc303bfd320afd703a1a0a159464be4d64117f96",
+                "next-action": "40da2b6c4059b8a099c6634d796264254d3c0e12ab",
                 "content-type": "multipart/form-data; boundary=-",
             }
 
@@ -128,7 +128,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
 
         data = [{"discoveryId": discovery_id, "hasBlocker": "False"}]
         headers = {
-            "next-action": "4084b9ef4e0e6922ef12b23a4b8517be790fa67b88",
+            "next-action": "4051bb75bb1a1a40d49e0cf17d929f2a113217b6f3",
             "content-type": "text/plain;charset=UTF-8",
         }
 
