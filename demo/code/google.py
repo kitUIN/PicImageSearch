@@ -10,10 +10,13 @@ url = f"{IMAGE_BASE_URL}/test03.jpg"
 file = get_image_path("test03.jpg")
 base_url = "https://www.google.co.jp"
 
+# Note: Google search requires cookies contain the `NID`
+cookies: Optional[str] = None
+
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=PROXIES) as client:
+    async with Network(proxies=PROXIES, cookies=cookies) as client:
         google = Google(base_url=base_url, client=client)
         # resp = await google.search(url=url)
         resp = await google.search(file=file)
@@ -27,7 +30,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    google = GoogleSync(base_url=base_url, proxies=PROXIES)
+    google = GoogleSync(base_url=base_url, proxies=PROXIES, cookies=cookies)
     resp = google.search(url=url)
     # resp = google.search(file=file)
     show_result(resp)  # type: ignore
