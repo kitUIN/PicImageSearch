@@ -22,6 +22,7 @@ from . import (
     Tineye,
     TraceMoe,
     Yandex,
+    Lenso,
 )
 
 
@@ -81,6 +82,7 @@ syncify(  # type: ignore
     Tineye,
     TraceMoe,
     Yandex,
+    Lenso,
 )
 
 __all__ = [
@@ -96,4 +98,5 @@ __all__ = [
     "Tineye",
     "TraceMoe",
     "Yandex",
+    "Lenso",
 ]

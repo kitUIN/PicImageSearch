@@ -5,6 +5,7 @@ from .copyseeker import Copyseeker
 from .ehentai import EHentai
 from .google import Google
 from .iqdb import Iqdb
+from .lenso import Lenso
 from .saucenao import SauceNAO
 from .tineye import Tineye
 from .tracemoe import TraceMoe
@@ -18,6 +19,7 @@ __all__ = [
     "EHentai",
     "Google",
     "Iqdb",
+    "Lenso",
     "SauceNAO",
     "Tineye",
     "TraceMoe",
