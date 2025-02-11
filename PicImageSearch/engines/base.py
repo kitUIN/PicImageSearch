@@ -77,7 +77,7 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
             raise ValueError("Either 'url' or 'file' must be provided")
 
     async def _make_request(
-        self, method: str, endpoint: str = "", **kwargs: Any
+        self, method: str, endpoint: str = "", url: str = "", **kwargs: Any
     ) -> Any:
         """Send an HTTP request and return the response.
 
@@ -86,6 +86,7 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
         Args:
             method (str): HTTP method, must be either 'get' or 'post' (case-insensitive).
             endpoint (str): API endpoint to append to the base URL. If empty, uses base_url directly.
+            url (str):  Optional. Full URL for the request.  Overrides base_url and endpoint if provided.
             **kwargs (Any): Additional parameters for the request, such as:
                 - params: URL parameters for GET requests
                 - data: Form data for POST requests
@@ -99,7 +100,10 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
         Raises:
             ValueError: If an unsupported HTTP method is specified.
         """
-        url = f"{self.base_url}/{endpoint}" if endpoint else self.base_url
+
+        if url == "": #Added to fix url
+            url = f"{self.base_url}/{endpoint}" if endpoint else self.base_url
+
 
         if method.lower() == "get":
             if "files" in kwargs:
