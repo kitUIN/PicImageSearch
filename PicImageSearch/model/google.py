@@ -76,7 +76,7 @@ class GoogleResponse(BaseSearchResponse[GoogleItem]):
             self.pages: list[str] = pages
         else:
             self.pages = [
-                f'https://www.google.com{i.attr("href")}'
+                f"https://www.google.com{i.attr('href')}"
                 for i in data.find('a[aria-label~="Page"]').items()
             ]
             self.pages.insert(0, kwargs["resp_url"])
