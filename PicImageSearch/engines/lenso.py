@@ -1,8 +1,7 @@
 import base64
 from json import loads as json_loads
-
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Literal, Optional, Union
 
 from ..model import LensoResponse
 from ..utils import read_file
@@ -17,22 +16,30 @@ class Lenso(BaseSearchEngine[LensoResponse]):
 
     Attributes:
         base_url (str): The base URL for Lenso API.
-
-    Supported search types (type parameter):
-        (default) It can be empty and then it will give all possible types, but in smaller quantities
-        - `similar`: Find visually similar images.
-        - `duplicates`: Find duplicate images.
-        - `places`:  Recognize places in the image.
-        - `related`: Find related images.
-
-    Supported sort options (sort parameter):
-        - `SMART` (default): Lenso's default smart sorting.
-        - `RANDOM`: Randomly sorted results.
-        - `QUALITY_DESCENDING`: Sort by quality, best to worst match.
-        - `QUALITY_ASCENDING`: Sort by quality, worst to best match.
-        - `DATE_DESCENDING`: Sort by date, newest to oldest.
-        - `DATE_ASCENDING`: Sort by date, oldest to newest.
+        SEARCH_TYPES (Literal): Valid search type options:
+            - "": All possible types in smaller quantities
+            - "duplicates": Find duplicate images
+            - "similar": Find visually similar images
+            - "places": Recognize places in the image
+            - "related": Find related content
+        SORT_TYPES (Literal): Valid sort type options:
+            - "SMART": Lenso's default smart sorting
+            - "RANDOM": Randomly sorted results
+            - "QUALITY_DESCENDING": Sort by quality, best to worst match
+            - "QUALITY_ASCENDING": Sort by quality, worst to best match
+            - "DATE_DESCENDING": Sort by date, newest to oldest
+            - "DATE_ASCENDING": Sort by date, oldest to newest
     """
+
+    SEARCH_TYPES = Literal["", "duplicates", "similar", "places", "related"]
+    SORT_TYPES = Literal[
+        "SMART",
+        "RANDOM",
+        "QUALITY_DESCENDING",
+        "QUALITY_ASCENDING",
+        "DATE_DESCENDING",
+        "DATE_ASCENDING",
+    ]
 
     def __init__(
         self,
@@ -46,7 +53,6 @@ class Lenso(BaseSearchEngine[LensoResponse]):
             **request_kwargs (Any): Additional arguments for network requests.
         """
         super().__init__(base_url, **request_kwargs)
-        self.base_url = base_url.rstrip('/')
 
     async def _upload_image(self, image_base64: str) -> str:
         """Uploads an image to Lenso API and retrieves the result hash.
@@ -62,24 +68,22 @@ class Lenso(BaseSearchEngine[LensoResponse]):
         """
         endpoint = "api/upload"
         payload = {"image": f"data:image/jpeg;base64,{image_base64}"}
-        resp = await self._make_request(
-            method="post",
-            endpoint=endpoint,
-            json=payload
-        )
+        resp = await self._make_request(method="post", endpoint=endpoint, json=payload)
         resp_json = json_loads(resp.text)
-        result_hash = resp_json.get('id')
-        if not result_hash:
-            raise RuntimeError(f"Lenso Upload failed or ID not found. Status Code: {resp.status_code}, Response: {resp.text}")
-        return result_hash
 
+        if result_hash := resp_json.get("id"):
+            return result_hash
+
+        raise RuntimeError(
+            f"Lenso Upload failed or ID not found. Status Code: {resp.status_code}, Response: {resp.text}"
+        )
 
     async def search(
         self,
         url: Optional[str] = None,
         file: Union[str, bytes, Path, None] = None,
-        search_type: str = "",
-        sort_type: str = "SMART",
+        search_type: SEARCH_TYPES = "",
+        sort_type: SORT_TYPES = "SMART",
         **kwargs: Any,
     ) -> LensoResponse:
         """Performs a reverse image search on Lenso.
@@ -91,42 +95,45 @@ class Lenso(BaseSearchEngine[LensoResponse]):
         Args:
             url (Optional[str]): URL of the image to search.
             file (Union[str, bytes, Path, None]): Local image file, can be a path string, bytes data, or Path object.
-            search_type (str): Type of search to perform. Options are 'similar', 'duplicates', 'places', 'related'. Defaults to 'similar'.
-            sort_type (str): Sorting method for results. Options are 'SMART', 'RANDOM', 'QUALITY_DESCENDING', 'QUALITY_ASCENDING', 'DATE_DESCENDING', 'DATE_ASCENDING'. Defaults to 'SMART'.
+            search_type (str): Type of search to perform. Must be one of SEARCH_TYPES.
+            sort_type (str): Sorting method for results. Must be one of SORT_TYPES.
             **kwargs (Any): Additional arguments passed to the parent class.
-
-        Returns:
-            LensoResponse: An object containing:
-                - Search results from Lenso API
-                - Metadata about the search
 
         Raises:
             ValueError: If neither `url` nor `file` is provided.
-            RuntimeError: If image upload to Lenso fails.
+            ValueError: If `search_type` or `sort_type` is invalid.
+            RuntimeError: If image upload fails or response is invalid.
         """
         self._validate_args(url, file)
+
+        if search_type and search_type not in self.SEARCH_TYPES.__args__:
+            valid_types = '", "'.join(t for t in self.SEARCH_TYPES.__args__ if t)
+            raise ValueError(
+                f'Invalid search_type. Must be empty or one of: "{valid_types}"'
+            )
+
+        if sort_type not in self.SORT_TYPES.__args__:
+            valid_sorts = '", "'.join(self.SORT_TYPES.__args__)
+            raise ValueError(f'Invalid sort_type. Must be one of: "{valid_sorts}"')
 
         image_base64: str = ""
         result_hash: str = ""
 
         if url:
             image_bytes = await self.download(url)
-            image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+            image_base64 = base64.b64encode(image_bytes).decode("utf-8")
             result_hash = await self._upload_image(image_base64)
 
         elif file:
             image_bytes = read_file(file)
-            image_base64 = base64.b64encode(image_bytes).decode('utf-8')
+            image_base64 = base64.b64encode(image_bytes).decode("utf-8")
             result_hash = await self._upload_image(image_base64)
-        else:
-            raise ValueError("Either 'url' or 'file' must be provided for Lenso search.")
-
 
         search_endpoint = "api/search"
         search_payload = {
             "image": {
                 "id": result_hash,
-                "data": f"data:image/jpeg;base64,{image_base64}"
+                "data": f"data:image/jpeg;base64,{image_base64}",
             },
             "effects": {},
             "selection": {},
@@ -136,14 +143,13 @@ class Lenso(BaseSearchEngine[LensoResponse]):
             "type": search_type,
             "sort": sort_type,
             "seed": 0,
-            "facial_search_consent": 0
+            "facial_search_consent": 0,
         }
 
-
         resp = await self._make_request(
-            method="post",
-            endpoint=search_endpoint,
-            json=search_payload
+            method="post", endpoint=search_endpoint, json=search_payload
         )
+        resp_json = json_loads(resp.text)
+        resp_url = f"{self.base_url}/en/results/{result_hash}"
 
-        return LensoResponse(json_loads(resp.text), resp.url)
+        return LensoResponse(resp_json, resp_url)

@@ -17,12 +17,12 @@ from . import (
     EHentai,
     Google,
     Iqdb,
+    Lenso,
     Network,
     SauceNAO,
     Tineye,
     TraceMoe,
     Yandex,
-    Lenso,
 )
 
 
@@ -77,12 +77,12 @@ syncify(  # type: ignore
     EHentai,
     Google,
     Iqdb,
+    Lenso,
     Network,
     SauceNAO,
     Tineye,
     TraceMoe,
     Yandex,
-    Lenso,
 )
 
 __all__ = [
@@ -93,10 +93,10 @@ __all__ = [
     "EHentai",
     "Google",
     "Iqdb",
+    "Lenso",
     "Network",
     "SauceNAO",
     "Tineye",
     "TraceMoe",
     "Yandex",
-    "Lenso",
 ]
