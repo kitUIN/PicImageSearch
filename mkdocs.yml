@@ -52,6 +52,7 @@ nav:
         - EHentai: engines/ehentai.md
         - Google: engines/google.md
         - IQDB: engines/iqdb.md
+        - Lenso: engines/lenso.md
         - SauceNAO: engines/saucenao.md
         - Tineye: engines/tineye.md
         - TraceMoe: engines/tracemoe.md
@@ -64,6 +65,7 @@ nav:
         - EHentai: model/ehentai.md
         - Google: model/google.md
         - IQDB: model/iqdb.md
+        - Lenso: model/lenso.md
         - SauceNAO: model/saucenao.md
         - Tineye: model/tineye.md
         - TraceMoe: model/tracemoe.md
