@@ -96,11 +96,11 @@ class SauceNAOItem(BaseSearchItem):
             str: The constructed URL to the source content, or empty string if no URL can be built.
         """
         if "pixiv_id" in data:
-            return f'https://www.pixiv.net/artworks/{data["pixiv_id"]}'
+            return f"https://www.pixiv.net/artworks/{data['pixiv_id']}"
         elif "pawoo_id" in data:
-            return f'https://pawoo.net/@{data["pawoo_user_acct"]}/{data["pawoo_id"]}'
+            return f"https://pawoo.net/@{data['pawoo_user_acct']}/{data['pawoo_id']}"
         elif "getchu_id" in data:
-            return f'https://www.getchu.com/soft.phtml?id={data["getchu_id"]}'
+            return f"https://www.getchu.com/soft.phtml?id={data['getchu_id']}"
         elif "ext_urls" in data:
             return data["ext_urls"][0]  # type: ignore
         return ""
@@ -165,17 +165,17 @@ class SauceNAOItem(BaseSearchItem):
             str: The constructed URL to the author's profile, or empty string if no URL can be built.
         """
         if "pixiv_id" in data:
-            return f'https://www.pixiv.net/users/{data["member_id"]}'
+            return f"https://www.pixiv.net/users/{data['member_id']}"
         elif "seiga_id" in data:
-            return f'https://seiga.nicovideo.jp/user/illust/{data["member_id"]}'
+            return f"https://seiga.nicovideo.jp/user/illust/{data['member_id']}"
         elif "nijie_id" in data:
-            return f'https://nijie.info/members.php?id={data["member_id"]}'
+            return f"https://nijie.info/members.php?id={data['member_id']}"
         elif "bcy_id" in data:
-            return f'https://bcy.net/u/{data["member_id"]}'
+            return f"https://bcy.net/u/{data['member_id']}"
         elif "tweet_id" in data:
-            return f'https://twitter.com/intent/user?user_id={data["twitter_user_id"]}'
+            return f"https://twitter.com/intent/user?user_id={data['twitter_user_id']}"
         elif "pawoo_user_acct" in data:
-            return f'https://pawoo.net/@{data["pawoo_user_acct"]}'
+            return f"https://pawoo.net/@{data['pawoo_user_acct']}"
         return str(data.get("author_url", ""))
 
 
@@ -230,6 +230,5 @@ class SauceNAOResponse(BaseSearchResponse[SauceNAOItem]):
         self.minimum_similarity: Optional[float] = header.get("minimum_similarity")
         self.results_returned: Optional[int] = header.get("results_returned")
         self.url: str = (
-            f"https://saucenao.com/search.php?url="
-            f'https://saucenao.com{header.get("query_image_display")}'
+            f"https://saucenao.com/search.php?url=https://saucenao.com{header.get('query_image_display')}"
         )

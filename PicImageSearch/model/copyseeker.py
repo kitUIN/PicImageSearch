@@ -26,7 +26,6 @@ class CopyseekerItem(BaseSearchItem):
         super().__init__(data, **kwargs)
 
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
-
         self.url: str = data["url"]
         self.title: str = data["title"]
         self.thumbnail: str = data.get("mainImage", "")
