@@ -93,7 +93,7 @@ PicImageSearch — это мощная библиотека Python для пои
 
     ---
 
-  Lenso.ai - AI Reverse Image Search
+    Lenso.ai - AI Reverse Image Search
 
 - ![SauceNAO](images/saucenao.png){ .lg .middle } SauceNAO
 

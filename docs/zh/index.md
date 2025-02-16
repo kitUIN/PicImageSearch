@@ -93,7 +93,7 @@ PicImageSearch 是一个强大的 Python 图片搜索库，它整合了多个主
 
     ---
 
-  Lenso.ai - AI Reverse Image Search
+    Lenso.ai - AI Reverse Image Search
 
 - ![SauceNAO](images/saucenao.png){ .lg .middle } SauceNAO
 

@@ -93,7 +93,7 @@ Currently, the project is mainly maintained by Neko Aria, continuously providing
 
     ---
 
-  Lenso.ai - AI Reverse Image Search
+    Lenso.ai - AI Reverse Image Search
 
 - ![SauceNAO](images/saucenao.png){ .lg .middle } SauceNAO
 
