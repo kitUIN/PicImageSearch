@@ -55,7 +55,7 @@ dev = [
     "loguru>=0.7.3",
     "mypy>=1.15.0",
     "pre-commit>=4.1.0",
-    "ruff>=0.9.7",
+    "ruff>=0.9.9",
 ]
 
 [tool.mypy]
