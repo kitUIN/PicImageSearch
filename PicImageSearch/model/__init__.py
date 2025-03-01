@@ -4,6 +4,7 @@ from .bing import BingItem, BingResponse
 from .copyseeker import CopyseekerItem, CopyseekerResponse
 from .ehentai import EHentaiItem, EHentaiResponse
 from .google import GoogleItem, GoogleResponse
+from .googleLens import GoogleLensItem, GoogleLensResponse, GoogleLensExactMatchesResponse, GoogleLensExactMatchesItem, GoogleLensRelatedSearchItem
 from .iqdb import IqdbItem, IqdbResponse
 from .lenso import LensoResponse, LensoResultItem, LensoURLItem
 from .saucenao import SauceNAOItem, SauceNAOResponse
@@ -24,6 +25,11 @@ __all__ = [
     "EHentaiResponse",
     "GoogleItem",
     "GoogleResponse",
+    "GoogleLensItem",
+    "GoogleLensResponse",
+    "GoogleLensExactMatchesResponse",
+    "GoogleLensExactMatchesItem",
+    "GoogleLensRelatedSearchItem",
     "IqdbItem",
     "IqdbResponse",
     "LensoResponse",
