@@ -43,6 +43,9 @@ socks = ["socksio>=1.0.0"]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
+[tool.basedpyright]
+pythonVersion = "3.9"
+
 [tool.pdm]
 version = { source = "file", path = "PicImageSearch/__init__.py" }
 
@@ -51,20 +54,12 @@ includes = ["PicImageSearch"]
 
 [tool.pdm.dev-dependencies]
 dev = [
+    "basedpyright>=1.28.1",
     "black>=24.10.0",
     "loguru>=0.7.3",
-    "mypy>=1.14.1",
     "pre-commit>=4.1.0",
     "ruff>=0.9.4",
 ]
-
-[tool.mypy]
-python_version = "3.9"
-ignore_missing_imports = true
-implicit_reexport = true
-pretty = true
-show_error_codes = true
-strict = true
 
 [tool.ruff]
 target-version = "py39"
