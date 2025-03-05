@@ -22,10 +22,16 @@ class GoogleLens(
 
     Attributes:
         base_url (str): The base URL for Google Lens searches.
+        search_url (str): The base URL for Google search results.
         hl_param (str): The hl parameter for locale settings.
         search_type (str): The type of search to perform ('all', 'products', 'visual_matches', 'exact_matches').
         q (Optional[str]): Optional query parameter for search.
     """
+
+    search_url: str
+    hl_param: str
+    search_type: str
+    q: Optional[str]
 
     def __init__(
         self,

@@ -36,13 +36,13 @@ async def test_async() -> None:
 def test_sync() -> None:
     google_lens_sync_all = GoogleLensSync(proxies=PROXIES, search_type="all", q="anime")
     resp_sync_all = google_lens_sync_all.search(url=url)
-    show_result(resp_sync_all, search_type="sync_all")  # type: ignore
+    show_result(resp_sync_all, search_type="sync_all")  # pyright: ignore
 
     google_lens_sync_exact = GoogleLensSync(
         proxies=PROXIES, search_type="exact_matches"
     )
     resp_sync_exact = google_lens_sync_exact.search(file=file)
-    show_result(resp_sync_exact, search_type="sync_exact")  # type: ignore
+    show_result(resp_sync_exact, search_type="sync_exact")  # pyright: ignore
 
 
 def show_result(

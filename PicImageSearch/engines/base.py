@@ -19,6 +19,8 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
         base_url (str): The base URL endpoint for the search engine's API.
     """
 
+    base_url: str
+
     def __init__(self, base_url: str, **request_kwargs: Any):
         """Initialize the base search engine.
 
