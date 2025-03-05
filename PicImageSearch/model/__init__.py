@@ -4,7 +4,13 @@ from .bing import BingItem, BingResponse
 from .copyseeker import CopyseekerItem, CopyseekerResponse
 from .ehentai import EHentaiItem, EHentaiResponse
 from .google import GoogleItem, GoogleResponse
-from .googleLens import GoogleLensItem, GoogleLensResponse, GoogleLensExactMatchesResponse, GoogleLensExactMatchesItem, GoogleLensRelatedSearchItem
+from .googleLens import (
+    GoogleLensExactMatchesItem,
+    GoogleLensExactMatchesResponse,
+    GoogleLensItem,
+    GoogleLensRelatedSearchItem,
+    GoogleLensResponse,
+)
 from .iqdb import IqdbItem, IqdbResponse
 from .saucenao import SauceNAOItem, SauceNAOResponse
 from .tineye import TineyeItem, TineyeResponse
