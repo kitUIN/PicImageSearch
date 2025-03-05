@@ -4,7 +4,7 @@ from .bing import BingItem, BingResponse
 from .copyseeker import CopyseekerItem, CopyseekerResponse
 from .ehentai import EHentaiItem, EHentaiResponse
 from .google import GoogleItem, GoogleResponse
-from .googleLens import (
+from .google_lens import (
     GoogleLensExactMatchesItem,
     GoogleLensExactMatchesResponse,
     GoogleLensItem,
