@@ -1,5 +1,5 @@
 import asyncio
-from typing import Union
+from typing import Optional, Union
 
 from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import GoogleLens, Network
@@ -9,40 +9,81 @@ from PicImageSearch.sync import GoogleLens as GoogleLensSync
 url = f"{IMAGE_BASE_URL}/test05.jpg"
 file = get_image_path("test05.jpg")
 
+# Note: Google Lens search requires cookies contain the `NID`
+cookies: Optional[str] = None
+
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=PROXIES) as client:
+    async with Network(proxies=PROXIES, cookies=cookies) as client:
         google_lens_all = GoogleLens(
             client=client, search_type="all", q="anime", hl="en", country="US"
         )
         resp_all = await google_lens_all.search(url=url)
         show_result(resp_all, search_type="all")
 
-        # google_lens_products = GoogleLens(client=client, search_type='products', q='anime', hl='en', country='GB')
+        # google_lens_products = GoogleLens(
+        #     client=client, search_type="products", q="anime", hl="en", country="GB"
+        # )
         # resp_products = await google_lens_products.search(file=file)
-        # show_result(resp_products, search_type='products')
+        # show_result(resp_products, search_type="products")
 
-        # google_lens_visual = GoogleLens(client=client, search_type='visual_matches', hl='zh', country='CN')
+        # google_lens_visual = GoogleLens(
+        #     client=client, search_type="visual_matches", hl="zh", country="CN"
+        # )
         # resp_visual = await google_lens_visual.search(url=url)
-        # show_result(resp_visual, search_type='visual_matches')
+        # show_result(resp_visual, search_type="visual_matches")
 
-        # google_lens_exact = GoogleLens(client=client, search_type='exact_matches', hl='ru', country='RU')
+        # google_lens_exact = GoogleLens(
+        #     client=client, search_type="exact_matches", hl="ru", country="RU"
+        # )
         # resp_exact = await google_lens_exact.search(file=file)
-        # show_result(resp_exact, search_type='exact_matches')
+        # show_result(resp_exact, search_type="exact_matches")
 
 
 @logger.catch()
 def test_sync() -> None:
-    google_lens_sync_all = GoogleLensSync(proxies=PROXIES, search_type="all", q="anime")
-    resp_sync_all = google_lens_sync_all.search(url=url)
-    show_result(resp_sync_all, search_type="sync_all")  # pyright: ignore
-
-    google_lens_sync_exact = GoogleLensSync(
-        proxies=PROXIES, search_type="exact_matches"
+    google_lens_all = GoogleLensSync(
+        proxies=PROXIES,
+        cookies=cookies,
+        search_type="all",
+        q="anime",
+        hl="en",
+        country="US",
     )
-    resp_sync_exact = google_lens_sync_exact.search(file=file)
-    show_result(resp_sync_exact, search_type="sync_exact")  # pyright: ignore
+    resp_all = google_lens_all.search(url=url)
+    show_result(resp_all, search_type="sync_all")  # pyright: ignore
+
+    # google_lens_products = GoogleLensSync(
+    #     proxies=PROXIES,
+    #     cookies=cookies,
+    #     search_type="products",
+    #     q="anime",
+    #     hl="en",
+    #     country="GB",
+    # )
+    # resp_products = google_lens_products.search(file=file)
+    # show_result(resp_products, search_type="products")  # pyright: ignore
+
+    # google_lens_visual = GoogleLensSync(
+    #     proxies=PROXIES,
+    #     cookies=cookies,
+    #     search_type="visual_matches",
+    #     hl="zh",
+    #     country="CN",
+    # )
+    # resp_visual = google_lens_visual.search(url=url)
+    # show_result(resp_visual, search_type="visual_matches")  # pyright: ignore
+
+    # google_lens_exact = GoogleLensSync(
+    #     proxies=PROXIES,
+    #     cookies=cookies,
+    #     search_type="exact_matches",
+    #     hl="ru",
+    #     country="RU",
+    # )
+    # resp_exact = google_lens_exact.search(file=file)
+    # show_result(resp_exact, search_type="exact_matches")  # pyright: ignore
 
 
 def show_result(
