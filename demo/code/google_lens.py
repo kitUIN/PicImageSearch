@@ -9,7 +9,7 @@ from PicImageSearch.sync import GoogleLens as GoogleLensSync
 url = f"{IMAGE_BASE_URL}/test05.jpg"
 file = get_image_path("test05.jpg")
 
-# Note: Google Lens search requires cookies contain the `NID`
+# Note: Google search requires the `NID` cookie (when NOT logged into any Google account), expected format: `NID=...`
 cookies: Optional[str] = None
 
 
