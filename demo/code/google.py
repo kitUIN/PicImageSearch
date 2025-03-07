@@ -10,7 +10,7 @@ url = f"{IMAGE_BASE_URL}/test03.jpg"
 file = get_image_path("test03.jpg")
 base_url = "https://www.google.co.jp"
 
-# Note: Google search requires cookies contain the `NID`
+# Note: Google search requires the `NID` cookie (when NOT logged into any Google account), expected format: `NID=...`
 cookies: Optional[str] = None
 
 
