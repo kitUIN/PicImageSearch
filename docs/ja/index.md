@@ -89,6 +89,12 @@ PicImageSearch は強力な Python 画像検索ライブラリで、複数の主
 
     Multi-service image search
 
+- ![Lenso](images/lenso.png){ .lg .middle } Lenso
+
+    ---
+
+    Lenso.ai - AI Reverse Image Search
+
 - ![SauceNAO](images/saucenao.png){ .lg .middle } SauceNAO
 
     ---

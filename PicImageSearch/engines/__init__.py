@@ -6,6 +6,7 @@ from .ehentai import EHentai
 from .google import Google
 from .google_lens import GoogleLens
 from .iqdb import Iqdb
+from .lenso import Lenso
 from .saucenao import SauceNAO
 from .tineye import Tineye
 from .tracemoe import TraceMoe
@@ -20,6 +21,7 @@ __all__ = [
     "Google",
     "GoogleLens",
     "Iqdb",
+    "Lenso",
     "SauceNAO",
     "Tineye",
     "TraceMoe",

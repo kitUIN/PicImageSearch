@@ -12,6 +12,7 @@ from .google_lens import (
     GoogleLensResponse,
 )
 from .iqdb import IqdbItem, IqdbResponse
+from .lenso import LensoResponse, LensoResultItem, LensoURLItem
 from .saucenao import SauceNAOItem, SauceNAOResponse
 from .tineye import TineyeItem, TineyeResponse
 from .tracemoe import TraceMoeItem, TraceMoeMe, TraceMoeResponse
@@ -37,6 +38,9 @@ __all__ = [
     "GoogleLensRelatedSearchItem",
     "IqdbItem",
     "IqdbResponse",
+    "LensoResponse",
+    "LensoResultItem",
+    "LensoURLItem",
     "SauceNAOItem",
     "SauceNAOResponse",
     "TineyeItem",

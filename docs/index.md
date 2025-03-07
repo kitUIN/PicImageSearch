@@ -89,6 +89,12 @@ Currently, the project is mainly maintained by Neko Aria, continuously providing
 
     Multi-service image search
 
+- ![Lenso](images/lenso.png){ .lg .middle } Lenso
+
+    ---
+
+    Lenso.ai - AI Reverse Image Search
+
 - ![SauceNAO](images/saucenao.png){ .lg .middle } SauceNAO
 
     ---

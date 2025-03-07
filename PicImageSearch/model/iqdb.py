@@ -154,7 +154,7 @@ class IqdbResponse(BaseSearchResponse[IqdbItem]):
             else "https://3d.iqdb.org"
         )
         tables = list(data("#pages > div > table").items())
-        self.url = f'{host}/?url=https://iqdb.org{tables[0].find("img").attr("src")}'
+        self.url = f"{host}/?url=https://iqdb.org{tables[0].find('img').attr('src')}"
         if len(tables) > 1:
             tables = tables[1:]
             self.raw.extend([IqdbItem(i) for i in tables])
