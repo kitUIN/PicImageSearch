@@ -17,6 +17,7 @@ class GoogleItem(BaseSearchItem):
         title (str): The title text of the search result.
         url (str): The URL link to the search result page.
         thumbnail (Optional[str]): Base64 encoded thumbnail image, if available.
+        content (str): Descriptive text or context surrounding the image.
     """
 
     def __init__(self, data: PyQuery, thumbnail: Optional[str]):
@@ -33,6 +34,7 @@ class GoogleItem(BaseSearchItem):
         self.title: str = data("h3").text()
         self.url: str = data("a").eq(0).attr("href")
         self.thumbnail: Optional[str] = kwargs.get("thumbnail")  # type: ignore
+        self.content: str = data("div.VwiC3b").text()
 
 
 class GoogleResponse(BaseSearchResponse[GoogleItem]):
