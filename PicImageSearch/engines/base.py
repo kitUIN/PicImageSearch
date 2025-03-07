@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any, Generic, Optional, TypeVar, Union
 
 from ..model.base import BaseSearchResponse
-from ..network import HandOver
+from ..network import RESP, HandOver
 
 ResponseT = TypeVar("ResponseT")
 T = TypeVar("T", bound=BaseSearchResponse[Any])
@@ -18,6 +18,8 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
     Attributes:
         base_url (str): The base URL endpoint for the search engine's API.
     """
+
+    base_url: str
 
     def __init__(self, base_url: str, **request_kwargs: Any):
         """Initialize the base search engine.
@@ -78,7 +80,7 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
 
     async def _make_request(
         self, method: str, endpoint: str = "", **kwargs: Any
-    ) -> Any:
+    ) -> RESP:
         """Send an HTTP request and return the response.
 
         A utility method that handles both GET and POST requests to the search engine's API.
@@ -94,7 +96,10 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
                 - etc.
 
         Returns:
-            Any: The response from the server. Type depends on the specific request.
+            RESP: A dataclass containing:
+                - text: The response body as text
+                - url: The final URL after any redirects
+                - status_code: The HTTP status code
 
         Raises:
             ValueError: If an unsupported HTTP method is specified.
