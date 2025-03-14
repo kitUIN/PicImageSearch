@@ -38,19 +38,12 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
             list[DomainInfo]: A list of domain information objects containing domain name,
             match count and optional tag.
         """
-        resp = await self._make_request(
-            method="get", endpoint=f"api/v1/search/get_domains/{query_hash}"
-        )
+        resp = await self._send_request(method="get", endpoint=f"api/v1/search/get_domains/{query_hash}")
         resp_json = json_loads(resp.text)
 
-        return [
-            DomainInfo.from_raw_data(domain_data)
-            for domain_data in resp_json.get("domains", [])
-        ]
+        return [DomainInfo.from_raw_data(domain_data) for domain_data in resp_json.get("domains", [])]
 
-    async def _navigate_page(
-        self, resp: TineyeResponse, offset: int
-    ) -> Optional[TineyeResponse]:
+    async def _navigate_page(self, resp: TineyeResponse, offset: int) -> Optional[TineyeResponse]:
         """Navigates to a specific page in the Tineye search results.
 
         This internal method handles the pagination of Tineye results.  It calculates the URL for the target page
@@ -72,7 +65,7 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
         api_url = resp.url.replace("search/", "api/v1/result_json/").replace(
             f"page={resp.page_number}", f"page={next_page_number}"
         )
-        _resp = await self.get(api_url)
+        _resp = await self._send_request(method="get", url=api_url)
         resp_json = json_loads(_resp.text)
         resp_json.update({"status_code": _resp.status_code})
 
@@ -150,7 +143,7 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
         Note:
             - Only one of `url` or `file` should be provided
         """
-        self._validate_args(url, file)
+        self._ensure_search_input(url, file)
 
         files: Optional[dict[str, Any]] = None
         params: dict[str, Any] = {
@@ -168,7 +161,7 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
         elif file:
             files = {"image": read_file(file)}
 
-        resp = await self._make_request(
+        resp = await self._send_request(
             method="post",
             endpoint="api/v1/result_json/",
             data=params,

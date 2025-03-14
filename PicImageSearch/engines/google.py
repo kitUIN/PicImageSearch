@@ -30,9 +30,7 @@ class Google(BaseSearchEngine[GoogleResponse]):
         base_url = f"{base_url}/searchbyimage"
         super().__init__(base_url, **request_kwargs)
 
-    async def _navigate_page(
-        self, resp: GoogleResponse, offset: int
-    ) -> Optional[GoogleResponse]:
+    async def _navigate_page(self, resp: GoogleResponse, offset: int) -> Optional[GoogleResponse]:
         """Navigates to a specific page in search results.
 
         This method handles both forward and backward navigation through search results.
@@ -56,7 +54,7 @@ class Google(BaseSearchEngine[GoogleResponse]):
         if next_page_number < 1 or next_page_number > len(resp.pages):
             return None
 
-        _resp = await self.get(resp.pages[next_page_number - 1])
+        _resp = await self._send_request(method="get", url=resp.pages[next_page_number - 1])
         return GoogleResponse(_resp.text, _resp.url, next_page_number, resp.pages)
 
     async def pre_page(self, resp: GoogleResponse) -> Optional[GoogleResponse]:
@@ -104,7 +102,7 @@ class Google(BaseSearchEngine[GoogleResponse]):
         if resp and resp.raw:
             selected = next((i for i in resp.raw if i.thumbnail), resp.raw[0])
             if not selected.thumbnail and len(resp.raw) > 1:
-                _resp = await self.get(resp.url)
+                _resp = await self._send_request(method="get", url=resp.url)
                 return GoogleResponse(_resp.text, _resp.url)
         return resp
 
@@ -143,16 +141,16 @@ class Google(BaseSearchEngine[GoogleResponse]):
             - The method automatically ensures thumbnail data is present in results
             - Safe search is disabled by default
         """
-        self._validate_args(url, file)
+        self._ensure_search_input(url, file)
 
         params: dict[str, Any] = {"sbisrc": 1, "safe": "off"}
 
         if url:
             params["image_url"] = url
-            resp = await self._make_request(method="get", params=params)
+            resp = await self._send_request(method="get", params=params)
         elif file:
             files = {"encoded_image": read_file(file)}
-            resp = await self._make_request(
+            resp = await self._send_request(
                 method="post",
                 endpoint="upload",
                 data=params,

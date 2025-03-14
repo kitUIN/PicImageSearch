@@ -119,7 +119,7 @@ class SauceNAO(BaseSearchEngine[SauceNAOResponse]):
                 * 4 searches per 30 seconds
             - Results are sorted by similarity score in descending order.
         """
-        self._validate_args(url, file)
+        self._ensure_search_input(url, file)
 
         params = self.params
         files: Optional[dict[str, Any]] = None
@@ -129,7 +129,7 @@ class SauceNAO(BaseSearchEngine[SauceNAOResponse]):
         elif file:
             files = {"file": read_file(file)}
 
-        resp = await self._make_request(
+        resp = await self._send_request(
             method="post",
             params=params,
             files=files,

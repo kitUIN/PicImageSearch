@@ -70,7 +70,7 @@ class Iqdb(BaseSearchEngine[IqdbResponse]):
                 - is_3d=True: Searches real-life images on 3d.iqdb.org
             - The force_gray option can help find visually similar images regardless of coloring
         """
-        self._validate_args(url, file)
+        self._ensure_search_input(url, file)
 
         data: dict[str, Any] = {}
         files: Optional[dict[str, Any]] = None
@@ -83,7 +83,7 @@ class Iqdb(BaseSearchEngine[IqdbResponse]):
         elif file:
             files = {"file": read_file(file)}
 
-        resp = await self._make_request(
+        resp = await self._send_request(
             method="post",
             data=data,
             files=files,

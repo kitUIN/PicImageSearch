@@ -91,7 +91,7 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
             - The search process involves multiple HTTP requests to BaiDu's API.
             - The response format varies depending on whether matches are found.
         """
-        self._validate_args(url, file)
+        self._ensure_search_input(url, file)
 
         params = {"from": "pc"}
         files: Optional[dict[str, Any]] = None
@@ -101,7 +101,7 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
         elif file:
             files = {"image": read_file(file)}
 
-        resp = await self._make_request(
+        resp = await self._send_request(
             method="post",
             endpoint="upload",
             params=params,
@@ -111,7 +111,7 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
         if not data_url:
             return BaiDuResponse({}, resp.url)
 
-        resp = await self.get(data_url)
+        resp = await self._send_request(method="get", url=data_url)
 
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp.text, parser=utf8_parser))
@@ -122,7 +122,7 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
                 return BaiDuResponse({}, data_url)
             if card.get("cardName") == "simipic":
                 next_url = card["tplData"]["firstUrl"]
-                resp = await self.get(next_url)
+                resp = await self._send_request(method="get", url=next_url)
                 return BaiDuResponse(json_loads(resp.text), data_url)
 
         return BaiDuResponse({}, data_url)

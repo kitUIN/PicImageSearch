@@ -78,7 +78,7 @@ class Ascii2D(BaseSearchEngine[Ascii2DResponse]):
             - Only one of `url` or `file` should be provided
             - Feature search (bovw) may take longer to process
         """
-        self._validate_args(url, file)
+        self._ensure_search_input(url, file)
 
         data: Optional[dict[str, Any]] = None
         files: Optional[dict[str, Any]] = None
@@ -89,7 +89,7 @@ class Ascii2D(BaseSearchEngine[Ascii2DResponse]):
         elif file:
             files = {"file": read_file(file)}
 
-        resp = await self._make_request(
+        resp = await self._send_request(
             method="post",
             endpoint=endpoint,
             data=data,
@@ -98,6 +98,6 @@ class Ascii2D(BaseSearchEngine[Ascii2DResponse]):
 
         # If 'bovw' is enabled, switch to feature search mode.
         if self.bovw:
-            resp = await self.get(resp.url.replace("/color/", "/bovw/"))
+            resp = await self._send_request(method="get", url=resp.url.replace("/color/", "/bovw/"))
 
         return Ascii2DResponse(resp.text, resp.url)

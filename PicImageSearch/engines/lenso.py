@@ -68,7 +68,7 @@ class Lenso(BaseSearchEngine[LensoResponse]):
         """
         endpoint = "api/upload"
         payload = {"image": f"data:image/jpeg;base64,{image_base64}"}
-        resp = await self._make_request(method="post", endpoint=endpoint, json=payload)
+        resp = await self._send_request(method="post", endpoint=endpoint, json=payload)
         resp_json = json_loads(resp.text)
 
         if result_hash := resp_json.get("id"):
@@ -104,13 +104,11 @@ class Lenso(BaseSearchEngine[LensoResponse]):
             ValueError: If `search_type` or `sort_type` is invalid.
             RuntimeError: If image upload fails or response is invalid.
         """
-        self._validate_args(url, file)
+        self._ensure_search_input(url, file)
 
         if search_type and search_type not in self.SEARCH_TYPES.__args__:
             valid_types = '", "'.join(t for t in self.SEARCH_TYPES.__args__ if t)
-            raise ValueError(
-                f'Invalid search_type. Must be empty or one of: "{valid_types}"'
-            )
+            raise ValueError(f'Invalid search_type. Must be empty or one of: "{valid_types}"')
 
         if sort_type not in self.SORT_TYPES.__args__:
             valid_sorts = '", "'.join(self.SORT_TYPES.__args__)
@@ -146,9 +144,7 @@ class Lenso(BaseSearchEngine[LensoResponse]):
             "facial_search_consent": 0,
         }
 
-        resp = await self._make_request(
-            method="post", endpoint=search_endpoint, json=search_payload
-        )
+        resp = await self._send_request(method="post", endpoint=search_endpoint, json=search_payload)
         resp_json = json_loads(resp.text)
         resp_url = f"{self.base_url}/en/results/{result_hash}"
 

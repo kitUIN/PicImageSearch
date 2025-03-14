@@ -9,9 +9,7 @@ from ..utils import read_file
 from .base import BaseSearchEngine
 
 
-class GoogleLens(
-    BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatchesResponse]]
-):
+class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatchesResponse]]):
     """API client for the Google Lens image search engine.
 
     Supported search types:
@@ -35,9 +33,7 @@ class GoogleLens(
 
     def __init__(
         self,
-        search_type: Literal[
-            "all", "products", "visual_matches", "exact_matches"
-        ] = "all",
+        search_type: Literal["all", "products", "visual_matches", "exact_matches"] = "all",
         q: Optional[str] = None,
         hl: str = "en",
         country: str = "US",
@@ -66,13 +62,9 @@ class GoogleLens(
 
         valid_search_types = ["all", "products", "visual_matches", "exact_matches"]
         if search_type not in valid_search_types:
-            raise ValueError(
-                f"Invalid search_type: {search_type}. Must be one of {valid_search_types}"
-            )
+            raise ValueError(f"Invalid search_type: {search_type}. Must be one of {valid_search_types}")
         if search_type == "exact_matches" and q:
-            raise ValueError(
-                "Query parameter 'q' is not applicable for 'exact_matches' search_type."
-            )
+            raise ValueError("Query parameter 'q' is not applicable for 'exact_matches' search_type.")
 
         self.hl_param = f"{hl}-{country.upper()}"
         self.search_type = search_type
@@ -102,7 +94,7 @@ class GoogleLens(
             endpoint = "v3/upload"
             filename = "image.jpg" if isinstance(file, bytes) else Path(file).name
             files = {"encoded_image": (filename, read_file(file), "image/jpeg")}
-            resp = await self._make_request(
+            resp = await self._send_request(
                 method="post",
                 endpoint=endpoint,
                 params=params,
@@ -111,7 +103,7 @@ class GoogleLens(
         elif url:
             endpoint = "uploadbyurl"
             params["url"] = url
-            resp = await self._make_request(
+            resp = await self._send_request(
                 method="post" if file else "get",
                 endpoint=endpoint,
                 params=params,
@@ -131,7 +123,7 @@ class GoogleLens(
                 exact_link = dom(f'a[href*="udm={udm_value}"]').attr("href") or ""
 
         if exact_link:
-            return await self.get(url=f"{self.search_url}{exact_link}")
+            return await self._send_request(method="get", url=f"{self.search_url}{exact_link}")
         return resp
 
     async def search(
@@ -159,7 +151,7 @@ class GoogleLens(
         Raises:
             ValueError: If neither `url` nor `file` is provided.
         """
-        self._validate_args(url, file)
+        self._ensure_search_input(url, file)
         if q is not None and self.search_type == "exact_matches":
             q = None
 

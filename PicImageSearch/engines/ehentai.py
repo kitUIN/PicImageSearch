@@ -80,7 +80,7 @@ class EHentai(BaseSearchEngine[EHentaiResponse]):
             - For ExHentai searches, valid cookies must be provided in the request_kwargs.
             - Search behavior is affected by the covers, similar, and exp flags set during initialization.
         """
-        self._validate_args(url, file)
+        self._ensure_search_input(url, file)
 
         endpoint = "upld/image_lookup.php" if self.is_ex else "image_lookup.php"
         data: dict[str, Any] = {"f_sfile": "File Search"}
@@ -98,7 +98,7 @@ class EHentai(BaseSearchEngine[EHentaiResponse]):
         if self.exp:
             data["fs_exp"] = "on"
 
-        resp = await self._make_request(
+        resp = await self._send_request(
             method="post",
             endpoint=endpoint,
             data=data,

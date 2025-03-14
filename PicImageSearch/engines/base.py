@@ -65,8 +65,8 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
         raise NotImplementedError
 
     @staticmethod
-    def _validate_args(url: Optional[str], file: Union[str, bytes, Path, None]) -> None:
-        """Validate the arguments for the search method.
+    def _ensure_search_input(url: Optional[str], file: Union[str, bytes, Path, None]) -> None:
+        """Ensure valid input parameters for the search operation.
 
         Args:
             url (Optional[str]): URL of the image to search.
@@ -78,9 +78,7 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
         if not url and not file:
             raise ValueError("Either 'url' or 'file' must be provided")
 
-    async def _make_request(
-        self, method: str, endpoint: str = "", **kwargs: Any
-    ) -> RESP:
+    async def _send_request(self, method: str, endpoint: str = "", url: str = "", **kwargs: Any) -> RESP:
         """Send an HTTP request and return the response.
 
         A utility method that handles both GET and POST requests to the search engine's API.
@@ -88,6 +86,7 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
         Args:
             method (str): HTTP method, must be either 'get' or 'post' (case-insensitive).
             endpoint (str): API endpoint to append to the base URL. If empty, uses base_url directly.
+            url (str): Full URL for the request. Overrides base_url and endpoint if provided.
             **kwargs (Any): Additional parameters for the request, such as:
                 - params: URL parameters for GET requests
                 - data: Form data for POST requests
@@ -104,13 +103,14 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
         Raises:
             ValueError: If an unsupported HTTP method is specified.
         """
-        url = f"{self.base_url}/{endpoint}" if endpoint else self.base_url
+        request_url = url or (f"{self.base_url}/{endpoint}" if endpoint else self.base_url)
 
-        if method.lower() == "get":
-            if "files" in kwargs:
-                kwargs.pop("files")
-            return await self.get(url, **kwargs)
-        elif method.lower() == "post":
-            return await self.post(url, **kwargs)
+        method = method.lower()
+        if method == "get":
+            # Files are not valid for GET requests
+            kwargs.pop("files", None)
+            return await self.get(request_url, **kwargs)
+        elif method == "post":
+            return await self.post(request_url, **kwargs)
         else:
             raise ValueError(f"Unsupported HTTP method: {method}")

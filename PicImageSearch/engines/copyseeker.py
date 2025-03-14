@@ -57,7 +57,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
                 "content-type": "text/plain;charset=UTF-8",
             }
 
-            resp = await self._make_request(
+            resp = await self._send_request(
                 method="post",
                 headers=headers,
                 data=json_dumps([data]),
@@ -73,7 +73,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
                 "content-type": "multipart/form-data; boundary=-",
             }
 
-            resp = await self._make_request(
+            resp = await self._send_request(
                 method="post",
                 headers=headers,
                 files=files,
@@ -120,7 +120,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
             - Only one of `url` or `file` should be provided.
             - The search process involves multiple HTTP requests to Copyseeker's API.
         """
-        self._validate_args(url, file)
+        self._ensure_search_input(url, file)
 
         discovery_id = await self._get_discovery_id(url, file)
         if discovery_id is None:
@@ -132,9 +132,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
             "content-type": "text/plain;charset=UTF-8",
         }
 
-        resp = await self._make_request(
-            method="post", endpoint="discovery", data=json_dumps(data), headers=headers
-        )
+        resp = await self._send_request(method="post", endpoint="discovery", data=json_dumps(data), headers=headers)
 
         resp_json = {}
 
