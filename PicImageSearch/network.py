@@ -307,9 +307,7 @@ class HandOver:
             )
             return RESP(resp.text, str(resp.url), resp.status_code)
 
-    async def download(
-        self, url: str, headers: Optional[dict[str, str]] = None
-    ) -> bytes:
+    async def download(self, url: str, headers: Optional[dict[str, str]] = None) -> bytes:
         """Download content from a URL with automatic client management.
 
         Args:

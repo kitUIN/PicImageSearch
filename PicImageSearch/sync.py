@@ -67,9 +67,7 @@ def syncify(*classes: type) -> None:
     for c in classes:
         for name in dir(c):
             attr = getattr(c, name, None)
-            if (
-                not name.startswith("_") or name == "__call__"
-            ) and inspect.iscoroutinefunction(attr):
+            if (not name.startswith("_") or name == "__call__") and inspect.iscoroutinefunction(attr):
                 _syncify_wrap(c, name)
 
 

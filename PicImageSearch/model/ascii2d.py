@@ -58,11 +58,7 @@ class Ascii2DItem(BaseSearchItem):
         self.hash: str = data("div.hash").eq(0).text()
         self.detail: str = data("small").eq(0).text()
         image_source = data("img").eq(0).attr("src")
-        self.thumbnail = (
-            f"{BASE_URL}{image_source}"
-            if image_source.startswith("/")
-            else image_source
-        )
+        self.thumbnail = f"{BASE_URL}{image_source}" if image_source.startswith("/") else image_source
         self.url_list: list[URL] = []
         self.author: str = ""
         self.author_url: str = ""
@@ -79,15 +75,9 @@ class Ascii2DItem(BaseSearchItem):
         """
         if infos := data.find("div.detail-box.gray-link"):
             links = infos.find("a")
-            self.url_list = (
-                [URL(i.attr("href"), i.text()) for i in links.items()] if links else []
-            )
+            self.url_list = [URL(i.attr("href"), i.text()) for i in links.items()] if links else []
             mark = next(
-                (
-                    small.text()
-                    for small in infos("small").items()
-                    if small.text() in SUPPORTED_SOURCES
-                ),
+                (small.text() for small in infos("small").items() if small.text() in SUPPORTED_SOURCES),
                 "",
             )
             self._arrange_links(infos, links, mark)
@@ -130,9 +120,7 @@ class Ascii2DItem(BaseSearchItem):
         """
         if not self.title:
             self.title = self._extract_external_text(infos) or infos.find("h6").text()
-        if self.title and any(
-            i in self.title for i in {"詳細掲示板のログ", "2ちゃんねるのログ"}
-        ):
+        if self.title and any(i in self.title for i in {"詳細掲示板のログ", "2ちゃんねるのログ"}):
             self.title = ""
 
     @staticmethod
@@ -158,8 +146,7 @@ class Ascii2DItem(BaseSearchItem):
         Modifies the url_list attribute in place.
         """
         self.url_list = [
-            URL(BASE_URL + url.href, url.text) if url.href.startswith("/") else url
-            for url in self.url_list
+            URL(BASE_URL + url.href, url.text) if url.href.startswith("/") else url for url in self.url_list
         ]
 
     def _arrange_backup_links(self, data: PyQuery) -> None:
@@ -206,6 +193,4 @@ class Ascii2DResponse(BaseSearchResponse[Ascii2DItem]):
         """
         data = parse_html(resp_data)
         self.origin: PyQuery = data
-        self.raw: list[Ascii2DItem] = [
-            Ascii2DItem(i) for i in data.find("div.row.item-box").items()
-        ]
+        self.raw: list[Ascii2DItem] = [Ascii2DItem(i) for i in data.find("div.row.item-box").items()]

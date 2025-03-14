@@ -80,9 +80,7 @@ class GoogleLensItem(BaseSearchItem):
 
         self.url: Optional[str] = link_element.attr("href") if link_element else None
         self.title: Optional[str] = title_element.text() if title_element else None
-        self.site_name: Optional[str] = (
-            site_name_element.text() if site_name_element else get_site_name(self.url)
-        )
+        self.site_name: Optional[str] = site_name_element.text() if site_name_element else get_site_name(self.url)
         self.image_url: Optional[str] = self._extract_image_url(image_element)
 
 
@@ -159,9 +157,7 @@ class GoogleLensResponse(BaseSearchResponse[GoogleLensItem]):
 
         return {"base64_map": base64_image_map, "url_map": image_url_map}
 
-    def _extract_ldi_images(
-        self, script_text: str, image_url_map: dict[str, Any]
-    ) -> None:
+    def _extract_ldi_images(self, script_text: str, image_url_map: dict[str, Any]) -> None:
         """Extract LDI image URLs from script."""
         ldi_match = re.search(r"google\.ldi\s*=\s*({[^}]+})", script_text)
         if not ldi_match:
@@ -173,33 +169,23 @@ class GoogleLensResponse(BaseSearchResponse[GoogleLensItem]):
             ldi_dict = ast.literal_eval(ldi_match[1])
             for key, value in ldi_dict.items():
                 if key.startswith("dimg_"):
-                    image_url_map[key] = value.replace("\\u003d", "=").replace(
-                        "\\u0026", "&"
-                    )
+                    image_url_map[key] = value.replace("\\u003d", "=").replace("\\u0026", "&")
         except (SyntaxError, ValueError) as e:
             print(f"Error parsing google.ldi JSON: {e}")
 
-    def _extract_base64_images(
-        self, script_text: str, base64_image_map: dict[str, Any]
-    ) -> None:
+    def _extract_base64_images(self, script_text: str, base64_image_map: dict[str, Any]) -> None:
         """Extract Base64 encoded images from script."""
         if "_setImagesSrc" not in script_text:
             return
 
         image_ids_match = re.search(r"var ii=\[([^]]*)];", script_text)
-        base64_match = re.search(
-            r"var s='(data:image/jpeg;base64,[A-Za-z0-9+/]+(?:=+)?)", script_text
-        )
+        base64_match = re.search(r"var s='(data:image/jpeg;base64,[A-Za-z0-9+/]+(?:=+)?)", script_text)
 
         if not (image_ids_match and base64_match):
             return
 
         image_ids_str = image_ids_match[1]
-        image_ids = [
-            img_id.strip().strip("'")
-            for img_id in image_ids_str.split(",")
-            if img_id.strip()
-        ]
+        image_ids = [img_id.strip().strip("'") for img_id in image_ids_str.split(",") if img_id.strip()]
         base64_str = base64_match[1]
 
         if image_ids and base64_str:
@@ -210,20 +196,14 @@ class GoogleLensResponse(BaseSearchResponse[GoogleLensItem]):
         """Parse search result items."""
         items_elements = html(".vEWxFf.RCxtQc.my5z3d")
         for el in items_elements:
-            item = GoogleLensItem(
-                PyQuery(el), image_maps["url_map"], image_maps["base64_map"]
-            )
+            item = GoogleLensItem(PyQuery(el), image_maps["url_map"], image_maps["base64_map"])
             self.raw.append(item)
 
-    def _parse_related_searches(
-        self, html: PyQuery, image_maps: dict[str, Any]
-    ) -> None:
+    def _parse_related_searches(self, html: PyQuery, image_maps: dict[str, Any]) -> None:
         """Parse related search items."""
         related_searches_elements = html(".Kg0xqe")
         for el in related_searches_elements:
-            related_item = GoogleLensRelatedSearchItem(
-                PyQuery(el), image_maps["url_map"], image_maps["base64_map"]
-            )
+            related_item = GoogleLensRelatedSearchItem(PyQuery(el), image_maps["url_map"], image_maps["base64_map"])
             self.related_searches.append(related_item)
 
     def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
@@ -291,9 +271,7 @@ class GoogleLensExactMatchesItem(BaseSearchItem):
 
         self.url: Optional[str] = link_element.attr("href") if link_element else None
         self.title: Optional[str] = title_element.text() if title_element else None
-        self.site_name: Optional[str] = (
-            site_name_element.text() if site_name_element else get_site_name(self.url)
-        )
+        self.site_name: Optional[str] = site_name_element.text() if site_name_element else get_site_name(self.url)
         self.size: Optional[str] = parse_size(info_div)
         self.image_url: Optional[str] = self._extract_image_url(image_element)
 
@@ -311,9 +289,7 @@ class GoogleLensExactMatchesResponse(BaseSearchResponse[GoogleLensExactMatchesIt
         """Initializes GoogleLensExactMatchesResponse with HTML response data."""
         super().__init__(resp_data, resp_url, **kwargs)
 
-    def _extract_ldi_images(
-        self, script_text: str, image_url_map: dict[str, Any]
-    ) -> None:
+    def _extract_ldi_images(self, script_text: str, image_url_map: dict[str, Any]) -> None:
         """Extract LDI image URLs from script."""
         ldi_match = re.search(r"google\.ldi\s*=\s*({[^}]+})", script_text)
         if not ldi_match:
@@ -325,40 +301,30 @@ class GoogleLensExactMatchesResponse(BaseSearchResponse[GoogleLensExactMatchesIt
             ldi_dict = ast.literal_eval(ldi_match[1])
             for key, value in ldi_dict.items():
                 if key.startswith("dimg_"):
-                    image_url_map[key] = value.replace("\\u003d", "=").replace(
-                        "\\u0026", "&"
-                    )
+                    image_url_map[key] = value.replace("\\u003d", "=").replace("\\u0026", "&")
         except (SyntaxError, ValueError) as e:
             print(f"Error parsing google.ldi JSON: {e}")
 
-    def _extract_base64_images(
-        self, script_text: str, base64_image_map: dict[str, Any]
-    ) -> None:
+    def _extract_base64_images(self, script_text: str, base64_image_map: dict[str, Any]) -> None:
         """Extract Base64 encoded images from script."""
         if "_setImagesSrc" not in script_text:
             return
 
         image_ids_match = re.search(r"var ii=\['([^']+)']", script_text)
-        base64_match = re.search(
-            r"var s='(data:image/[^;]+;base64,[^']+)';", script_text
-        )
+        base64_match = re.search(r"var s='(data:image/[^;]+;base64,[^']+)';", script_text)
 
         if not (image_ids_match and base64_match):
             return
 
         image_ids_str = image_ids_match[1]
-        image_ids = [
-            img_id.strip() for img_id in image_ids_str.split(",") if img_id.strip()
-        ]
+        image_ids = [img_id.strip() for img_id in image_ids_str.split(",") if img_id.strip()]
         base64_str = base64_match[1]
 
         if image_ids and base64_str:
             for img_id in image_ids:
                 base64_image_map[img_id] = base64_str
 
-    def _extract_image_maps(
-        self, html: PyQuery
-    ) -> tuple[dict[str, Any], dict[str, Any]]:
+    def _extract_image_maps(self, html: PyQuery) -> tuple[dict[str, Any], dict[str, Any]]:
         """Extract image mapping information."""
         base64_image_map = {}
         image_url_map = {}
@@ -380,9 +346,7 @@ class GoogleLensExactMatchesResponse(BaseSearchResponse[GoogleLensExactMatchesIt
         items = []
         items_elements = html(".YxbOwd")
         for el in items_elements:
-            item = GoogleLensExactMatchesItem(
-                PyQuery(el), image_url_map, base64_image_map
-            )
+            item = GoogleLensExactMatchesItem(PyQuery(el), image_url_map, base64_image_map)
             items.append(item)
         return items
 

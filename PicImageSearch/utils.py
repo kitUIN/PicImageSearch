@@ -77,9 +77,7 @@ def read_file(file: Union[str, bytes, Path]) -> bytes:
         with open(file, "rb") as f:
             return f.read()
     except OSError as e:
-        raise OSError(
-            f"An I/O error occurred while reading the file {file}: {e}"
-        ) from e
+        raise OSError(f"An I/O error occurred while reading the file {file}: {e}") from e
 
 
 def parse_html(html: str) -> PyQuery:

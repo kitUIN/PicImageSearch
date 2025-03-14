@@ -47,9 +47,7 @@ class YandexItem(BaseSearchItem):
         self.url: str = data["url"]
         self.title: str = data["title"]
         thumb_url: str = data["thumb"]["url"]
-        self.thumbnail: str = (
-            f"https:{thumb_url}" if thumb_url.startswith("//") else thumb_url
-        )
+        self.thumbnail: str = f"https:{thumb_url}" if thumb_url.startswith("//") else thumb_url
         self.source: str = data["domain"]
         self.content: str = data["description"]
         original_image = data["originalImage"]

@@ -26,18 +26,14 @@ DEFAULT_SORT_TYPE = SORT_TYPES[0]
 async def test_async() -> None:
     async with Network(proxies=PROXIES) as client:
         lenso = Lenso(client=client)
-        resp = await lenso.search(
-            file=file, search_type=DEFAULT_SEARCH_TYPE, sort_type=DEFAULT_SORT_TYPE
-        )
+        resp = await lenso.search(file=file, search_type=DEFAULT_SEARCH_TYPE, sort_type=DEFAULT_SORT_TYPE)
         show_result(resp, DEFAULT_SEARCH_TYPE)
 
 
 @logger.catch()
 def test_sync() -> None:
     lenso = LensoSync(proxies=PROXIES)
-    resp = lenso.search(
-        file=file, search_type=DEFAULT_SEARCH_TYPE, sort_type=DEFAULT_SORT_TYPE
-    )
+    resp = lenso.search(file=file, search_type=DEFAULT_SEARCH_TYPE, sort_type=DEFAULT_SORT_TYPE)
     show_result(resp, DEFAULT_SEARCH_TYPE)  # type: ignore
 
 

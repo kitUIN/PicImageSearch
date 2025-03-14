@@ -148,11 +148,7 @@ class IqdbResponse(BaseSearchResponse[IqdbItem]):
         Args:
             data (PyQuery): PyQuery object containing the complete search response.
         """
-        host = (
-            "https://iqdb.org"
-            if data('a[href^="//3d.iqdb.org"]')
-            else "https://3d.iqdb.org"
-        )
+        host = "https://iqdb.org" if data('a[href^="//3d.iqdb.org"]') else "https://3d.iqdb.org"
         tables = list(data("#pages > div > table").items())
         self.url = f"{host}/?url=https://iqdb.org{tables[0].find('img').attr('src')}"
         if len(tables) > 1:

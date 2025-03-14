@@ -6,9 +6,7 @@ from loguru import logger
 USE_SIMPLE_LOGGER = False
 PROXIES = "http://127.0.0.1:1080"
 # PROXIES = None
-IMAGE_BASE_URL = (
-    "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images"
-)
+IMAGE_BASE_URL = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images"
 
 if USE_SIMPLE_LOGGER:
     logger.remove()

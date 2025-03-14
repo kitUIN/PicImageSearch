@@ -75,17 +75,13 @@ class GoogleResponse(BaseSearchResponse[GoogleItem]):
         if pages := kwargs.get("pages"):
             self.pages: list[str] = pages
         else:
-            self.pages = [
-                f"https://www.google.com{i.attr('href')}"
-                for i in data.find('a[aria-label~="Page"]').items()
-            ]
+            self.pages = [f"https://www.google.com{i.attr('href')}" for i in data.find('a[aria-label~="Page"]').items()]
             self.pages.insert(0, kwargs["resp_url"])
 
         script_list = list(data.find("script").items())
         thumbnail_dict: dict[str, str] = self.create_thumbnail_dict(script_list)
         self.raw: list[GoogleItem] = [
-            GoogleItem(i, thumbnail_dict.get(i('img[id^="dimg_"]').attr("id")))
-            for i in data.find("#search .g").items()
+            GoogleItem(i, thumbnail_dict.get(i('img[id^="dimg_"]').attr("id"))) for i in data.find("#search .g").items()
         ]
 
     @staticmethod

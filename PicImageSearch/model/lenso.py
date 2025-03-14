@@ -113,7 +113,5 @@ class LensoResponse(BaseSearchResponse[LensoResultItem]):
         }
 
         for result_type, result_list in result_types.items():
-            result_list.extend(
-                LensoResultItem(item) for item in results_data.get(result_type, [])
-            )
+            result_list.extend(LensoResultItem(item) for item in results_data.get(result_type, []))
             self.raw.extend(result_list)

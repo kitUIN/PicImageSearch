@@ -123,11 +123,7 @@ class SauceNAOItem(BaseSearchItem):
         return (
             next(
                 (
-                    (
-                        ", ".join(data[i])
-                        if i == "creator" and isinstance(data[i], list)
-                        else data[i]
-                    )
+                    (", ".join(data[i]) if i == "creator" and isinstance(data[i], list) else data[i])
                     for i in [
                         "author",
                         "member_name",
@@ -229,6 +225,4 @@ class SauceNAOResponse(BaseSearchResponse[SauceNAOItem]):
         self.search_depth: Optional[int] = header.get("search_depth")
         self.minimum_similarity: Optional[float] = header.get("minimum_similarity")
         self.results_returned: Optional[int] = header.get("results_returned")
-        self.url: str = (
-            f"https://saucenao.com/search.php?url=https://saucenao.com{header.get('query_image_display')}"
-        )
+        self.url: str = f"https://saucenao.com/search.php?url=https://saucenao.com{header.get('query_image_display')}"

@@ -74,6 +74,4 @@ class BaiDuResponse(BaseSearchResponse[BaiDuItem]):
         Note:
             If resp_data is empty or invalid, an empty list will be returned.
         """
-        self.raw: list[BaiDuItem] = (
-            [BaiDuItem(i) for i in resp_data["data"]["list"]] if resp_data else []
-        )
+        self.raw: list[BaiDuItem] = [BaiDuItem(i) for i in resp_data["data"]["list"]] if resp_data else []

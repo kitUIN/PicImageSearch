@@ -16,9 +16,7 @@ cookies: Optional[str] = None
 @logger.catch()
 async def test_async() -> None:
     async with Network(proxies=PROXIES, cookies=cookies) as client:
-        google_lens_all = GoogleLens(
-            client=client, search_type="all", q="anime", hl="en", country="US"
-        )
+        google_lens_all = GoogleLens(client=client, search_type="all", q="anime", hl="en", country="US")
         resp_all = await google_lens_all.search(url=url)
         show_result(resp_all, search_type="all")
 
@@ -86,9 +84,7 @@ def test_sync() -> None:
     # show_result(resp_exact, search_type="exact_matches")  # pyright: ignore
 
 
-def show_result(
-    resp: Union[GoogleLensResponse, GoogleLensExactMatchesResponse], search_type: str
-) -> None:
+def show_result(resp: Union[GoogleLensResponse, GoogleLensExactMatchesResponse], search_type: str) -> None:
     logger.info(f"Search Type: {search_type}")
     logger.info(f"Search URL: {resp.url}")
 

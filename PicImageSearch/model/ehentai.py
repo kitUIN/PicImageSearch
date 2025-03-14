@@ -58,18 +58,12 @@ class EHentaiItem(BaseSearchItem):
             self.url = glink.parent("div").parent("a").attr("href")
         else:
             self.url = glink.parent("a").attr("href")
-        thumbnail = (
-            data.find(".glthumb img")
-            or data.find(".gl1e img")
-            or data.find(".gl3t img")
-        )
+        thumbnail = data.find(".glthumb img") or data.find(".gl1e img") or data.find(".gl3t img")
         self.thumbnail = thumbnail.attr("data-src") or thumbnail.attr("src")
         _type = data.find(".cs") or data.find(".cn")
         self.type = _type.eq(0).text()
         self.date = data.find("[id^='posted']").eq(0).text()
-        self.tags = [
-            i.attr("title") for i in data.find("div[class=gt],div[class=gtl]").items()
-        ]
+        self.tags = [i.attr("title") for i in data.find("div[class=gt],div[class=gtl]").items()]
 
 
 class EHentaiResponse(BaseSearchResponse[EHentaiItem]):

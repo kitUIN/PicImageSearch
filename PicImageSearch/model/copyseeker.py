@@ -74,7 +74,5 @@ class CopyseekerResponse(BaseSearchResponse[CopyseekerItem]):
         self.entities: Optional[str] = resp_data.get("entities")
         self.total: int = resp_data["totalLinksFound"]
         self.exif: dict[str, Any] = resp_data.get("exif", {})
-        self.raw: list[CopyseekerItem] = [
-            CopyseekerItem(page) for page in resp_data.get("pages", [])
-        ]
+        self.raw: list[CopyseekerItem] = [CopyseekerItem(page) for page in resp_data.get("pages", [])]
         self.similar_image_urls: list[str] = resp_data.get("visuallySimilarImages", [])
