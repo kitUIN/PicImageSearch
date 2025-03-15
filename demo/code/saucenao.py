@@ -24,7 +24,7 @@ def test_sync() -> None:
     saucenao = SauceNAOSync(api_key=api_key, hide=3, proxies=PROXIES)
     resp = saucenao.search(url=url)
     # resp = saucenao.search(file=file)
-    show_result(resp)  # type: ignore
+    show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: SauceNAOResponse) -> None:

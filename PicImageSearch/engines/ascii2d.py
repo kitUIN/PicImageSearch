@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any, Optional, Union
 
+from typing_extensions import override
+
 from ..model import Ascii2DResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
@@ -41,8 +43,9 @@ class Ascii2D(BaseSearchEngine[Ascii2DResponse]):
         """
         base_url = f"{base_url}/search"
         super().__init__(base_url, **request_kwargs)
-        self.bovw = bovw
+        self.bovw: bool = bovw
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -78,8 +81,6 @@ class Ascii2D(BaseSearchEngine[Ascii2DResponse]):
             - Only one of `url` or `file` should be provided
             - Feature search (bovw) may take longer to process
         """
-        self._validate_args(url, file)
-
         data: Optional[dict[str, Any]] = None
         files: Optional[dict[str, Any]] = None
         endpoint: str = "uri" if url else "file"
@@ -88,8 +89,10 @@ class Ascii2D(BaseSearchEngine[Ascii2DResponse]):
             data = {"uri": url}
         elif file:
             files = {"file": read_file(file)}
+        else:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
-        resp = await self._make_request(
+        resp = await self._send_request(
             method="post",
             endpoint=endpoint,
             data=data,
@@ -98,6 +101,6 @@ class Ascii2D(BaseSearchEngine[Ascii2DResponse]):
 
         # If 'bovw' is enabled, switch to feature search mode.
         if self.bovw:
-            resp = await self.get(resp.url.replace("/color/", "/bovw/"))
+            resp = await self._send_request(method="get", url=resp.url.replace("/color/", "/bovw/"))
 
         return Ascii2DResponse(resp.text, resp.url)

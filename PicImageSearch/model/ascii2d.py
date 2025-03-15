@@ -1,7 +1,7 @@
-from collections import namedtuple
-from typing import Any
+from typing import Any, NamedTuple
 
 from pyquery import PyQuery
+from typing_extensions import override
 
 from ..utils import parse_html
 from .base import BaseSearchItem, BaseSearchResponse
@@ -16,7 +16,11 @@ SUPPORTED_SOURCES = [
     "ニコニコ静画",
     "ニジエ",
 ]
-URL = namedtuple("URL", ["href", "text"])
+
+
+class URL(NamedTuple):
+    href: str
+    text: str
 
 
 class Ascii2DItem(BaseSearchItem):
@@ -45,6 +49,7 @@ class Ascii2DItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
+    @override
     def _parse_data(self, data: PyQuery, **kwargs: Any) -> None:
         """Parses raw search result data into structured attributes.
 
@@ -58,11 +63,7 @@ class Ascii2DItem(BaseSearchItem):
         self.hash: str = data("div.hash").eq(0).text()
         self.detail: str = data("small").eq(0).text()
         image_source = data("img").eq(0).attr("src")
-        self.thumbnail = (
-            f"{BASE_URL}{image_source}"
-            if image_source.startswith("/")
-            else image_source
-        )
+        self.thumbnail: str = f"{BASE_URL}{image_source}" if image_source.startswith("/") else image_source
         self.url_list: list[URL] = []
         self.author: str = ""
         self.author_url: str = ""
@@ -79,15 +80,9 @@ class Ascii2DItem(BaseSearchItem):
         """
         if infos := data.find("div.detail-box.gray-link"):
             links = infos.find("a")
-            self.url_list = (
-                [URL(i.attr("href"), i.text()) for i in links.items()] if links else []
-            )
+            self.url_list = [URL(i.attr("href"), i.text()) for i in links.items()] if links else []
             mark = next(
-                (
-                    small.text()
-                    for small in infos("small").items()
-                    if small.text() in SUPPORTED_SOURCES
-                ),
+                (small.text() for small in infos("small").items() if small.text() in SUPPORTED_SOURCES),
                 "",
             )
             self._arrange_links(infos, links, mark)
@@ -110,11 +105,10 @@ class Ascii2DItem(BaseSearchItem):
         if links:
             link_items = list(links.items())
             if len(link_items) > 1 and mark in SUPPORTED_SOURCES:
-                self.title, self.url = link_items[0].text(), link_items[0].attr("href")
-                self.author_url, self.author = (
-                    link_items[1].attr("href"),
-                    link_items[1].text(),
-                )
+                self.title: str = link_items[0].text()
+                self.url: str = link_items[0].attr("href")
+                self.author_url = link_items[1].attr("href")
+                self.author = link_items[1].text()
             elif links.eq(0).parents("small"):
                 infos.remove("small")
                 self.title = infos.text()
@@ -130,9 +124,7 @@ class Ascii2DItem(BaseSearchItem):
         """
         if not self.title:
             self.title = self._extract_external_text(infos) or infos.find("h6").text()
-        if self.title and any(
-            i in self.title for i in {"詳細掲示板のログ", "2ちゃんねるのログ"}
-        ):
+        if self.title and any(i in self.title for i in {"詳細掲示板のログ", "2ちゃんねるのログ"}):
             self.title = ""
 
     @staticmethod
@@ -158,8 +150,7 @@ class Ascii2DItem(BaseSearchItem):
         Modifies the url_list attribute in place.
         """
         self.url_list = [
-            URL(BASE_URL + url.href, url.text) if url.href.startswith("/") else url
-            for url in self.url_list
+            URL(BASE_URL + url.href, url.text) if url.href.startswith("/") else url for url in self.url_list
         ]
 
     def _arrange_backup_links(self, data: PyQuery) -> None:
@@ -195,6 +186,7 @@ class Ascii2DResponse(BaseSearchResponse[Ascii2DItem]):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
+    @override
     def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
         """Parses the raw response data into structured search results.
 
@@ -206,6 +198,4 @@ class Ascii2DResponse(BaseSearchResponse[Ascii2DItem]):
         """
         data = parse_html(resp_data)
         self.origin: PyQuery = data
-        self.raw: list[Ascii2DItem] = [
-            Ascii2DItem(i) for i in data.find("div.row.item-box").items()
-        ]
+        self.raw: list[Ascii2DItem] = [Ascii2DItem(i) for i in data.find("div.row.item-box").items()]

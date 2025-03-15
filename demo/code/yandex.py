@@ -23,7 +23,7 @@ def test_sync() -> None:
     yandex = YandexSync(proxies=PROXIES)
     resp = yandex.search(url=url)
     # resp = yandex.search(file=file)
-    show_result(resp)  # type: ignore
+    show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: YandexResponse) -> None:

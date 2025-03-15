@@ -71,19 +71,19 @@ def test_sync() -> None:
     #     sort=sort,
     #     order=order,
     # )
-    show_result(resp, "Initial Search")  # type: ignore
+    show_result(resp, "Initial Search")  # pyright: ignore[reportArgumentType]
 
-    if resp.total_pages > 1:  # type: ignore
-        resp2 = tineye.next_page(resp)  # type: ignore
-        show_result(resp2, "Next Page")  # type: ignore
+    if resp.total_pages > 1:  # pyright: ignore[reportAttributeAccessIssue]
+        resp2 = tineye.next_page(resp)  # pyright: ignore[reportArgumentType]
+        show_result(resp2, "Next Page")  # pyright: ignore[reportArgumentType]
 
         if resp2:
-            resp3 = tineye.next_page(resp2)  # type: ignore
-            show_result(resp3, "Next Page")  # type: ignore
+            resp3 = tineye.next_page(resp2)  # pyright: ignore[reportArgumentType]
+            show_result(resp3, "Next Page")  # pyright: ignore[reportArgumentType]
 
             if resp3:
-                resp4 = tineye.pre_page(resp3)  # type: ignore
-                show_result(resp4, "Previous Page")  # type: ignore
+                resp4 = tineye.pre_page(resp3)  # pyright: ignore[reportArgumentType]
+                show_result(resp4, "Previous Page")  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: Optional[TineyeResponse], title: str = "") -> None:

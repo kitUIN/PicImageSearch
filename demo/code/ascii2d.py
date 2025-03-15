@@ -31,7 +31,7 @@ def test_sync() -> None:
     )
     resp = ascii2d.search(url=url)
     # resp = ascii2d.search(file=file)
-    show_result(resp)  # type: ignore
+    show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: Ascii2DResponse) -> None:

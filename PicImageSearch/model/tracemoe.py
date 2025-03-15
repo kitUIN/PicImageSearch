@@ -1,5 +1,7 @@
 from typing import Any, Optional
 
+from typing_extensions import override
+
 from .base import BaseSearchItem, BaseSearchResponse
 
 
@@ -40,7 +42,6 @@ class TraceMoeItem(BaseSearchItem):
         origin (dict): Raw response data from the API.
         anime_info (dict): Comprehensive anime metadata.
         idMal (int): MyAnimeList database ID.
-        title (dict): Dictionary containing titles in various languages.
         title_native (str): Title in the original language.
         title_english (str): English title.
         title_romaji (str): Romanized title.
@@ -77,6 +78,7 @@ class TraceMoeItem(BaseSearchItem):
         """
         super().__init__(data, mute=mute, size=size)
 
+    @override
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
         """Parses raw API response data into structured attributes.
 
@@ -95,7 +97,6 @@ class TraceMoeItem(BaseSearchItem):
         """
         self.anime_info: dict[str, Any] = {}
         self.idMal: int = 0
-        self.title: dict[str, str] = {}  # type: ignore
         self.title_native: str = ""
         self.title_english: str = ""
         self.title_romaji: str = ""
@@ -156,6 +157,7 @@ class TraceMoeResponse(BaseSearchResponse[TraceMoeItem]):
         """
         super().__init__(resp_data, resp_url, mute=mute, size=size)
 
+    @override
     def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Processes the raw API response into structured data.
 

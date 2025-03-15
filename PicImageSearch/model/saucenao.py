@@ -1,5 +1,7 @@
 from typing import Any, Optional
 
+from typing_extensions import override
+
 from .base import BaseSearchItem, BaseSearchResponse
 
 
@@ -32,20 +34,21 @@ class SauceNAOItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
+    @override
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search result data."""
         header = data["header"]
-        self.similarity = float(header["similarity"])
-        self.thumbnail = header["thumbnail"]
-        self.index_id = header["index_id"]
-        self.index_name = header["index_name"]
-        self.hidden = header.get("hidden", 0)
-        self.title = self._get_title(data["data"])
-        self.url = self._get_url(data["data"])
-        self.ext_urls = data["data"].get("ext_urls", [])
-        self.author = self._get_author(data["data"])
-        self.author_url = self._get_author_url(data["data"])
-        self.source = data["data"].get("source", "")
+        self.similarity: float = float(header["similarity"])
+        self.thumbnail: str = header["thumbnail"]
+        self.index_id: int = header["index_id"]
+        self.index_name: str = header["index_name"]
+        self.hidden: int = header.get("hidden", 0)
+        self.title: str = self._get_title(data["data"])
+        self.url: str = self._get_url(data["data"])
+        self.ext_urls: list[str] = data["data"].get("ext_urls", [])
+        self.author: str = self._get_author(data["data"])
+        self.author_url: str = self._get_author_url(data["data"])
+        self.source: str = data["data"].get("source", "")
 
     @staticmethod
     def _get_title(data: dict[str, Any]) -> str:
@@ -102,7 +105,7 @@ class SauceNAOItem(BaseSearchItem):
         elif "getchu_id" in data:
             return f"https://www.getchu.com/soft.phtml?id={data['getchu_id']}"
         elif "ext_urls" in data:
-            return data["ext_urls"][0]  # type: ignore
+            return data["ext_urls"][0]
         return ""
 
     @staticmethod
@@ -123,11 +126,7 @@ class SauceNAOItem(BaseSearchItem):
         return (
             next(
                 (
-                    (
-                        ", ".join(data[i])
-                        if i == "creator" and isinstance(data[i], list)
-                        else data[i]
-                    )
+                    (", ".join(data[i]) if i == "creator" and isinstance(data[i], list) else data[i])
                     for i in [
                         "author",
                         "member_name",
@@ -212,6 +211,7 @@ class SauceNAOResponse(BaseSearchResponse[SauceNAOItem]):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
+    @override
     def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search response data."""
         self.status_code: int = resp_data["status_code"]
@@ -229,6 +229,4 @@ class SauceNAOResponse(BaseSearchResponse[SauceNAOItem]):
         self.search_depth: Optional[int] = header.get("search_depth")
         self.minimum_similarity: Optional[float] = header.get("minimum_similarity")
         self.results_returned: Optional[int] = header.get("results_returned")
-        self.url: str = (
-            f"https://saucenao.com/search.php?url=https://saucenao.com{header.get('query_image_display')}"
-        )
+        self.url: str = f"https://saucenao.com/search.php?url=https://saucenao.com{header.get('query_image_display')}"

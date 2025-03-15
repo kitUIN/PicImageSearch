@@ -38,7 +38,7 @@ def test_sync() -> None:
     )
     resp = ehentai.search(url=url)
     # resp = ehentai.search(file=file)
-    show_result(resp)  # type: ignore
+    show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: EHentaiResponse) -> None:

@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any, Optional, Union
 
+from typing_extensions import override
+
 from ..model import EHentaiResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
@@ -42,11 +44,12 @@ class EHentai(BaseSearchEngine[EHentaiResponse]):
         """
         base_url = "https://upld.exhentai.org" if is_ex else "https://upld.e-hentai.org"
         super().__init__(base_url, **request_kwargs)
-        self.is_ex = is_ex
-        self.covers = covers
-        self.similar = similar
-        self.exp = exp
+        self.is_ex: bool = is_ex
+        self.covers: bool = covers
+        self.similar: bool = similar
+        self.exp: bool = exp
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -80,16 +83,15 @@ class EHentai(BaseSearchEngine[EHentaiResponse]):
             - For ExHentai searches, valid cookies must be provided in the request_kwargs.
             - Search behavior is affected by the covers, similar, and exp flags set during initialization.
         """
-        self._validate_args(url, file)
-
         endpoint = "upld/image_lookup.php" if self.is_ex else "image_lookup.php"
         data: dict[str, Any] = {"f_sfile": "File Search"}
-        files: dict[str, Any] = {}
 
         if url:
             files = {"sfile": await self.download(url)}
         elif file:
             files = {"sfile": read_file(file)}
+        else:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
         if self.covers:
             data["fs_covers"] = "on"
@@ -98,7 +100,7 @@ class EHentai(BaseSearchEngine[EHentaiResponse]):
         if self.exp:
             data["fs_exp"] = "on"
 
-        resp = await self._make_request(
+        resp = await self._send_request(
             method="post",
             endpoint=endpoint,
             data=data,

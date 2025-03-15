@@ -5,8 +5,5 @@ repos:
     rev: 'v0.11.0'
     hooks:
       - id: ruff
-        args: [ format ]
-  - repo: https://github.com/psf/black
-    rev: 25.1.0
-    hooks:
-      - id: black
+        args: [ --fix ]
+      - id: ruff-format
