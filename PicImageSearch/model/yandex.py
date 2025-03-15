@@ -4,6 +4,7 @@ from typing import Any
 from pyquery import PyQuery
 from typing_extensions import override
 
+from ..exceptions import ParsingError
 from ..utils import parse_html
 from .base import BaseSearchItem, BaseSearchResponse
 
@@ -95,6 +96,15 @@ class YandexResponse(BaseSearchResponse[YandexItem]):
         data = parse_html(resp_data)
         self.origin: PyQuery = data
         data_div = data.find('div.Root[id^="CbirSites_infinite"]')
-        data_json = json_loads(data_div.attr("data-state"))
+        data_state = data_div.attr("data-state")
+
+        if not data_state:
+            raise ParsingError(
+                message="Failed to find critical DOM attribute 'data-state'",
+                engine="yandex",
+                details="This usually indicates a change in the page structure or an unexpected response.",
+            )
+
+        data_json = json_loads(str(data_state))
         sites = data_json["sites"]
         self.raw: list[YandexItem] = [YandexItem(site) for site in sites]
