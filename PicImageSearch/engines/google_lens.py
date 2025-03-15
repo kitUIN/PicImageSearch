@@ -22,18 +22,15 @@ class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatch
     Attributes:
         base_url (str): The base URL for Google Lens searches.
         search_url (str): The base URL for Google search results.
-        hl_param (str): The hl parameter for locale settings.
+        hl_param (str): The language parameter combined with country code.
         search_type (str): The type of search to perform ('all', 'products', 'visual_matches', 'exact_matches').
-        q (Optional[str]): Optional query parameter for search.
+        q (Optional[str]): Optional query parameter for search. Not applicable for 'exact_matches' type.
     """
-
-    search_url: str
-    hl_param: str
-    search_type: str
-    q: Optional[str]
 
     def __init__(
         self,
+        base_url: str = "https://lens.google.com",
+        search_url: str = "https://www.google.com",
         search_type: Literal["all", "products", "visual_matches", "exact_matches"] = "all",
         q: Optional[str] = None,
         hl: str = "en",
@@ -43,6 +40,8 @@ class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatch
         """Initializes a GoogleLens API client with specified configurations.
 
         Args:
+            base_url (str): The base URL for Google Lens searches. Defaults to "https://lens.google.com".
+            search_url (str): The base URL for Google search results. Defaults to "https://www.google.com".
             search_type (Literal["all", "products", "visual_matches", "exact_matches"]): The type of search to perform.
                 Defaults to "all".
             q (Optional[str]): Optional query parameter for search. Defaults to None. Not applicable for 'exact_matches'
@@ -57,8 +56,6 @@ class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatch
             ValueError: If search_type is 'exact_matches' and q is provided.
             ValueError: If search_type is not one of 'all', 'products', 'visual_matches', 'exact_matches'.
         """
-        base_url = "https://lens.google.com"
-        self.search_url = "https://www.google.com"
         super().__init__(base_url, **request_kwargs)
 
         valid_search_types = ["all", "products", "visual_matches", "exact_matches"]
@@ -67,9 +64,10 @@ class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatch
         if search_type == "exact_matches" and q:
             raise ValueError("Query parameter 'q' is not applicable for 'exact_matches' search_type.")
 
-        self.hl_param = f"{hl}-{country.upper()}"
-        self.search_type = search_type
-        self.q = q or ""
+        self.search_url: str = search_url
+        self.hl_param: str = f"{hl}-{country.upper()}"
+        self.search_type: str = search_type
+        self.q: Optional[str] = q
 
     async def _perform_image_search(
         self,
@@ -77,15 +75,19 @@ class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatch
         file: Union[str, bytes, Path, None] = None,
         q: Optional[str] = None,
     ) -> RESP:
-        """Uploads an image (URL or file) to Google Lens and returns the HTML content of the search result page.
+        """Uploads an image (URL or file) to Google Lens and returns the response from the search result page.
 
         Args:
             url (Optional[str]): URL of the image to search.
             file (Union[str, bytes, Path, None]): Path to the image file, bytes data, or Path object.
-            q (Optional[str]): Optional query parameter for search.
+            q (Optional[str]): Optional query parameter for search. Overrides the instance's q attribute if provided.
+                Will be ignored for 'exact_matches' search type.
 
         Returns:
-            str: HTML content of the search result page.
+            RESP: Response object containing the HTML content, URL and status code of the search result page.
+
+        Raises:
+            ValueError: If neither 'url' nor 'file' is provided.
         """
         params = {"hl": self.hl_param}
         if q and self.search_type != "exact_matches":
@@ -142,8 +144,9 @@ class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatch
         Args:
             url (Optional[str]): URL of the image to search.
             file (Union[str, bytes, Path, None]): Local image file, can be a path string, bytes data, or Path object.
-            q (Optional[str]): Optional query parameter for search. Not applicable for 'exact_matches' type.
-            **kwargs (Any): Additional arguments passed to the parent class.
+            q (Optional[str]): Optional query parameter for search. Overrides the instance's q attribute if provided.
+                Will be ignored for 'exact_matches' search type.
+            **kwargs (Any): Additional arguments passed to the underlying request.
 
         Returns:
             Union[GoogleLensResponse, GoogleLensExactMatchesResponse]: An object containing search results.
@@ -153,9 +156,6 @@ class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatch
         Raises:
             ValueError: If neither `url` nor `file` is provided.
         """
-        if not url and not file:
-            raise ValueError("Either 'url' or 'file' must be provided")
-
         if q is not None and self.search_type == "exact_matches":
             q = None
 
