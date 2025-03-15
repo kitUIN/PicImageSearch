@@ -83,6 +83,12 @@ PicImageSearch — это мощная библиотека Python для пои
 
     Google Images
 
+- ![Google Lens](images/google-lens.png){ .lg .middle } Google Lens
+
+    ---
+
+    Google Lens
+
 - ![Iqdb](images/iqdb.png){ .lg .middle } Iqdb
 
     ---

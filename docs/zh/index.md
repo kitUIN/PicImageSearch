@@ -83,6 +83,12 @@ PicImageSearch 是一个强大的 Python 图片搜索库，它整合了多个主
 
     Google Images
 
+- ![Google Lens](images/google-lens.png){ .lg .middle } Google Lens
+
+    ---
+
+    Google Lens
+
 - ![Iqdb](images/iqdb.png){ .lg .middle } Iqdb
 
     ---

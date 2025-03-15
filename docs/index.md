@@ -83,6 +83,12 @@ Currently, the project is mainly maintained by Neko Aria, continuously providing
 
     Google Images
 
+- ![Google Lens](images/google-lens.png){ .lg .middle } Google Lens
+
+    ---
+
+    Google Lens
+
 - ![Iqdb](images/iqdb.png){ .lg .middle } Iqdb
 
     ---
