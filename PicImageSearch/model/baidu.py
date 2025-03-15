@@ -2,6 +2,7 @@ from typing import Any
 
 from typing_extensions import override
 
+from ..utils import deep_get
 from .base import BaseSearchItem, BaseSearchResponse
 
 
@@ -40,9 +41,9 @@ class BaiDuItem(BaseSearchItem):
         """
         # deprecated attributes
         # self.similarity: float = round(float(data["simi"]) * 100, 2)
-        # self.title: str = data["fromPageTitle"]
-        self.thumbnail: str = data["thumbUrl"]
-        self.url: str = data["fromUrl"]
+        self.title: str = deep_get(data, "title[0]") or ""
+        self.thumbnail: str = data.get("image_src") or data.get("thumbUrl") or ""
+        self.url: str = data.get("url") or data.get("fromUrl") or ""
 
 
 class BaiDuResponse(BaseSearchResponse[BaiDuItem]):
@@ -78,4 +79,8 @@ class BaiDuResponse(BaseSearchResponse[BaiDuItem]):
         Note:
             If resp_data is empty or invalid, an empty list will be returned.
         """
-        self.raw: list[BaiDuItem] = [BaiDuItem(i) for i in resp_data["data"]["list"]] if resp_data else []
+        self.raw: list[BaiDuItem] = []
+        if "list" in resp_data:
+            self.raw.extend(BaiDuItem(i) for i in resp_data["list"] if "url" in i and "image_src" in i)
+        elif data_list := deep_get(resp_data, "data.list"):
+            self.raw.extend([BaiDuItem(i) for i in data_list])

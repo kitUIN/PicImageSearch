@@ -122,6 +122,8 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
         for card in card_data:
             if card.get("cardName") == "noresult":
                 return BaiDuResponse({}, data_url)
+            if card.get("cardName") == "same":
+                return BaiDuResponse(card["tplData"], data_url)
             if card.get("cardName") == "simipic":
                 next_url = card["tplData"]["firstUrl"]
                 resp = await self._send_request(method="get", url=next_url)

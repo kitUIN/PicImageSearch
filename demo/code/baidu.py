@@ -8,10 +8,13 @@ from PicImageSearch.sync import BaiDu as BaiDuSync
 url = f"{IMAGE_BASE_URL}/test02.jpg"
 file = get_image_path("test02.jpg")
 
+# Note: Baidu search requires cookies contain the `verify`
+cookies: str = ""
+
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=PROXIES) as client:
+    async with Network(proxies=PROXIES, cookies=cookies) as client:
         baidu = BaiDu(client=client)
         # resp = await baidu.search(url=url)
         resp = await baidu.search(file=file)
@@ -20,7 +23,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    baidu = BaiDuSync(proxies=PROXIES)
+    baidu = BaiDuSync(proxies=PROXIES, cookies=cookies)
     resp = baidu.search(url=url)
     # resp = baidu.search(file=file)
     show_result(resp)  # pyright: ignore[reportArgumentType]
@@ -31,7 +34,7 @@ def show_result(resp: BaiDuResponse) -> None:
     logger.info(resp.url)  # Link to search results
     # logger.info(resp.raw[0].origin)
     # logger.info(resp.raw[0].similarity)  # deprecated
-    # logger.info(resp.raw[0].title)  # deprecated
+    logger.info(resp.raw[0].title)
     logger.info(resp.raw[0].url)
     logger.info(resp.raw[0].thumbnail)
     logger.info("-" * 50)
