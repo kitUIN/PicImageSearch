@@ -36,6 +36,7 @@ class GoogleItem(BaseSearchItem):
         self.title: str = data("h3").text()
         self.url: str = data("a").eq(0).attr("href")
         self.thumbnail: str = kwargs.get("thumbnail") or ""
+        self.content: str = data("div.VwiC3b").text()
 
 
 class GoogleResponse(BaseSearchResponse[GoogleItem]):
