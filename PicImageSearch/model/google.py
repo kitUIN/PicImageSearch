@@ -2,6 +2,7 @@ from re import compile
 from typing import Any, Optional
 
 from pyquery import PyQuery
+from typing_extensions import override
 
 from ..utils import parse_html
 from .base import BaseSearchItem, BaseSearchResponse
@@ -17,6 +18,7 @@ class GoogleItem(BaseSearchItem):
         title (str): The title text of the search result.
         url (str): The URL link to the search result page.
         thumbnail (Optional[str]): Base64 encoded thumbnail image, if available.
+        content (str): Descriptive text or context surrounding the image.
     """
 
     def __init__(self, data: PyQuery, thumbnail: Optional[str]):
@@ -28,11 +30,13 @@ class GoogleItem(BaseSearchItem):
         """
         super().__init__(data, thumbnail=thumbnail)
 
+    @override
     def _parse_data(self, data: PyQuery, **kwargs: Any) -> None:
         """Parse search result data."""
         self.title: str = data("h3").text()
         self.url: str = data("a").eq(0).attr("href")
-        self.thumbnail: Optional[str] = kwargs.get("thumbnail")  # type: ignore
+        self.thumbnail: str = kwargs.get("thumbnail") or ""
+        self.content: str = data("div.VwiC3b").text()
 
 
 class GoogleResponse(BaseSearchResponse[GoogleItem]):
@@ -66,6 +70,7 @@ class GoogleResponse(BaseSearchResponse[GoogleItem]):
         """
         super().__init__(resp_data, resp_url, page_number=page_number, pages=pages)
 
+    @override
     def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
         """Parse search response data."""
         data = parse_html(resp_data)
@@ -75,17 +80,13 @@ class GoogleResponse(BaseSearchResponse[GoogleItem]):
         if pages := kwargs.get("pages"):
             self.pages: list[str] = pages
         else:
-            self.pages = [
-                f'https://www.google.com{i.attr("href")}'
-                for i in data.find('a[aria-label~="Page"]').items()
-            ]
+            self.pages = [f"https://www.google.com{i.attr('href')}" for i in data.find('a[aria-label~="Page"]').items()]
             self.pages.insert(0, kwargs["resp_url"])
 
         script_list = list(data.find("script").items())
         thumbnail_dict: dict[str, str] = self.create_thumbnail_dict(script_list)
         self.raw: list[GoogleItem] = [
-            GoogleItem(i, thumbnail_dict.get(i('img[id^="dimg_"]').attr("id")))
-            for i in data.find("#search .g").items()
+            GoogleItem(i, thumbnail_dict.get(i('img[id^="dimg_"]').attr("id"))) for i in data.find("#search .g").items()
         ]
 
     @staticmethod

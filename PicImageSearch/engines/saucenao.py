@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 from httpx import QueryParams
+from typing_extensions import override
 
 from ..model import SauceNAOResponse
 from ..utils import read_file
@@ -79,12 +80,13 @@ class SauceNAO(BaseSearchEngine[SauceNAOResponse]):
             params["dbmask"] = dbmask
         if dbmaski is not None:
             params["dbmaski"] = dbmaski
-        self.params = QueryParams(params)
+        self.params: QueryParams = QueryParams(params)
         if dbs is not None:
             self.params = self.params.remove("db")
             for i in dbs:
                 self.params = self.params.add("dbs[]", i)
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -119,8 +121,6 @@ class SauceNAO(BaseSearchEngine[SauceNAOResponse]):
                 * 4 searches per 30 seconds
             - Results are sorted by similarity score in descending order.
         """
-        self._validate_args(url, file)
-
         params = self.params
         files: Optional[dict[str, Any]] = None
 
@@ -128,8 +128,10 @@ class SauceNAO(BaseSearchEngine[SauceNAOResponse]):
             params = params.add("url", url)
         elif file:
             files = {"file": read_file(file)}
+        else:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
-        resp = await self._make_request(
+        resp = await self._send_request(
             method="post",
             params=params,
             files=files,

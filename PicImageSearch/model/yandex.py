@@ -2,6 +2,7 @@ from json import loads as json_loads
 from typing import Any
 
 from pyquery import PyQuery
+from typing_extensions import override
 
 from ..exceptions import ParsingError
 from ..utils import parse_html
@@ -31,6 +32,7 @@ class YandexItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
+    @override
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
         """Parses raw search result data into structured attributes.
 
@@ -76,6 +78,7 @@ class YandexResponse(BaseSearchResponse[YandexItem]):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
+    @override
     def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
         """Parses the raw HTML response from Yandex into structured data.
 

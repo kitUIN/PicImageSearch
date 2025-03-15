@@ -3,6 +3,8 @@ name: Update PDM Dependencies
 on:
   schedule:
     - cron: "0 0 * * 6,0"
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:

@@ -5,6 +5,8 @@ from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Optional, Union
 
+from typing_extensions import override
+
 from ..model import BingResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
@@ -48,16 +50,14 @@ class Bing(BaseSearchEngine[BingResponse]):
             "cbir": "sbi",
             "imageBin": image_base64,
         }
-        resp = await self._make_request(method="post", endpoint=endpoint, files=files)
+        resp = await self._send_request(method="post", endpoint=endpoint, files=files)
 
         if match := re.search(r"(bcid_[A-Za-z0-9-.]+)", resp.text):
             return match[1], str(resp.url)
         else:
             raise ValueError("BCID not found on page.")
 
-    async def _get_insights(
-        self, bcid: Optional[str] = None, image_url: Optional[str] = None
-    ) -> dict[str, Any]:
+    async def _get_insights(self, bcid: Optional[str] = None, image_url: Optional[str] = None) -> dict[str, Any]:
         """Retrieves image insights from Bing using either BCID or image URL.
 
         This method handles two search scenarios:
@@ -94,9 +94,7 @@ class Bing(BaseSearchEngine[BingResponse]):
                     json_dumps({"imageInfo": {"url": image_url, "source": "Url"}}),
                 )
             }
-            resp = await self._make_request(
-                method="post", endpoint=endpoint, headers=headers, files=files
-            )
+            resp = await self._send_request(method="post", endpoint=endpoint, headers=headers, files=files)
 
         else:
             endpoint += f"&insightsToken={bcid}"
@@ -106,12 +104,11 @@ class Bing(BaseSearchEngine[BingResponse]):
             data = {"imageInfo": {"imageInsightsToken": bcid}, "knowledgeRequest": {}}
             if self.client:
                 self.client.cookies.clear()
-            resp = await self._make_request(
-                method="post", endpoint=endpoint, headers=headers, data=data
-            )
+            resp = await self._send_request(method="post", endpoint=endpoint, headers=headers, data=data)
 
-        return json_loads(resp.text)  # type: ignore
+        return json_loads(resp.text)
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -140,8 +137,6 @@ class Bing(BaseSearchEngine[BingResponse]):
             - Only one of `url` or `file` should be provided.
             - The search process involves multiple HTTP requests to Bing's API.
         """
-        self._validate_args(url, file)
-
         if url:
             resp_url = (
                 f"{self.base_url}/images/search?"
@@ -153,5 +148,7 @@ class Bing(BaseSearchEngine[BingResponse]):
         elif file:
             bcid, resp_url = await self._upload_image(file)
             resp_json = await self._get_insights(bcid=bcid)
+        else:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
         return BingResponse(resp_json, resp_url)
