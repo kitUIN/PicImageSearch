@@ -52,6 +52,7 @@ def show_result(resp: Optional[GoogleResponse]) -> None:
     logger.info(selected.origin)
     logger.info(selected.thumbnail)
     logger.info(selected.title)
+    logger.info(selected.content)
     logger.info(selected.url)
     logger.info("-" * 50)
 
