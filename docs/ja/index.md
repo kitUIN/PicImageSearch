@@ -47,6 +47,12 @@ PicImageSearch は強力な Python 画像検索ライブラリで、複数の主
 
 <div class="grid cards" markdown>
 
+- ![AnimeTrace](images/anime-trace.png){ .lg .middle } AnimeTrace
+
+    ---
+
+    以图识番 - 在线 AI 识番引擎 | 日漫识别 | 动漫查询 | 动漫基因库
+
 - ![Ascii2D](images/ascii2d.png){ .lg .middle } Ascii2D
 
     ---

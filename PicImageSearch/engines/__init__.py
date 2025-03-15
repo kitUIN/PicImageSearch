@@ -1,3 +1,4 @@
+from .anime_trace import AnimeTrace
 from .ascii2d import Ascii2D
 from .baidu import BaiDu
 from .bing import Bing
@@ -13,6 +14,7 @@ from .tracemoe import TraceMoe
 from .yandex import Yandex
 
 __all__ = [
+    "AnimeTrace",
     "Ascii2D",
     "BaiDu",
     "Bing",

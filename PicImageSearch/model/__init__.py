@@ -1,3 +1,4 @@
+from .anime_trace import AnimeTraceItem, AnimeTraceResponse
 from .ascii2d import Ascii2DItem, Ascii2DResponse
 from .baidu import BaiDuItem, BaiDuResponse
 from .bing import BingItem, BingResponse
@@ -19,6 +20,8 @@ from .tracemoe import TraceMoeItem, TraceMoeMe, TraceMoeResponse
 from .yandex import YandexItem, YandexResponse
 
 __all__ = [
+    "AnimeTraceItem",
+    "AnimeTraceResponse",
     "Ascii2DItem",
     "Ascii2DResponse",
     "BaiDuItem",

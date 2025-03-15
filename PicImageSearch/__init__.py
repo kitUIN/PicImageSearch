@@ -4,6 +4,7 @@ from .network import Network
 __version__ = "3.11.4"
 
 __all__ = [
+    "AnimeTrace",
     "Ascii2D",
     "BaiDu",
     "Bing",

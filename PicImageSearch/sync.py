@@ -12,6 +12,7 @@ from collections.abc import Coroutine
 from typing import Any, Callable
 
 from . import (
+    AnimeTrace,
     Ascii2D,
     BaiDu,
     Bing,
@@ -72,6 +73,7 @@ def syncify(*classes: type) -> None:
 
 
 syncify(
+    AnimeTrace,
     Ascii2D,
     BaiDu,
     Bing,
@@ -89,6 +91,7 @@ syncify(
 )
 
 __all__ = [
+    "AnimeTrace",
     "Ascii2D",
     "BaiDu",
     "Bing",

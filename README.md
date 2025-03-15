@@ -30,6 +30,7 @@ Read in other languages: [简体中文](docs/zh/README.zh-CN.md), [Русски�
 
 | Engine      | Website                              |
 |-------------|--------------------------------------|
+| AnimeTrace  | <https://www.animetrace.com/>        |
 | ASCII2D     | <https://ascii2d.net/>               |
 | Baidu       | <https://graph.baidu.com/>           |
 | Bing        | <https://www.bing.com/images/search> |
