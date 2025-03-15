@@ -51,7 +51,7 @@ includes = ["PicImageSearch"]
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "black>=24.10.0",
+    "black>=25.1.0",
     "loguru>=0.7.3",
     "mypy>=1.15.0",
     "pre-commit>=4.1.0",
