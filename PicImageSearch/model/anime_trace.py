@@ -6,6 +6,15 @@ from .base import BaseSearchItem, BaseSearchResponse
 
 
 class Character(NamedTuple):
+    """Represents a character identified in AnimeTrace search results.
+
+    Contains information about the character's name and the work they appear in.
+
+    Attributes:
+        name (str): The name of the character.
+        work (str): The title of the work the character appears in.
+    """
+
     name: str
     work: str
 
@@ -48,10 +57,7 @@ class AnimeTraceItem(BaseSearchItem):
         self.characters: list[Character] = []
 
         for char_info in character_data:
-            character = Character(
-                name=char_info["character"],
-                work=char_info["work"],
-            )
+            character = Character(char_info["character"], char_info["work"])
             self.characters.append(character)
 
 
