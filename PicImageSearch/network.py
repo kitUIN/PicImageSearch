@@ -1,6 +1,5 @@
-from dataclasses import dataclass
 from types import TracebackType
-from typing import Any, Optional, Union
+from typing import Any, NamedTuple, Optional, Union
 
 from httpx import AsyncClient, QueryParams
 
@@ -157,9 +156,8 @@ class ClientManager:
             await self.client.close()
 
 
-@dataclass
-class RESP:
-    """A dataclass for HTTP response data.
+class RESP(NamedTuple):
+    """A named tuple for HTTP response data.
 
     This class provides a convenient way to store and access HTTP response data,
     including the response body, URL, and status code.
