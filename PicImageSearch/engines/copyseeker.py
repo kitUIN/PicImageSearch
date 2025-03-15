@@ -4,6 +4,8 @@ from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Optional, Union
 
+from typing_extensions import override
+
 from ..model import CopyseekerResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
@@ -88,6 +90,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
 
         return discovery_id
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -120,7 +123,8 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
             - Only one of `url` or `file` should be provided.
             - The search process involves multiple HTTP requests to Copyseeker's API.
         """
-        self._ensure_search_input(url, file)
+        if not url and not file:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
         discovery_id = await self._get_discovery_id(url, file)
         if discovery_id is None:

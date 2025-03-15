@@ -24,7 +24,7 @@ def test_sync() -> None:
     bing = BingSync(proxies=PROXIES, http2=http2)
     resp = bing.search(url=url)
     # resp = bing.search(file=file)
-    show_result(resp)  # type: ignore
+    show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: BingResponse) -> None:

@@ -1,5 +1,7 @@
 from typing import Any
 
+from typing_extensions import override
+
 from ..utils import deep_get
 from .base import BaseSearchItem, BaseSearchResponse
 
@@ -46,6 +48,7 @@ class LensoResultItem(BaseSearchItem):
         self.height: int = 0
         super().__init__(data, **kwargs)
 
+    @override
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search result data."""
         self.origin: dict[str, Any] = data
@@ -94,6 +97,7 @@ class LensoResponse(BaseSearchResponse[LensoResultItem]):
         self.detected_faces: list[Any] = []
         super().__init__(resp_data, resp_url, **kwargs)
 
+    @override
     def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Parse the raw response data into structured results.
 

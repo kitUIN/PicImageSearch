@@ -64,20 +64,6 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
         """
         raise NotImplementedError
 
-    @staticmethod
-    def _ensure_search_input(url: Optional[str], file: Union[str, bytes, Path, None]) -> None:
-        """Ensure valid input parameters for the search operation.
-
-        Args:
-            url (Optional[str]): URL of the image to search.
-            file (Union[str, bytes, Path, None]): Local image file to search.
-
-        Raises:
-            ValueError: If neither 'url' nor 'file' is provided.
-        """
-        if not url and not file:
-            raise ValueError("Either 'url' or 'file' must be provided")
-
     async def _send_request(self, method: str, endpoint: str = "", url: str = "", **kwargs: Any) -> RESP:
         """Send an HTTP request and return the response.
 

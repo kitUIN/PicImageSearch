@@ -1,31 +1,26 @@
 import re
+from ast import literal_eval
 from typing import Any, Optional
+from urllib.parse import urlparse
 
 from pyquery import PyQuery
+from typing_extensions import override
 
 from ..utils import parse_html
 from .base import BaseSearchItem, BaseSearchResponse
 
 
-def get_site_name(url: Optional[str]) -> Optional[str]:
+def get_site_name(url: Optional[str]) -> str:
     """Extracts the site name from a URL."""
     if not url:
-        return None
-    from urllib.parse import urlparse
+        return ""
 
     parsed_url = urlparse(url)
-    return parsed_url.netloc.replace("www.", "") if parsed_url.netloc else None
+    return parsed_url.netloc.replace("www.", "") if parsed_url.netloc else ""
 
 
-def parse_size(html: PyQuery) -> Optional[str]:
-    """Parses the size from the HTML snippet.
-
-    Args:
-        html (PyQuery): PyQuery object containing size information
-
-    Returns:
-        Optional[str]: Size information, if found.
-    """
+def parse_image_size(html: PyQuery) -> Optional[str]:
+    """Parses the image size from the HTML snippet."""
     info_spans = html("div.oYQBg.Zn52Me > span")
 
     for span in info_spans.items():
@@ -36,16 +31,127 @@ def parse_size(html: PyQuery) -> Optional[str]:
     return None
 
 
-class GoogleLensItem(BaseSearchItem):
+def extract_ldi_images(script_text: str, image_url_map: dict[str, Any]) -> None:
+    """Extract LDI image URLs from script."""
+    ldi_match = re.search(r"google\.ldi\s*=\s*({[^}]+})", script_text)
+    if not ldi_match:
+        return
+
+    try:
+        ldi_dict = literal_eval(ldi_match[1])
+        for key, value in ldi_dict.items():
+            if key.startswith("dimg_"):
+                image_url_map[key] = value.replace("\\u003d", "=").replace("\\u0026", "&")
+    except (SyntaxError, ValueError) as e:
+        print(f"Error parsing google.ldi JSON: {e}")
+
+
+def extract_base64_images(script_text: str, base64_image_map: dict[str, Any]) -> None:
+    """Extract Base64 encoded images from script."""
+    if "_setImagesSrc" not in script_text:
+        return
+
+    image_ids_match = re.search(r"var ii=\[([^]]*)];", script_text)
+    base64_match = re.search(r"var s='(data:image/[^;]+;base64,[^']+)';", script_text)
+
+    if not (image_ids_match and base64_match):
+        return
+
+    image_ids_str = image_ids_match[1]
+    image_ids = [img_id.strip().strip("'") for img_id in image_ids_str.split(",") if img_id.strip()]
+    base64_str = base64_match[1]
+
+    if image_ids and base64_str:
+        for img_id in image_ids:
+            base64_image_map[img_id] = base64_str
+
+
+def extract_image_maps(html: PyQuery) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Extract image mapping information from HTML."""
+    base64_image_map = {}
+    image_url_map = {}
+
+    for script_element in html("script[nonce]"):
+        if script_text := PyQuery(script_element).text():
+            extract_ldi_images(script_text, image_url_map)
+            extract_base64_images(script_text, base64_image_map)
+
+    return image_url_map, base64_image_map
+
+
+class GoogleLensBaseItem(BaseSearchItem):
+    """Base class for Google Lens items with common image extraction functionality."""
+
+    def __init__(
+        self,
+        data: PyQuery,
+        image_url_map: dict[str, str],
+        base64_image_map: dict[str, str],
+        **kwargs: Any,
+    ):
+        """Initializes a GoogleLensBaseItem with data and image maps."""
+        self.image_url_map: dict[str, str] = image_url_map
+        self.base64_image_map: dict[str, str] = base64_image_map
+        super().__init__(data, **kwargs)
+
+    @override
+    def _parse_data(self, data: Any, **kwargs: Any) -> None:
+        """Parse the raw search result data.
+
+        This method should be implemented by subclasses to extract relevant information
+        from the raw data and populate the instance attributes.
+
+        Args:
+            data (Any): Raw data from the search engine response.
+            **kwargs (Any): Additional keyword arguments for specific search engines.
+        """
+        pass
+
+    def _extract_image_url(self, image_element: PyQuery) -> str:
+        """Extract image URL using a comprehensive approach.
+
+        Prioritizes in this order:
+        1. Maps image ID to URL from image_url_map
+        2. Maps image ID to base64 data from base64_image_map
+        3. Uses data-src attribute
+        4. Uses src attribute
+        """
+        if not image_element:
+            return ""
+
+        # Try to get image ID from data-iid or id attribute
+        if image_id := image_element.attr("data-iid") or image_element.attr("id"):
+            # Check if ID exists in image URL map
+            if image_id in self.image_url_map:
+                return self.image_url_map[image_id]
+            # Check if ID exists in base64 image map
+            if image_id in self.base64_image_map:
+                return self.base64_image_map[image_id]
+
+        # Try to get from data-src attribute
+        if data_src := image_element.attr("data-src"):
+            return data_src
+
+        # Try to get from src attribute
+        return src if (src := image_element.attr("src")) else ""
+
+
+class GoogleLensItem(GoogleLensBaseItem):
     """Represents a single Google Lens visual match item.
 
     Attributes:
         origin (PyQuery): The raw PyQuery object of the search result item.
-        url (Optional[str]): URL of the webpage containing the visual match.
-        title (Optional[str]): Title of the visual match result.
-        site_name (Optional[str]): Name of the site where the visual match is found.
-        image_url (Optional[str]): URL of the image representing the visual match.
+        url (str): URL of the webpage containing the visual match.
+        title (str): Title of the visual match result.
+        site_name (str): Name of the site where the visual match is found.
+        thumbnail (str): URL of the image representing the visual match.
     """
+
+    url: str
+    title: str
+    site_name: str
+    image_url_map: dict[str, str]
+    base64_image_map: dict[str, str]
 
     def __init__(
         self,
@@ -55,43 +161,35 @@ class GoogleLensItem(BaseSearchItem):
         **kwargs: Any,
     ):
         """Initializes a GoogleLensItem with data from a search result."""
-        self.image_url_map = image_url_map
-        self.base64_image_map = base64_image_map
-        super().__init__(data, **kwargs)
+        super().__init__(data, image_url_map, base64_image_map, **kwargs)
 
-    def _extract_image_url(self, image_element: PyQuery) -> Optional[str]:
-        """Extract image URL, prioritize base64 encoded images, then use data-src attribute."""
-        if not image_element:
-            return None
-
-        image_id = image_element.attr("id")
-        if image_id and image_id in self.base64_image_map:
-            return self.base64_image_map[image_id]
-
-        return image_element.attr("data-src")
-
+    @override
     def _parse_data(self, data: PyQuery, **kwargs: Any) -> None:
         """Parses the raw HTML data to populate item attributes."""
-
         link_element = data("a.LBcIee")
         title_element = data("a.LBcIee .Yt787")
         site_name_element = data("a.LBcIee .R8BTeb.q8U8x.LJEGod.du278d.i0Rdmd")
         image_element = data(".gdOPf.q07dbf.uhHOwf.ez24Df img")
 
-        self.url: Optional[str] = link_element.attr("href") if link_element else None
-        self.title: Optional[str] = title_element.text() if title_element else None
-        self.site_name: Optional[str] = site_name_element.text() if site_name_element else get_site_name(self.url)
-        self.image_url: Optional[str] = self._extract_image_url(image_element)
+        self.url = link_element.attr("href") if link_element else ""
+        self.title = title_element.text() if title_element else ""
+
+        if site_name_element:
+            self.site_name = site_name_element.text()
+        else:
+            self.site_name = get_site_name(self.url)
+
+        self.thumbnail: str = self._extract_image_url(image_element)
 
 
-class GoogleLensRelatedSearchItem(BaseSearchItem):
+class GoogleLensRelatedSearchItem(GoogleLensBaseItem):
     """Represents a single Google Lens related search item.
 
     Attributes:
         origin (PyQuery): The raw PyQuery object of the related search item.
-        search_url (Optional[str]): URL for the related search.
-        title (Optional[str]): Title of the related search suggestion.
-        image_url (Optional[str]): URL of the image associated with the related search.
+        url (Optional[str]): URL for the related search.
+        title (str): Title of the related search suggestion.
+        thumbnail (str): URL of the image associated with the related search.
     """
 
     def __init__(
@@ -102,33 +200,19 @@ class GoogleLensRelatedSearchItem(BaseSearchItem):
         **kwargs: Any,
     ):
         """Initializes a GoogleLensRelatedSearchItem with data from a related search result."""
-        self.image_url_map = image_url_map
-        self.base64_image_map = base64_image_map
-        super().__init__(data, **kwargs)
+        super().__init__(data, image_url_map, base64_image_map, **kwargs)
 
-    def _extract_image_url(self, image_element: PyQuery) -> Optional[str]:
-        """Extract image URL, prioritize base64 encoded images, then use data-src attribute."""
-        if not image_element:
-            return None
-
-        image_id = image_element.attr("id")
-        if image_id and image_id in self.base64_image_map:
-            return self.base64_image_map[image_id]
-
-        return image_element.attr("src")
-
+    @override
     def _parse_data(self, data: PyQuery, **kwargs: Any) -> None:
         """Parses the raw HTML data to populate related search item attributes."""
-        search_url_el = data("a.Kg0xqe")
+        url_el = data("a.Kg0xqe")
         image_element = data("img")
 
-        self.search_url: Optional[str] = (
-            f"https://www.google.com{search_url_el.attr('href')}"
-            if search_url_el and search_url_el.attr("href")
-            else None
-        )
-        self.title: Optional[str] = data(".I9S4yc").text()
-        self.image_url: Optional[str] = self._extract_image_url(image_element)
+        if url_el and url_el.attr("href"):
+            self.url: str = f"https://www.google.com{url_el.attr('href')}"
+
+        self.title: str = data(".I9S4yc").text()
+        self.thumbnail: str = self._extract_image_url(image_element)
 
 
 class GoogleLensResponse(BaseSearchResponse[GoogleLensItem]):
@@ -145,67 +229,25 @@ class GoogleLensResponse(BaseSearchResponse[GoogleLensItem]):
         """Initializes a GoogleLensResponse with the HTML response data."""
         super().__init__(resp_data, resp_url, **kwargs)
 
-    def _extract_image_maps(self, html: PyQuery) -> dict[str, Any]:
-        """Extract image mapping information."""
-        base64_image_map = {}
-        image_url_map = {}
-
-        for script_element in html("script[nonce]"):
-            script_text = PyQuery(script_element).text()
-            self._extract_ldi_images(script_text, image_url_map)
-            self._extract_base64_images(script_text, base64_image_map)
-
-        return {"base64_map": base64_image_map, "url_map": image_url_map}
-
-    def _extract_ldi_images(self, script_text: str, image_url_map: dict[str, Any]) -> None:
-        """Extract LDI image URLs from script."""
-        ldi_match = re.search(r"google\.ldi\s*=\s*({[^}]+})", script_text)
-        if not ldi_match:
-            return
-
-        try:
-            import ast
-
-            ldi_dict = ast.literal_eval(ldi_match[1])
-            for key, value in ldi_dict.items():
-                if key.startswith("dimg_"):
-                    image_url_map[key] = value.replace("\\u003d", "=").replace("\\u0026", "&")
-        except (SyntaxError, ValueError) as e:
-            print(f"Error parsing google.ldi JSON: {e}")
-
-    def _extract_base64_images(self, script_text: str, base64_image_map: dict[str, Any]) -> None:
-        """Extract Base64 encoded images from script."""
-        if "_setImagesSrc" not in script_text:
-            return
-
-        image_ids_match = re.search(r"var ii=\[([^]]*)];", script_text)
-        base64_match = re.search(r"var s='(data:image/jpeg;base64,[A-Za-z0-9+/]+(?:=+)?)", script_text)
-
-        if not (image_ids_match and base64_match):
-            return
-
-        image_ids_str = image_ids_match[1]
-        image_ids = [img_id.strip().strip("'") for img_id in image_ids_str.split(",") if img_id.strip()]
-        base64_str = base64_match[1]
-
-        if image_ids and base64_str:
-            for img_id in image_ids:
-                base64_image_map[img_id] = base64_str
-
-    def _parse_search_items(self, html: PyQuery, image_maps: dict[str, Any]) -> None:
-        """Parse search result items."""
+    def _parse_search_items(
+        self, html: PyQuery, image_url_map: dict[str, Any], base64_image_map: dict[str, Any]
+    ) -> None:
+        """Parse search result items from HTML."""
         items_elements = html(".vEWxFf.RCxtQc.my5z3d")
         for el in items_elements:
-            item = GoogleLensItem(PyQuery(el), image_maps["url_map"], image_maps["base64_map"])
+            item = GoogleLensItem(PyQuery(el), image_url_map, base64_image_map)
             self.raw.append(item)
 
-    def _parse_related_searches(self, html: PyQuery, image_maps: dict[str, Any]) -> None:
-        """Parse related search items."""
+    def _parse_related_searches(
+        self, html: PyQuery, image_url_map: dict[str, Any], base64_image_map: dict[str, Any]
+    ) -> None:
+        """Parse related search items from HTML."""
         related_searches_elements = html(".Kg0xqe")
         for el in related_searches_elements:
-            related_item = GoogleLensRelatedSearchItem(PyQuery(el), image_maps["url_map"], image_maps["base64_map"])
+            related_item = GoogleLensRelatedSearchItem(PyQuery(el), image_url_map, base64_image_map)
             self.related_searches.append(related_item)
 
+    @override
     def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
         """Parses the HTML response to extract search results and related searches."""
         html = parse_html(resp_data)
@@ -214,22 +256,21 @@ class GoogleLensResponse(BaseSearchResponse[GoogleLensItem]):
         self.raw: list[GoogleLensItem] = []
         self.related_searches: list[GoogleLensRelatedSearchItem] = []
 
-        image_maps = self._extract_image_maps(html)
+        image_url_map, base64_image_map = extract_image_maps(html)
+        self._parse_search_items(html, image_url_map, base64_image_map)
+        self._parse_related_searches(html, image_url_map, base64_image_map)
 
-        self._parse_search_items(html, image_maps)
-        self._parse_related_searches(html, image_maps)
 
-
-class GoogleLensExactMatchesItem(BaseSearchItem):
+class GoogleLensExactMatchesItem(GoogleLensBaseItem):
     """Represents a single Google Lens exact match item.
 
     Attributes:
         origin (PyQuery): The raw PyQuery object of the search result item.
-        url (Optional[str]): URL of the webpage containing the exact match.
-        title (Optional[str]): Title of the exact match result.
-        site_name (Optional[str]): Name of the site where the exact match is found.
+        url (str): URL of the webpage containing the exact match.
+        title (str): Title of the exact match result.
+        site_name (str): Name of the site where the exact match is found.
         size (Optional[str]): Size information of the product, if applicable.
-        image_url (Optional[str]): URL of the image representing the exact match.
+        thumbnail (str): URL of the image representing the exact match.
     """
 
     def __init__(
@@ -240,27 +281,11 @@ class GoogleLensExactMatchesItem(BaseSearchItem):
         **kwargs: Any,
     ):
         """Initializes a GoogleLensExactMatchesItem with data from a search result."""
-        self.image_url_map = image_url_map
-        self.base64_image_map = base64_image_map
-        super().__init__(data, **kwargs)
+        self.image_url_map: dict[str, str] = image_url_map
+        self.base64_image_map: dict[str, str] = base64_image_map
+        super().__init__(data, image_url_map, base64_image_map, **kwargs)
 
-    def _extract_image_url(self, image_element: PyQuery) -> Optional[str]:
-        """Extract image URL, prioritize base64 encoded images, then use data-src attribute."""
-        if not image_element:
-            return None
-
-        if image_id := image_element.attr("data-iid") or image_element.attr("id"):
-            if image_id in self.image_url_map:
-                return self.image_url_map[image_id]
-            elif image_id in self.base64_image_map:
-                return self.base64_image_map[image_id]
-            elif image_element.attr("data-src"):
-                return image_element.attr("data-src")
-            elif image_element.attr("src"):
-                return image_element.attr("src")
-
-        return None
-
+    @override
     def _parse_data(self, data: PyQuery, **kwargs: Any) -> None:
         """Parses raw HTML to populate exact match item attributes."""
         link_element = data("a.ngTNl")
@@ -269,11 +294,16 @@ class GoogleLensExactMatchesItem(BaseSearchItem):
         site_name_element = data(".XC18Gb .LbKnXb .xuPcX")
         info_div = data(".oYQBg.Zn52Me")
 
-        self.url: Optional[str] = link_element.attr("href") if link_element else None
-        self.title: Optional[str] = title_element.text() if title_element else None
-        self.site_name: Optional[str] = site_name_element.text() if site_name_element else get_site_name(self.url)
-        self.size: Optional[str] = parse_size(info_div)
-        self.image_url: Optional[str] = self._extract_image_url(image_element)
+        self.url: str = link_element.attr("href") if link_element else ""
+        self.title: str = title_element.text() if title_element else ""
+
+        if site_name_element:
+            self.site_name: str = site_name_element.text()
+        else:
+            self.site_name = get_site_name(self.url)
+
+        self.size: Optional[str] = parse_image_size(info_div)
+        self.thumbnail: str = self._extract_image_url(image_element)
 
 
 class GoogleLensExactMatchesResponse(BaseSearchResponse[GoogleLensExactMatchesItem]):
@@ -289,60 +319,13 @@ class GoogleLensExactMatchesResponse(BaseSearchResponse[GoogleLensExactMatchesIt
         """Initializes GoogleLensExactMatchesResponse with HTML response data."""
         super().__init__(resp_data, resp_url, **kwargs)
 
-    def _extract_ldi_images(self, script_text: str, image_url_map: dict[str, Any]) -> None:
-        """Extract LDI image URLs from script."""
-        ldi_match = re.search(r"google\.ldi\s*=\s*({[^}]+})", script_text)
-        if not ldi_match:
-            return
-
-        try:
-            import ast
-
-            ldi_dict = ast.literal_eval(ldi_match[1])
-            for key, value in ldi_dict.items():
-                if key.startswith("dimg_"):
-                    image_url_map[key] = value.replace("\\u003d", "=").replace("\\u0026", "&")
-        except (SyntaxError, ValueError) as e:
-            print(f"Error parsing google.ldi JSON: {e}")
-
-    def _extract_base64_images(self, script_text: str, base64_image_map: dict[str, Any]) -> None:
-        """Extract Base64 encoded images from script."""
-        if "_setImagesSrc" not in script_text:
-            return
-
-        image_ids_match = re.search(r"var ii=\['([^']+)']", script_text)
-        base64_match = re.search(r"var s='(data:image/[^;]+;base64,[^']+)';", script_text)
-
-        if not (image_ids_match and base64_match):
-            return
-
-        image_ids_str = image_ids_match[1]
-        image_ids = [img_id.strip() for img_id in image_ids_str.split(",") if img_id.strip()]
-        base64_str = base64_match[1]
-
-        if image_ids and base64_str:
-            for img_id in image_ids:
-                base64_image_map[img_id] = base64_str
-
-    def _extract_image_maps(self, html: PyQuery) -> tuple[dict[str, Any], dict[str, Any]]:
-        """Extract image mapping information."""
-        base64_image_map = {}
-        image_url_map = {}
-
-        for script_element in html("script[nonce]"):
-            script_text = PyQuery(script_element).text()
-            self._extract_ldi_images(script_text, image_url_map)
-            self._extract_base64_images(script_text, base64_image_map)
-
-        return image_url_map, base64_image_map
-
+    @staticmethod
     def _parse_search_items(
-        self,
         html: PyQuery,
         image_url_map: dict[str, Any],
         base64_image_map: dict[str, Any],
     ) -> list[GoogleLensExactMatchesItem]:
-        """Parse search result items."""
+        """Parse search result items from HTML."""
         items = []
         items_elements = html(".YxbOwd")
         for el in items_elements:
@@ -350,6 +333,7 @@ class GoogleLensExactMatchesResponse(BaseSearchResponse[GoogleLensExactMatchesIt
             items.append(item)
         return items
 
+    @override
     def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
         """Parses HTML response to extract exact match results."""
         html = parse_html(resp_data)
@@ -357,5 +341,5 @@ class GoogleLensExactMatchesResponse(BaseSearchResponse[GoogleLensExactMatchesIt
         self.url: str = kwargs.get("resp_url", "")
         self.raw: list[GoogleLensExactMatchesItem] = []
 
-        image_url_map, base64_image_map = self._extract_image_maps(html)
+        image_url_map, base64_image_map = extract_image_maps(html)
         self.raw = self._parse_search_items(html, image_url_map, base64_image_map)

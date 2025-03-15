@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any, Optional, Union
 
+from typing_extensions import override
+
 from ..model import GoogleResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
@@ -106,6 +108,7 @@ class Google(BaseSearchEngine[GoogleResponse]):
                 return GoogleResponse(_resp.text, _resp.url)
         return resp
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -141,8 +144,6 @@ class Google(BaseSearchEngine[GoogleResponse]):
             - The method automatically ensures thumbnail data is present in results
             - Safe search is disabled by default
         """
-        self._ensure_search_input(url, file)
-
         params: dict[str, Any] = {"sbisrc": 1, "safe": "off"}
 
         if url:
@@ -156,6 +157,8 @@ class Google(BaseSearchEngine[GoogleResponse]):
                 data=params,
                 files=files,
             )
+        else:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
         initial_resp = GoogleResponse(resp.text, resp.url)
         return await self._ensure_thumbnail_data(initial_resp)

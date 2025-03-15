@@ -1,5 +1,7 @@
 from typing import Any
 
+from typing_extensions import override
+
 from .base import BaseSearchItem, BaseSearchResponse
 
 
@@ -23,6 +25,7 @@ class BaiDuItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
+    @override
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
         """Parse the raw search result data into structured attributes.
 
@@ -64,6 +67,7 @@ class BaiDuResponse(BaseSearchResponse[BaiDuItem]):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
+    @override
     def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Parse the raw response data into a list of search result items.
 

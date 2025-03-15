@@ -23,7 +23,7 @@ def test_sync() -> None:
     tracemoe = TraceMoeSync(mute=False, size=None, proxies=PROXIES)
     resp = tracemoe.search(url=url)
     # resp = tracemoe.search(file=file)
-    show_result(resp)  # type: ignore
+    show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: TraceMoeResponse) -> None:

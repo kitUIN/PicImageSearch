@@ -12,6 +12,7 @@ __all__ = [
     "Google",
     "GoogleLens",
     "Iqdb",
+    "Lenso",
     "Network",
     "SauceNAO",
     "Tineye",

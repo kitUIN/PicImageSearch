@@ -1,5 +1,7 @@
 from typing import Any, Optional
 
+from typing_extensions import override
+
 from .base import BaseSearchItem, BaseSearchResponse
 
 
@@ -25,6 +27,7 @@ class CopyseekerItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
+    @override
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
         self.url: str = data["url"]
         self.title: str = data["title"]
@@ -66,6 +69,7 @@ class CopyseekerResponse(BaseSearchResponse[CopyseekerItem]):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
+    @override
     def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search response data."""
         self.id: str = resp_data["id"]

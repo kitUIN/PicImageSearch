@@ -2,6 +2,7 @@ from re import compile
 from typing import Any, Optional
 
 from pyquery import PyQuery
+from typing_extensions import override
 
 from ..utils import parse_html
 from .base import BaseSearchItem, BaseSearchResponse
@@ -28,11 +29,12 @@ class GoogleItem(BaseSearchItem):
         """
         super().__init__(data, thumbnail=thumbnail)
 
+    @override
     def _parse_data(self, data: PyQuery, **kwargs: Any) -> None:
         """Parse search result data."""
         self.title: str = data("h3").text()
         self.url: str = data("a").eq(0).attr("href")
-        self.thumbnail: Optional[str] = kwargs.get("thumbnail")  # type: ignore
+        self.thumbnail: str = kwargs.get("thumbnail") or ""
 
 
 class GoogleResponse(BaseSearchResponse[GoogleItem]):
@@ -66,6 +68,7 @@ class GoogleResponse(BaseSearchResponse[GoogleItem]):
         """
         super().__init__(resp_data, resp_url, page_number=page_number, pages=pages)
 
+    @override
     def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
         """Parse search response data."""
         data = parse_html(resp_data)

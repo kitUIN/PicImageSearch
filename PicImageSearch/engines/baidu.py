@@ -4,6 +4,7 @@ from typing import Any, Optional, Union
 
 from lxml.html import HTMLParser, fromstring
 from pyquery import PyQuery
+from typing_extensions import override
 
 from ..model import BaiDuResponse
 from ..utils import deep_get, read_file
@@ -52,9 +53,10 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
             if script_text and "window.cardData" in script_text:
                 start = script_text.find("[")
                 end = script_text.rfind("]") + 1
-                return json_loads(script_text[start:end])  # type: ignore
+                return json_loads(script_text[start:end])
         return []
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -91,8 +93,6 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
             - The search process involves multiple HTTP requests to BaiDu's API.
             - The response format varies depending on whether matches are found.
         """
-        self._ensure_search_input(url, file)
-
         params = {"from": "pc"}
         files: Optional[dict[str, Any]] = None
 
@@ -100,6 +100,8 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
             params["image"] = url
         elif file:
             files = {"image": read_file(file)}
+        else:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
         resp = await self._send_request(
             method="post",

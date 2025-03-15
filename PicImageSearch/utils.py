@@ -33,7 +33,7 @@ def deep_get(dictionary: dict[str, Any], keys: str) -> Optional[Any]:
             try:
                 if list_search[1]:
                     dictionary = dictionary[list_search[1]]
-                dictionary = dictionary[int(list_search[2])]  # type: ignore
+                dictionary = dictionary[int(list_search[2])]  # pyright: ignore[reportArgumentType]
             except (KeyError, IndexError):
                 return None
         else:

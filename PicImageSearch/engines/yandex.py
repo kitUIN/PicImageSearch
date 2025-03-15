@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any, Optional, Union
 
+from typing_extensions import override
+
 from ..model import YandexResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
@@ -34,6 +36,7 @@ class Yandex(BaseSearchEngine[YandexResponse]):
         base_url = f"{base_url}/images/search"
         super().__init__(base_url, **request_kwargs)
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -64,8 +67,6 @@ class Yandex(BaseSearchEngine[YandexResponse]):
             - When using file upload, the image will be sent to Yandex's servers.
             - The search process involves standard Yandex parameters like `rpt` and `cbir_page`.
         """
-        self._ensure_search_input(url, file)
-
         params = {"rpt": "imageview", "cbir_page": "sites"}
 
         if url:
@@ -79,5 +80,7 @@ class Yandex(BaseSearchEngine[YandexResponse]):
                 data={"prg": 1},
                 files=files,
             )
+        else:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
         return YandexResponse(resp.text, resp.url)

@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Any, Optional, Union
 
+from typing_extensions import override
+
 from ..model import IqdbResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
@@ -34,6 +36,7 @@ class Iqdb(BaseSearchEngine[IqdbResponse]):
         base_url = "https://3d.iqdb.org" if is_3d else "https://iqdb.org"
         super().__init__(base_url, **request_kwargs)
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -70,8 +73,6 @@ class Iqdb(BaseSearchEngine[IqdbResponse]):
                 - is_3d=True: Searches real-life images on 3d.iqdb.org
             - The force_gray option can help find visually similar images regardless of coloring
         """
-        self._ensure_search_input(url, file)
-
         data: dict[str, Any] = {}
         files: Optional[dict[str, Any]] = None
 
@@ -82,6 +83,8 @@ class Iqdb(BaseSearchEngine[IqdbResponse]):
             data["url"] = url
         elif file:
             files = {"file": read_file(file)}
+        else:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
         resp = await self._send_request(
             method="post",

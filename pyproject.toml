@@ -45,6 +45,11 @@ build-backend = "pdm.backend"
 
 [tool.basedpyright]
 pythonVersion = "3.9"
+reportAny = false
+reportExplicitAny = false
+reportUnknownArgumentType = false
+reportUnknownMemberType = false
+reportUnknownVariableType = false
 
 [tool.pdm]
 version = { source = "file", path = "PicImageSearch/__init__.py" }

@@ -1,5 +1,7 @@
 from typing import Any, Callable, Optional
 
+from typing_extensions import override
+
 from .base import BaseSearchItem, BaseSearchResponse
 
 
@@ -22,6 +24,7 @@ class BingItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
+    @override
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search result data."""
         self.title: str = data.get("name", "")
@@ -194,6 +197,7 @@ class BingResponse(BaseSearchResponse[BingItem]):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
+    @override
     def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search response data."""
         self.pages_including: list[PagesIncludingItem] = []

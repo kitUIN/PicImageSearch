@@ -2,6 +2,8 @@ from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Optional, Union
 
+from typing_extensions import override
+
 from ..model import TineyeResponse
 from ..types import DomainInfo
 from ..utils import deep_get, read_file
@@ -99,6 +101,7 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
         """
         return await self._navigate_page(resp, 1)
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -143,8 +146,6 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
         Note:
             - Only one of `url` or `file` should be provided
         """
-        self._ensure_search_input(url, file)
-
         files: Optional[dict[str, Any]] = None
         params: dict[str, Any] = {
             "sort": sort,
@@ -160,6 +161,8 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
             params["url"] = url
         elif file:
             files = {"image": read_file(file)}
+        else:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
         resp = await self._send_request(
             method="post",

@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Any, Literal, Optional, Union
 
 from pyquery import PyQuery
+from typing_extensions import override
 
 from ..model import GoogleLensExactMatchesResponse, GoogleLensResponse
 from ..network import RESP
@@ -126,6 +127,7 @@ class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatch
             return await self._send_request(method="get", url=f"{self.search_url}{exact_link}")
         return resp
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -151,7 +153,9 @@ class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatch
         Raises:
             ValueError: If neither `url` nor `file` is provided.
         """
-        self._ensure_search_input(url, file)
+        if not url and not file:
+            raise ValueError("Either 'url' or 'file' must be provided")
+
         if q is not None and self.search_type == "exact_matches":
             q = None
 

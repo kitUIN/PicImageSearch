@@ -1,7 +1,7 @@
 import asyncio
 from typing import Optional
 
-from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
+from demo.code.config import GOOGLE_COOKIES, IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import Google, Network
 from PicImageSearch.model import GoogleResponse
 from PicImageSearch.sync import Google as GoogleSync
@@ -10,13 +10,10 @@ url = f"{IMAGE_BASE_URL}/test03.jpg"
 file = get_image_path("test03.jpg")
 base_url = "https://www.google.co.jp"
 
-# Note: Google search requires the `NID` cookie (when NOT logged into any Google account), expected format: `NID=...`
-cookies: Optional[str] = None
-
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=PROXIES, cookies=cookies) as client:
+    async with Network(proxies=PROXIES, cookies=GOOGLE_COOKIES) as client:
         google = Google(base_url=base_url, client=client)
         # resp = await google.search(url=url)
         resp = await google.search(file=file)
@@ -30,15 +27,15 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    google = GoogleSync(base_url=base_url, proxies=PROXIES, cookies=cookies)
+    google = GoogleSync(base_url=base_url, proxies=PROXIES, cookies=GOOGLE_COOKIES)
     resp = google.search(url=url)
     # resp = google.search(file=file)
-    show_result(resp)  # type: ignore
-    resp2 = google.next_page(resp)  # type: ignore
-    show_result(resp2)  # type: ignore
+    show_result(resp)  # pyright: ignore[reportArgumentType]
+    resp2 = google.next_page(resp)  # pyright: ignore[reportArgumentType]
+    show_result(resp2)  # pyright: ignore[reportArgumentType]
     if resp2:
-        resp3 = google.pre_page(resp2)  # type: ignore
-        show_result(resp3)  # type: ignore
+        resp3 = google.pre_page(resp2)  # pyright: ignore[reportArgumentType]
+        show_result(resp3)  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: Optional[GoogleResponse]) -> None:

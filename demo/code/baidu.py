@@ -23,7 +23,7 @@ def test_sync() -> None:
     baidu = BaiDuSync(proxies=PROXIES)
     resp = baidu.search(url=url)
     # resp = baidu.search(file=file)
-    show_result(resp)  # type: ignore
+    show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: BaiDuResponse) -> None:

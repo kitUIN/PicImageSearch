@@ -23,7 +23,7 @@ def test_sync() -> None:
     iqdb = IqdbSync(proxies=PROXIES)
     resp = iqdb.search(url=url)
     # resp = iqdb.search(file=file)
-    show_result(resp)  # type: ignore
+    show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: IqdbResponse) -> None:

@@ -1,7 +1,9 @@
 import base64
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Literal, Optional, Union
+from typing import Any, Literal, Optional, Union, get_args
+
+from typing_extensions import override
 
 from ..model import LensoResponse
 from ..utils import read_file
@@ -31,8 +33,8 @@ class Lenso(BaseSearchEngine[LensoResponse]):
             - "DATE_ASCENDING": Sort by date, oldest to newest
     """
 
-    SEARCH_TYPES = Literal["", "duplicates", "similar", "places", "related"]
-    SORT_TYPES = Literal[
+    SEARCH_TYPES = Literal["", "duplicates", "similar", "places", "related"]  # pyright: ignore[reportUnannotatedClassAttribute]
+    SORT_TYPES = Literal[  # pyright: ignore[reportUnannotatedClassAttribute]
         "SMART",
         "RANDOM",
         "QUALITY_DESCENDING",
@@ -78,6 +80,7 @@ class Lenso(BaseSearchEngine[LensoResponse]):
             f"Lenso Upload failed or ID not found. Status Code: {resp.status_code}, Response: {resp.text}"
         )
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -104,28 +107,24 @@ class Lenso(BaseSearchEngine[LensoResponse]):
             ValueError: If `search_type` or `sort_type` is invalid.
             RuntimeError: If image upload fails or response is invalid.
         """
-        self._ensure_search_input(url, file)
-
-        if search_type and search_type not in self.SEARCH_TYPES.__args__:
-            valid_types = '", "'.join(t for t in self.SEARCH_TYPES.__args__ if t)
+        if search_type and search_type not in get_args(self.SEARCH_TYPES):
+            valid_types = '", "'.join(t for t in get_args(self.SEARCH_TYPES) if t)
             raise ValueError(f'Invalid search_type. Must be empty or one of: "{valid_types}"')
 
-        if sort_type not in self.SORT_TYPES.__args__:
-            valid_sorts = '", "'.join(self.SORT_TYPES.__args__)
+        if sort_type not in get_args(self.SORT_TYPES):
+            valid_sorts = '", "'.join(get_args(self.SORT_TYPES))
             raise ValueError(f'Invalid sort_type. Must be one of: "{valid_sorts}"')
-
-        image_base64: str = ""
-        result_hash: str = ""
 
         if url:
             image_bytes = await self.download(url)
             image_base64 = base64.b64encode(image_bytes).decode("utf-8")
             result_hash = await self._upload_image(image_base64)
-
         elif file:
             image_bytes = read_file(file)
             image_base64 = base64.b64encode(image_bytes).decode("utf-8")
             result_hash = await self._upload_image(image_base64)
+        else:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
         search_endpoint = "api/search"
         search_payload = {
