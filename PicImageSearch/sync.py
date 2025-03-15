@@ -8,6 +8,8 @@ Automatically wraps asynchronous methods of specified classes, enabling synchron
 import asyncio
 import functools
 import inspect
+from collections.abc import Coroutine
+from typing import Any, Callable
 
 from . import (
     Ascii2D,
@@ -16,7 +18,9 @@ from . import (
     Copyseeker,
     EHentai,
     Google,
+    GoogleLens,
     Iqdb,
+    Lenso,
     Network,
     SauceNAO,
     Tineye,
@@ -25,7 +29,7 @@ from . import (
 )
 
 
-def _syncify_wrap(class_type, method_name):  # type: ignore
+def _syncify_wrap(class_type: type, method_name: str) -> None:
     """Wrap an asynchronous method of a class for synchronous calling.
 
     Creates a synchronous version of the specified asynchronous method.
@@ -39,11 +43,11 @@ def _syncify_wrap(class_type, method_name):  # type: ignore
     Returns:
         None: Modifies the class method in-place.
     """
-    method = getattr(class_type, method_name)
+    method: Callable[..., Coroutine[None, None, Any]] = getattr(class_type, method_name)
 
     @functools.wraps(method)
-    def syncified(*args, **kwargs):  # type: ignore
-        coro = method(*args, **kwargs)
+    def syncified(*args: Any, **kwargs: Any) -> Any:
+        coro: Coroutine[None, None, Any] = method(*args, **kwargs)
         loop = asyncio.get_event_loop()
         return coro if loop.is_running() else loop.run_until_complete(coro)
 
@@ -51,7 +55,7 @@ def _syncify_wrap(class_type, method_name):  # type: ignore
     setattr(class_type, method_name, syncified)
 
 
-def syncify(*classes):  # type: ignore
+def syncify(*classes: type) -> None:
     """Decorate coroutine methods of classes for synchronous execution.
 
     Iterates over classes, applying `_syncify_wrap` to coroutine methods.
@@ -62,20 +66,21 @@ def syncify(*classes):  # type: ignore
     """
     for c in classes:
         for name in dir(c):
-            if (
-                not name.startswith("_") or name == "__call__"
-            ) and inspect.iscoroutinefunction(getattr(c, name)):
-                _syncify_wrap(c, name)  # type: ignore
+            attr = getattr(c, name, None)
+            if (not name.startswith("_") or name == "__call__") and inspect.iscoroutinefunction(attr):
+                _syncify_wrap(c, name)
 
 
-syncify(  # type: ignore
+syncify(
     Ascii2D,
     BaiDu,
     Bing,
     Copyseeker,
     EHentai,
     Google,
+    GoogleLens,
     Iqdb,
+    Lenso,
     Network,
     SauceNAO,
     Tineye,
@@ -90,7 +95,9 @@ __all__ = [
     "Copyseeker",
     "EHentai",
     "Google",
+    "GoogleLens",
     "Iqdb",
+    "Lenso",
     "Network",
     "SauceNAO",
     "Tineye",

@@ -3,6 +3,8 @@ from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Optional, Union
 
+from typing_extensions import override
+
 from ..model import TraceMoeItem, TraceMoeMe, TraceMoeResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
@@ -69,10 +71,10 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
             size (Optional[str]): Specifies preview video size ('s', 'm', 'l').
             **request_kwargs (Any): Additional arguments for network requests.
         """
-        self.anilist_url = f"{base_url}/anilist"
+        self.anilist_url: str = f"{base_url}/anilist"
         base_url = f"{base_url_api}/search"
         super().__init__(base_url, **request_kwargs)
-        self.me_url = f"{base_url_api}/me"
+        self.me_url: str = f"{base_url_api}/me"
         self.mute: bool = mute
         self.size: Optional[str] = size
 
@@ -93,12 +95,10 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
             Response data includes search quota reset time and remaining searches.
         """
         params = {"key": key} if key else None
-        resp = await self.get(self.me_url, params=params)
+        resp = await self._send_request(method="get", url=self.me_url, params=params)
         return TraceMoeMe(json_loads(resp.text))
 
-    async def update_anime_info(
-        self, item: TraceMoeItem, chinese_title: bool = True
-    ) -> None:
+    async def update_anime_info(self, item: TraceMoeItem, chinese_title: bool = True) -> None:
         """Updates a TraceMoeItem with detailed anime information from AniList API.
 
         Args:
@@ -115,17 +115,14 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
             - Alternative titles (synonyms)
         """
         variables = {"id": item.anilist}
-        item.anime_info = json_loads(
-            (
-                await self.post(
-                    url=self.anilist_url,
-                    json={"query": ANIME_INFO_QUERY, "variables": variables},
-                )
-            )[0]
-        )["data"]["Media"]
+        resp = await self._send_request(
+            method="post",
+            url=self.anilist_url,
+            json={"query": ANIME_INFO_QUERY, "variables": variables},
+        )
+        item.anime_info = (json_loads(resp.text))["data"]["Media"]
         # Update item fields with anime information
         item.idMal = item.anime_info["idMal"]
-        item.title = item.anime_info["title"]
         item.title_native = item.anime_info["title"]["native"]
         item.title_romaji = item.anime_info["title"]["romaji"]
         item.title_english = item.anime_info["title"]["english"]
@@ -139,6 +136,7 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
         if chinese_title:
             item.title_chinese = item.anime_info["title"].get("chinese", "")
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -180,8 +178,6 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
             - Using an API key increases search quota and priority
             - Results are automatically enriched with detailed anime information
         """
-        self._validate_args(url, file)
-
         headers = {"x-trace-key": key} if key else None
         files: Optional[dict[str, Any]] = None
 
@@ -195,8 +191,10 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
             params["url"] = url
         elif file:
             files = {"file": read_file(file)}
+        else:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
-        resp = await self._make_request(
+        resp = await self._send_request(
             method="post",
             headers=headers,
             params=params,
@@ -209,8 +207,6 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
             mute=self.mute,
             size=self.size,
         )
-        await asyncio.gather(
-            *[self.update_anime_info(item, chinese_title) for item in result.raw]
-        )
+        await asyncio.gather(*[self.update_anime_info(item, chinese_title) for item in result.raw])  # pyright: ignore[reportUnusedCallResult]
 
         return result

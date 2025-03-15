@@ -1,5 +1,7 @@
 from typing import Any
 
+from typing_extensions import override
+
 from ..types import DomainInfo
 from .base import BaseSearchItem, BaseSearchResponse
 
@@ -26,6 +28,7 @@ class TineyeItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
+    @override
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
         """Parses the raw data for a single Tineye search result."""
         self.thumbnail: str = data["image_url"]
@@ -70,13 +73,14 @@ class TineyeResponse(BaseSearchResponse[TineyeItem]):
             domains=domains,
             page_number=page_number,
         )
-        self.domains = domains
-        self.page_number = page_number
+        self.domains: list[DomainInfo] = domains
+        self.page_number: int = page_number
 
+    @override
     def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Parses the raw JSON response from Tineye."""
         self.query_hash: str = resp_data["query_hash"]
         self.status_code: int = resp_data["status_code"]
         self.total_pages: int = resp_data["total_pages"]
         matches = resp_data["matches"]
-        self.raw = [TineyeItem(i) for i in matches] if matches else []
+        self.raw: list[TineyeItem] = [TineyeItem(i) for i in matches] if matches else []

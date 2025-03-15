@@ -1,5 +1,7 @@
 from typing import Any, Callable, Optional
 
+from typing_extensions import override
+
 from .base import BaseSearchItem, BaseSearchResponse
 
 
@@ -22,6 +24,7 @@ class BingItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
+    @override
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search result data."""
         self.title: str = data.get("name", "")
@@ -126,12 +129,8 @@ class TravelInfo:
     def __init__(self, data: dict[str, Any]):
         self.destination_name: str = data.get("destinationName", "")
         self.travel_guide_url: str = data.get("travelGuideUrl", "")
-        self.attractions: list[Attraction] = [
-            Attraction(x) for x in data.get("attractions", [])
-        ]
-        self.travel_cards: list[TravelCard] = [
-            TravelCard(x) for x in data.get("travelCards", [])
-        ]
+        self.attractions: list[Attraction] = [Attraction(x) for x in data.get("attractions", [])]
+        self.travel_cards: list[TravelCard] = [TravelCard(x) for x in data.get("travelCards", [])]
 
 
 class EntityItem:
@@ -162,9 +161,7 @@ class EntityItem:
                 for profile in social_media.get("profiles", [])
             ]
 
-        self.short_description: str = data.get("entityPresentationInfo", {}).get(
-            "entityTypeDisplayHint", ""
-        )
+        self.short_description: str = data.get("entityPresentationInfo", {}).get("entityTypeDisplayHint", "")
 
 
 class BingResponse(BaseSearchResponse[BingItem]):
@@ -200,6 +197,7 @@ class BingResponse(BaseSearchResponse[BingItem]):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
+    @override
     def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search response data."""
         self.pages_including: list[PagesIncludingItem] = []

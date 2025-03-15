@@ -24,7 +24,7 @@ def test_sync() -> None:
     bing = BingSync(proxies=PROXIES, http2=http2)
     resp = bing.search(url=url)
     # resp = bing.search(file=file)
-    show_result(resp)  # type: ignore
+    show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: BingResponse) -> None:
@@ -66,9 +66,7 @@ def show_result(resp: BingResponse) -> None:
                 logger.info(f"    Title: {attraction.title}")
                 logger.info(f"    URL: {attraction.url}")
                 logger.info(f"    Requery URL: {attraction.search_url}")
-                logger.info(
-                    f"    Interest Types: {', '.join(attraction.interest_types)}"
-                )
+                logger.info(f"    Interest Types: {', '.join(attraction.interest_types)}")
                 logger.info("-" * 20)
 
         if resp.travel.travel_cards:
@@ -91,9 +89,7 @@ def show_result(resp: BingResponse) -> None:
             if entity.profiles:
                 logger.info("  Profiles:")
                 for profile in entity.profiles:
-                    logger.info(
-                        f"     {profile.get('social_network')}: {profile.get('url')}"
-                    )
+                    logger.info(f"     {profile.get('social_network')}: {profile.get('url')}")
 
             logger.info("-" * 20)
 

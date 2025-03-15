@@ -1,5 +1,7 @@
 from typing import Any, Optional
 
+from typing_extensions import override
+
 from .base import BaseSearchItem, BaseSearchResponse
 
 
@@ -25,8 +27,8 @@ class CopyseekerItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
+    @override
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
-
         self.url: str = data["url"]
         self.title: str = data["title"]
         self.thumbnail: str = data.get("mainImage", "")
@@ -67,6 +69,7 @@ class CopyseekerResponse(BaseSearchResponse[CopyseekerItem]):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
+    @override
     def _parse_response(self, resp_data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search response data."""
         self.id: str = resp_data["id"]
@@ -75,7 +78,5 @@ class CopyseekerResponse(BaseSearchResponse[CopyseekerItem]):
         self.entities: Optional[str] = resp_data.get("entities")
         self.total: int = resp_data["totalLinksFound"]
         self.exif: dict[str, Any] = resp_data.get("exif", {})
-        self.raw: list[CopyseekerItem] = [
-            CopyseekerItem(page) for page in resp_data.get("pages", [])
-        ]
+        self.raw: list[CopyseekerItem] = [CopyseekerItem(page) for page in resp_data.get("pages", [])]
         self.similar_image_urls: list[str] = resp_data.get("visuallySimilarImages", [])

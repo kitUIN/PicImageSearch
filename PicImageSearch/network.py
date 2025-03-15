@@ -1,4 +1,4 @@
-from collections import namedtuple
+from dataclasses import dataclass
 from types import TracebackType
 from typing import Any, Optional, Union
 
@@ -11,7 +11,6 @@ DEFAULT_HEADERS = {
         "Chrome/99.0.4844.82 Safari/537.36"
     )
 }
-RESP = namedtuple("RESP", ["text", "url", "status_code"])
 
 
 class Network:
@@ -158,6 +157,24 @@ class ClientManager:
             await self.client.close()
 
 
+@dataclass
+class RESP:
+    """A dataclass for HTTP response data.
+
+    This class provides a convenient way to store and access HTTP response data,
+    including the response body, URL, and status code.
+
+    Attributes:
+        text (str): The response body as text.
+        url (str): The final URL after any redirects.
+        status_code (int): The HTTP status code.
+    """
+
+    text: str
+    url: str
+    status_code: int
+
+
 class HandOver:
     """A high-level interface for making HTTP requests.
 
@@ -261,7 +278,7 @@ class HandOver:
             **kwargs (Any): Additional arguments passed to httpx.AsyncClient.post().
 
         Returns:
-            RESP: A named tuple containing:
+            RESP: A dataclass containing:
                 - text: The response body as text
                 - url: The final URL after any redirects
                 - status_code: The HTTP status code
@@ -290,9 +307,7 @@ class HandOver:
             )
             return RESP(resp.text, str(resp.url), resp.status_code)
 
-    async def download(
-        self, url: str, headers: Optional[dict[str, str]] = None
-    ) -> bytes:
+    async def download(self, url: str, headers: Optional[dict[str, str]] = None) -> bytes:
         """Download content from a URL with automatic client management.
 
         Args:

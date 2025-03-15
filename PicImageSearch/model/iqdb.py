@@ -1,6 +1,7 @@
 from typing import Any
 
 from pyquery import PyQuery
+from typing_extensions import override
 
 from ..utils import parse_html
 from .base import BaseSearchItem, BaseSearchResponse
@@ -28,6 +29,7 @@ class IqdbItem(BaseSearchItem):
         """
         super().__init__(data, **kwargs)
 
+    @override
     def _parse_data(self, data: PyQuery, **kwargs: Any) -> None:
         """Initialize and parse the search result data.
 
@@ -63,8 +65,8 @@ class IqdbItem(BaseSearchItem):
             if self.content == "No relevant matches":
                 return
             tr_list = tr_list[1:]
-        self.url = self._get_url(tr_list[0]("td > a").attr("href"))
-        self.thumbnail = "https://iqdb.org" + tr_list[0]("td > a > img").attr("src")
+        self.url: str = self._get_url(tr_list[0]("td > a").attr("href"))
+        self.thumbnail: str = "https://iqdb.org" + tr_list[0]("td > a > img").attr("src")
         source_list = [i.tail.strip() for i in tr_list[1]("img")]
         self.source = source_list[0]
         if other_source := tr_list[1]("td > a"):
@@ -76,7 +78,7 @@ class IqdbItem(BaseSearchItem):
             )
         self.size = tr_list[2]("td").text()
         similarity_raw = tr_list[3]("td").text()
-        self.similarity = float(similarity_raw.removesuffix("% similarity"))
+        self.similarity: float = float(similarity_raw.removesuffix("% similarity"))
 
     @staticmethod
     def _get_url(url: str) -> str:
@@ -118,6 +120,7 @@ class IqdbResponse(BaseSearchResponse[IqdbItem]):
         """
         super().__init__(resp_data, resp_url, **kwargs)
 
+    @override
     def _parse_response(self, resp_data: str, **kwargs: Any) -> None:
         """Initialize and parse the complete search response.
 
@@ -148,13 +151,9 @@ class IqdbResponse(BaseSearchResponse[IqdbItem]):
         Args:
             data (PyQuery): PyQuery object containing the complete search response.
         """
-        host = (
-            "https://iqdb.org"
-            if data('a[href^="//3d.iqdb.org"]')
-            else "https://3d.iqdb.org"
-        )
+        host = "https://iqdb.org" if data('a[href^="//3d.iqdb.org"]') else "https://3d.iqdb.org"
         tables = list(data("#pages > div > table").items())
-        self.url = f'{host}/?url=https://iqdb.org{tables[0].find("img").attr("src")}'
+        self.url: str = f"{host}/?url=https://iqdb.org{tables[0].find('img').attr('src')}"
         if len(tables) > 1:
             tables = tables[1:]
             self.raw.extend([IqdbItem(i) for i in tables])

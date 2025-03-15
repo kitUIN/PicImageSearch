@@ -23,7 +23,7 @@ def test_sync() -> None:
     copyseeker = CopyseekerSync(proxies=PROXIES)
     resp = copyseeker.search(url=url)
     # resp = copyseeker.search(file=file)
-    show_result(resp)  # type: ignore
+    show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: CopyseekerResponse) -> None:

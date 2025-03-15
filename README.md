@@ -37,6 +37,7 @@ Read in other languages: [简体中文](docs/zh/README.zh-CN.md), [Русски�
 | E-Hentai   | <https://e-hentai.org/>              |
 | Google     | <https://www.google.com/imghp>       |
 | IQDB       | <https://iqdb.org/>                  |
+| Lenso      | <https://lenso.ai/>                  |
 | SauceNAO   | <https://saucenao.com/>              |
 | Tineye     | <https://tineye.com/search/>         |
 | TraceMoe   | <https://trace.moe/>                 |

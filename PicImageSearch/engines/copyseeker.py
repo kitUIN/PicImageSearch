@@ -4,6 +4,8 @@ from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Optional, Union
 
+from typing_extensions import override
+
 from ..model import CopyseekerResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
@@ -53,11 +55,11 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
         if url:
             data = {"discoveryType": "ReverseImageSearch", "imageUrl": url}
             headers = {
-                "next-action": "4004c826c84c7592d782ef3648ac6da33ae40f0893",
+                "next-action": "40b36f62371893e153d4a97395db8b742b3a55ba92",
                 "content-type": "text/plain;charset=UTF-8",
             }
 
-            resp = await self._make_request(
+            resp = await self._send_request(
                 method="post",
                 headers=headers,
                 data=json_dumps([data]),
@@ -69,11 +71,11 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
                 "0": (None, '["$K1"]'),
             }
             headers = {
-                "next-action": "40da2b6c4059b8a099c6634d796264254d3c0e12ab",
+                "next-action": "403e08305b4fcd290c2f7b51c938c920b8ebc4c44d",
                 "content-type": "multipart/form-data; boundary=-",
             }
 
-            resp = await self._make_request(
+            resp = await self._send_request(
                 method="post",
                 headers=headers,
                 files=files,
@@ -88,6 +90,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
 
         return discovery_id
 
+    @override
     async def search(
         self,
         url: Optional[str] = None,
@@ -120,7 +123,8 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
             - Only one of `url` or `file` should be provided.
             - The search process involves multiple HTTP requests to Copyseeker's API.
         """
-        self._validate_args(url, file)
+        if not url and not file:
+            raise ValueError("Either 'url' or 'file' must be provided")
 
         discovery_id = await self._get_discovery_id(url, file)
         if discovery_id is None:
@@ -128,13 +132,11 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
 
         data = [{"discoveryId": discovery_id, "hasBlocker": "False"}]
         headers = {
-            "next-action": "4051bb75bb1a1a40d49e0cf17d929f2a113217b6f3",
+            "next-action": "403ce7a907ea80fc8b45d73cea703aad2516a44b02",
             "content-type": "text/plain;charset=UTF-8",
         }
 
-        resp = await self._make_request(
-            method="post", endpoint="discovery", data=json_dumps(data), headers=headers
-        )
+        resp = await self._send_request(method="post", endpoint="discovery", data=json_dumps(data), headers=headers)
 
         resp_json = {}
 
