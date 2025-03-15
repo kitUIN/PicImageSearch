@@ -12,7 +12,7 @@ GOOGLE_COOKIES = ""
 
 if USE_SIMPLE_LOGGER:
     logger.remove()
-    logger.add(sys.stderr, format="<level>{level: <8}</level> <green>{message}</green>")
+    logger.add(sys.stderr, format="<level>{level: <8}</level> <green>{message}</green>")  # pyright: ignore[reportUnusedCallResult]
 
 
 def get_image_path(image_name: str) -> Path:

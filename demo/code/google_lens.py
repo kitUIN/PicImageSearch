@@ -78,7 +78,7 @@ def test_sync() -> None:
     #     country="RU",
     # )
     # resp_exact = google_lens_exact.search(file=file)
-    # show_result(resp_exact, search_type="exact_matches")  # pyright: ignore
+    # show_result(resp_exact, search_type="exact_matches")  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: Union[GoogleLensResponse, GoogleLensExactMatchesResponse], search_type: str) -> None:

@@ -33,7 +33,7 @@ def test_sync() -> None:
     show_result(resp)  # pyright: ignore[reportArgumentType]
     resp2 = google.next_page(resp)  # pyright: ignore[reportArgumentType]
     show_result(resp2)  # pyright: ignore[reportArgumentType]
-    if resp2:
+    if resp2:  # pyright: ignore[reportUnnecessaryComparison]
         resp3 = google.pre_page(resp2)  # pyright: ignore[reportArgumentType]
         show_result(resp3)  # pyright: ignore[reportArgumentType]
 

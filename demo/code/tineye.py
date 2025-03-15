@@ -77,11 +77,11 @@ def test_sync() -> None:
         resp2 = tineye.next_page(resp)  # pyright: ignore[reportArgumentType]
         show_result(resp2, "Next Page")  # pyright: ignore[reportArgumentType]
 
-        if resp2:
+        if resp2:  # pyright: ignore[reportUnnecessaryComparison]
             resp3 = tineye.next_page(resp2)  # pyright: ignore[reportArgumentType]
             show_result(resp3, "Next Page")  # pyright: ignore[reportArgumentType]
 
-            if resp3:
+            if resp3:  # pyright: ignore[reportUnnecessaryComparison]
                 resp4 = tineye.pre_page(resp3)  # pyright: ignore[reportArgumentType]
                 show_result(resp4, "Previous Page")  # pyright: ignore[reportArgumentType]
 
