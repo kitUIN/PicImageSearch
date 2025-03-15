@@ -1,5 +1,4 @@
 import asyncio
-from typing import Optional
 
 from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import BaiDu, Network
@@ -10,7 +9,7 @@ url = f"{IMAGE_BASE_URL}/test02.jpg"
 file = get_image_path("test02.jpg")
 
 # Note: Baidu search requires cookies contain the `verify`
-cookies: Optional[str] = None
+cookies: str = ""
 
 
 @logger.catch()
