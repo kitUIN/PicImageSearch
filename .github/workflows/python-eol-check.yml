@@ -1,0 +1,35 @@
+name: Python EOL Check
+
+on:
+  schedule:
+    - cron: '0 0 * * 6'
+  workflow_dispatch:
+
+jobs:
+  check-python-eol:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/scripts/requirements.txt
+
+      - name: Run Python EOL check script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Extract repository name from github.repository (format: owner/repo)
+          REPO_NAME=$(echo "${{ github.repository }}" | cut -d '/' -f 2)
+          
+          python .github/scripts/python_eol_check.py \
+            --repo-owner ${{ github.repository_owner }} \
+            --repo-name $REPO_NAME \
+            --github-token ${{ secrets.GITHUB_TOKEN }}
