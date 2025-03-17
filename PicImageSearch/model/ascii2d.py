@@ -19,6 +19,15 @@ SUPPORTED_SOURCES = [
 
 
 class URL(NamedTuple):
+    """Represents a URL in Ascii2D search results.
+
+    Contains both the URL link and its associated display text.
+
+    Attributes:
+        href (str): The URL link address.
+        text (str): The display text or description for the URL.
+    """
+
     href: str
     text: str
 

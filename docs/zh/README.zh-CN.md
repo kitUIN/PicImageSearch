@@ -28,19 +28,22 @@
 
 ## 支持的搜索引擎
 
-| 引擎         | 网站                                   |
-|------------|--------------------------------------|
-| ASCII2D    | <https://ascii2d.net/>               |
-| Baidu      | <https://graph.baidu.com/>           |
-| Bing       | <https://www.bing.com/images/search> |
-| Copyseeker | <https://copyseeker.net/>            |
-| E-Hentai   | <https://e-hentai.org/>              |
-| Google     | <https://www.google.com/imghp>       |
-| IQDB       | <https://iqdb.org/>                  |
-| SauceNAO   | <https://saucenao.com/>              |
-| Tineye     | <https://tineye.com/search/>         |
-| TraceMoe   | <https://trace.moe/>                 |
-| Yandex     | <https://yandex.com/images/search>   |
+| 引擎          | 网站                                   |
+|-------------|--------------------------------------|
+| AnimeTrace  | <https://www.animetrace.com/>        |
+| ASCII2D     | <https://ascii2d.net/>               |
+| Baidu       | <https://graph.baidu.com/>           |
+| Bing        | <https://www.bing.com/images/search> |
+| Copyseeker  | <https://copyseeker.net/>            |
+| E-Hentai    | <https://e-hentai.org/>              |
+| Google      | <https://www.google.com/imghp>       |
+| Google Lens | <https://lens.google.com/>           |
+| IQDB        | <https://iqdb.org/>                  |
+| Lenso       | <https://lenso.ai/>                  |
+| SauceNAO    | <https://saucenao.com/>              |
+| Tineye      | <https://tineye.com/search/>         |
+| TraceMoe    | <https://trace.moe/>                 |
+| Yandex      | <https://yandex.com/images/search>   |
 
 ## 使用方法
 

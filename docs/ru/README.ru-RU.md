@@ -28,19 +28,22 @@
 
 ## Поддерживаемые сервисы
 
-| Поисковик  | Веб-сайт                             |
-|------------|--------------------------------------|
-| ASCII2D    | <https://ascii2d.net/>               |
-| Baidu      | <https://graph.baidu.com/>           |
-| Bing       | <https://www.bing.com/images/search> |
-| Copyseeker | <https://copyseeker.net/>            |
-| E-Hentai   | <https://e-hentai.org/>              |
-| Google     | <https://www.google.com/imghp>       |
-| IQDB       | <https://iqdb.org/>                  |
-| SauceNAO   | <https://saucenao.com/>              |
-| Tineye     | <https://tineye.com/search/>         |
-| TraceMoe   | <https://trace.moe/>                 |
-| Yandex     | <https://yandex.com/images/search>   |
+| Поисковик   | Веб-сайт                             |
+|-------------|--------------------------------------|
+| AnimeTrace  | <https://www.animetrace.com/>        |
+| ASCII2D     | <https://ascii2d.net/>               |
+| Baidu       | <https://graph.baidu.com/>           |
+| Bing        | <https://www.bing.com/images/search> |
+| Copyseeker  | <https://copyseeker.net/>            |
+| E-Hentai    | <https://e-hentai.org/>              |
+| Google      | <https://www.google.com/imghp>       |
+| Google Lens | <https://lens.google.com/>           |
+| IQDB        | <https://iqdb.org/>                  |
+| Lenso       | <https://lenso.ai/>                  |
+| SauceNAO    | <https://saucenao.com/>              |
+| Tineye      | <https://tineye.com/search/>         |
+| TraceMoe    | <https://trace.moe/>                 |
+| Yandex      | <https://yandex.com/images/search>   |
 
 ## Применение
 

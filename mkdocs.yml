@@ -45,6 +45,7 @@ nav:
   - Introduction: index.md
   - Docs:
     - Engines:
+        - AnimeTrace: engines/anime-trace.md
         - Ascii2D: engines/ascii2d.md
         - Baidu: engines/baidu.md
         - Bing: engines/bing.md
@@ -59,6 +60,7 @@ nav:
         - TraceMoe: engines/tracemoe.md
         - Yandex: engines/yandex.md
     - Model:
+        - AnimeTrace: model/anime-trace.md
         - Ascii2D: model/ascii2d.md
         - Baidu: model/baidu.md
         - Bing: model/bing.md
