@@ -114,9 +114,9 @@ class GoogleLensBaseItem(BaseSearchItem):
             base64_image_map (dict[str, str]): Dictionary mapping image IDs to base64 data
             **kwargs (Any): Additional keyword arguments
         """
-        super().__init__(data, **kwargs)
         self.image_url_map: dict[str, str] = image_url_map
         self.base64_image_map: dict[str, str] = base64_image_map
+        super().__init__(data, **kwargs)
 
     @override
     def _parse_data(self, data: PyQuery, **kwargs: Any) -> None:
