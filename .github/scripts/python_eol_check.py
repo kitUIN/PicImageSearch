@@ -10,7 +10,7 @@ import argparse
 import sys
 from datetime import datetime
 
-import requests
+import httpx
 from github import Github
 
 
@@ -41,10 +41,10 @@ def get_eol_info(python_version: str):
     """
     url = f"https://endoflife.date/api/python/{python_version}.json"
     try:
-        response = requests.get(url)
+        response = httpx.get(url)
         response.raise_for_status()
         return response.json()
-    except requests.exceptions.RequestException as e:
+    except Exception as e:
         print(f"Error fetching EOL information: {e}")
         sys.exit(1)
 

@@ -1,11 +1,10 @@
-import os
-from json import dumps as json_dumps
 from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Optional, Union
 
 from typing_extensions import override
 
+from ..constants import COPYSEEKER_CONSTANTS
 from ..model import CopyseekerResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
@@ -53,27 +52,22 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
         discovery_id = None
 
         if url:
-            data = {"discoveryType": "ReverseImageSearch", "imageUrl": url}
-            headers = {
-                "next-action": "40b36f62371893e153d4a97395db8b742b3a55ba92",
-                "content-type": "text/plain;charset=UTF-8",
-            }
+            data = [{"discoveryType": "ReverseImageSearch", "imageUrl": url}]
+            headers = {"next-action": COPYSEEKER_CONSTANTS["URL_SEARCH_TOKEN"]}
 
             resp = await self._send_request(
                 method="post",
                 headers=headers,
-                data=json_dumps([data]),
+                json=data,
             )
+
         elif file:
             files = {
-                "1_file": (os.path.basename(file), read_file(file), "image/jpeg"),
+                "1_file": ("image.jpg", read_file(file), "image/jpeg"),
                 "1_discoveryType": (None, "ReverseImageSearch"),
                 "0": (None, '["$K1"]'),
             }
-            headers = {
-                "next-action": "403e08305b4fcd290c2f7b51c938c920b8ebc4c44d",
-                "content-type": "multipart/form-data; boundary=-",
-            }
+            headers = {"next-action": COPYSEEKER_CONSTANTS["FILE_UPLOAD_TOKEN"]}
 
             resp = await self._send_request(
                 method="post",
@@ -130,13 +124,15 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
         if discovery_id is None:
             return CopyseekerResponse({}, "")
 
-        data = [{"discoveryId": discovery_id, "hasBlocker": "False"}]
-        headers = {
-            "next-action": "403ce7a907ea80fc8b45d73cea703aad2516a44b02",
-            "content-type": "text/plain;charset=UTF-8",
-        }
+        data = [{"discoveryId": discovery_id, "hasBlocker": False}]
+        headers = {"next-action": COPYSEEKER_CONSTANTS["GET_RESULTS_TOKEN"]}
 
-        resp = await self._send_request(method="post", endpoint="discovery", data=json_dumps(data), headers=headers)
+        resp = await self._send_request(
+            method="post",
+            endpoint="discovery",
+            headers=headers,
+            json=data,
+        )
 
         resp_json = {}
 
