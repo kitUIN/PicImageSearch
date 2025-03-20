@@ -4,6 +4,7 @@ from json import dumps as json_dumps
 from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Optional, Union
+from urllib.parse import quote_plus
 
 from typing_extensions import override
 
@@ -74,37 +75,53 @@ class Bing(BaseSearchEngine[BingResponse]):
         Raises:
             ValueError: If neither bcid nor image_url is provided.
         """
-        endpoint = (
-            "images/api/custom/knowledge"
-            "?rshighlight=true&textDecorations=true&internalFeatures=share"
-            "&nbl=1&FORM=SBIHMP&safeSearch=off&mkt=en-us&setLang=en-us&IID=idpins&SFX=1"
-        )
+        endpoint = "images/api/custom/knowledge"
+
+        params: dict[str, Any] = {
+            "rshighlight": "true",
+            "textDecorations": "true",
+            "internalFeatures": "similarproducts,share",
+            "nbl": "1",
+            "FORM": "SBIHMP",
+            "safeSearch": "off",
+            "mkt": "en-us",
+            "setLang": "en-us",
+            "iss": "sbi",
+            "IID": "idpins",
+            "SFX": "1",
+        }
 
         if image_url:
             headers = {
                 "Referer": (
                     f"{self.base_url}/images/search?"
                     f"view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste"
-                    f"&q=imgurl:{image_url}&idpbck=1"
+                    f"&q=imgurl:{quote_plus(image_url)}&idpbck=1"
                 )
             }
             files = {
                 "knowledgeRequest": (
                     None,
                     json_dumps({"imageInfo": {"url": image_url, "source": "Url"}}),
+                    "application/json",
                 )
             }
-            resp = await self._send_request(method="post", endpoint=endpoint, headers=headers, files=files)
 
         else:
-            endpoint += f"&insightsToken={bcid}"
-            headers = {
-                "Referer": f"{self.base_url}/images/search?insightsToken={bcid}",
+            params["insightsToken"] = bcid
+            headers = {"Referer": f"{self.base_url}/images/search?insightsToken={bcid}"}
+            files = {
+                "knowledgeRequest": (
+                    None,
+                    json_dumps({"imageInfo": {"imageInsightsToken": bcid, "source": "Gallery"}}),
+                    "application/json",
+                )
             }
-            data = {"imageInfo": {"imageInsightsToken": bcid}, "knowledgeRequest": {}}
+
             if self.client:
                 self.client.cookies.clear()
-            resp = await self._send_request(method="post", endpoint=endpoint, headers=headers, data=data)
+
+        resp = await self._send_request(method="post", endpoint=endpoint, headers=headers, params=params, files=files)
 
         return json_loads(resp.text)
 
