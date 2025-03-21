@@ -55,8 +55,8 @@ class Bing(BaseSearchEngine[BingResponse]):
 
         if match := re.search(r"(bcid_[A-Za-z0-9-.]+)", resp.text):
             return match[1], str(resp.url)
-        else:
-            raise ValueError("BCID not found on page.")
+
+        raise ValueError("BCID not found on page.")
 
     async def _get_insights(self, bcid: Optional[str] = None, image_url: Optional[str] = None) -> dict[str, Any]:
         """Retrieves image insights from Bing using either BCID or image URL.
@@ -92,35 +92,29 @@ class Bing(BaseSearchEngine[BingResponse]):
         }
 
         if image_url:
-            headers = {
-                "Referer": (
-                    f"{self.base_url}/images/search?"
-                    f"view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste"
-                    f"&q=imgurl:{quote_plus(image_url)}&idpbck=1"
-                )
-            }
-            files = {
-                "knowledgeRequest": (
-                    None,
-                    json_dumps({"imageInfo": {"url": image_url, "source": "Url"}}),
-                    "application/json",
-                )
-            }
+            referer = (
+                f"{self.base_url}/images/search?"
+                f"view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste"
+                f"&q=imgurl:{quote_plus(image_url)}&idpbck=1"
+            )
+            image_info = {"imageInfo": {"url": image_url, "source": "Url"}}
 
         else:
             params["insightsToken"] = bcid
-            headers = {"Referer": f"{self.base_url}/images/search?insightsToken={bcid}"}
-            files = {
-                "knowledgeRequest": (
-                    None,
-                    json_dumps({"imageInfo": {"imageInsightsToken": bcid, "source": "Gallery"}}),
-                    "application/json",
-                )
-            }
+            referer = f"{self.base_url}/images/search?insightsToken={bcid}"
+            image_info = {"imageInfo": {"imageInsightsToken": bcid, "source": "Gallery"}}
 
             if self.client:
                 self.client.cookies.clear()
 
+        headers = {"Referer": referer}
+        files = {
+            "knowledgeRequest": (
+                None,
+                json_dumps(image_info),
+                "application/json",
+            )
+        }
         resp = await self._send_request(method="post", endpoint=endpoint, headers=headers, params=params, files=files)
 
         return json_loads(resp.text)
