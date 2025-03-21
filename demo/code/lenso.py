@@ -1,3 +1,8 @@
+"""
+Warning: The Lenso engine is deprecated as the website now uses Cloudflare turnstile protection
+which prevents this client from working properly.
+"""
+
 import asyncio
 
 from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
