@@ -1,7 +1,7 @@
 from types import TracebackType
 from typing import Any, NamedTuple, Optional, Union
 
-from httpx import AsyncClient, QueryParams
+from httpx import AsyncClient, QueryParams, create_ssl_context
 
 DEFAULT_HEADERS = {
     "User-Agent": (
@@ -53,10 +53,12 @@ class Network:
                 key, value = line.strip().split("=", 1)
                 self.cookies[key] = value
 
+        ssl_context = create_ssl_context(verify=verify_ssl)
+        ssl_context.set_ciphers("DEFAULT")
         self.client: AsyncClient = AsyncClient(
             headers=headers,
             cookies=self.cookies,
-            verify=verify_ssl,
+            verify=ssl_context,
             http2=http2,
             proxy=proxies,
             timeout=timeout,
