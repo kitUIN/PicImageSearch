@@ -1,15 +1,12 @@
 import pytest
 
 from PicImageSearch import BaiDu
-from tests.conftest import has_baidu_config
 
 
 class TestBaiDu:
     @pytest.fixture
-    def engine(self, test_config):
-        if not has_baidu_config(test_config):
-            pytest.skip("Missing BaiDu configuration")
-        return BaiDu(cookies=test_config.get("baidu", {}).get("cookies"))
+    def engine(self):
+        return BaiDu()
 
     @pytest.fixture
     def test_image(self, get_test_image, engine_image_mapping):

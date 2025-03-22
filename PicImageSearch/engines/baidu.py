@@ -93,11 +93,10 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
             - The search process involves multiple HTTP requests to BaiDu's API.
             - The response format varies depending on whether matches are found.
         """
-        params = {"from": "pc"}
-        files: Optional[dict[str, Any]] = None
+        data = {"from": "pc"}
 
         if url:
-            params["image"] = url
+            files = {"image": await self.download(url)}
         elif file:
             files = {"image": read_file(file)}
         else:
@@ -106,7 +105,8 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
         resp = await self._send_request(
             method="post",
             endpoint="upload",
-            params=params,
+            headers={"Acs-Token": ""},
+            data=data,
             files=files,
         )
         data_url = deep_get(json_loads(resp.text), "data.url")

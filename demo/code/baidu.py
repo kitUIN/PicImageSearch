@@ -1,6 +1,6 @@
 import asyncio
 
-from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
+from demo.code.config import IMAGE_BASE_URL, get_image_path, logger
 from PicImageSearch import BaiDu, Network
 from PicImageSearch.model import BaiDuResponse
 from PicImageSearch.sync import BaiDu as BaiDuSync
@@ -8,13 +8,10 @@ from PicImageSearch.sync import BaiDu as BaiDuSync
 url = f"{IMAGE_BASE_URL}/test02.jpg"
 file = get_image_path("test02.jpg")
 
-# Note: Baidu search requires cookies contain the `verify`
-cookies: str = ""
-
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=PROXIES, cookies=cookies) as client:
+    async with Network() as client:
         baidu = BaiDu(client=client)
         # resp = await baidu.search(url=url)
         resp = await baidu.search(file=file)
@@ -23,7 +20,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    baidu = BaiDuSync(proxies=PROXIES, cookies=cookies)
+    baidu = BaiDuSync()
     resp = baidu.search(url=url)
     # resp = baidu.search(file=file)
     show_result(resp)  # pyright: ignore[reportArgumentType]
