@@ -59,10 +59,10 @@ includes = ["PicImageSearch"]
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "basedpyright>=1.28.1",
+    "basedpyright>=1.28.3",
     "loguru>=0.7.3",
-    "pre-commit>=4.1.0",
-    "ruff>=0.11.0",
+    "pre-commit>=4.2.0",
+    "ruff>=0.11.2",
 ]
 
 [tool.ruff]
