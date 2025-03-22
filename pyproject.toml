@@ -61,6 +61,9 @@ includes = ["PicImageSearch"]
 dev = [
     "basedpyright>=1.28.3",
     "loguru>=0.7.3",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.25.3",
+    "pytest-vcr>=1.0.2",
     "pre-commit>=4.2.0",
     "ruff>=0.11.2",
 ]

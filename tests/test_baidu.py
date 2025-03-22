@@ -9,11 +9,21 @@ class TestBaiDu:
         return BaiDu()
 
     @pytest.fixture
-    def test_image(self, get_test_image, engine_image_mapping):
-        return get_test_image("baidu", engine_image_mapping)
+    def test_image_path(self, engine_image_path_mapping):
+        return engine_image_path_mapping.get("baidu")
+
+    @pytest.fixture
+    def test_image_url(self, engine_image_url_mapping):
+        return engine_image_url_mapping.get("baidu")
 
     @pytest.mark.asyncio
-    async def test_search(self, engine, test_image):
-        result = await engine.search(file=test_image)
-        assert result is not None
-        assert hasattr(result, "raw")
+    @pytest.mark.vcr("baidu_file_search.yaml")
+    async def test_search_with_file(self, engine, test_image_path):
+        result = await engine.search(file=test_image_path)
+        assert len(result.raw) > 0
+
+    @pytest.mark.asyncio
+    @pytest.mark.vcr("baidu_url_search.yaml")
+    async def test_search_with_url(self, engine, test_image_url):
+        result = await engine.search(url=test_image_url)
+        assert len(result.raw) > 0
