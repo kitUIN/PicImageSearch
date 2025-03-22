@@ -47,9 +47,9 @@ jobs:
         if: steps.check-changes.outputs.changes == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
-          title: 'chore: Update Copyseeker next-action tokens'
+          title: 'fix(Copyseeker): update the `next-action` tokens'
           body: |
-            This PR was automatically created by GitHub Actions to update the Copyseeker next-action tokens.
+            This PR was automatically created by GitHub Actions to update the Copyseeker `next-action` tokens.
             
             The Copyseeker website may have updated its token values, requiring an update to our code to maintain compatibility.
           branch: bot/update-copyseeker-tokens
