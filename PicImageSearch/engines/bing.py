@@ -4,6 +4,7 @@ from json import dumps as json_dumps
 from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Optional, Union
+from urllib.parse import quote_plus
 
 from typing_extensions import override
 
@@ -54,8 +55,8 @@ class Bing(BaseSearchEngine[BingResponse]):
 
         if match := re.search(r"(bcid_[A-Za-z0-9-.]+)", resp.text):
             return match[1], str(resp.url)
-        else:
-            raise ValueError("BCID not found on page.")
+
+        raise ValueError("BCID not found on page.")
 
     async def _get_insights(self, bcid: Optional[str] = None, image_url: Optional[str] = None) -> dict[str, Any]:
         """Retrieves image insights from Bing using either BCID or image URL.
@@ -74,37 +75,47 @@ class Bing(BaseSearchEngine[BingResponse]):
         Raises:
             ValueError: If neither bcid nor image_url is provided.
         """
-        endpoint = (
-            "images/api/custom/knowledge"
-            "?rshighlight=true&textDecorations=true&internalFeatures=share"
-            "&nbl=1&FORM=SBIHMP&safeSearch=off&mkt=en-us&setLang=en-us&IID=idpins&SFX=1"
-        )
+        endpoint = "images/api/custom/knowledge"
+
+        params: dict[str, Any] = {
+            "rshighlight": "true",
+            "textDecorations": "true",
+            "internalFeatures": "similarproducts,share",
+            "nbl": "1",
+            "FORM": "SBIHMP",
+            "safeSearch": "off",
+            "mkt": "en-us",
+            "setLang": "en-us",
+            "iss": "sbi",
+            "IID": "idpins",
+            "SFX": "1",
+        }
 
         if image_url:
-            headers = {
-                "Referer": (
-                    f"{self.base_url}/images/search?"
-                    f"view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste"
-                    f"&q=imgurl:{image_url}&idpbck=1"
-                )
-            }
-            files = {
-                "knowledgeRequest": (
-                    None,
-                    json_dumps({"imageInfo": {"url": image_url, "source": "Url"}}),
-                )
-            }
-            resp = await self._send_request(method="post", endpoint=endpoint, headers=headers, files=files)
+            referer = (
+                f"{self.base_url}/images/search?"
+                f"view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste"
+                f"&q=imgurl:{quote_plus(image_url)}&idpbck=1"
+            )
+            image_info = {"imageInfo": {"url": image_url, "source": "Url"}}
 
         else:
-            endpoint += f"&insightsToken={bcid}"
-            headers = {
-                "Referer": f"{self.base_url}/images/search?insightsToken={bcid}",
-            }
-            data = {"imageInfo": {"imageInsightsToken": bcid}, "knowledgeRequest": {}}
+            params["insightsToken"] = bcid
+            referer = f"{self.base_url}/images/search?insightsToken={bcid}"
+            image_info = {"imageInfo": {"imageInsightsToken": bcid, "source": "Gallery"}}
+
             if self.client:
                 self.client.cookies.clear()
-            resp = await self._send_request(method="post", endpoint=endpoint, headers=headers, data=data)
+
+        headers = {"Referer": referer}
+        files = {
+            "knowledgeRequest": (
+                None,
+                json_dumps(image_info),
+                "application/json",
+            )
+        }
+        resp = await self._send_request(method="post", endpoint=endpoint, headers=headers, params=params, files=files)
 
         return json_loads(resp.text)
 

@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.13.2'
 
       - name: Install dependencies
         run: |
@@ -38,8 +38,8 @@ jobs:
       - name: Commit changes
         if: steps.check-changes.outputs.changes == 'true'
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add PicImageSearch/constants.py
           git commit -m "chore: Update Copyseeker next-action tokens"
 
@@ -47,9 +47,9 @@ jobs:
         if: steps.check-changes.outputs.changes == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
-          title: 'chore: Update Copyseeker next-action tokens'
+          title: 'fix(Copyseeker): update the `next-action` tokens'
           body: |
-            This PR was automatically created by GitHub Actions to update the Copyseeker next-action tokens.
+            This PR was automatically created by GitHub Actions to update the Copyseeker `next-action` tokens.
             
             The Copyseeker website may have updated its token values, requiring an update to our code to maintain compatibility.
           branch: bot/update-copyseeker-tokens

@@ -5,14 +5,13 @@ from PicImageSearch import Bing, Network
 from PicImageSearch.model import BingResponse
 from PicImageSearch.sync import Bing as BingSync
 
-http2 = True
 url = f"{IMAGE_BASE_URL}/test08.jpg"
 file = get_image_path("test08.jpg")
 
 
 @logger.catch()
 async def test_async() -> None:
-    async with Network(proxies=PROXIES, http2=http2) as client:
+    async with Network(proxies=PROXIES) as client:
         bing = Bing(client=client)
         # resp = await bing.search(url=url)
         resp = await bing.search(file=file)
@@ -21,7 +20,7 @@ async def test_async() -> None:
 
 @logger.catch()
 def test_sync() -> None:
-    bing = BingSync(proxies=PROXIES, http2=http2)
+    bing = BingSync(proxies=PROXIES)
     resp = bing.search(url=url)
     # resp = bing.search(file=file)
     show_result(resp)  # pyright: ignore[reportArgumentType]

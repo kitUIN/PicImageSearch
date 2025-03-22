@@ -1,4 +1,5 @@
 import base64
+import warnings
 from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Literal, Optional, Union, get_args
@@ -11,7 +12,10 @@ from .base import BaseSearchEngine
 
 
 class Lenso(BaseSearchEngine[LensoResponse]):
-    """API client for the Lenso image search engine.
+    """API client for the Lenso image search engine. (DEPRECATED)
+
+    This engine is deprecated as Lenso has implemented Cloudflare turnstile protection
+    which prevents this client from working properly.
 
     Lenso is a powerful AI-driven visual search engine that helps you find similar images,
     duplicates, recognize places, and discover related content.
@@ -54,6 +58,15 @@ class Lenso(BaseSearchEngine[LensoResponse]):
             base_url (str): The base URL for Lenso API.
             **request_kwargs (Any): Additional arguments for network requests.
         """
+        warnings.warn(
+            (
+                "The Lenso engine is deprecated as the website now uses Cloudflare turnstile protection "
+                "which prevents this client from working properly."
+            ),
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         super().__init__(base_url, **request_kwargs)
 
     async def _upload_image(self, image_base64: str) -> str:
@@ -89,7 +102,10 @@ class Lenso(BaseSearchEngine[LensoResponse]):
         sort_type: SORT_TYPES = "SMART",
         **kwargs: Any,
     ) -> LensoResponse:
-        """Performs a reverse image search on Lenso.
+        """Performs a reverse image search on Lenso. (DEPRECATED)
+
+        This method is deprecated as Lenso has implemented Cloudflare turnstile protection
+        which prevents this client from working properly.
 
         This method supports two ways of searching:
             1. Search by image URL
@@ -107,6 +123,15 @@ class Lenso(BaseSearchEngine[LensoResponse]):
             ValueError: If `search_type` or `sort_type` is invalid.
             RuntimeError: If image upload fails or response is invalid.
         """
+        warnings.warn(
+            (
+                "The Lenso engine is deprecated as the website now uses Cloudflare turnstile protection "
+                "which prevents this client from working properly."
+            ),
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         if search_type and search_type not in get_args(self.SEARCH_TYPES):
             valid_types = '", "'.join(t for t in get_args(self.SEARCH_TYPES) if t)
             raise ValueError(f'Invalid search_type. Must be empty or one of: "{valid_types}"')

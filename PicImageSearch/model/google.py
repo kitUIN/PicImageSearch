@@ -4,6 +4,7 @@ from typing import Any, Optional
 from pyquery import PyQuery
 from typing_extensions import override
 
+from ..exceptions import ParsingError
 from ..utils import parse_html
 from .base import BaseSearchItem, BaseSearchResponse
 
@@ -85,9 +86,18 @@ class GoogleResponse(BaseSearchResponse[GoogleItem]):
 
         script_list = list(data.find("script").items())
         thumbnail_dict: dict[str, str] = self.create_thumbnail_dict(script_list)
+
+        search_items = data.find("#search .wHYlTd")
         self.raw: list[GoogleItem] = [
-            GoogleItem(i, thumbnail_dict.get(i('img[id^="dimg_"]').attr("id"))) for i in data.find("#search .g").items()
+            GoogleItem(i, thumbnail_dict.get(i('img[id^="dimg_"]').attr("id"))) for i in search_items.items()
         ]
+
+        if thumbnail_dict and not self.raw:
+            raise ParsingError(
+                message="Failed to extract search results despite finding thumbnails",
+                engine="google",
+                details="This usually indicates a change in the page structure.",
+            )
 
     @staticmethod
     def create_thumbnail_dict(script_list: list[PyQuery]) -> dict[str, str]:
