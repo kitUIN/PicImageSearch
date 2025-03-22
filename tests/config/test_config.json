@@ -1,0 +1,11 @@
+{
+  "ascii2d": {
+    "base_url": ""
+  },
+  "google": {
+    "cookies": "NID=522=zkzq0i9ZqywiC3CCxf-a-JeGQ4T6PlyGnrjDl1NvltWBfmzeguphZZHRKx6wEYSFbzagS2j_pVcm25g05S4aUFXeG-w6TAMdWYB_zl1QM856yZGwyttLCdFgw2e3Mc1ygEMSdnUUk8xte1F9siHdz_gnw9iHvRpRybP1Qvy-BiP0Z5OnfHumR8Zkm8_45zfr7xfvZzq90WmFsIvoHHY-1HmB2rAj79bsgZ5toRs24ys79AOt1hdPN3N8SuqjrXDCS2yUXNy_PlWAEpS0ajXpLtLi6CeKEVdOppXU4EtUT-ZZxxEkLXl8JpTPUIUKoks"
+  },
+  "saucenao": {
+    "api_key": "a4ab3f81009b003528f7e31aed187fa32a063f58"
+  }
+}

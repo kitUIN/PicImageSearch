@@ -142,3 +142,5 @@ cython_debug/
 .idea/
 node_modules
 .pdm-python
+
+tests/cassettes
