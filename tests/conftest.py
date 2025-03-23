@@ -8,22 +8,22 @@ def pytest_configure(config):
     """Configure test environment"""
     # Create test configuration directory
     os.makedirs("tests/config", exist_ok=True)
-    # 创建 vcr cassettes 目录
+    # Create vcr cassettes directory
     os.makedirs("tests/cassettes", exist_ok=True)
 
-    # 添加导入 vcr 需要的模块
+    # Import modules required by vcr
     import vcr.stubs.httpx_stubs
     from vcr.request import Request as VcrRequest
 
-    # 添加猴子补丁，修复 VCR 处理二进制请求的问题
+    # Add monkey patch to fix VCR handling of binary requests
     def patched_make_vcr_request(httpx_request, **kwargs):
-        # 直接使用二进制数据，不尝试 UTF-8 解码
+        # Use binary data directly, don't attempt UTF-8 decoding
         body = httpx_request.read()
         uri = str(httpx_request.url)
         headers = dict(httpx_request.headers)
         return VcrRequest(httpx_request.method, uri, body, headers)
 
-    # 应用猴子补丁
+    # Apply monkey patch
     vcr.stubs.httpx_stubs._make_vcr_request = patched_make_vcr_request
 
 
@@ -37,14 +37,14 @@ def pytest_addoption(parser):
     )
 
 
-# VCR 相关配置
+# VCR related configuration
 @pytest.fixture(scope="module", autouse=True)
 def vcr_config():
-    """配置 pytest-vcr"""
+    """Configure pytest-vcr"""
     return {
-        # cassette 文件存放位置
+        # cassette file storage location
         "cassette_library_dir": "tests/cassettes",
-        # 模式设置
+        # mode setting
         "record_mode": "once",
     }
 

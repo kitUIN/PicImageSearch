@@ -1,7 +1,7 @@
 [project]
 name = "PicImageSearch"
 dynamic = ["version"]
-description = "PicImageSearch APIs for Python 3.x 适用于 Python 3 以图搜源整合API"
+description = "PicImageSearch - Aggregator for Reverse Image Search APIs"
 readme = "README.md"
 authors = [
     { name = "kitUIN", email = "kulujun@gmail.com" },
