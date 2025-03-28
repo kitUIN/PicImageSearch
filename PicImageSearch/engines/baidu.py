@@ -118,15 +118,21 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
         utf8_parser = HTMLParser(encoding="utf-8")
         data = PyQuery(fromstring(resp.text, parser=utf8_parser))
         card_data = self._extract_card_data(data)
+        same_data = None
 
         for card in card_data:
             if card.get("cardName") == "noresult":
                 return BaiDuResponse({}, data_url)
             if card.get("cardName") == "same":
-                return BaiDuResponse(card["tplData"], data_url)
+                same_data = card["tplData"]
             if card.get("cardName") == "simipic":
                 next_url = card["tplData"]["firstUrl"]
                 resp = await self._send_request(method="get", url=next_url)
-                return BaiDuResponse(json_loads(resp.text), data_url)
+                resp_data = json_loads(resp.text)
+
+                if same_data:
+                    resp_data["same"] = same_data
+
+                return BaiDuResponse(resp_data, data_url)
 
         return BaiDuResponse({}, data_url)

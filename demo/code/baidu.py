@@ -31,9 +31,15 @@ def show_result(resp: BaiDuResponse) -> None:
     logger.info(resp.url)  # Link to search results
     # logger.info(resp.raw[0].origin)
     # logger.info(resp.raw[0].similarity)  # deprecated
-    logger.info(resp.raw[0].title)
     logger.info(resp.raw[0].url)
     logger.info(resp.raw[0].thumbnail)
+
+    if resp.exact_matches:
+        logger.info("-" * 20)
+        logger.info(resp.exact_matches[0].title)
+        logger.info(resp.exact_matches[0].url)
+        logger.info(resp.exact_matches[0].thumbnail)
+
     logger.info("-" * 50)
 
 

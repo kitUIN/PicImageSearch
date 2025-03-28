@@ -55,6 +55,7 @@ class BaiDuResponse(BaseSearchResponse[BaiDuItem]):
     Attributes:
         origin (dict): The complete raw response data from BaiDu.
         raw (list[BaiDuItem]): List of processed search results as BaiDuItem instances.
+        exact_matches (list[BaiDuItem]): List of exact same image results as BaiDuItem instances.
         url (str): URL of the search results page on BaiDu.
     """
 
@@ -80,7 +81,13 @@ class BaiDuResponse(BaseSearchResponse[BaiDuItem]):
             If resp_data is empty or invalid, an empty list will be returned.
         """
         self.raw: list[BaiDuItem] = []
-        if "list" in resp_data:
-            self.raw.extend(BaiDuItem(i) for i in resp_data["list"] if "url" in i and "image_src" in i)
-        elif data_list := deep_get(resp_data, "data.list"):
+        self.exact_matches: list[BaiDuItem] = []
+
+        # Parse same image results if available
+        if same_data := resp_data.get("same"):
+            if "list" in same_data:
+                self.exact_matches.extend(BaiDuItem(i) for i in same_data["list"] if "url" in i and "image_src" in i)
+
+        # Parse similar image results
+        if data_list := deep_get(resp_data, "data.list"):
             self.raw.extend([BaiDuItem(i) for i in data_list])
