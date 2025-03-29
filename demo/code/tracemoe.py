@@ -10,7 +10,7 @@ file = get_image_path("test05.jpg")
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network(proxies=PROXIES) as client:
         tracemoe = TraceMoe(mute=False, size=None, client=client)
         # resp = await tracemoe.search(url=url)
@@ -19,7 +19,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     tracemoe = TraceMoeSync(mute=False, size=None, proxies=PROXIES)
     resp = tracemoe.search(url=url)
     # resp = tracemoe.search(file=file)
@@ -54,5 +54,5 @@ def show_result(resp: TraceMoeResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()

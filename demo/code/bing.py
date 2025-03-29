@@ -10,7 +10,7 @@ file = get_image_path("test08.jpg")
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network(proxies=PROXIES) as client:
         bing = Bing(client=client)
         # resp = await bing.search(url=url)
@@ -19,7 +19,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     bing = BingSync(proxies=PROXIES)
     resp = bing.search(url=url)
     # resp = bing.search(file=file)
@@ -97,5 +97,5 @@ def show_result(resp: BingResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()

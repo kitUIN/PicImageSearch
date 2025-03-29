@@ -11,7 +11,7 @@ file = get_image_path("test05.jpg")
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network(proxies=PROXIES, cookies=GOOGLE_COOKIES) as client:
         google_lens_all = GoogleLens(client=client, search_type="all", q="anime", hl="en", country="US")
         resp_all = await google_lens_all.search(url=url)
@@ -37,7 +37,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     google_lens_all = GoogleLensSync(
         proxies=PROXIES,
         cookies=GOOGLE_COOKIES,
@@ -116,5 +116,5 @@ def show_result(resp: Union[GoogleLensResponse, GoogleLensExactMatchesResponse],
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()

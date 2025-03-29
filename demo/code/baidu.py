@@ -10,7 +10,7 @@ file = get_image_path("test02.jpg")
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network() as client:
         baidu = BaiDu(client=client)
         # resp = await baidu.search(url=url)
@@ -19,7 +19,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     baidu = BaiDuSync()
     resp = baidu.search(url=url)
     # resp = baidu.search(file=file)
@@ -44,5 +44,5 @@ def show_result(resp: BaiDuResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()

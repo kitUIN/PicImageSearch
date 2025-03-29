@@ -20,7 +20,7 @@ timeout = 60
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network(proxies=PROXIES, cookies=cookies, timeout=timeout) as client:
         ehentai = EHentai(is_ex=is_ex, client=client)
         # resp = await ehentai.search(url=url)
@@ -29,7 +29,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     ehentai = EHentaiSync(
         is_ex=is_ex,
         proxies=PROXIES,
@@ -57,5 +57,5 @@ def show_result(resp: EHentaiResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()

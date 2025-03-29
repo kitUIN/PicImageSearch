@@ -12,7 +12,7 @@ base_url = "https://www.google.co.jp"
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network(proxies=PROXIES, cookies=GOOGLE_COOKIES) as client:
         google = Google(base_url=base_url, client=client)
         # resp = await google.search(url=url)
@@ -26,7 +26,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     google = GoogleSync(base_url=base_url, proxies=PROXIES, cookies=GOOGLE_COOKIES)
     resp = google.search(url=url)
     # resp = google.search(file=file)
@@ -58,5 +58,5 @@ def show_result(resp: Optional[GoogleResponse]) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()

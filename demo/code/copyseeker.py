@@ -10,7 +10,7 @@ file = get_image_path("test05.jpg")
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network(proxies=PROXIES) as client:
         copyseeker = Copyseeker(client=client)
         # resp = await copyseeker.search(url=url)
@@ -19,7 +19,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     copyseeker = CopyseekerSync(proxies=PROXIES)
     resp = copyseeker.search(url=url)
     # resp = copyseeker.search(file=file)
@@ -45,5 +45,5 @@ def show_result(resp: CopyseekerResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()

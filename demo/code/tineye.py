@@ -18,7 +18,7 @@ order = "desc"  # Example: "asc"
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network(proxies=PROXIES) as client:
         tineye = Tineye(client=client)
         # resp = await tineye.search(
@@ -53,7 +53,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     tineye = TineyeSync(proxies=PROXIES)
     resp = tineye.search(
         url=url,
@@ -117,5 +117,5 @@ def show_match_details(match_index: int, match_item: TineyeItem) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()

@@ -11,7 +11,7 @@ api_key = "a4ab3f81009b003528f7e31aed187fa32a063f58"
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network(proxies=PROXIES) as client:
         saucenao = SauceNAO(api_key=api_key, hide=3, client=client)
         # resp = await saucenao.search(url=url)
@@ -20,7 +20,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     saucenao = SauceNAOSync(api_key=api_key, hide=3, proxies=PROXIES)
     resp = saucenao.search(url=url)
     # resp = saucenao.search(file=file)
@@ -47,5 +47,5 @@ def show_result(resp: SauceNAOResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()

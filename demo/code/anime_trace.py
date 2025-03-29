@@ -10,7 +10,7 @@ file = get_image_path("test05.jpg")
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network(proxies=PROXIES) as client:
         anime_trace = AnimeTrace(client=client)
         resp = await anime_trace.search(url=url)
@@ -19,7 +19,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     anime_trace = AnimeTraceSync(proxies=PROXIES)
     # resp = anime_trace.search(url=url)
     resp = anime_trace.search(file=file)
@@ -43,5 +43,5 @@ def show_result(resp: AnimeTraceResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()

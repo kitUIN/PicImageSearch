@@ -15,7 +15,7 @@ file = get_image_path("test08.jpg")
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network(proxies=PROXIES) as client:
         lenso = Lenso(client=client)
         resp = await lenso.search(file=file)
@@ -23,7 +23,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     lenso = LensoSync(proxies=PROXIES)
     resp = lenso.search(file=file)
     show_result(resp)  # pyright: ignore[reportArgumentType]
@@ -67,5 +67,5 @@ def show_result(resp: LensoResponse, search_type: str = "") -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()

@@ -10,7 +10,7 @@ file = get_image_path("test04.jpg")
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network(proxies=PROXIES) as client:
         iqdb = Iqdb(is_3d=True, client=client)
         # resp = await iqdb.search(url=url)
@@ -19,7 +19,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     iqdb = IqdbSync(is_3d=True, proxies=PROXIES)
     resp = iqdb.search(url=url)
     # resp = iqdb.search(file=file)
@@ -42,5 +42,5 @@ def show_result(resp: IqdbResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()

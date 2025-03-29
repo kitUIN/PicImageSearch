@@ -10,7 +10,7 @@ file = get_image_path("test06.jpg")
 
 
 @logger.catch()
-async def test_async() -> None:
+async def demo_async() -> None:
     async with Network(proxies=PROXIES) as client:
         yandex = Yandex(client=client)
         # resp = await yandex.search(url=url)
@@ -19,7 +19,7 @@ async def test_async() -> None:
 
 
 @logger.catch()
-def test_sync() -> None:
+def demo_sync() -> None:
     yandex = YandexSync(proxies=PROXIES)
     resp = yandex.search(url=url)
     # resp = yandex.search(file=file)
@@ -40,5 +40,5 @@ def show_result(resp: YandexResponse) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(test_async())
-    # test_sync()
+    asyncio.run(demo_async())
+    # demo_sync()
