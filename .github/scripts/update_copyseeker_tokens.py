@@ -2,7 +2,7 @@
 """
 Copyseeker Tokens Update Script
 
-This script retrieves the latest next-action tokens from the Copyseeker website,
+This script retrieves the latest next-action tokens and set-cookie token from the Copyseeker website,
 and updates the corresponding values in the PicImageSearch/constants.py file.
 
 Usage:
@@ -38,7 +38,7 @@ def fetch_url_search_and_file_upload_token():
     try:
         with httpx.Client() as client:
             response = client.get(COPYSEEKER_URL)
-            response.raise_for_status()
+            response.raise_for_status()  # pyright: ignore[reportUnusedCallResult]
 
             # Find links containing JS files
             js_urls = re.findall(r'static/chunks/[^"]+\.js', response.text)
@@ -54,17 +54,19 @@ def fetch_url_search_and_file_upload_token():
 
                 url_match = re.search(r'\("([a-f0-9]+)"[^"]+"triggerDiscovery"', js_content)
                 file_match = re.search(r'\("([a-f0-9]+)"[^"]+"triggerDiscoveryByFile"', js_content)
+                set_cookie_match = re.search(r'\("([a-f0-9]+)"[^"]+"SetCookie"', js_content)
 
                 url_token = url_match[1] if url_match else None
                 file_token = file_match[1] if file_match else None
+                set_cookie_token = set_cookie_match[1] if set_cookie_match else None
 
-                if url_token and file_token:
-                    return url_token, file_token
+                if url_token and file_token and set_cookie_token:
+                    return url_token, file_token, set_cookie_token
 
-            return None, None
+            return None, None, None
     except Exception as e:
         print(f"Failed to get next-action token for URL search and file upload: {e}")
-        return None, None
+        return None, None, None
 
 
 def fetch_get_results_token():
@@ -72,7 +74,7 @@ def fetch_get_results_token():
     try:
         with httpx.Client() as client:
             response = client.get(COPYSEEKER_DISCOVERY_URL)
-            response.raise_for_status()
+            response.raise_for_status()  # pyright: ignore[reportUnusedCallResult]
 
             # Find target JS files
             js_urls = re.findall(r'static/chunks/app/discovery/page-[^"]+\.js', response.text)
@@ -93,7 +95,7 @@ def fetch_get_results_token():
         return None
 
 
-def update_constants_file(url_token: str, file_token: str, results_token: str):
+def update_constants_file(url_token: str, file_token: str, set_cookie_token: str, results_token: str):
     """Update tokens in the constants.py file"""
     # Read current file content
     content = constants_file.read_text(encoding="utf-8")
@@ -102,6 +104,7 @@ def update_constants_file(url_token: str, file_token: str, results_token: str):
     new_constants = {
         "URL_SEARCH_TOKEN": url_token,
         "FILE_UPLOAD_TOKEN": file_token,
+        "SET_COOKIE_TOKEN": set_cookie_token,
         "GET_RESULTS_TOKEN": results_token,
     }
 
@@ -113,16 +116,20 @@ def update_constants_file(url_token: str, file_token: str, results_token: str):
     new_content = re.sub(constants_pattern, constants_str, content)
 
     # Write to file
-    constants_file.write_text(new_content, encoding="utf-8")
+    constants_file.write_text(new_content, encoding="utf-8")  # pyright: ignore[reportUnusedCallResult]
 
 
-def handle_missing_tokens(url_token: Optional[str], file_token: Optional[str], results_token: Optional[str]):
+def handle_missing_tokens(
+    url_token: Optional[str], file_token: Optional[str], set_cookie_token: Optional[str], results_token: Optional[str]
+):
     """Handle missing tokens and output error messages"""
     missing = []
     if not url_token:
         missing.append("URL search token")
     if not file_token:
         missing.append("file upload token")
+    if not set_cookie_token:
+        missing.append("set cookie token")
     if not results_token:
         missing.append("get results token")
 
@@ -134,21 +141,26 @@ def main():
     print("Starting to update Copyseeker next-action tokens...")
 
     # Get tokens
-    url_token, file_token = fetch_url_search_and_file_upload_token()
+    url_token, file_token, set_cookie_token = fetch_url_search_and_file_upload_token()
     results_token = fetch_get_results_token()
 
     # Check if all tokens were retrieved
-    if url_token and file_token and results_token:
-        # Display retrieved tokens
-        print(f"URL search token: {url_token}")
-        print(f"File upload token: {file_token}")
-        print(f"Get results token: {results_token}")
-
-        # Update constants.py file
-        update_constants_file(url_token, file_token, results_token)
-        print("Successfully updated constants.py file!")
+    if url_token and file_token and set_cookie_token and results_token:
+        update_copyseeker_tokens(url_token, file_token, set_cookie_token, results_token)
     else:
-        handle_missing_tokens(url_token, file_token, results_token)
+        handle_missing_tokens(url_token, file_token, set_cookie_token, results_token)
+
+
+def update_copyseeker_tokens(url_token: str, file_token: str, set_cookie_token: str, results_token: str):
+    # Display retrieved tokens
+    print(f"URL search token: {url_token}")
+    print(f"File upload token: {file_token}")
+    print(f"Set cookie token: {set_cookie_token}")
+    print(f"Get results token: {results_token}")
+
+    # Update constants.py file
+    update_constants_file(url_token, file_token, set_cookie_token, results_token)
+    print("Successfully updated constants.py file!")
 
 
 if __name__ == "__main__":

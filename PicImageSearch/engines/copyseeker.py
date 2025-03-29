@@ -48,8 +48,16 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
             - The discovery ID is required for retrieving search results.
         """
 
-        resp = None
+        headers = {"content-type": "text/plain;charset=UTF-8", "next-action": COPYSEEKER_CONSTANTS["SET_COOKIE_TOKEN"]}
+        data = "[]"
         discovery_id = None
+
+        # Set cookie token
+        await self._send_request(
+            method="post",
+            headers=headers,
+            data=data,
+        )
 
         if url:
             data = [{"discoveryType": "ReverseImageSearch", "imageUrl": url}]
