@@ -41,7 +41,7 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add PicImageSearch/constants.py
-          git commit -m "chore: Update Copyseeker next-action tokens"
+          git commit -m "fix(Copyseeker): update the `next-action` tokens"
 
       - name: Create Pull Request
         if: steps.check-changes.outputs.changes == 'true'
