@@ -2,7 +2,7 @@
 
 # PicImageSearch
 
-Read in other languages: [简体中文](docs/zh/README.zh-CN.md), [Русский](docs/ru/README.ru-RU.md), [日本語](docs/ja/README.ja-JP.md)
+English | [简体中文](docs/zh/README.zh-CN.md) | [Русский](docs/ru/README.ru-RU.md) | [日本語](docs/ja/README.ja-JP.md)
 
 ✨ Aggregated Image Search Engine for Reverse Image Search ✨
 
@@ -28,22 +28,22 @@ Read in other languages: [简体中文](docs/zh/README.zh-CN.md), [Русски�
 
 ## Supported Search Engines
 
-| Engine      | Website                              |
-|-------------|--------------------------------------|
-| AnimeTrace  | <https://www.animetrace.com/>        |
-| ASCII2D     | <https://ascii2d.net/>               |
-| Baidu       | <https://graph.baidu.com/>           |
-| Bing        | <https://www.bing.com/images/search> |
-| Copyseeker  | <https://copyseeker.net/>            |
-| E-Hentai    | <https://e-hentai.org/>              |
-| Google      | <https://www.google.com/imghp>       |
-| Google Lens | <https://lens.google.com/>           |
-| IQDB        | <https://iqdb.org/>                  |
-| Lenso       | <https://lenso.ai/>                  |
-| SauceNAO    | <https://saucenao.com/>              |
-| Tineye      | <https://tineye.com/search/>         |
-| TraceMoe    | <https://trace.moe/>                 |
-| Yandex      | <https://yandex.com/images/search>   |
+| Engine             | Website                              |
+|--------------------|--------------------------------------|
+| AnimeTrace         | <https://www.animetrace.com/>        |
+| ASCII2D            | <https://ascii2d.net/>               |
+| Baidu              | <https://graph.baidu.com/>           |
+| Bing               | <https://www.bing.com/images/search> |
+| Copyseeker         | <https://copyseeker.net/>            |
+| E-Hentai           | <https://e-hentai.org/>              |
+| Google             | <https://www.google.com/imghp>       |
+| Google Lens        | <https://lens.google.com/>           |
+| IQDB               | <https://iqdb.org/>                  |
+| Lenso (deprecated) | <https://lenso.ai/>                  |
+| SauceNAO           | <https://saucenao.com/>              |
+| Tineye             | <https://tineye.com/search/>         |
+| TraceMoe           | <https://trace.moe/>                 |
+| Yandex             | <https://yandex.com/images/search>   |
 
 ## Usage
 

@@ -20,14 +20,17 @@ dependencies = [
     "pyquery>=2.0.1",
 ]
 keywords = [
+    "animetrace",
     "ascii2d",
     "baidu",
     "bing",
     "copyseeker",
     "e-hentai",
     "google",
+    "google-lens",
     "iqdb",
     "saucenao",
+    "tineye",
     "tracemoe",
     "yandex",
 ]

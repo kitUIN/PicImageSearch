@@ -2,7 +2,7 @@
 
 # PicImageSearch
 
-阅读其他语言版本： [English](../../README.md), [Русский](../ru/README.ru-RU.md), [日本語](../ja/README.ja-JP.md)
+[English](../../README.md) | 简体中文 | [Русский](../ru/README.ru-RU.md) | [日本語](../ja/README.ja-JP.md)
 
 ✨ 聚合识图引擎 用于以图搜源 ✨
 
@@ -28,22 +28,22 @@
 
 ## 支持的搜索引擎
 
-| 引擎          | 网站                                   |
-|-------------|--------------------------------------|
-| AnimeTrace  | <https://www.animetrace.com/>        |
-| ASCII2D     | <https://ascii2d.net/>               |
-| Baidu       | <https://graph.baidu.com/>           |
-| Bing        | <https://www.bing.com/images/search> |
-| Copyseeker  | <https://copyseeker.net/>            |
-| E-Hentai    | <https://e-hentai.org/>              |
-| Google      | <https://www.google.com/imghp>       |
-| Google Lens | <https://lens.google.com/>           |
-| IQDB        | <https://iqdb.org/>                  |
-| Lenso       | <https://lenso.ai/>                  |
-| SauceNAO    | <https://saucenao.com/>              |
-| Tineye      | <https://tineye.com/search/>         |
-| TraceMoe    | <https://trace.moe/>                 |
-| Yandex      | <https://yandex.com/images/search>   |
+| 引擎                 | 网站                                   |
+|--------------------|--------------------------------------|
+| AnimeTrace         | <https://www.animetrace.com/>        |
+| ASCII2D            | <https://ascii2d.net/>               |
+| Baidu              | <https://graph.baidu.com/>           |
+| Bing               | <https://www.bing.com/images/search> |
+| Copyseeker         | <https://copyseeker.net/>            |
+| E-Hentai           | <https://e-hentai.org/>              |
+| Google             | <https://www.google.com/imghp>       |
+| Google Lens        | <https://lens.google.com/>           |
+| IQDB               | <https://iqdb.org/>                  |
+| Lenso (deprecated) | <https://lenso.ai/>                  |
+| SauceNAO           | <https://saucenao.com/>              |
+| Tineye             | <https://tineye.com/search/>         |
+| TraceMoe           | <https://trace.moe/>                 |
+| Yandex             | <https://yandex.com/images/search>   |
 
 ## 使用方法
 
