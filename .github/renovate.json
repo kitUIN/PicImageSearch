@@ -20,12 +20,7 @@
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["major"],
       "labels": ["dependencies", "breaking"]
-    },
-    {
-      "description": "disable python updates for poetry manager",
-      "matchPackageNames": ["python"],
-      "matchManagers": ["poetry"],
-      "enabled": false
     }
-  ]
+  ],
+  "ignoreDeps": ["python"]
 }
