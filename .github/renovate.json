@@ -1,46 +1,31 @@
 {
-  "extends": [
-    "config:base",
-    "schedule:weekends"
-  ],
+  "extends": ["config:base", "schedule:weekends"],
   "baseBranches": ["main"],
   "dependencyDashboard": false,
   "rangeStrategy": "bump",
-  "enabledManagers": [
-    "github-actions",
-    "pep621",
-    "pre-commit"
-  ],
+  "enabledManagers": ["github-actions", "pep621", "pre-commit"],
   "pre-commit": {
     "enabled": true
   },
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        "*"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non-major dependencies",
       "groupSlug": "all-minor-patch",
-      "labels": [
-        "dependencies"
-      ],
+      "labels": ["dependencies"],
       "automerge": true
     },
     {
-      "matchPackagePatterns": [
-        "*"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "labels": [
-        "dependencies",
-        "breaking"
-      ]
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dependencies", "breaking"]
+    },
+    {
+      "description": "disable python updates for poetry manager",
+      "matchPackageNames": ["python"],
+      "matchManagers": ["poetry"],
+      "enabled": false
     }
   ]
 }
