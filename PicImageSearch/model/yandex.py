@@ -5,7 +5,7 @@ from pyquery import PyQuery
 from typing_extensions import override
 
 from ..exceptions import ParsingError
-from ..utils import parse_html
+from ..utils import deep_get, parse_html
 from .base import BaseSearchItem, BaseSearchResponse
 
 
@@ -95,7 +95,7 @@ class YandexResponse(BaseSearchResponse[YandexItem]):
         """
         data = parse_html(resp_data)
         self.origin: PyQuery = data
-        data_div = data.find('div.Root[id^="CbirSites_infinite"]')
+        data_div = data.find('div.Root[id^="ImagesApp-"]')
         data_state = data_div.attr("data-state")
 
         if not data_state:
@@ -106,5 +106,11 @@ class YandexResponse(BaseSearchResponse[YandexItem]):
             )
 
         data_json = json_loads(str(data_state))
-        sites = data_json["sites"]
-        self.raw: list[YandexItem] = [YandexItem(site) for site in sites]
+        if sites := deep_get(data_json, "initialState.cbirSites.sites"):
+            self.raw: list[YandexItem] = [YandexItem(site) for site in sites]
+        else:
+            raise ParsingError(
+                message="Failed to extract search results from 'data-state'",
+                engine="yandex",
+                details="This usually indicates a change in the page structure or an unexpected response.",
+            )
