@@ -49,7 +49,11 @@ def _syncify_wrap(class_type: type, method_name: str) -> None:
     @functools.wraps(method)
     def syncified(*args: Any, **kwargs: Any) -> Any:
         coro: Coroutine[None, None, Any] = method(*args, **kwargs)
-        loop = asyncio.get_event_loop()
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
         return coro if loop.is_running() else loop.run_until_complete(coro)
 
     setattr(syncified, "__tl.sync", method)
