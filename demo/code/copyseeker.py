@@ -20,9 +20,26 @@ async def demo_async() -> None:
 
 @logger.catch()
 def demo_sync() -> None:
-    copyseeker = CopyseekerSync(proxies=PROXIES)
+    # Note: Unlike other modules, Copyseeker requires special handling in sync mode
+    # due to its multi-step API that depends on persistent cookies between requests.
+    #
+    # The standard syncified wrapper doesn't maintain client state properly for such APIs,
+    # because each request may create a new client instance, losing cookie state.
+    #
+    # This explicit client management approach ensures cookies persist across requests.
+    # This complexity is one reason why async methods are generally recommended over sync methods.
+    network = Network(proxies=PROXIES)
+    client = network.start()
+
+    # Pass the client explicitly to maintain the same session across multiple requests
+    copyseeker = CopyseekerSync(client=client)
     resp = copyseeker.search(url=url)
     # resp = copyseeker.search(file=file)
+
+    # Important: We need to properly close the network client to avoid resource leaks
+    # This step isn't necessary with context managers in async code (async with Network() as client:)
+    network.close()
+
     show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
