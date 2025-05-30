@@ -2,7 +2,7 @@ name: Python EOL Check
 
 on:
   schedule:
-    - cron: '0 0 * * 6'
+    - cron: "0 0 * * 6"
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13.3'
+          python-version: "3.13.3"
 
       - name: Install dependencies
         run: |
@@ -28,7 +28,7 @@ jobs:
         run: |
           # Extract repository name from github.repository (format: owner/repo)
           REPO_NAME=$(echo "${{ github.repository }}" | cut -d '/' -f 2)
-          
+
           python .github/scripts/python_eol_check.py \
             --repo-owner ${{ github.repository_owner }} \
             --repo-name $REPO_NAME \
