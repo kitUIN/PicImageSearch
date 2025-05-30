@@ -111,7 +111,8 @@ def create_issue(
     issue_body = f"""
 # Python Version End of Life Reminder
 
-The current Python version {python_version} used in this project will reach its **End of Life date** on **{eol_date}**, which is **{days_until_eol}** days from now.
+The current Python version {python_version} used in this project will reach its **End of Life date** on **{eol_date}**,
+which is **{days_until_eol}** days from now.
 
 Please consider upgrading to a newer Python version to ensure the security and stability of the project.
 
