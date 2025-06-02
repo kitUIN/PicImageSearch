@@ -42,25 +42,7 @@ repository = "https://github.com/kitUIN/PicImageSearch"
 [project.optional-dependencies]
 socks = ["socksio>=1.0.0"]
 
-[build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
-
-[tool.basedpyright]
-pythonVersion = "3.9"
-reportAny = false
-reportExplicitAny = false
-reportUnknownArgumentType = false
-reportUnknownMemberType = false
-reportUnknownVariableType = false
-
-[tool.pdm]
-version = { source = "file", path = "PicImageSearch/__init__.py" }
-
-[tool.pdm.build]
-includes = ["PicImageSearch"]
-
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
     "basedpyright>=1.29.2",
     "loguru>=0.7.3",
@@ -70,6 +52,28 @@ dev = [
     "pre-commit>=4.2.0",
     "ruff>=0.11.12",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "PicImageSearch/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["PicImageSearch"]
+
+[tool.basedpyright]
+pythonVersion = "3.9"
+reportAny = false
+reportExplicitAny = false
+reportUnknownArgumentType = false
+reportUnknownMemberType = false
+reportUnknownVariableType = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.ruff]
 target-version = "py39"
@@ -85,7 +89,3 @@ select = ["F", "E", "W", "I", "UP"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
-
-[tool.pytest.ini_options]
-asyncio_mode = "strict"
-asyncio_default_fixture_loop_scope = "function"

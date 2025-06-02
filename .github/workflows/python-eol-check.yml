@@ -12,15 +12,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.13.3"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r .github/scripts/requirements.txt
+          enable-cache: true
 
       - name: Run Python EOL check script
         env:
@@ -29,7 +24,7 @@ jobs:
           # Extract repository name from github.repository (format: owner/repo)
           REPO_NAME=$(echo "${{ github.repository }}" | cut -d '/' -f 2)
 
-          python .github/scripts/python_eol_check.py \
+          uv run --no-project --with "httpx,PyGithub" .github/scripts/python_eol_check.py \
             --repo-owner ${{ github.repository_owner }} \
             --repo-name $REPO_NAME \
             --github-token ${{ secrets.GITHUB_TOKEN }}
