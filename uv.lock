@@ -25,14 +25,14 @@ wheels = [
 
 [[package]]
 name = "basedpyright"
-version = "1.29.2"
+version = "1.29.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "nodejs-wheel-binaries" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0c/db/fcfced6e89a49b52694d51078c2cf626b3fe9d097c1145bb8424337d7ae6/basedpyright-1.29.2.tar.gz", hash = "sha256:12c49186003b9f69a028615da883ef97035ea2119a9e3f93a00091b3a27088a6", size = 21966851, upload-time = "2025-05-21T11:45:43.03Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/80/fb/bd92196a07e3b4ccee4ff2761a26a05bff77d4da089b67b4b1a547868099/basedpyright-1.29.4.tar.gz", hash = "sha256:2df1976f8591eedf4b4ce8f9d123f43e810cc8cb7cc83c53eec0e2f8044073d0", size = 21961481, upload-time = "2025-06-11T22:25:55.173Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/98/b7/8307208ab517ac6e5d0331ad7347624fe8b250fb6e659ba3bd081d82c890/basedpyright-1.29.2-py3-none-any.whl", hash = "sha256:f389e2997de33d038c5065fd85bff351fbdc62fa6d6371c7b947fc3bce8d437d", size = 11472099, upload-time = "2025-05-21T11:45:38.785Z" },
+    { url = "https://files.pythonhosted.org/packages/d5/dc/180fe721a2574fb3aad4051adcca196ac2d18adaf75122f5eeb47436cca2/basedpyright-1.29.4-py3-none-any.whl", hash = "sha256:e087513979972f83010639c6c1a1c13dd3b1d24ee45f8ecff747962cc2063d6f", size = 11476859, upload-time = "2025-06-11T22:25:52.01Z" },
 ]
 
 [[package]]
@@ -497,7 +497,7 @@ provides-extras = ["socks"]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "basedpyright", specifier = ">=1.29.2" },
+    { name = "basedpyright", specifier = ">=1.29.4" },
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pytest", specifier = ">=8.4.0" },
