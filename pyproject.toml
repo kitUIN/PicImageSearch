@@ -44,7 +44,7 @@ socks = ["socksio>=1.0.0"]
 
 [dependency-groups]
 dev = [
-    "basedpyright>=1.29.2",
+    "basedpyright>=1.29.4",
     "loguru>=0.7.3",
     "pytest>=8.4.0",
     "pytest-asyncio>=1.0.0",
