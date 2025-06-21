@@ -46,11 +46,11 @@ socks = ["socksio>=1.0.0"]
 dev = [
     "basedpyright>=1.29.4",
     "loguru>=0.7.3",
-    "pytest>=8.4.0",
+    "pytest>=8.4.1",
     "pytest-asyncio>=1.0.0",
     "pytest-vcr>=1.0.2",
     "pre-commit>=4.2.0",
-    "ruff>=0.11.13",
+    "ruff>=0.12.0",
 ]
 
 [build-system]
