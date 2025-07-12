@@ -489,7 +489,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "httpx", extras = ["http2"], specifier = ">=0.28.1" },
-    { name = "lxml", specifier = ">=5.4.0" },
+    { name = "lxml", specifier = ">=5.4.0,<6.0.0" },
     { name = "pyquery", specifier = ">=2.0.1" },
     { name = "socksio", marker = "extra == 'socks'", specifier = ">=1.0.0" },
 ]
