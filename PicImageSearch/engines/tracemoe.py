@@ -5,6 +5,7 @@ from typing import Any, Optional, Union
 
 from typing_extensions import override
 
+from ..exceptions import ParsingError
 from ..model import TraceMoeItem, TraceMoeMe, TraceMoeResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
@@ -120,7 +121,24 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
             url=self.anilist_url,
             json={"query": ANIME_INFO_QUERY, "variables": variables},
         )
-        item.anime_info = (json_loads(resp.text))["data"]["Media"]
+        resp_json = json_loads(resp.text)
+
+        # Check for API rate limiting or errors
+        if resp_json.get("errors"):
+            error = resp_json["errors"][0]
+            if error.get("status") == 429:
+                raise ParsingError(
+                    message="AniList API rate limit exceeded",
+                    engine="tracemoe",
+                    details=f"Status: {error.get('status')}, Message: {error.get('message')}",
+                )
+            raise ParsingError(
+                message=f"AniList API error: {error.get('message')}",
+                engine="tracemoe",
+                details=f"Status: {error.get('status', 'unknown')}",
+            )
+
+        item.anime_info = resp_json["data"]["Media"]
         # Update item fields with anime information
         item.idMal = item.anime_info["idMal"]
         item.title_native = item.anime_info["title"]["native"]

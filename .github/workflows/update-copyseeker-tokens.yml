@@ -51,13 +51,13 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add PicImageSearch/constants.py
-          git commit -m "fix(Copyseeker): update the `next-action` tokens"
+          git commit -m "fix(copyseeker): update the \`next-action\` tokens"
 
       - name: Create Pull Request
         if: steps.check-changes.outputs.changes == 'true' && steps.run-tests.outputs.tests_passed == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
-          title: "fix(Copyseeker): update the `next-action` tokens"
+          title: "fix(copyseeker): update the `next-action` tokens"
           body: |
             This PR was automatically created by GitHub Actions to update the Copyseeker `next-action` tokens.
 
