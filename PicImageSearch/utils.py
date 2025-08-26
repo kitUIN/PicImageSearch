@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from lxml.html import HTMLParser, fromstring
+from lxml.html import fromstring
 from pyquery import PyQuery
 
 
@@ -96,5 +96,4 @@ def parse_html(html: str) -> PyQuery:
         Uses lxml's HTMLParser with explicit UTF-8 encoding to prevent
         potential character encoding issues.
     """
-    utf8_parser = HTMLParser(encoding="utf-8")
-    return PyQuery(fromstring(html, parser=utf8_parser))
+    return PyQuery(fromstring(html))

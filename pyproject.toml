@@ -51,6 +51,7 @@ dev = [
     "pytest-vcr>=1.0.2",
     "pre-commit>=4.3.0",
     "ruff>=0.12.10",
+    "types-lxml[basedpyright]>=2025.8.25",
 ]
 
 [build-system]

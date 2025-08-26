@@ -2,7 +2,7 @@ from json import loads as json_loads
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from lxml.html import HTMLParser, fromstring
+from lxml.html import fromstring
 from pyquery import PyQuery
 from typing_extensions import override
 
@@ -115,8 +115,7 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
 
         resp = await self._send_request(method="get", url=data_url)
 
-        utf8_parser = HTMLParser(encoding="utf-8")
-        data = PyQuery(fromstring(resp.text, parser=utf8_parser))
+        data = PyQuery(fromstring(resp.text))
         card_data = self._extract_card_data(data)
         same_data = None
 

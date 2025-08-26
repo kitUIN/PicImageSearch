@@ -51,6 +51,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
         headers = {"content-type": "text/plain;charset=UTF-8", "next-action": COPYSEEKER_CONSTANTS["SET_COOKIE_TOKEN"]}
         data = "[]"
         discovery_id = None
+        resp = None
 
         # Set cookie token
         await self._send_request(
