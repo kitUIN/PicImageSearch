@@ -55,7 +55,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.check-changes.outputs.changes == 'true' && steps.run-tests.outputs.tests_passed == 'true'
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           title: "fix(copyseeker): update the `next-action` tokens"
           body: |
