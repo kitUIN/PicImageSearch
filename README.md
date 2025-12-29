@@ -12,7 +12,7 @@ English | [简体中文](docs/zh/README.zh-CN.md) | [Русский](docs/ru/REA
 <a href="https://pypi.python.org/pypi/PicImageSearch">
     <img src="https://img.shields.io/pypi/v/PicImageSearch" alt="pypi">
 </a>
-<img src="https://img.shields.io/badge/python-3.9+-blue" alt="python">
+<img src="https://img.shields.io/badge/python-3.10+-blue" alt="python">
 <a href="https://github.com/kitUIN/PicImageSearch/releases">
     <img src="https://img.shields.io/github/v/release/kitUIN/PicImageSearch" alt="release">
 </a>
@@ -54,7 +54,7 @@ For `asynchronous` usage, import using `from PicImageSearch import Network,...` 
 
 ### Installation
 
-- Requires Python 3.9 and above.
+- Requires Python 3.10 and above.
 - Installation command: `pip install PicImageSearch`
 - Or use the Tsinghua mirror: `pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
 

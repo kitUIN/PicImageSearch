@@ -12,7 +12,7 @@
 <a href="https://pypi.python.org/pypi/PicImageSearch">
     <img src="https://img.shields.io/pypi/v/PicImageSearch" alt="pypi">
 </a>
-<img src="https://img.shields.io/badge/python-3.9+-blue" alt="python">
+<img src="https://img.shields.io/badge/python-3.10+-blue" alt="python">
 <a href="https://github.com/kitUIN/PicImageSearch/releases">
     <img src="https://img.shields.io/github/v/release/kitUIN/PicImageSearch" alt="release">
 </a>
@@ -54,7 +54,7 @@
 
 ### インストール
 
-- Python 3.9 以降が必要です。
+- Python 3.10 以降が必要です。
 - インストール: `pip install PicImageSearch`
 - または Tsinghua ミラーを使用: `pip install PicImageSearch -i https://pypi.tuna.tsinghua.edu.cn/simple`
 
