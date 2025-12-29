@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 from typing_extensions import override
 
@@ -32,7 +32,7 @@ class Google(BaseSearchEngine[GoogleResponse]):
         base_url = f"{base_url}/searchbyimage"
         super().__init__(base_url, **request_kwargs)
 
-    async def _navigate_page(self, resp: GoogleResponse, offset: int) -> Optional[GoogleResponse]:
+    async def _navigate_page(self, resp: GoogleResponse, offset: int) -> GoogleResponse | None:
         """Navigates to a specific page in search results.
 
         This method handles both forward and backward navigation through search results.
@@ -59,7 +59,7 @@ class Google(BaseSearchEngine[GoogleResponse]):
         _resp = await self._send_request(method="get", url=resp.pages[next_page_number - 1])
         return GoogleResponse(_resp.text, _resp.url, next_page_number, resp.pages)
 
-    async def pre_page(self, resp: GoogleResponse) -> Optional[GoogleResponse]:
+    async def pre_page(self, resp: GoogleResponse) -> GoogleResponse | None:
         """Navigates to the previous page in Google search results.
 
         Args:
@@ -70,7 +70,7 @@ class Google(BaseSearchEngine[GoogleResponse]):
         """
         return await self._navigate_page(resp, -1)
 
-    async def next_page(self, resp: GoogleResponse) -> Optional[GoogleResponse]:
+    async def next_page(self, resp: GoogleResponse) -> GoogleResponse | None:
         """Navigates to the next page in Google search results.
 
         Args:
@@ -111,8 +111,8 @@ class Google(BaseSearchEngine[GoogleResponse]):
     @override
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
         **kwargs: Any,
     ) -> GoogleResponse:
         """Performs a reverse image search on Google.

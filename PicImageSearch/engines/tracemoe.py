@@ -1,7 +1,7 @@
 import asyncio
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 from typing_extensions import override
 
@@ -60,7 +60,7 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
         base_url: str = "https://trace.moe",
         base_url_api: str = "https://api.trace.moe",
         mute: bool = False,
-        size: Optional[str] = None,
+        size: str | None = None,
         **request_kwargs: Any,
     ):
         """Initializes a TraceMoe API client with specified configurations.
@@ -77,9 +77,9 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
         super().__init__(base_url, **request_kwargs)
         self.me_url: str = f"{base_url_api}/me"
         self.mute: bool = mute
-        self.size: Optional[str] = size
+        self.size: str | None = size
 
-    async def me(self, key: Optional[str] = None) -> TraceMoeMe:
+    async def me(self, key: str | None = None) -> TraceMoeMe:
         """Retrieves user account information and API usage statistics from TraceMoe.
 
         Args:
@@ -157,10 +157,10 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
     @override
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
-        key: Optional[str] = None,
-        anilist_id: Optional[int] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
+        key: str | None = None,
+        anilist_id: int | None = None,
         chinese_title: bool = True,
         cut_borders: bool = True,
         **kwargs: Any,
@@ -197,9 +197,9 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
             - Results are automatically enriched with detailed anime information
         """
         headers = {"x-trace-key": key} if key else None
-        files: Optional[dict[str, Any]] = None
+        files: dict[str, Any] | None = None
 
-        params: dict[str, Union[bool, int, str]] = {}
+        params: dict[str, bool | int | str] = {}
         if cut_borders:
             params["cutBorders"] = "true"
         if anilist_id:

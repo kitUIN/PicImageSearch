@@ -1,6 +1,6 @@
 import re
 from ast import literal_eval
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import urlparse
 
 from pyquery import PyQuery
@@ -10,7 +10,7 @@ from ..utils import parse_html
 from .base import BaseSearchItem, BaseSearchResponse
 
 
-def get_site_name(url: Optional[str]) -> str:
+def get_site_name(url: str | None) -> str:
     """Extracts the site name from a URL."""
     if not url:
         return ""
@@ -19,7 +19,7 @@ def get_site_name(url: Optional[str]) -> str:
     return parsed_url.netloc.replace("www.", "") if parsed_url.netloc else ""
 
 
-def parse_image_size(html: PyQuery) -> Optional[str]:
+def parse_image_size(html: PyQuery) -> str | None:
     """Parses the image size from the HTML snippet."""
     info_spans = html("div.oYQBg.Zn52Me > span")
 
@@ -336,7 +336,7 @@ class GoogleLensExactMatchesItem(GoogleLensBaseItem):
         else:
             self.site_name = get_site_name(self.url)
 
-        self.size: Optional[str] = parse_image_size(info_div)
+        self.size: str | None = parse_image_size(info_div)
         self.thumbnail: str = self._extract_image_url(image_element)
 
 

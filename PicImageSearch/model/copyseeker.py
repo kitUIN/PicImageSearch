@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from typing_extensions import override
 
@@ -74,8 +74,8 @@ class CopyseekerResponse(BaseSearchResponse[CopyseekerItem]):
         """Parse search response data."""
         self.id: str = resp_data["id"]
         self.image_url: str = resp_data["imageUrl"]
-        self.best_guess_label: Optional[str] = resp_data.get("bestGuessLabel")
-        self.entities: Optional[str] = resp_data.get("entities")
+        self.best_guess_label: str | None = resp_data.get("bestGuessLabel")
+        self.entities: str | None = resp_data.get("entities")
         self.total: int = resp_data["totalLinksFound"]
         self.exif: dict[str, Any] = resp_data.get("exif", {})
         self.raw: list[CopyseekerItem] = [CopyseekerItem(page) for page in resp_data.get("pages", [])]

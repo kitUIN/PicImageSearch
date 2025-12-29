@@ -1,4 +1,5 @@
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from typing import Any
 
 from typing_extensions import override
 
@@ -203,8 +204,8 @@ class BingResponse(BaseSearchResponse[BingItem]):
         self.pages_including: list[PagesIncludingItem] = []
         self.visual_search: list[VisualSearchItem] = []
         self.related_searches: list[RelatedSearchItem] = []
-        self.best_guess: Optional[str] = None
-        self.travel: Optional[TravelInfo] = None
+        self.best_guess: str | None = None
+        self.travel: TravelInfo | None = None
         self.entities: list[EntityItem] = []
 
         if tags := resp_data.get("tags"):

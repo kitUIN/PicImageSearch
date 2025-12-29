@@ -1,6 +1,6 @@
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 from httpx import QueryParams
 from typing_extensions import override
@@ -23,16 +23,16 @@ class SauceNAO(BaseSearchEngine[SauceNAOResponse]):
     def __init__(
         self,
         base_url: str = "https://saucenao.com",
-        api_key: Optional[str] = None,
+        api_key: str | None = None,
         numres: int = 5,
         hide: int = 0,
         minsim: int = 30,
         output_type: int = 2,
         testmode: int = 0,
-        dbmask: Optional[int] = None,
-        dbmaski: Optional[int] = None,
+        dbmask: int | None = None,
+        dbmaski: int | None = None,
         db: int = 999,
-        dbs: Optional[list[int]] = None,
+        dbs: list[int] | None = None,
         **request_kwargs: Any,
     ):
         """Initializes a SauceNAO API client with specified configurations.
@@ -89,8 +89,8 @@ class SauceNAO(BaseSearchEngine[SauceNAOResponse]):
     @override
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
         **kwargs: Any,
     ) -> SauceNAOResponse:
         """Performs a reverse image search on SauceNAO.
@@ -122,7 +122,7 @@ class SauceNAO(BaseSearchEngine[SauceNAOResponse]):
             - Results are sorted by similarity score in descending order.
         """
         params = self.params
-        files: Optional[dict[str, Any]] = None
+        files: dict[str, Any] | None = None
 
         if url:
             params = params.add("url", url)

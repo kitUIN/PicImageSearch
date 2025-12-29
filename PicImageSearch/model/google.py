@@ -1,5 +1,5 @@
 from re import compile
-from typing import Any, Optional
+from typing import Any
 
 from pyquery import PyQuery
 from typing_extensions import override
@@ -22,7 +22,7 @@ class GoogleItem(BaseSearchItem):
         content (str): Descriptive text or context surrounding the image.
     """
 
-    def __init__(self, data: PyQuery, thumbnail: Optional[str]):
+    def __init__(self, data: PyQuery, thumbnail: str | None):
         """Initializes a GoogleItem with data from a search result.
 
         Args:
@@ -59,7 +59,7 @@ class GoogleResponse(BaseSearchResponse[GoogleItem]):
         resp_data: str,
         resp_url: str,
         page_number: int = 1,
-        pages: Optional[list[str]] = None,
+        pages: list[str] | None = None,
     ):
         """Initializes with the response text and URL.
 

@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 from typing_extensions import override
 
@@ -48,8 +48,8 @@ class Ascii2D(BaseSearchEngine[Ascii2DResponse]):
     @override
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
         **kwargs: Any,
     ) -> Ascii2DResponse:
         """Performs a reverse image search on Ascii2D.
@@ -81,8 +81,8 @@ class Ascii2D(BaseSearchEngine[Ascii2DResponse]):
             - Only one of `url` or `file` should be provided
             - Feature search (bovw) may take longer to process
         """
-        data: Optional[dict[str, Any]] = None
-        files: Optional[dict[str, Any]] = None
+        data: dict[str, Any] | None = None
+        files: dict[str, Any] | None = None
         endpoint: str = "uri" if url else "file"
 
         if url:

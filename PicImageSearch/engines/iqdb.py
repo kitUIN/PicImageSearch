@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 from typing_extensions import override
 
@@ -39,8 +39,8 @@ class Iqdb(BaseSearchEngine[IqdbResponse]):
     @override
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
         force_gray: bool = False,
         **kwargs: Any,
     ) -> IqdbResponse:
@@ -74,7 +74,7 @@ class Iqdb(BaseSearchEngine[IqdbResponse]):
             - The force_gray option can help find visually similar images regardless of coloring
         """
         data: dict[str, Any] = {}
-        files: Optional[dict[str, Any]] = None
+        files: dict[str, Any] | None = None
 
         if force_gray:
             data["forcegray"] = "on"

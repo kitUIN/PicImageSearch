@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 
 class DomainTag(str, Enum):
@@ -16,7 +16,7 @@ class DomainInfo:
 
     domain: str
     count: int
-    tag: Optional[DomainTag] = None
+    tag: DomainTag | None = None
 
     @classmethod
     def from_raw_data(cls, data: list[Any]) -> "DomainInfo":

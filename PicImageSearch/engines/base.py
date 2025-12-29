@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Generic, Optional, TypeVar, Union
+from typing import Any, Generic, TypeVar
 
 from ..model.base import BaseSearchResponse
 from ..network import RESP, HandOver
@@ -38,8 +38,8 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
     @abstractmethod
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
         **kwargs: Any,
     ) -> T:
         """Perform a reverse image search.

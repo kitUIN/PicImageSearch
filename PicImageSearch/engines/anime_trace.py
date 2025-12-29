@@ -1,6 +1,6 @@
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 from typing_extensions import override
 
@@ -24,8 +24,8 @@ class AnimeTrace(BaseSearchEngine[AnimeTraceResponse]):
         self,
         base_url: str = "https://api.animetrace.com",
         endpoint: str = "v1/search",
-        is_multi: Optional[int] = None,
-        ai_detect: Optional[int] = None,
+        is_multi: int | None = None,
+        ai_detect: int | None = None,
         **request_kwargs: Any,
     ):
         """Initializes an AnimeTrace API client with specified configurations.
@@ -39,16 +39,16 @@ class AnimeTrace(BaseSearchEngine[AnimeTraceResponse]):
         """
         base_url = f"{base_url}/{endpoint}"
         super().__init__(base_url, **request_kwargs)
-        self.is_multi: Optional[int] = is_multi
-        self.ai_detect: Optional[int] = ai_detect
+        self.is_multi: int | None = is_multi
+        self.ai_detect: int | None = ai_detect
 
     @override
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
-        base64: Optional[str] = None,
-        model: Optional[str] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
+        base64: str | None = None,
+        model: str | None = None,
         **kwargs: Any,
     ) -> AnimeTraceResponse:
         """Performs an anime character recognition search on AnimeTrace.

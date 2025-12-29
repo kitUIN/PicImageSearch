@@ -3,7 +3,7 @@ from base64 import b64encode
 from json import dumps as json_dumps
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 from urllib.parse import quote_plus
 
 from typing_extensions import override
@@ -31,7 +31,7 @@ class Bing(BaseSearchEngine[BingResponse]):
         base_url = "https://www.bing.com"
         super().__init__(base_url, **request_kwargs)
 
-    async def _upload_image(self, file: Union[str, bytes, Path]) -> tuple[str, str]:
+    async def _upload_image(self, file: str | bytes | Path) -> tuple[str, str]:
         """Uploads an image to Bing and retrieves the BCID.
 
         Args:
@@ -58,7 +58,7 @@ class Bing(BaseSearchEngine[BingResponse]):
 
         raise ValueError("BCID not found on page.")
 
-    async def _get_insights(self, bcid: Optional[str] = None, image_url: Optional[str] = None) -> dict[str, Any]:
+    async def _get_insights(self, bcid: str | None = None, image_url: str | None = None) -> dict[str, Any]:
         """Retrieves image insights from Bing using either BCID or image URL.
 
         This method handles two search scenarios:
@@ -122,8 +122,8 @@ class Bing(BaseSearchEngine[BingResponse]):
     @override
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
         **kwargs: Any,
     ) -> BingResponse:
         """Performs a reverse image search on Bing.

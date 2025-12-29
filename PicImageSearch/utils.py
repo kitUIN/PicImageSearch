@@ -1,12 +1,12 @@
 import re
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 from lxml.html import fromstring
 from pyquery import PyQuery
 
 
-def deep_get(dictionary: dict[str, Any], keys: str) -> Optional[Any]:
+def deep_get(dictionary: dict[str, Any], keys: str) -> Any | None:
     """Retrieves a value from a nested dictionary using a dot-separated string of keys.
 
     This function supports both dictionary key access and list index access:
@@ -44,7 +44,7 @@ def deep_get(dictionary: dict[str, Any], keys: str) -> Optional[Any]:
     return dictionary
 
 
-def read_file(file: Union[str, bytes, Path]) -> bytes:
+def read_file(file: str | bytes | Path) -> bytes:
     """Reads file content and returns it as bytes.
 
     This function handles different input types:

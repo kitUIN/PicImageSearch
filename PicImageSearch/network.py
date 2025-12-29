@@ -1,5 +1,5 @@
 from types import TracebackType
-from typing import Any, NamedTuple, Optional, Union
+from typing import Any, NamedTuple
 
 from httpx import AsyncClient, QueryParams, create_ssl_context
 
@@ -27,9 +27,9 @@ class Network:
     def __init__(
         self,
         internal: bool = False,
-        proxies: Optional[str] = None,
-        headers: Optional[dict[str, str]] = None,
-        cookies: Optional[str] = None,
+        proxies: str | None = None,
+        headers: dict[str, str] | None = None,
+        cookies: str | None = None,
         timeout: float = 30,
         verify_ssl: bool = True,
         http2: bool = False,
@@ -87,9 +87,9 @@ class Network:
 
     async def __aexit__(
         self,
-        exc_type: Optional[type[BaseException]] = None,
-        exc_val: Optional[BaseException] = None,
-        exc_tb: Optional[TracebackType] = None,
+        exc_type: type[BaseException] | None = None,
+        exc_val: BaseException | None = None,
+        exc_tb: TracebackType | None = None,
     ) -> None:
         """Async context manager exit for closing the HTTP client if managed internally."""
         await self.client.aclose()
@@ -107,10 +107,10 @@ class ClientManager:
 
     def __init__(
         self,
-        client: Optional[AsyncClient] = None,
-        proxies: Optional[str] = None,
-        headers: Optional[dict[str, str]] = None,
-        cookies: Optional[str] = None,
+        client: AsyncClient | None = None,
+        proxies: str | None = None,
+        headers: dict[str, str] | None = None,
+        cookies: str | None = None,
         timeout: float = 30,
         verify_ssl: bool = True,
         http2: bool = False,
@@ -129,7 +129,7 @@ class ClientManager:
         Note:
             If client is provided, other parameters are ignored.
         """
-        self.client: Union[Network, AsyncClient] = client or Network(
+        self.client: Network | AsyncClient = client or Network(
             internal=True,
             proxies=proxies,
             headers=headers,
@@ -149,9 +149,9 @@ class ClientManager:
 
     async def __aexit__(
         self,
-        exc_type: Optional[type[BaseException]] = None,
-        exc_val: Optional[BaseException] = None,
-        exc_tb: Optional[TracebackType] = None,
+        exc_type: type[BaseException] | None = None,
+        exc_val: BaseException | None = None,
+        exc_tb: TracebackType | None = None,
     ) -> None:
         """Async context manager exit, cleans up the client if created internally."""
         if isinstance(self.client, Network) and self.client.internal:
@@ -193,10 +193,10 @@ class HandOver:
 
     def __init__(
         self,
-        client: Optional[AsyncClient] = None,
-        proxies: Optional[str] = None,
-        headers: Optional[dict[str, str]] = None,
-        cookies: Optional[str] = None,
+        client: AsyncClient | None = None,
+        proxies: str | None = None,
+        headers: dict[str, str] | None = None,
+        cookies: str | None = None,
         timeout: float = 30,
         verify_ssl: bool = True,
         http2: bool = False,
@@ -212,10 +212,10 @@ class HandOver:
             verify_ssl (bool): If True, verifies SSL certificates.
             http2 (bool): If True, enables HTTP/2 support.
         """
-        self.client: Optional[AsyncClient] = client
-        self.proxies: Optional[str] = proxies
-        self.headers: Optional[dict[str, str]] = headers
-        self.cookies: Optional[str] = cookies
+        self.client: AsyncClient | None = client
+        self.proxies: str | None = proxies
+        self.headers: dict[str, str] | None = headers
+        self.cookies: str | None = cookies
         self.timeout: float = timeout
         self.verify_ssl: bool = verify_ssl
         self.http2: bool = http2
@@ -223,8 +223,8 @@ class HandOver:
     async def get(
         self,
         url: str,
-        params: Optional[dict[str, str]] = None,
-        headers: Optional[dict[str, str]] = None,
+        params: dict[str, str] | None = None,
+        headers: dict[str, str] | None = None,
         **kwargs: Any,
     ) -> RESP:
         """Perform an HTTP GET request with automatic client management.
@@ -259,11 +259,11 @@ class HandOver:
     async def post(
         self,
         url: str,
-        params: Union[dict[str, Any], QueryParams, None] = None,
-        headers: Optional[dict[str, str]] = None,
-        data: Optional[dict[Any, Any]] = None,
-        files: Optional[dict[str, Any]] = None,
-        json: Optional[dict[str, Any]] = None,
+        params: dict[str, Any] | QueryParams | None = None,
+        headers: dict[str, str] | None = None,
+        data: dict[Any, Any] | None = None,
+        files: dict[str, Any] | None = None,
+        json: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> RESP:
         """Perform an HTTP POST request with automatic client management.
@@ -307,7 +307,7 @@ class HandOver:
             )
             return RESP(resp.text, str(resp.url), resp.status_code)
 
-    async def download(self, url: str, headers: Optional[dict[str, str]] = None) -> bytes:
+    async def download(self, url: str, headers: dict[str, str] | None = None) -> bytes:
         """Download content from a URL with automatic client management.
 
         Args:

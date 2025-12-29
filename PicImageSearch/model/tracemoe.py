@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from typing_extensions import override
 
@@ -67,7 +67,7 @@ class TraceMoeItem(BaseSearchItem):
         self,
         data: dict[str, Any],
         mute: bool = False,
-        size: Optional[str] = None,
+        size: str | None = None,
     ):
         """Initializes a TraceMoeItem with data from a search result.
 
@@ -145,7 +145,7 @@ class TraceMoeResponse(BaseSearchResponse[TraceMoeItem]):
         resp_data: dict[str, Any],
         resp_url: str,
         mute: bool,
-        size: Optional[str],
+        size: str | None,
     ):
         """Initializes with the response data.
 

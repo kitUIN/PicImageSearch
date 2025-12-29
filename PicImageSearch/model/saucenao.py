@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from typing_extensions import override
 
@@ -218,15 +218,15 @@ class SauceNAOResponse(BaseSearchResponse[SauceNAOItem]):
         header = resp_data["header"]
         results = resp_data.get("results", [])
         self.raw: list[SauceNAOItem] = [SauceNAOItem(i) for i in results]
-        self.short_remaining: Optional[int] = header.get("short_remaining")
-        self.long_remaining: Optional[int] = header.get("long_remaining")
-        self.user_id: Optional[int] = header.get("user_id")
-        self.account_type: Optional[int] = header.get("account_type")
-        self.short_limit: Optional[str] = header.get("short_limit")
-        self.long_limit: Optional[str] = header.get("long_limit")
-        self.status: Optional[int] = header.get("status")
-        self.results_requested: Optional[int] = header.get("results_requested")
-        self.search_depth: Optional[int] = header.get("search_depth")
-        self.minimum_similarity: Optional[float] = header.get("minimum_similarity")
-        self.results_returned: Optional[int] = header.get("results_returned")
+        self.short_remaining: int | None = header.get("short_remaining")
+        self.long_remaining: int | None = header.get("long_remaining")
+        self.user_id: int | None = header.get("user_id")
+        self.account_type: int | None = header.get("account_type")
+        self.short_limit: str | None = header.get("short_limit")
+        self.long_limit: str | None = header.get("long_limit")
+        self.status: int | None = header.get("status")
+        self.results_requested: int | None = header.get("results_requested")
+        self.search_depth: int | None = header.get("search_depth")
+        self.minimum_similarity: float | None = header.get("minimum_similarity")
+        self.results_returned: int | None = header.get("results_returned")
         self.url: str = f"https://saucenao.com/search.php?url=https://saucenao.com{header.get('query_image_display')}"

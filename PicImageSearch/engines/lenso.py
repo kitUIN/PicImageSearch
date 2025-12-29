@@ -2,7 +2,7 @@ import base64
 import warnings
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Literal, Optional, Union, get_args
+from typing import Any, Literal, get_args
 
 from typing_extensions import override
 
@@ -96,8 +96,8 @@ class Lenso(BaseSearchEngine[LensoResponse]):
     @override
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
         search_type: SEARCH_TYPES = "",
         sort_type: SORT_TYPES = "SMART",
         **kwargs: Any,

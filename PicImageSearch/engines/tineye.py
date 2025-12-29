@@ -1,6 +1,6 @@
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 from typing_extensions import override
 
@@ -45,7 +45,7 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
 
         return [DomainInfo.from_raw_data(domain_data) for domain_data in resp_json.get("domains", [])]
 
-    async def _navigate_page(self, resp: TineyeResponse, offset: int) -> Optional[TineyeResponse]:
+    async def _navigate_page(self, resp: TineyeResponse, offset: int) -> TineyeResponse | None:
         """Navigates to a specific page in the Tineye search results.
 
         This internal method handles the pagination of Tineye results.  It calculates the URL for the target page
@@ -78,7 +78,7 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
             next_page_number,
         )
 
-    async def pre_page(self, resp: TineyeResponse) -> Optional[TineyeResponse]:
+    async def pre_page(self, resp: TineyeResponse) -> TineyeResponse | None:
         """Navigates to the previous page of Tineye search results.
 
         Args:
@@ -90,7 +90,7 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
         """
         return await self._navigate_page(resp, -1)
 
-    async def next_page(self, resp: TineyeResponse) -> Optional[TineyeResponse]:
+    async def next_page(self, resp: TineyeResponse) -> TineyeResponse | None:
         """Navigates to the next page of Tineye search results.
 
         Args:
@@ -104,8 +104,8 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
     @override
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
         show_unavailable_domains: bool = False,
         domain: str = "",
         sort: str = "score",
@@ -146,7 +146,7 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
         Note:
             - Only one of `url` or `file` should be provided
         """
-        files: Optional[dict[str, Any]] = None
+        files: dict[str, Any] | None = None
         params: dict[str, Any] = {
             "sort": sort,
             "order": order,

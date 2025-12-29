@@ -1,6 +1,6 @@
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 from typing_extensions import override
 
@@ -28,9 +28,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
         """
         super().__init__(base_url, **request_kwargs)
 
-    async def _get_discovery_id(
-        self, url: Optional[str] = None, file: Union[str, bytes, Path, None] = None
-    ) -> Optional[str]:
+    async def _get_discovery_id(self, url: str | None = None, file: str | bytes | Path | None = None) -> str | None:
         """Retrieves a discovery ID from Copyseeker for image search.
 
         This method handles two search scenarios:
@@ -96,8 +94,8 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
     @override
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
         **kwargs: Any,
     ) -> CopyseekerResponse:
         """Performs a reverse image search on Copyseeker.

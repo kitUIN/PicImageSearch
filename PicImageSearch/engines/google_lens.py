@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Literal, Optional, Union
+from typing import Any, Literal
 
 from pyquery import PyQuery
 from typing_extensions import override
@@ -10,7 +10,7 @@ from ..utils import read_file
 from .base import BaseSearchEngine
 
 
-class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatchesResponse]]):
+class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesResponse]):
     """API client for the Google Lens image search engine.
 
     Supported search types:
@@ -32,7 +32,7 @@ class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatch
         base_url: str = "https://lens.google.com",
         search_url: str = "https://www.google.com",
         search_type: Literal["all", "products", "visual_matches", "exact_matches"] = "all",
-        q: Optional[str] = None,
+        q: str | None = None,
         hl: str = "en",
         country: str = "US",
         **request_kwargs: Any,
@@ -67,13 +67,13 @@ class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatch
         self.search_url: str = search_url
         self.hl_param: str = f"{hl}-{country.upper()}"
         self.search_type: str = search_type
-        self.q: Optional[str] = q
+        self.q: str | None = q
 
     async def _perform_image_search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
-        q: Optional[str] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
+        q: str | None = None,
     ) -> RESP:
         """Uploads an image (URL or file) to Google Lens and returns the response from the search result page.
 
@@ -132,11 +132,11 @@ class GoogleLens(BaseSearchEngine[Union[GoogleLensResponse, GoogleLensExactMatch
     @override
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
-        q: Optional[str] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
+        q: str | None = None,
         **kwargs: Any,
-    ) -> Union[GoogleLensResponse, GoogleLensExactMatchesResponse]:
+    ) -> GoogleLensResponse | GoogleLensExactMatchesResponse:
         """Performs a reverse image search on Google Lens.
 
         This method supports searching by image URL or by uploading a local image file.

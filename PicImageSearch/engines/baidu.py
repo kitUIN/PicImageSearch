@@ -1,6 +1,6 @@
 from json import loads as json_loads
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 from lxml.html import fromstring
 from pyquery import PyQuery
@@ -59,8 +59,8 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
     @override
     async def search(
         self,
-        url: Optional[str] = None,
-        file: Union[str, bytes, Path, None] = None,
+        url: str | None = None,
+        file: str | bytes | Path | None = None,
         **kwargs: Any,
     ) -> BaiDuResponse:
         """Performs a reverse image search on BaiDu.
