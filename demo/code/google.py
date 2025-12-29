@@ -1,5 +1,4 @@
 import asyncio
-from typing import Optional
 
 from demo.code.config import GOOGLE_COOKIES, IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import Google, Network
@@ -38,7 +37,7 @@ def demo_sync() -> None:
         show_result(resp3)  # pyright: ignore[reportArgumentType]
 
 
-def show_result(resp: Optional[GoogleResponse]) -> None:
+def show_result(resp: GoogleResponse | None) -> None:
     if not resp or not resp.raw:
         return
     # logger.info(resp.origin)  # Original Data

@@ -1,5 +1,4 @@
 import asyncio
-from typing import Optional
 
 from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import EHentai, Network
@@ -10,7 +9,7 @@ url = f"{IMAGE_BASE_URL}/test06.jpg"
 file = get_image_path("test06.jpg")
 
 # Note: EXHentai search requires cookies if to be used
-cookies: Optional[str] = None
+cookies: str | None = None
 
 # Use EXHentai search or not, it's recommended to use bool(cookies), i.e. use EXHentai search if cookies is configured
 is_ex = False

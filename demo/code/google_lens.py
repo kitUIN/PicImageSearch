@@ -1,5 +1,4 @@
 import asyncio
-from typing import Union
 
 from demo.code.config import GOOGLE_COOKIES, IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import GoogleLens, Network
@@ -81,7 +80,7 @@ def demo_sync() -> None:
     # show_result(resp_exact, search_type="exact_matches")  # pyright: ignore[reportArgumentType]
 
 
-def show_result(resp: Union[GoogleLensResponse, GoogleLensExactMatchesResponse], search_type: str) -> None:
+def show_result(resp: GoogleLensResponse | GoogleLensExactMatchesResponse, search_type: str) -> None:
     logger.info(f"Search Type: {search_type}")
     logger.info(f"Search URL: {resp.url}")
 

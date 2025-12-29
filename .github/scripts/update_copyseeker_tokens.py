@@ -14,7 +14,6 @@ import re
 import sys
 from json import dumps as json_dumps
 from pathlib import Path
-from typing import Optional
 
 import httpx
 
@@ -120,7 +119,7 @@ def update_constants_file(url_token: str, file_token: str, set_cookie_token: str
 
 
 def handle_missing_tokens(
-    url_token: Optional[str], file_token: Optional[str], set_cookie_token: Optional[str], results_token: Optional[str]
+    url_token: str | None, file_token: str | None, set_cookie_token: str | None, results_token: str | None
 ):
     """Handle missing tokens and output error messages"""
     missing = []

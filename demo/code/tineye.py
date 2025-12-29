@@ -1,5 +1,4 @@
 import asyncio
-from typing import Optional
 
 from demo.code.config import IMAGE_BASE_URL, PROXIES, get_image_path, logger
 from PicImageSearch import Network, Tineye
@@ -86,7 +85,7 @@ def demo_sync() -> None:
                 show_result(resp4, "Previous Page")  # pyright: ignore[reportArgumentType]
 
 
-def show_result(resp: Optional[TineyeResponse], title: str = "") -> None:
+def show_result(resp: TineyeResponse | None, title: str = "") -> None:
     if resp and not resp.raw:
         logger.info(f"Origin Response: {resp.origin}")
 
