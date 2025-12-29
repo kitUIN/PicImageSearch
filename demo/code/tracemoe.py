@@ -31,7 +31,7 @@ def show_result(resp: TraceMoeResponse) -> None:
     logger.info(resp.raw[0].origin)
     logger.info(resp.raw[0].anime_info)
     logger.info(resp.frameCount)
-    logger.info(resp.raw[0].anilist)
+    logger.info(resp.raw[0].anilist_id)
     logger.info(resp.raw[0].idMal)
     logger.info(resp.raw[0].title_native)
     logger.info(resp.raw[0].title_romaji)

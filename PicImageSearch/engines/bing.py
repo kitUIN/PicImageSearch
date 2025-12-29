@@ -224,8 +224,8 @@ class Bing(BaseSearchEngine[BingResponse]):
                 f"view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste"
                 f"&q=imgurl:{url}&idpbck=1"
             )
-            resp_text, _, _ = await self.get(resp_url)
-            self._image_signature = re.search(r"imageSignature&quot;:&quot;(.+?)&quot;", resp_text)[1]
+            resp = await self._send_request(method="GET", url=resp_url)
+            self._image_signature = re.search(r"imageSignature&quot;:&quot;(.+?)&quot;", resp.text)[1]
             resp_json = await self._get_insights(image_url=url)
 
         elif file:

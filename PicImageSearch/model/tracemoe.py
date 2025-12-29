@@ -46,7 +46,7 @@ class TraceMoeItem(BaseSearchItem):
         title_english (str): English title.
         title_romaji (str): Romanized title.
         title_chinese (str): Chinese title.
-        anilist (int): AniList database ID.
+        anilist_id (int): AniList database ID.
         synonyms (list[str]): Alternative titles.
         isAdult (bool): Whether the content is adult-oriented.
         type (str): Media type classification.
@@ -101,7 +101,7 @@ class TraceMoeItem(BaseSearchItem):
         self.title_english: str = ""
         self.title_romaji: str = ""
         self.title_chinese: str = ""
-        self.anilist: int = data["anilist"]
+        self.anilist_id: int = 0
         self.synonyms: list[str] = []
         self.isAdult: bool = False
         self.type: str = ""
@@ -109,6 +109,25 @@ class TraceMoeItem(BaseSearchItem):
         self.start_date: dict[str, Any] = {}
         self.end_date: dict[str, Any] = {}
         self.cover_image: str = ""
+
+        if anilist_data := data.get("anilist"):
+            self.anilist_id = anilist_data.get("id", 0)
+            self.anime_info = anilist_data
+            self.idMal = anilist_data.get("idMal", 0)
+            title = anilist_data.get("title", {})
+            self.title_native = title.get("native", "")
+            self.title_romaji = title.get("romaji", "")
+            self.title_english = title.get("english", "")
+            self.title_chinese = title.get("chinese", "")
+            self.synonyms = anilist_data.get("synonyms", [])
+            self.isAdult = anilist_data.get("isAdult", False)
+            self.type = anilist_data.get("type", "")
+            self.format = anilist_data.get("format", "")
+            self.start_date = anilist_data.get("startDate", {})
+            self.end_date = anilist_data.get("endDate", {})
+            cover = anilist_data.get("coverImage", {})
+            self.cover_image = cover.get("large", "") if isinstance(cover, dict) else ""
+
         self.filename: str = data["filename"]
         self.episode: int = data["episode"]
         self.From: float = data["from"]

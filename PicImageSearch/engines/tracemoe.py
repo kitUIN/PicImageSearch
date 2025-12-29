@@ -1,45 +1,12 @@
-import asyncio
 from json import loads as json_loads
 from pathlib import Path
 from typing import Any
 
 from typing_extensions import override
 
-from ..exceptions import ParsingError
-from ..model import TraceMoeItem, TraceMoeMe, TraceMoeResponse
+from ..model import TraceMoeMe, TraceMoeResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
-
-ANIME_INFO_QUERY = """
-query ($id: Int) {
-  Media (id: $id, type: ANIME) {
-    id
-    idMal
-    title {
-      native
-      romaji
-      english
-    }
-    type
-    format
-    startDate {
-      year
-      month
-      day
-    }
-    endDate {
-      year
-      month
-      day
-    }
-    coverImage {
-      large
-    }
-    synonyms
-    isAdult
-  }
-}
-"""
 
 
 class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
@@ -48,7 +15,6 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
     Used for performing reverse image searches using TraceMoe service.
 
     Attributes:
-        anilist_url (str): URL for TraceMoe endpoint to retrieve anime info.
         base_url (str): The base URL for TraceMoe searches.
         me_url (str): URL for TraceMoe API endpoint to retrieve user info.
         size (Optional[str]): Optional string indicating preview size ('s', 'm', 'l').
@@ -72,7 +38,6 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
             size (Optional[str]): Specifies preview video size ('s', 'm', 'l').
             **request_kwargs (Any): Additional arguments for network requests.
         """
-        self.anilist_url: str = f"{base_url}/anilist"
         base_url = f"{base_url_api}/search"
         super().__init__(base_url, **request_kwargs)
         self.me_url: str = f"{base_url_api}/me"
@@ -98,61 +63,6 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
         params = {"key": key} if key else None
         resp = await self._send_request(method="get", url=self.me_url, params=params)
         return TraceMoeMe(json_loads(resp.text))
-
-    async def update_anime_info(self, item: TraceMoeItem, chinese_title: bool = True) -> None:
-        """Updates a TraceMoeItem with detailed anime information from AniList API.
-
-        Args:
-            item (TraceMoeItem): TraceMoeItem instance to be updated with detailed information.
-            chinese_title (bool): If True, attempts to fetch Chinese title if available.
-
-        Note:
-            Updates multiple fields including:
-            - MAL and AniList IDs
-            - Titles (native, romaji, english, chinese)
-            - Anime metadata (type, format, dates)
-            - Cover image URL
-            - Adult content flag
-            - Alternative titles (synonyms)
-        """
-        variables = {"id": item.anilist}
-        resp = await self._send_request(
-            method="post",
-            url=self.anilist_url,
-            json={"query": ANIME_INFO_QUERY, "variables": variables},
-        )
-        resp_json = json_loads(resp.text)
-
-        # Check for API rate limiting or errors
-        if resp_json.get("errors"):
-            error = resp_json["errors"][0]
-            if error.get("status") == 429:
-                raise ParsingError(
-                    message="AniList API rate limit exceeded",
-                    engine="tracemoe",
-                    details=f"Status: {error.get('status')}, Message: {error.get('message')}",
-                )
-            raise ParsingError(
-                message=f"AniList API error: {error.get('message')}",
-                engine="tracemoe",
-                details=f"Status: {error.get('status', 'unknown')}",
-            )
-
-        item.anime_info = resp_json["data"]["Media"]
-        # Update item fields with anime information
-        item.idMal = item.anime_info["idMal"]
-        item.title_native = item.anime_info["title"]["native"]
-        item.title_romaji = item.anime_info["title"]["romaji"]
-        item.title_english = item.anime_info["title"]["english"]
-        item.synonyms = item.anime_info["synonyms"]
-        item.isAdult = item.anime_info["isAdult"]
-        item.type = item.anime_info["type"]
-        item.format = item.anime_info["format"]
-        item.start_date = item.anime_info["startDate"]
-        item.end_date = item.anime_info["endDate"]
-        item.cover_image = item.anime_info["coverImage"]["large"]
-        if chinese_title:
-            item.title_chinese = item.anime_info["title"].get("chinese", "")
 
     @override
     async def search(
@@ -199,7 +109,8 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
         headers = {"x-trace-key": key} if key else None
         files: dict[str, Any] | None = None
 
-        params: dict[str, bool | int | str] = {}
+        # Add anilistInfo parameter to get anime info directly from TraceMoe API
+        params: dict[str, bool | int | str] = {"anilistInfo": ""}
         if cut_borders:
             params["cutBorders"] = "true"
         if anilist_id:
@@ -225,6 +136,5 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
             mute=self.mute,
             size=self.size,
         )
-        await asyncio.gather(*[self.update_anime_info(item, chinese_title) for item in result.raw])  # pyright: ignore[reportUnusedCallResult]
 
         return result
