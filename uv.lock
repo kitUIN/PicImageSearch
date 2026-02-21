@@ -470,7 +470,7 @@ dev = [
     { name = "pytest-asyncio" },
     { name = "pytest-vcr" },
     { name = "ruff" },
-    { name = "types-lxml", extra = ["basedpyright"] },
+    { name = "types-lxml" },
 ]
 
 [package.metadata]
@@ -491,7 +491,7 @@ dev = [
     { name = "pytest-asyncio", specifier = ">=1.3.0" },
     { name = "pytest-vcr", specifier = ">=1.0.2" },
     { name = "ruff", specifier = ">=0.15.2" },
-    { name = "types-lxml", extras = ["basedpyright"], specifier = ">=2025.11.25" },
+    { name = "types-lxml", extras = ["basedpyright"], specifier = ">=2026.2.16" },
 ]
 
 [[package]]
@@ -830,7 +830,7 @@ wheels = [
 
 [[package]]
 name = "types-lxml"
-version = "2025.11.25"
+version = "2026.2.16"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -838,14 +838,9 @@ dependencies = [
     { name = "types-html5lib" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/6e/30/63ad18e633f61d848444fe4f1b95fcfcf80283bc5578f308501ef7210437/types_lxml-2025.11.25.tar.gz", hash = "sha256:30e7ff9a2d8d7c2ea7967c5d71c8169dd1806b58503ed4972af1ce602919b0e4", size = 156623, upload-time = "2025-11-25T20:41:24.931Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/dd/ad/c70ac8cbdc28eb58a17301c69b4925af54b614e47f9b2ebc9de5cc10f786/types_lxml-2026.2.16.tar.gz", hash = "sha256:b3a1340cc06db98d541c785732f6f68bea438daff4e2b7809ef748d545d01406", size = 161204, upload-time = "2026-02-17T02:34:50.855Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b5/83/ab792ad6d91cb25eca5547f1f9e593994310ad5bc19c2baf9e85cd4d506c/types_lxml-2025.11.25-py3-none-any.whl", hash = "sha256:c9e56aad336076f245e38d7f9b6bd6cdd9ffadda64ce650b9d3aa3a9ae4a8890", size = 96781, upload-time = "2025-11-25T20:41:23.5Z" },
-]
-
-[package.optional-dependencies]
-basedpyright = [
-    { name = "basedpyright" },
+    { url = "https://files.pythonhosted.org/packages/5f/5c/03ec9befbf4bb5309bfd576c6a5ac1c75633f78f6b64cf1f594e97cd3d23/types_lxml-2026.2.16-py3-none-any.whl", hash = "sha256:5dd81ffa54830e5f361988737c5f1d6a0ae48b2742790637ec560df790ea0401", size = 97040, upload-time = "2026-02-17T02:34:49.286Z" },
 ]
 
 [[package]]
