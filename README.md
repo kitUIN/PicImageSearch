@@ -28,22 +28,22 @@ English | [简体中文](docs/zh/README.zh-CN.md) | [Русский](docs/ru/REA
 
 ## Supported Search Engines
 
-| Engine             | Website                              |
-|--------------------|--------------------------------------|
-| AnimeTrace         | <https://www.animetrace.com/>        |
-| ASCII2D            | <https://ascii2d.net/>               |
-| Baidu              | <https://graph.baidu.com/>           |
-| Bing               | <https://www.bing.com/images/search> |
-| Copyseeker         | <https://copyseeker.net/>            |
-| E-Hentai           | <https://e-hentai.org/>              |
-| Google             | <https://www.google.com/imghp>       |
-| Google Lens        | <https://lens.google.com/>           |
-| IQDB               | <https://iqdb.org/>                  |
-| Lenso (deprecated) | <https://lenso.ai/>                  |
-| SauceNAO           | <https://saucenao.com/>              |
-| Tineye             | <https://tineye.com/search/>         |
-| TraceMoe           | <https://trace.moe/>                 |
-| Yandex             | <https://yandex.com/images/search>   |
+| Engine              | Website                              |
+| ------------------- | ------------------------------------ |
+| AnimeTrace          | <https://www.animetrace.com/>        |
+| ASCII2D             | <https://ascii2d.net/>               |
+| Baidu               | <https://graph.baidu.com/>           |
+| Bing                | <https://www.bing.com/images/search> |
+| Copyseeker          | <https://copyseeker.net/>            |
+| E-Hentai            | <https://e-hentai.org/>              |
+| Google (deprecated) | <https://www.google.com/imghp>       |
+| Google Lens         | <https://lens.google.com/>           |
+| IQDB                | <https://iqdb.org/>                  |
+| Lenso (deprecated)  | <https://lenso.ai/>                  |
+| SauceNAO            | <https://saucenao.com/>              |
+| Tineye              | <https://tineye.com/search/>         |
+| TraceMoe            | <https://trace.moe/>                 |
+| Yandex              | <https://yandex.com/images/search>   |
 
 ## Usage
 

@@ -14,7 +14,7 @@ from .base import BaseSearchEngine
 class Lenso(BaseSearchEngine[LensoResponse]):
     """API client for the Lenso image search engine. (DEPRECATED)
 
-    This engine is deprecated as Lenso has implemented Cloudflare turnstile protection
+    This engine is deprecated as Lenso has implemented Cloudflare turnstile protection,
     which prevents this client from working properly.
 
     Lenso is a powerful AI-driven visual search engine that helps you find similar images,
@@ -60,7 +60,7 @@ class Lenso(BaseSearchEngine[LensoResponse]):
         """
         warnings.warn(
             (
-                "The Lenso engine is deprecated as the website now uses Cloudflare turnstile protection "
+                "The Lenso engine is deprecated as the website now uses Cloudflare turnstile protection, "
                 "which prevents this client from working properly."
             ),
             DeprecationWarning,
@@ -104,7 +104,7 @@ class Lenso(BaseSearchEngine[LensoResponse]):
     ) -> LensoResponse:
         """Performs a reverse image search on Lenso. (DEPRECATED)
 
-        This method is deprecated as Lenso has implemented Cloudflare turnstile protection
+        This method is deprecated as Lenso has implemented Cloudflare turnstile protection,
         which prevents this client from working properly.
 
         This method supports two ways of searching:
@@ -125,7 +125,7 @@ class Lenso(BaseSearchEngine[LensoResponse]):
         """
         warnings.warn(
             (
-                "The Lenso engine is deprecated as the website now uses Cloudflare turnstile protection "
+                "The Lenso engine is deprecated as the website now uses Cloudflare turnstile protection, "
                 "which prevents this client from working properly."
             ),
             DeprecationWarning,

@@ -1,5 +1,5 @@
 """
-Warning: The Lenso engine is deprecated as the website now uses Cloudflare turnstile protection
+Warning: The Lenso engine is deprecated as the website now uses Cloudflare turnstile protection,
 which prevents this client from working properly.
 """
 

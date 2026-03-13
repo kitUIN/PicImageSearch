@@ -1,3 +1,4 @@
+import warnings
 from pathlib import Path
 from typing import Any
 
@@ -9,7 +10,10 @@ from .base import BaseSearchEngine
 
 
 class Google(BaseSearchEngine[GoogleResponse]):
-    """API client for the Google image search engine.
+    """API client for the Google image search engine. (DEPRECATED)
+
+    This engine is deprecated as the legacy image search API is no longer available,
+    which prevents this client from working properly.
 
     Used for performing reverse image searches using Google service.
 
@@ -29,6 +33,15 @@ class Google(BaseSearchEngine[GoogleResponse]):
             base_url (str): The base URL for Google searches, defaults to the international version.
             **request_kwargs (Any): Additional arguments for network requests.
         """
+        warnings.warn(
+            (
+                "The Google engine is deprecated as the legacy image search API is no longer available, "
+                "which prevents this client from working properly."
+            ),
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         base_url = f"{base_url}/searchbyimage"
         super().__init__(base_url, **request_kwargs)
 
@@ -115,7 +128,10 @@ class Google(BaseSearchEngine[GoogleResponse]):
         file: str | bytes | Path | None = None,
         **kwargs: Any,
     ) -> GoogleResponse:
-        """Performs a reverse image search on Google.
+        """Performs a reverse image search on Google. (DEPRECATED)
+
+        This method is deprecated as the legacy image search API is no longer available,
+        which prevents this client from working properly.
 
         This method supports two ways of searching:
             1. Search by image URL
@@ -144,6 +160,15 @@ class Google(BaseSearchEngine[GoogleResponse]):
             - The method automatically ensures thumbnail data is present in results
             - Safe search is disabled by default
         """
+        warnings.warn(
+            (
+                "The Google engine is deprecated as the legacy image search API is no longer available, "
+                "which prevents this client from working properly."
+            ),
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         params: dict[str, Any] = {"sbisrc": 1, "safe": "off"}
 
         if url:

@@ -1,3 +1,8 @@
+"""
+Warning: The Google engine is deprecated as the legacy image search API is no longer available,
+which prevents this client from working properly.
+"""
+
 import asyncio
 
 from demo.code.config import GOOGLE_COOKIES, IMAGE_BASE_URL, PROXIES, get_image_path, logger
