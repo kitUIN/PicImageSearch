@@ -47,10 +47,10 @@ dev = [
     "basedpyright>=1.39.6",
     "loguru>=0.7.3",
     "pytest>=9.0.3",
-    "pytest-asyncio>=1.3.0",
+    "pytest-asyncio>=1.4.0",
     "pytest-vcr>=1.0.2",
     "pre-commit>=4.6.0",
-    "ruff>=0.15.14",
+    "ruff>=0.15.15",
     "types-lxml[basedpyright]>=2026.2.16",
 ]
 
