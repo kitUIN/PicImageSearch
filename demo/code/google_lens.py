@@ -12,25 +12,23 @@ file = get_image_path("test05.jpg")
 @logger.catch()
 async def demo_async() -> None:
     async with Network(proxies=PROXIES, cookies=GOOGLE_COOKIES) as client:
-        google_lens_all = GoogleLens(client=client, search_type="all", q="anime", hl="en", country="US")
+        google_lens_all = GoogleLens(
+            client=client,
+            search_type="all",
+            q="anime",
+        )
         resp_all = await google_lens_all.search(url=url)
         show_result(resp_all, search_type="all")
 
-        # google_lens_products = GoogleLens(
-        #     client=client, search_type="products", q="anime", hl="en", country="GB"
-        # )
+        # google_lens_products = GoogleLens(client=client, search_type="products", q="anime")
         # resp_products = await google_lens_products.search(file=file)
         # show_result(resp_products, search_type="products")
 
-        # google_lens_visual = GoogleLens(
-        #     client=client, search_type="visual_matches", hl="zh", country="CN"
-        # )
+        # google_lens_visual = GoogleLens(client=client, search_type="visual_matches")
         # resp_visual = await google_lens_visual.search(url=url)
         # show_result(resp_visual, search_type="visual_matches")
 
-        # google_lens_exact = GoogleLens(
-        #     client=client, search_type="exact_matches", hl="ru", country="RU"
-        # )
+        # google_lens_exact = GoogleLens(client=client, search_type="exact_matches")
         # resp_exact = await google_lens_exact.search(file=file)
         # show_result(resp_exact, search_type="exact_matches")
 
@@ -42,8 +40,6 @@ def demo_sync() -> None:
         cookies=GOOGLE_COOKIES,
         search_type="all",
         q="anime",
-        hl="en",
-        country="US",
     )
     resp_all = google_lens_all.search(url=url)
     show_result(resp_all, search_type="sync_all")  # pyright: ignore[reportArgumentType]
@@ -53,8 +49,6 @@ def demo_sync() -> None:
     #     cookies=GOOGLE_COOKIES,
     #     search_type="products",
     #     q="anime",
-    #     hl="en",
-    #     country="GB",
     # )
     # resp_products = google_lens_products.search(file=file)
     # show_result(resp_products, search_type="products")  # pyright: ignore[reportArgumentType]
@@ -63,8 +57,6 @@ def demo_sync() -> None:
     #     proxies=PROXIES,
     #     cookies=GOOGLE_COOKIES,
     #     search_type="visual_matches",
-    #     hl="zh",
-    #     country="CN",
     # )
     # resp_visual = google_lens_visual.search(url=url)
     # show_result(resp_visual, search_type="visual_matches")  # pyright: ignore[reportArgumentType]
@@ -73,8 +65,6 @@ def demo_sync() -> None:
     #     proxies=PROXIES,
     #     cookies=GOOGLE_COOKIES,
     #     search_type="exact_matches",
-    #     hl="ru",
-    #     country="RU",
     # )
     # resp_exact = google_lens_exact.search(file=file)
     # show_result(resp_exact, search_type="exact_matches")  # pyright: ignore[reportArgumentType]

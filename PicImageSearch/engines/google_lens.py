@@ -22,7 +22,6 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
     Attributes:
         base_url (str): The base URL for Google Lens searches.
         search_url (str): The base URL for Google search results.
-        hl_param (str): The language parameter combined with country code.
         search_type (str): The type of search to perform ('all', 'products', 'visual_matches', 'exact_matches').
         q (Optional[str]): Optional query parameter for search. Not applicable for 'exact_matches' type.
     """
@@ -33,8 +32,6 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
         search_url: str = "https://www.google.com",
         search_type: Literal["all", "products", "visual_matches", "exact_matches"] = "all",
         q: str | None = None,
-        hl: str = "en",
-        country: str = "US",
         **request_kwargs: Any,
     ):
         """Initializes a GoogleLens API client with specified configurations.
@@ -46,10 +43,6 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
                 Defaults to "all".
             q (Optional[str]): Optional query parameter for search. Defaults to None. Not applicable for 'exact_matches'
                 type.
-            hl (str): The hl parameter for language. Defaults to "en". See
-                https://www.searchapi.io/docs/parameters/google/hl for options.
-            country (str): The country parameter for regional settings. Defaults to "US". See
-                https://www.searchapi.io/docs/parameters/google-lens/country for options.
             **request_kwargs (Any): Additional arguments for network requests.
 
         Raises:
@@ -65,7 +58,6 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
             raise ValueError("Query parameter 'q' is not applicable for 'exact_matches' search_type.")
 
         self.search_url: str = search_url
-        self.hl_param: str = f"{hl}-{country.upper()}"
         self.search_type: str = search_type
         self.q: str | None = q
 
@@ -89,44 +81,39 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
         Raises:
             ValueError: If neither 'url' nor 'file' is provided.
         """
-        params = {"hl": self.hl_param}
+        # Google Lens currently returns 403 when upload requests include `hl`.
+        params: dict[str, str] = {}
         if q and self.search_type != "exact_matches":
             params["q"] = q
 
         if file:
-            endpoint = "v3/upload"
             filename = "image.jpg" if isinstance(file, bytes) else Path(file).name
             files = {"encoded_image": (filename, read_file(file), "image/jpeg")}
             resp = await self._send_request(
                 method="post",
-                endpoint=endpoint,
+                endpoint="v3/upload",
                 params=params,
                 files=files,
             )
         elif url:
-            endpoint = "uploadbyurl"
             params["url"] = url
             resp = await self._send_request(
-                method="post" if file else "get",
-                endpoint=endpoint,
+                method="get",
+                endpoint="uploadbyurl",
                 params=params,
             )
         else:
             raise ValueError("Either 'url' or 'file' must be provided")
 
         dom = PyQuery(resp.text)
-        exact_link = ""
-
-        if self.search_type != "all":
-            if udm_value := {
-                "products": "37",
-                "visual_matches": "44",
-                "exact_matches": "48",
-            }.get(self.search_type):
-                exact_link = dom(f'a[href*="udm={udm_value}"]').attr("href") or ""
-
-        if exact_link:
+        udm_value = {
+            "products": "37",
+            "visual_matches": "44",
+            "exact_matches": "48",
+        }.get(self.search_type)
+        if udm_value and (exact_link := dom(f'a[href*="udm={udm_value}"]').attr("href")):
             return await self._send_request(method="get", url=f"{self.search_url}{exact_link}")
+
         return resp
 
     @override
@@ -156,12 +143,12 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
         Raises:
             ValueError: If neither `url` nor `file` is provided.
         """
-        if q is not None and self.search_type == "exact_matches":
-            q = None
-
-        resp = await self._perform_image_search(url, file, q)
+        search_q = q if q is not None else self.q
+        if self.search_type == "exact_matches":
+            search_q = None
+        resp = await self._perform_image_search(url, file, search_q)
 
         if self.search_type == "exact_matches":
             return GoogleLensExactMatchesResponse(resp.text, resp.url)
-        else:
-            return GoogleLensResponse(resp.text, resp.url)
+
+        return GoogleLensResponse(resp.text, resp.url)
