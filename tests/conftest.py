@@ -69,46 +69,35 @@ def test_image_path() -> str:
 
 
 # Add an image mapping dictionary to specify different test images for different engines
+_ENGINE_IMAGE_FILENAMES = {
+    "animetrace": "test05.jpg",
+    "ascii2d": "test01.jpg",
+    "baidu": "test02.jpg",
+    "bing": "test08.jpg",
+    "copyseeker": "test05.jpg",
+    "ehentai": "test06.jpg",
+    "google": "test03.jpg",
+    "googlelens": "test05.jpg",
+    "iqdb": "test01.jpg",
+    "saucenao": "test01.jpg",
+    "tineye": "test07.jpg",
+    "tracemoe": "test05.jpg",
+    "yandex": "test06.jpg",
+}
+
+
 @pytest.fixture(scope="session")
 def engine_image_path_mapping() -> dict[str, str]:
     """Map engine names to corresponding test image paths"""
     base_path = "demo/images"
-    return {
-        "animetrace": f"{base_path}/test05.jpg",
-        "ascii2d": f"{base_path}/test01.jpg",
-        "baidu": f"{base_path}/test02.jpg",
-        "bing": f"{base_path}/test08.jpg",
-        "copyseeker": f"{base_path}/test05.jpg",
-        "ehentai": f"{base_path}/test06.jpg",
-        "google": f"{base_path}/test03.jpg",
-        "googlelens": f"{base_path}/test05.jpg",
-        "iqdb": f"{base_path}/test01.jpg",
-        "saucenao": f"{base_path}/test01.jpg",
-        "tineye": f"{base_path}/test07.jpg",
-        "tracemoe": f"{base_path}/test05.jpg",
-        "yandex": f"{base_path}/test06.jpg",
-    }
+    return {engine: f"{base_path}/{filename}" for engine, filename in _ENGINE_IMAGE_FILENAMES.items()}
 
 
 @pytest.fixture(scope="session")
 def engine_image_url_mapping() -> dict[str, str]:
     """Map engine names to corresponding test image URLs"""
     base_url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images"
-    return {
-        "animetrace": f"{base_url}/test05.jpg",
-        "ascii2d": f"{base_url}/test01.jpg",
-        "baidu": f"{base_url}/test02.jpg",
-        "bing": f"{base_url}/test08.jpg",
-        "copyseeker": f"{base_url}/test05.jpg",
-        "ehentai": f"{base_url}/test06.jpg",
-        "google": f"{base_url}/test03.jpg",
-        "googlelens": f"{base_url}/test05.jpg",
-        "iqdb": f"{base_url}/test01.jpg",
-        "saucenao": f"{base_url}/test01.jpg",
-        "tineye": f"{base_url}/test07.jpg",
-        "tracemoe": f"{base_url}/test05.jpg",
-        "yandex": f"{base_url}/test06.jpg",
-    }
+    return {engine: f"{base_url}/{filename}" for engine, filename in _ENGINE_IMAGE_FILENAMES.items()}
 
 
 # Configuration check functions for each engine
