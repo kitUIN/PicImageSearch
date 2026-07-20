@@ -230,6 +230,18 @@ class HandOver:
         self.verify_ssl: bool = verify_ssl
         self.http2: bool = http2
 
+    def _client_manager(self) -> ClientManager:
+        """Create a client manager for this instance's network settings."""
+        return ClientManager(
+            client=self.client,
+            proxies=self.proxies,
+            headers=self.headers,
+            cookies=self.cookies,
+            timeout=self.timeout,
+            verify_ssl=self.verify_ssl,
+            http2=self.http2,
+        )
+
     async def get(
         self,
         url: str,
@@ -254,15 +266,7 @@ class HandOver:
         Note:
             The client is automatically managed within a context manager.
         """
-        async with ClientManager(
-            self.client,
-            self.proxies,
-            self.headers,
-            self.cookies,
-            self.timeout,
-            self.verify_ssl,
-            self.http2,
-        ) as client:
+        async with self._client_manager() as client:
             resp = await client.get(url, params=params, headers=headers, **kwargs)
             return RESP(resp.text, str(resp.url), resp.status_code)
 
@@ -297,15 +301,7 @@ class HandOver:
             - Only one of `data`, `files`, or `json` should be provided.
             - The client is automatically managed within a context manager.
         """
-        async with ClientManager(
-            self.client,
-            self.proxies,
-            self.headers,
-            self.cookies,
-            self.timeout,
-            self.verify_ssl,
-            self.http2,
-        ) as client:
+        async with self._client_manager() as client:
             resp = await client.post(
                 url,
                 params=params,
@@ -330,14 +326,6 @@ class HandOver:
         Note:
             The client is automatically managed within a context manager.
         """
-        async with ClientManager(
-            self.client,
-            self.proxies,
-            self.headers,
-            self.cookies,
-            self.timeout,
-            self.verify_ssl,
-            self.http2,
-        ) as client:
+        async with self._client_manager() as client:
             resp = await client.get(url, headers=headers)
             return resp.read()
