@@ -1,3 +1,4 @@
+from collections.abc import Mapping
 from types import TracebackType
 from typing import Any, NamedTuple
 
@@ -7,9 +8,18 @@ DEFAULT_HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
         "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/99.0.4844.82 Safari/537.36"
+        "Chrome/139.0.0.0 Safari/537.36"
     )
 }
+
+
+def _merge_headers(*header_sets: Mapping[str, str] | None) -> dict[str, str]:
+    """Merge HTTP headers case-insensitively, preserving the last spelling and value."""
+    merged: dict[str, tuple[str, str]] = {}
+    for headers in header_sets:
+        for name, value in (headers or {}).items():
+            merged[name.lower()] = (name, value)
+    return {name: value for name, value in merged.values()}
 
 
 class Network:
@@ -46,7 +56,7 @@ class Network:
             http2 (bool): If True, enables HTTP/2 support.
         """
         self.internal: bool = internal
-        headers = {**DEFAULT_HEADERS, **headers} if headers else DEFAULT_HEADERS
+        headers = _merge_headers(DEFAULT_HEADERS, headers)
         self.cookies: dict[str, str] = {}
         if cookies:
             for line in cookies.split(";"):
