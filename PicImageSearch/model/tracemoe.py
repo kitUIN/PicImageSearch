@@ -95,38 +95,24 @@ class TraceMoeItem(BaseSearchItem):
             - Size parameter affects both video and image preview URLs
             - Mute parameter only affects video preview URLs
         """
-        self.anime_info: dict[str, Any] = {}
-        self.idMal: int = 0
-        self.title_native: str = ""
-        self.title_english: str = ""
-        self.title_romaji: str = ""
-        self.title_chinese: str = ""
-        self.anilist_id: int = 0
-        self.synonyms: list[str] = []
-        self.isAdult: bool = False
-        self.type: str = ""
-        self.format: str = ""
-        self.start_date: dict[str, Any] = {}
-        self.end_date: dict[str, Any] = {}
-        self.cover_image: str = ""
+        anilist_data: dict[str, Any] = data.get("anilist") or {}
+        title = anilist_data.get("title", {})
+        cover = anilist_data.get("coverImage", {})
 
-        if anilist_data := data.get("anilist"):
-            self.anilist_id = anilist_data.get("id", 0)
-            self.anime_info = anilist_data
-            self.idMal = anilist_data.get("idMal", 0)
-            title = anilist_data.get("title", {})
-            self.title_native = title.get("native", "")
-            self.title_romaji = title.get("romaji", "")
-            self.title_english = title.get("english", "")
-            self.title_chinese = title.get("chinese", "")
-            self.synonyms = anilist_data.get("synonyms", [])
-            self.isAdult = anilist_data.get("isAdult", False)
-            self.type = anilist_data.get("type", "")
-            self.format = anilist_data.get("format", "")
-            self.start_date = anilist_data.get("startDate", {})
-            self.end_date = anilist_data.get("endDate", {})
-            cover = anilist_data.get("coverImage", {})
-            self.cover_image = cover.get("large", "") if isinstance(cover, dict) else ""
+        self.anime_info: dict[str, Any] = anilist_data
+        self.idMal: int = anilist_data.get("idMal", 0)
+        self.title_native: str = title.get("native", "")
+        self.title_english: str = title.get("english", "")
+        self.title_romaji: str = title.get("romaji", "")
+        self.title_chinese: str = title.get("chinese", "")
+        self.anilist_id: int = anilist_data.get("id", 0)
+        self.synonyms: list[str] = anilist_data.get("synonyms", [])
+        self.isAdult: bool = anilist_data.get("isAdult", False)
+        self.type: str = anilist_data.get("type", "")
+        self.format: str = anilist_data.get("format", "")
+        self.start_date: dict[str, Any] = anilist_data.get("startDate", {})
+        self.end_date: dict[str, Any] = anilist_data.get("endDate", {})
+        self.cover_image: str = cover.get("large", "") if isinstance(cover, dict) else ""
 
         self.filename: str = data["filename"]
         self.episode: int = data["episode"]

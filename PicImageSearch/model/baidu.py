@@ -84,10 +84,9 @@ class BaiDuResponse(BaseSearchResponse[BaiDuItem]):
         self.exact_matches: list[BaiDuItem] = []
 
         # Parse same image results if available
-        if same_data := resp_data.get("same"):
-            if "list" in same_data:
-                self.exact_matches.extend(BaiDuItem(i) for i in same_data["list"] if "url" in i and "image_src" in i)
+        if (same_data := resp_data.get("same")) and "list" in same_data:
+            self.exact_matches.extend(BaiDuItem(i) for i in same_data["list"] if "url" in i and "image_src" in i)
 
         # Parse similar image results
-        if data_list := deep_get(resp_data, "data.list"):
-            self.raw.extend([BaiDuItem(i) for i in data_list])
+        data_list = deep_get(resp_data, "data.list") or []
+        self.raw = [BaiDuItem(i) for i in data_list]

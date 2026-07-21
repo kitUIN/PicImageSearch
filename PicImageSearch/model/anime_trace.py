@@ -53,12 +53,9 @@ class AnimeTraceItem(BaseSearchItem):
         self.box_id: str = data["box_id"]
 
         # Parse character data
-        character_data = data["character"]
-        self.characters: list[Character] = []
-
-        for char_info in character_data:
-            character = Character(char_info["character"], char_info["work"])
-            self.characters.append(character)
+        self.characters: list[Character] = [
+            Character(char_info["character"], char_info["work"]) for char_info in data["character"]
+        ]
 
 
 class AnimeTraceResponse(BaseSearchResponse[AnimeTraceItem]):

@@ -43,15 +43,16 @@ def demo_sync() -> None:
 def show_result(resp: EHentaiResponse) -> None:
     # logger.info(resp.origin)  # Original data
     logger.info(resp.url)  # Link to search results
-    # logger.info(resp.raw[0].origin)
-    logger.info(resp.raw[0].title)
-    logger.info(resp.raw[0].url)
-    logger.info(resp.raw[0].thumbnail)
-    logger.info(resp.raw[0].type)
-    logger.info(resp.raw[0].date)
+    result = resp.raw[0]
+    # logger.info(result.origin)
+    logger.info(result.title)
+    logger.info(result.url)
+    logger.info(result.thumbnail)
+    logger.info(result.type)
+    logger.info(result.date)
 
     # It is recommended to use the Compact / Extended page layout, otherwise you will not get tags
-    logger.info(resp.raw[0].tags)
+    logger.info(result.tags)
     logger.info("-" * 50)
 
 

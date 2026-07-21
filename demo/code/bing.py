@@ -29,22 +29,18 @@ def demo_sync() -> None:
 def show_result(resp: BingResponse) -> None:
     logger.info(f"Search URL: {resp.url}")
 
-    if resp.pages_including:
-        logger.info("Pages Including:")
-        for page_item in resp.pages_including:
-            logger.info(f"  Name: {page_item.name}")
-            logger.info(f"  URL: {page_item.url}")
-            logger.info(f"  Thumbnail URL: {page_item.thumbnail}")
-            logger.info(f"  Image URL: {page_item.image_url}")
-            logger.info("-" * 20)
-
-    if resp.visual_search:
-        logger.info("Visual Search:")
-        for visual_item in resp.visual_search:
-            logger.info(f"  Name: {visual_item.name}")
-            logger.info(f"  URL: {visual_item.url}")
-            logger.info(f"  Thumbnail URL: {visual_item.thumbnail}")
-            logger.info(f"  Image URL: {visual_item.image_url}")
+    for section_name, items in (
+        ("Pages Including", resp.pages_including),
+        ("Visual Search", resp.visual_search),
+    ):
+        if not items:
+            continue
+        logger.info(f"{section_name}:")
+        for item in items:
+            logger.info(f"  Name: {item.name}")
+            logger.info(f"  URL: {item.url}")
+            logger.info(f"  Thumbnail URL: {item.thumbnail}")
+            logger.info(f"  Image URL: {item.image_url}")
             logger.info("-" * 20)
 
     if resp.related_searches:
@@ -54,23 +50,23 @@ def show_result(resp: BingResponse) -> None:
             logger.info(f"  Thumbnail URL: {search_item.thumbnail}")
             logger.info("-" * 20)
 
-    if resp.travel:
+    if travel := resp.travel:
         logger.info("Travel:")
-        logger.info(f"  Destination: {resp.travel.destination_name}")
-        logger.info(f"  Travel Guide URL: {resp.travel.travel_guide_url}")
+        logger.info(f"  Destination: {travel.destination_name}")
+        logger.info(f"  Travel Guide URL: {travel.travel_guide_url}")
 
-        if resp.travel.attractions:
+        if travel.attractions:
             logger.info("  Attractions:")
-            for attraction in resp.travel.attractions:
+            for attraction in travel.attractions:
                 logger.info(f"    Title: {attraction.title}")
                 logger.info(f"    URL: {attraction.url}")
                 logger.info(f"    Requery URL: {attraction.search_url}")
                 logger.info(f"    Interest Types: {', '.join(attraction.interest_types)}")
                 logger.info("-" * 20)
 
-        if resp.travel.travel_cards:
+        if travel.travel_cards:
             logger.info("  Travel Cards:")
-            for card in resp.travel.travel_cards:
+            for card in travel.travel_cards:
                 logger.info(f"    Card Type: {card.card_type}")
                 logger.info(f"    Title: {card.title}")
                 logger.info(f"    Click URL: {card.url}")

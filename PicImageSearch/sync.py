@@ -69,11 +69,11 @@ def syncify(*classes: type) -> None:
     Args:
         *classes: Classes to modify for synchronous coroutine method use.
     """
-    for c in classes:
-        for name in dir(c):
-            attr = getattr(c, name, None)
-            if (not name.startswith("_") or name == "__call__") and inspect.iscoroutinefunction(attr):
-                _syncify_wrap(c, name)
+    for class_type in classes:
+        for method_name in dir(class_type):
+            method = getattr(class_type, method_name, None)
+            if (not method_name.startswith("_") or method_name == "__call__") and inspect.iscoroutinefunction(method):
+                _syncify_wrap(class_type, method_name)
 
 
 syncify(

@@ -29,14 +29,15 @@ def demo_sync() -> None:
 def show_result(resp: IqdbResponse) -> None:
     # logger.info(resp.origin)  # Original Data
     logger.info(resp.url)  # Link to search results
-    # logger.info(resp.raw[0].origin)
-    logger.info(f"Description: {resp.raw[0].content}")
-    logger.info(f"Source URL: {resp.raw[0].url}")
-    logger.info(f"Thumbnail: {resp.raw[0].thumbnail}")
-    logger.info(f"Similarity: {resp.raw[0].similarity}")
-    logger.info(f"Image Size: {resp.raw[0].size}")
-    logger.info(f"Image Source: {resp.raw[0].source}")
-    logger.info(f"Other Image Sources: {resp.raw[0].other_source}")
+    result = resp.raw[0]
+    # logger.info(result.origin)
+    logger.info(f"Description: {result.content}")
+    logger.info(f"Source URL: {result.url}")
+    logger.info(f"Thumbnail: {result.thumbnail}")
+    logger.info(f"Similarity: {result.similarity}")
+    logger.info(f"Image Size: {result.size}")
+    logger.info(f"Image Source: {result.source}")
+    logger.info(f"Other Image Sources: {result.other_source}")
     logger.info(f"SauceNAO Search Link: {resp.saucenao_url}")
     logger.info(f"Ascii2d Search Link: {resp.ascii2d_url}")
     logger.info(f"TinEye Search Link: {resp.tineye_url}")

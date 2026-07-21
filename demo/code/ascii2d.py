@@ -37,7 +37,7 @@ def demo_sync() -> None:
 def show_result(resp: Ascii2DResponse) -> None:
     # logger.info(resp.origin)  # Original data
     logger.info(resp.url)  # Link to search results
-    selected = next((i for i in resp.raw if i.title or i.url_list), resp.raw[0])
+    selected = next((item for item in resp.raw if item.title or item.url_list), resp.raw[0])
     logger.info(selected.origin)
     logger.info(selected.thumbnail)
     logger.info(selected.title)

@@ -29,13 +29,14 @@ def demo_sync() -> None:
 def show_result(resp: YandexResponse) -> None:
     # logger.info(resp.origin)  # Original data
     logger.info(resp.url)  # Link to search results
-    # logger.info(resp.raw[0].origin)
-    logger.info(resp.raw[0].title)
-    logger.info(resp.raw[0].url)
-    logger.info(resp.raw[0].thumbnail)
-    logger.info(resp.raw[0].source)
-    logger.info(resp.raw[0].content)
-    logger.info(resp.raw[0].size)
+    result = resp.raw[0]
+    # logger.info(result.origin)
+    logger.info(result.title)
+    logger.info(result.url)
+    logger.info(result.thumbnail)
+    logger.info(result.source)
+    logger.info(result.content)
+    logger.info(result.size)
     logger.info("-" * 50)
 
 

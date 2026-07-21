@@ -10,6 +10,16 @@ from ..utils import read_file
 from .base import BaseSearchEngine
 
 
+def _parse_action_response(response_text: str) -> dict[str, Any]:
+    """Extract the first JSON payload from a Next.js action response."""
+    for line in response_text.splitlines():
+        line = line.strip()
+        if line.startswith("1:{"):
+            return json_loads(line[2:])
+
+    return {}
+
+
 class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
     """API client for the Copyseeker image search engine.
 
@@ -47,27 +57,22 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
         """
 
         headers = {"content-type": "text/plain;charset=UTF-8", "next-action": COPYSEEKER_CONSTANTS["SET_COOKIE_TOKEN"]}
-        data = "[]"
-        discovery_id = None
-        resp = None
 
         # Set cookie token
         await self._send_request(
             method="post",
             headers=headers,
-            data=data,
+            data="[]",
         )
 
         if url:
             data = [{"discoveryType": "ReverseImageSearch", "imageUrl": url}]
             headers = {"next-action": COPYSEEKER_CONSTANTS["URL_SEARCH_TOKEN"]}
-
             resp = await self._send_request(
                 method="post",
                 headers=headers,
                 json=data,
             )
-
         elif file:
             files = {
                 "1_file": ("image.jpg", read_file(file), "image/jpeg"),
@@ -75,21 +80,15 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
                 "0": (None, '["$K1"]'),
             }
             headers = {"next-action": COPYSEEKER_CONSTANTS["FILE_UPLOAD_TOKEN"]}
-
             resp = await self._send_request(
                 method="post",
                 headers=headers,
                 files=files,
             )
+        else:
+            return None
 
-        if resp:
-            for line in resp.text.splitlines():
-                line = line.strip()
-                if line.startswith("1:{"):
-                    discovery_id = json_loads(line[2:]).get("discoveryId")
-                    break
-
-        return discovery_id
+        return _parse_action_response(resp.text).get("discoveryId")
 
     @override
     async def search(
@@ -141,12 +140,4 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
             json=data,
         )
 
-        resp_json = {}
-
-        for line in resp.text.splitlines():
-            line = line.strip()
-            if line.startswith("1:{"):
-                resp_json = json_loads(line[2:])
-                break
-
-        return CopyseekerResponse(resp_json, resp.url)
+        return CopyseekerResponse(_parse_action_response(resp.text), resp.url)

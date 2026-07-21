@@ -31,18 +31,19 @@ def show_result(resp: SauceNAOResponse) -> None:
     logger.info(resp.status_code)  # HTTP status
     logger.info(resp.origin)  # Original Data
     logger.info(resp.url)  # Link to search results
-    logger.info(resp.raw[0].origin)
+    result = resp.raw[0]
+    logger.info(result.origin)
     logger.info(resp.long_remaining)
     logger.info(resp.short_remaining)
-    logger.info(resp.raw[0].thumbnail)
-    logger.info(resp.raw[0].similarity)
-    logger.info(resp.raw[0].hidden)
-    logger.info(resp.raw[0].title)
-    logger.info(resp.raw[0].author)
-    logger.info(resp.raw[0].author_url)
-    logger.info(resp.raw[0].source)
-    logger.info(resp.raw[0].url)
-    logger.info(resp.raw[0].ext_urls)
+    logger.info(result.thumbnail)
+    logger.info(result.similarity)
+    logger.info(result.hidden)
+    logger.info(result.title)
+    logger.info(result.author)
+    logger.info(result.author_url)
+    logger.info(result.source)
+    logger.info(result.url)
+    logger.info(result.ext_urls)
     logger.info("-" * 50)
 
 

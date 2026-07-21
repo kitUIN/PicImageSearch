@@ -142,15 +142,13 @@ class Lenso(BaseSearchEngine[LensoResponse]):
 
         if url:
             image_bytes = await self.download(url)
-            image_base64 = base64.b64encode(image_bytes).decode("utf-8")
-            result_hash = await self._upload_image(image_base64)
         elif file:
             image_bytes = read_file(file)
-            image_base64 = base64.b64encode(image_bytes).decode("utf-8")
-            result_hash = await self._upload_image(image_base64)
         else:
             raise ValueError("Either 'url' or 'file' must be provided")
 
+        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+        result_hash = await self._upload_image(image_base64)
         search_endpoint = "api/search"
         search_payload = {
             "image": {

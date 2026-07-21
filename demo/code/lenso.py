@@ -41,27 +41,28 @@ def show_result(resp: LensoResponse, search_type: str = "") -> None:
         "people": resp.people,
     }
 
-    for res_type, items in result_lists.items():
-        if items:
-            logger.info(f"--- {res_type} Results ---")
-            for item in items:
-                logger.info(f"  Hash: {item.hash}")
-                logger.info(f"  Similarity: {item.similarity}")
-                logger.info(f"  Thumbnail URL: {item.thumbnail}")
-                logger.info(f"  Size: {item.width}x{item.height}")
-                logger.info(f"  URL: {item.url}")
-                logger.info(f"  Title: {item.title}")
+    for result_type, items in result_lists.items():
+        if not items:
+            logger.info(f"--- No {result_type} Results ---")
+            continue
 
-                if item.url_list:
-                    logger.info("  URLs:")
-                    for url_item in item.url_list:
-                        logger.info(f"    > Image URL: {url_item.image_url}")
-                        logger.info(f"    > Source URL: {url_item.source_url}")
-                        logger.info(f"    > Title: {url_item.title}")
-                        logger.info(f"    > Lang: {url_item.lang}")
-                logger.info("-" * 20)
-        else:
-            logger.info(f"--- No {res_type} Results ---")
+        logger.info(f"--- {result_type} Results ---")
+        for item in items:
+            logger.info(f"  Hash: {item.hash}")
+            logger.info(f"  Similarity: {item.similarity}")
+            logger.info(f"  Thumbnail URL: {item.thumbnail}")
+            logger.info(f"  Size: {item.width}x{item.height}")
+            logger.info(f"  URL: {item.url}")
+            logger.info(f"  Title: {item.title}")
+
+            if item.url_list:
+                logger.info("  URLs:")
+                for url_item in item.url_list:
+                    logger.info(f"    > Image URL: {url_item.image_url}")
+                    logger.info(f"    > Source URL: {url_item.source_url}")
+                    logger.info(f"    > Title: {url_item.title}")
+                    logger.info(f"    > Lang: {url_item.lang}")
+            logger.info("-" * 20)
 
     logger.info("=" * 50)
 

@@ -93,7 +93,7 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
             - The search process involves multiple HTTP requests to BaiDu's API.
             - The response format varies depending on whether matches are found.
         """
-        data = {"from": "pc"}
+        upload_data = {"from": "pc"}
 
         if url:
             files = {"image": await self.download(url)}
@@ -106,7 +106,7 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
             method="post",
             endpoint="upload",
             headers={"Acs-Token": ""},
-            data=data,
+            data=upload_data,
             files=files,
         )
         data_url = deep_get(json_loads(resp.text), "data.url")
@@ -115,16 +115,17 @@ class BaiDu(BaseSearchEngine[BaiDuResponse]):
 
         resp = await self._send_request(method="get", url=data_url)
 
-        data = PyQuery(fromstring(resp.text))
-        card_data = self._extract_card_data(data)
+        page = PyQuery(fromstring(resp.text))
+        card_data = self._extract_card_data(page)
         same_data = None
 
         for card in card_data:
-            if card.get("cardName") == "noresult":
+            card_name = card.get("cardName")
+            if card_name == "noresult":
                 return BaiDuResponse({}, data_url)
-            if card.get("cardName") == "same":
+            if card_name == "same":
                 same_data = card["tplData"]
-            if card.get("cardName") == "simipic":
+            elif card_name == "simipic":
                 next_url = card["tplData"]["firstUrl"]
                 resp = await self._send_request(method="get", url=next_url)
                 resp_data = json_loads(resp.text)

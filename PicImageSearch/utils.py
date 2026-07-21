@@ -28,20 +28,21 @@ def deep_get(dictionary: dict[str, Any], keys: str) -> Any | None:
         >>> deep_get(data, 'a.b[1]')
         None
     """
+    current: Any = dictionary
     for key in keys.split("."):
         if list_search := re.search(r"(\S+)?\[(\d+)]", key):
             try:
                 if list_search[1]:
-                    dictionary = dictionary[list_search[1]]
-                dictionary = dictionary[int(list_search[2])]  # pyright: ignore[reportArgumentType]
+                    current = current[list_search[1]]
+                current = current[int(list_search[2])]
             except (KeyError, IndexError):
                 return None
         else:
             try:
-                dictionary = dictionary[key]
+                current = current[key]
             except (KeyError, TypeError):
                 return None
-    return dictionary
+    return current
 
 
 def read_file(file: str | bytes | Path) -> bytes:
@@ -70,30 +71,23 @@ def read_file(file: str | bytes | Path) -> bytes:
     if isinstance(file, bytes):
         return file
 
-    if not Path(file).exists():
+    path = Path(file)
+    if not path.exists():
         raise FileNotFoundError(f"The file {file} does not exist.")
 
     try:
-        with open(file, "rb") as f:
-            return f.read()
+        return path.read_bytes()
     except OSError as e:
         raise OSError(f"An I/O error occurred while reading the file {file}: {e}") from e
 
 
 def parse_html(html: str) -> PyQuery:
-    """Parses HTML content into a PyQuery object using UTF-8 encoding.
-
-    This function creates a PyQuery object from HTML string content,
-    ensuring proper UTF-8 encoding during parsing.
+    """Parse an HTML string into a PyQuery object.
 
     Args:
-        html (str): The HTML content to parse as a string.
+        html (str): The HTML content to parse.
 
     Returns:
         A PyQuery object representing the parsed HTML document.
-
-    Note:
-        Uses lxml's HTMLParser with explicit UTF-8 encoding to prevent
-        potential character encoding issues.
     """
     return PyQuery(fromstring(html))

@@ -1,34 +1,32 @@
-import os
-from typing import Any
+import json
+from pathlib import Path
+from typing import Any, cast
 
 import pytest
+from httpx import Request as HttpxRequest
 
 
-def pytest_configure(config):
-    """Configure test environment"""
-    # Create test configuration directory
-    os.makedirs("tests/config", exist_ok=True)
-    # Create vcr cassettes directory
-    os.makedirs("tests/cassettes", exist_ok=True)
+def pytest_configure(config: pytest.Config) -> None:
+    tests_directory = config.invocation_params.dir / "tests"
+    for directory in ("config", "cassettes"):
+        (tests_directory / directory).mkdir(parents=True, exist_ok=True)
 
-    # Import modules required by vcr
-    import vcr.stubs.httpx_stubs
-    from vcr.request import Request as VcrRequest
+    import vcr.stubs.httpx_stubs  # pyright: ignore[reportMissingTypeStubs]
+    from vcr.request import Request as VcrRequest  # pyright: ignore[reportMissingTypeStubs]
 
-    # Add monkey patch to fix VCR handling of binary requests
-    def patched_make_vcr_request(httpx_request, **kwargs):
-        # Use binary data directly, don't attempt UTF-8 decoding
-        body = httpx_request.read()
-        uri = str(httpx_request.url)
-        headers = dict(httpx_request.headers)
-        return VcrRequest(httpx_request.method, uri, body, headers)
+    def patched_make_vcr_request(httpx_request: HttpxRequest, **_kwargs: Any) -> VcrRequest:
+        # Preserve binary request bodies instead of decoding them as UTF-8.
+        return VcrRequest(
+            httpx_request.method,
+            str(httpx_request.url),
+            httpx_request.read(),
+            dict(httpx_request.headers),
+        )
 
-    # Apply monkey patch
-    vcr.stubs.httpx_stubs._make_vcr_request = patched_make_vcr_request
+    vcr.stubs.httpx_stubs._make_vcr_request = patched_make_vcr_request  # pyright: ignore[reportPrivateUsage]
 
 
-def pytest_addoption(parser):
-    """Add command line options"""
+def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption(
         "--test-config-file",
         action="store",
@@ -37,38 +35,29 @@ def pytest_addoption(parser):
     )
 
 
-# VCR related configuration
 @pytest.fixture(scope="module", autouse=True)
-def vcr_config():
-    """Configure pytest-vcr"""
+def vcr_config() -> dict[str, str]:
     return {
-        # cassette file storage location
         "cassette_library_dir": "tests/cassettes",
-        # mode setting
         "record_mode": "once",
     }
 
 
 @pytest.fixture(scope="session")
-def test_config(request) -> dict[str, Any]:
-    """Load test configuration"""
-    import json
+def test_config(request: pytest.FixtureRequest) -> dict[str, Any]:
+    config_path = Path(cast(str, request.config.getoption("--test-config-file")))
+    if not config_path.exists():
+        return {}
 
-    config_file = request.config.getoption("--test-config-file")
-
-    if os.path.exists(config_file):
-        with open(config_file, encoding="utf-8") as f:
-            return json.load(f)
-    return {}
+    with config_path.open(encoding="utf-8") as config_file:
+        return json.load(config_file)
 
 
 @pytest.fixture(scope="session")
 def test_image_path() -> str:
-    """Test image path"""
     return "demo/images/test01.jpg"
 
 
-# Add an image mapping dictionary to specify different test images for different engines
 _ENGINE_IMAGE_FILENAMES = {
     "animetrace": "test05.jpg",
     "ascii2d": "test01.jpg",
@@ -86,21 +75,32 @@ _ENGINE_IMAGE_FILENAMES = {
 }
 
 
+def _build_engine_image_mapping(base: str) -> dict[str, str]:
+    return {engine: f"{base}/{filename}" for engine, filename in _ENGINE_IMAGE_FILENAMES.items()}
+
+
 @pytest.fixture(scope="session")
 def engine_image_path_mapping() -> dict[str, str]:
-    """Map engine names to corresponding test image paths"""
-    base_path = "demo/images"
-    return {engine: f"{base_path}/{filename}" for engine, filename in _ENGINE_IMAGE_FILENAMES.items()}
+    return _build_engine_image_mapping("demo/images")
 
 
 @pytest.fixture(scope="session")
 def engine_image_url_mapping() -> dict[str, str]:
-    """Map engine names to corresponding test image URLs"""
-    base_url = "https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images"
-    return {engine: f"{base_url}/{filename}" for engine, filename in _ENGINE_IMAGE_FILENAMES.items()}
+    return _build_engine_image_mapping("https://raw.githubusercontent.com/kitUIN/PicImageSearch/main/demo/images")
 
 
-# Configuration check functions for each engine
+def create_engine_image_fixtures(engine_name: str):
+    @pytest.fixture
+    def test_image_path(engine_image_path_mapping: dict[str, str]) -> str:
+        return engine_image_path_mapping[engine_name]
+
+    @pytest.fixture
+    def test_image_url(engine_image_url_mapping: dict[str, str]) -> str:
+        return engine_image_url_mapping[engine_name]
+
+    return test_image_path, test_image_url
+
+
 def has_ascii2d_config(config: dict[str, Any]) -> bool:
     return bool(config.get("ascii2d", {}).get("base_url"))
 

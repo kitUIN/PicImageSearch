@@ -33,10 +33,11 @@ def show_result(resp: AnimeTraceResponse) -> None:
     logger.info(resp.trace_id)
 
     if resp.raw:
-        # logger.info(resp.raw[0].origin)
-        logger.info(resp.raw[0].box)
-        logger.info(resp.raw[0].box_id)
-        if characters := resp.raw[0].characters:
+        result = resp.raw[0]
+        # logger.info(result.origin)
+        logger.info(result.box)
+        logger.info(result.box_id)
+        if characters := result.characters:
             for character in characters:
                 logger.info(f"Character Name: {character.name}")
                 logger.info(f"From Work: {character.work}")

@@ -38,17 +38,18 @@ class SauceNAOItem(BaseSearchItem):
     def _parse_data(self, data: dict[str, Any], **kwargs: Any) -> None:
         """Parse search result data."""
         header = data["header"]
+        result_data = data["data"]
         self.similarity: float = float(header["similarity"])
         self.thumbnail: str = header["thumbnail"]
         self.index_id: int = header["index_id"]
         self.index_name: str = header["index_name"]
         self.hidden: int = header.get("hidden", 0)
-        self.title: str = self._get_title(data["data"])
-        self.url: str = self._get_url(data["data"])
-        self.ext_urls: list[str] = data["data"].get("ext_urls", [])
-        self.author: str = self._get_author(data["data"])
-        self.author_url: str = self._get_author_url(data["data"])
-        self.source: str = data["data"].get("source", "")
+        self.title: str = self._get_title(result_data)
+        self.url: str = self._get_url(result_data)
+        self.ext_urls: list[str] = result_data.get("ext_urls", [])
+        self.author: str = self._get_author(result_data)
+        self.author_url: str = self._get_author_url(result_data)
+        self.source: str = result_data.get("source", "")
 
     @staticmethod
     def _get_title(data: dict[str, Any]) -> str:

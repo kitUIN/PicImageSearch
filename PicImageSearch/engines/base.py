@@ -5,7 +5,6 @@ from typing import Any, Generic, TypeVar
 from ..model.base import BaseSearchResponse
 from ..network import RESP, HandOver
 
-ResponseT = TypeVar("ResponseT")
 T = TypeVar("T", bound=BaseSearchResponse[Any])
 
 
@@ -96,7 +95,6 @@ class BaseSearchEngine(HandOver, ABC, Generic[T]):
             # Files are not valid for GET requests
             kwargs.pop("files", None)
             return await self.get(request_url, **kwargs)
-        elif method == "post":
+        if method == "post":
             return await self.post(request_url, **kwargs)
-        else:
-            raise ValueError(f"Unsupported HTTP method: {method}")
+        raise ValueError(f"Unsupported HTTP method: {method}")

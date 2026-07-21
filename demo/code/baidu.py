@@ -29,16 +29,18 @@ def demo_sync() -> None:
 def show_result(resp: BaiDuResponse) -> None:
     # logger.info(resp.origin)  # Original data
     logger.info(resp.url)  # Link to search results
-    # logger.info(resp.raw[0].origin)
-    # logger.info(resp.raw[0].similarity)  # deprecated
-    logger.info(resp.raw[0].url)
-    logger.info(resp.raw[0].thumbnail)
+    result = resp.raw[0]
+    # logger.info(result.origin)
+    # logger.info(result.similarity)  # deprecated
+    logger.info(result.url)
+    logger.info(result.thumbnail)
 
     if resp.exact_matches:
+        exact_match = resp.exact_matches[0]
         logger.info("-" * 20)
-        logger.info(resp.exact_matches[0].title)
-        logger.info(resp.exact_matches[0].url)
-        logger.info(resp.exact_matches[0].thumbnail)
+        logger.info(exact_match.title)
+        logger.info(exact_match.url)
+        logger.info(exact_match.thumbnail)
 
     logger.info("-" * 50)
 

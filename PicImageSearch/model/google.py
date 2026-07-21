@@ -124,15 +124,16 @@ class GoogleResponse(BaseSearchResponse[GoogleItem]):
         id_regex = compile(r"dimg_[^'\"]+")
 
         for script in script_list:
-            base_64_match = base_64_regex.findall(script.text())
-            if not base_64_match:
+            script_text = script.text()
+            base64_matches = base_64_regex.findall(script_text)
+            if not base64_matches:
                 continue
 
             # extract and adjust base64 encoded thumbnails
-            base64: str = base_64_match[0]
-            id_list: list[str] = id_regex.findall(script.text())
+            base64_thumbnail = base64_matches[0].replace(r"\x3d", "=")
+            id_list: list[str] = id_regex.findall(script_text)
 
             for _id in id_list:
-                thumbnail_dict[_id] = base64.replace(r"\x3d", "=")
+                thumbnail_dict[_id] = base64_thumbnail
 
         return thumbnail_dict

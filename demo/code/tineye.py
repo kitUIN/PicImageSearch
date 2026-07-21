@@ -38,17 +38,21 @@ async def demo_async() -> None:
         )
         show_result(resp, "Initial Search")
 
-        if resp.total_pages > 1:
-            resp2 = await tineye.next_page(resp)
-            show_result(resp2, "Next Page")
+        if resp.total_pages <= 1:
+            return
 
-            if resp2:
-                resp3 = await tineye.next_page(resp2)
-                show_result(resp3, "Next Page")
+        second_page = await tineye.next_page(resp)
+        show_result(second_page, "Next Page")
+        if not second_page:
+            return
 
-                if resp3:
-                    resp4 = await tineye.pre_page(resp3)
-                    show_result(resp4, "Previous Page")
+        third_page = await tineye.next_page(second_page)
+        show_result(third_page, "Next Page")
+        if not third_page:
+            return
+
+        previous_page = await tineye.pre_page(third_page)
+        show_result(previous_page, "Previous Page")
 
 
 @logger.catch()
@@ -72,17 +76,21 @@ def demo_sync() -> None:
     # )
     show_result(resp, "Initial Search")  # pyright: ignore[reportArgumentType]
 
-    if resp.total_pages > 1:  # pyright: ignore[reportAttributeAccessIssue]
-        resp2 = tineye.next_page(resp)  # pyright: ignore[reportArgumentType]
-        show_result(resp2, "Next Page")  # pyright: ignore[reportArgumentType]
+    if resp.total_pages <= 1:  # pyright: ignore[reportAttributeAccessIssue]
+        return
 
-        if resp2:  # pyright: ignore[reportUnnecessaryComparison]
-            resp3 = tineye.next_page(resp2)  # pyright: ignore[reportArgumentType]
-            show_result(resp3, "Next Page")  # pyright: ignore[reportArgumentType]
+    second_page = tineye.next_page(resp)  # pyright: ignore[reportArgumentType]
+    show_result(second_page, "Next Page")  # pyright: ignore[reportArgumentType]
+    if not second_page:  # pyright: ignore[reportUnnecessaryComparison]
+        return
 
-            if resp3:  # pyright: ignore[reportUnnecessaryComparison]
-                resp4 = tineye.pre_page(resp3)  # pyright: ignore[reportArgumentType]
-                show_result(resp4, "Previous Page")  # pyright: ignore[reportArgumentType]
+    third_page = tineye.next_page(second_page)  # pyright: ignore[reportArgumentType]
+    show_result(third_page, "Next Page")  # pyright: ignore[reportArgumentType]
+    if not third_page:  # pyright: ignore[reportUnnecessaryComparison]
+        return
+
+    previous_page = tineye.pre_page(third_page)  # pyright: ignore[reportArgumentType]
+    show_result(previous_page, "Previous Page")  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: TineyeResponse | None, title: str = "") -> None:

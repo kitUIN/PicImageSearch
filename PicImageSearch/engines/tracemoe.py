@@ -38,8 +38,8 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
             size (Optional[str]): Specifies preview video size ('s', 'm', 'l').
             **request_kwargs (Any): Additional arguments for network requests.
         """
-        base_url = f"{base_url_api}/search"
-        super().__init__(base_url, **request_kwargs)
+        api_search_url = f"{base_url_api}/search"
+        super().__init__(api_search_url, **request_kwargs)
         self.me_url: str = f"{base_url_api}/me"
         self.mute: bool = mute
         self.size: str | None = size
@@ -130,11 +130,9 @@ class TraceMoe(BaseSearchEngine[TraceMoeResponse]):
             files=files,
         )
 
-        result = TraceMoeResponse(
+        return TraceMoeResponse(
             resp_data=json_loads(resp.text),
             resp_url=resp.url,
             mute=self.mute,
             size=self.size,
         )
-
-        return result

@@ -22,11 +22,11 @@ async def demo_async() -> None:
         # resp = await google.search(url=url)
         resp = await google.search(file=file)
         show_result(resp)
-        resp2 = await google.next_page(resp)
-        show_result(resp2)
-        if resp2:
-            resp3 = await google.pre_page(resp2)
-            show_result(resp3)
+        next_resp = await google.next_page(resp)
+        show_result(next_resp)
+        if next_resp:
+            previous_resp = await google.pre_page(next_resp)
+            show_result(previous_resp)
 
 
 @logger.catch()
@@ -35,11 +35,11 @@ def demo_sync() -> None:
     resp = google.search(url=url)
     # resp = google.search(file=file)
     show_result(resp)  # pyright: ignore[reportArgumentType]
-    resp2 = google.next_page(resp)  # pyright: ignore[reportArgumentType]
-    show_result(resp2)  # pyright: ignore[reportArgumentType]
-    if resp2:  # pyright: ignore[reportUnnecessaryComparison]
-        resp3 = google.pre_page(resp2)  # pyright: ignore[reportArgumentType]
-        show_result(resp3)  # pyright: ignore[reportArgumentType]
+    next_resp = google.next_page(resp)  # pyright: ignore[reportArgumentType]
+    show_result(next_resp)  # pyright: ignore[reportArgumentType]
+    if next_resp:  # pyright: ignore[reportUnnecessaryComparison]
+        previous_resp = google.pre_page(next_resp)  # pyright: ignore[reportArgumentType]
+        show_result(previous_resp)  # pyright: ignore[reportArgumentType]
 
 
 def show_result(resp: GoogleResponse | None) -> None:
@@ -52,7 +52,7 @@ def show_result(resp: GoogleResponse | None) -> None:
     logger.info(resp.page_number)
 
     # try to get first result with thumbnail
-    selected = next((i for i in resp.raw if i.thumbnail), resp.raw[0])
+    selected = next((item for item in resp.raw if item.thumbnail), resp.raw[0])
     logger.info(selected.origin)
     logger.info(selected.thumbnail)
     logger.info(selected.title)

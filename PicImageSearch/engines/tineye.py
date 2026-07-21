@@ -172,12 +172,12 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
         )
         resp_json = json_loads(resp.text)
         resp_json["status_code"] = resp.status_code
-        _url = resp.url
+        result_url = resp.url
 
         domains = []
         if query_hash := deep_get(resp_json, "query.key"):
             query_string = "&".join(f"{k}={v}" for k, v in params.items())
-            _url = f"{self.base_url}/search/{query_hash}?{query_string}"
+            result_url = f"{self.base_url}/search/{query_hash}?{query_string}"
             domains = await self._get_domains(resp_json["query"]["hash"])
 
-        return TineyeResponse(resp_json, _url, domains)
+        return TineyeResponse(resp_json, result_url, domains)

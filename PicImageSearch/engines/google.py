@@ -114,11 +114,9 @@ class Google(BaseSearchEngine[GoogleResponse]):
         Note:
             This is an internal method used by the search method to ensure complete results.
         """
-        if resp and resp.raw:
-            selected = next((i for i in resp.raw if i.thumbnail), resp.raw[0])
-            if not selected.thumbnail and len(resp.raw) > 1:
-                _resp = await self._send_request(method="get", url=resp.url)
-                return GoogleResponse(_resp.text, _resp.url)
+        if resp and len(resp.raw) > 1 and not any(item.thumbnail for item in resp.raw):
+            retry_resp = await self._send_request(method="get", url=resp.url)
+            return GoogleResponse(retry_resp.text, retry_resp.url)
         return resp
 
     @override

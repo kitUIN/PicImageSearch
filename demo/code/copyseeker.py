@@ -38,7 +38,7 @@ def demo_sync() -> None:
 
     # Important: We need to properly close the network client to avoid resource leaks
     # This step isn't necessary with context managers in async code (async with Network() as client:)
-    network.close()
+    network.close()  # pyright: ignore[reportUnusedCallResult, reportUnusedCoroutine]
 
     show_result(resp)  # pyright: ignore[reportArgumentType]
 
@@ -52,11 +52,12 @@ def show_result(resp: CopyseekerResponse) -> None:
     logger.info(resp.exif)
     logger.info(resp.similar_image_urls)
     if resp.raw:
-        logger.info(resp.raw[0].url)
-        logger.info(resp.raw[0].title)
-        logger.info(resp.raw[0].website_rank)
-        logger.info(resp.raw[0].thumbnail)
-        logger.info(resp.raw[0].thumbnail_list)
+        result = resp.raw[0]
+        logger.info(result.url)
+        logger.info(result.title)
+        logger.info(result.website_rank)
+        logger.info(result.thumbnail)
+        logger.info(result.thumbnail_list)
     logger.info("-" * 50)
     # logger.info(resp.visuallySimilarImages)
 
