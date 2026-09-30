@@ -2,25 +2,29 @@ name: "translator"
 
 on:
   issues:
-    types: [opened, edited]
+    types: [opened]
   issue_comment:
-    types: [created, edited]
-  pull_request_target:
-    types: [opened, edited]
+    types: [created]
   pull_request_review_comment:
-    types: [created, edited]
+    types: [created]
 
 jobs:
   translate:
-    if: github.repository == 'kitUIN/PicImageSearch'
+    if: >-
+      github.repository == 'kitUIN/PicImageSearch' &&
+      github.actor != 'dependabot[bot]' &&
+      github.actor != 'renovate[bot]'
     permissions:
       issues: write
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: lizheming/github-translate-action@c55aac477e98562d4faed9f77c54ab8306ae6ebf # 1.1.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: tisfeng/issues-translate-action@92f09e4db5411aea294862418b746c52ccb3a653 # v2.9.2
+        continue-on-error: true
         with:
+          BOT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BOT_LOGIN_NAME: github-actions[bot]
           IS_MODIFY_TITLE: true
-          APPEND_TRANSLATION: true
+          PRIMARY_LANGUAGE: en
+          SECONDARY_LANGUAGE: ""
+          CUSTOM_BOT_NOTE: Bot automatically translated this content.
