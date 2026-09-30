@@ -25,7 +25,7 @@ jobs:
           # Extract repository name from github.repository (format: owner/repo)
           REPO_NAME=$(echo "${{ github.repository }}" | cut -d '/' -f 2)
 
-          uv run --no-project --with "httpx,PyGithub" .github/scripts/python_eol_check.py \
+          uv run --no-project --with "httpx2,PyGithub" .github/scripts/python_eol_check.py \
             --repo-owner ${{ github.repository_owner }} \
             --repo-name $REPO_NAME \
             --github-token ${{ secrets.GITHUB_TOKEN }}

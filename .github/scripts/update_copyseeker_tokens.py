@@ -7,7 +7,7 @@ from json import dumps as json_dumps
 from pathlib import Path
 from typing import NoReturn
 
-import httpx
+import httpx2
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CONSTANTS_FILE = PROJECT_ROOT / "PicImageSearch" / "constants.py"
@@ -65,7 +65,7 @@ def fetch_next_action_tokens(page_url: str, action_names: tuple[str, ...]) -> di
     """Get Next.js server action tokens from all chunks referenced by a page."""
     tokens: dict[str, str | None] = {action_name: None for action_name in action_names}
 
-    with httpx.Client(timeout=HTTP_TIMEOUT_SECONDS) as client:
+    with httpx2.Client(timeout=HTTP_TIMEOUT_SECONDS) as client:
         response = client.get(page_url).raise_for_status()
 
         for js_url in get_js_chunk_urls(response.text):
@@ -93,7 +93,7 @@ def fetch_discovery_action_tokens() -> tuple[str | None, str | None, str | None]
             tokens["triggerDiscoveryByFile"],
             tokens["SetCookie"],
         )
-    except httpx.HTTPError as exc:
+    except httpx2.HTTPError as exc:
         print(f"Failed to get next-action tokens for discovery actions: {exc}", file=sys.stderr)
         return None, None, None
 
@@ -103,7 +103,7 @@ def fetch_results_action_token() -> str | None:
     try:
         tokens = fetch_next_action_tokens(COPYSEEKER_DISCOVERY_URL, (RESULTS_ACTION_NAME,))
         return tokens[RESULTS_ACTION_NAME]
-    except httpx.HTTPError as exc:
+    except httpx2.HTTPError as exc:
         print(f"Failed to get next-action token for search results: {exc}", file=sys.stderr)
         return None
 

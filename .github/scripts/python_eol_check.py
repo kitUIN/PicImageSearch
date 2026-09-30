@@ -10,7 +10,7 @@ import argparse
 import sys
 from datetime import datetime
 
-import httpx
+import httpx2
 from github import Github
 
 
@@ -41,7 +41,7 @@ def get_eol_info(python_version: str):
     """
     url = f"https://endoflife.date/api/python/{python_version}.json"
     try:
-        response = httpx.get(url)
+        response = httpx2.get(url)
         response.raise_for_status()
         return response.json()
     except Exception as e:

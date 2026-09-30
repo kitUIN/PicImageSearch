@@ -2,7 +2,7 @@ from json import loads as json_loads
 from pathlib import Path
 from typing import Any
 
-from httpx import QueryParams
+from httpx2 import QueryParams
 from typing_extensions import override
 
 from ..model import SauceNAOResponse

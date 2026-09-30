@@ -3,27 +3,12 @@ from pathlib import Path
 from typing import Any, cast
 
 import pytest
-from httpx import Request as HttpxRequest
 
 
 def pytest_configure(config: pytest.Config) -> None:
     tests_directory = config.invocation_params.dir / "tests"
     for directory in ("config", "cassettes"):
         (tests_directory / directory).mkdir(parents=True, exist_ok=True)
-
-    import vcr.stubs.httpx_stubs  # pyright: ignore[reportMissingTypeStubs]
-    from vcr.request import Request as VcrRequest  # pyright: ignore[reportMissingTypeStubs]
-
-    def patched_make_vcr_request(httpx_request: HttpxRequest, **_kwargs: Any) -> VcrRequest:
-        # Preserve binary request bodies instead of decoding them as UTF-8.
-        return VcrRequest(
-            httpx_request.method,
-            str(httpx_request.url),
-            httpx_request.read(),
-            dict(httpx_request.headers),
-        )
-
-    vcr.stubs.httpx_stubs._make_vcr_request = patched_make_vcr_request  # pyright: ignore[reportPrivateUsage]
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:

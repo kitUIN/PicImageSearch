@@ -2,7 +2,7 @@ from collections.abc import Mapping
 from types import TracebackType
 from typing import Any, NamedTuple
 
-from httpx import AsyncClient, QueryParams, create_ssl_context
+from httpx2 import AsyncClient, QueryParams, create_ssl_context
 
 DEFAULT_HEADERS = {
     "User-Agent": (
@@ -25,7 +25,7 @@ def _merge_headers(*header_sets: Mapping[str, str] | None) -> dict[str, str]:
 class Network:
     """A class that manages HTTP client lifecycle and configuration.
 
-    This class provides a wrapper around httpx.AsyncClient with support for
+    This class provides a wrapper around httpx2.AsyncClient with support for
     cookies parsing, proxy configuration, and custom headers management.
 
     Attributes:
@@ -255,7 +255,7 @@ class HandOver:
             url (str): The target URL for the GET request.
             params (Optional[dict[str, str]]): Optional query parameters to append to the URL.
             headers (Optional[dict[str, str]]): Optional headers to override defaults.
-            **kwargs (Any): Additional arguments passed to httpx.AsyncClient.get().
+            **kwargs (Any): Additional arguments passed to httpx2.AsyncClient.get().
 
         Returns:
             RESP: A named tuple containing:
@@ -289,7 +289,7 @@ class HandOver:
             data (Optional[dict[Any, Any]]): Optional form data for the request body.
             files (Optional[dict[str, Any]]): Optional files for multipart/form-data requests.
             json (Optional[dict[str, Any]]): Optional JSON data for the request body.
-            **kwargs (Any): Additional arguments passed to httpx.AsyncClient.post().
+            **kwargs (Any): Additional arguments passed to httpx2.AsyncClient.post().
 
         Returns:
             RESP: A dataclass containing:
