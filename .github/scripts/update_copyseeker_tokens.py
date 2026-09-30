@@ -13,6 +13,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CONSTANTS_FILE = PROJECT_ROOT / "PicImageSearch" / "constants.py"
 
 COPYSEEKER_URL = "https://copyseeker.net"
+COPYSEEKER_SEARCH_URL = f"{COPYSEEKER_URL}/reverse-image-search"
 COPYSEEKER_DISCOVERY_URL = f"{COPYSEEKER_URL}/discovery"
 HTTP_TIMEOUT_SECONDS = 20.0
 
@@ -86,7 +87,7 @@ def fetch_next_action_tokens(page_url: str, action_names: tuple[str, ...]) -> di
 def fetch_discovery_action_tokens() -> tuple[str | None, str | None, str | None]:
     """Get next-action tokens for URL search, file upload, and SetCookie."""
     try:
-        tokens = fetch_next_action_tokens(COPYSEEKER_URL, DISCOVERY_ACTION_NAMES)
+        tokens = fetch_next_action_tokens(COPYSEEKER_SEARCH_URL, DISCOVERY_ACTION_NAMES)
         return (
             tokens["triggerDiscovery"],
             tokens["triggerDiscoveryByFile"],

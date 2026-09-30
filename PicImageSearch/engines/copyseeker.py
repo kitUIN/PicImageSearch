@@ -9,6 +9,8 @@ from ..model import CopyseekerResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
 
+COPYSEEKER_SEARCH_ENDPOINT = "reverse-image-search"
+
 
 def _parse_action_response(response_text: str) -> dict[str, Any]:
     """Extract the first JSON payload from a Next.js action response."""
@@ -61,6 +63,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
         # Set cookie token
         await self._send_request(
             method="post",
+            endpoint=COPYSEEKER_SEARCH_ENDPOINT,
             headers=headers,
             data="[]",
         )
@@ -70,18 +73,20 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
             headers = {"next-action": COPYSEEKER_CONSTANTS["URL_SEARCH_TOKEN"]}
             resp = await self._send_request(
                 method="post",
+                endpoint=COPYSEEKER_SEARCH_ENDPOINT,
                 headers=headers,
                 json=data,
             )
         elif file:
             files = {
-                "1_file": ("image.jpg", read_file(file), "image/jpeg"),
-                "1_discoveryType": (None, "ReverseImageSearch"),
+                "_1_file": ("image.jpg", read_file(file), "image/jpeg"),
+                "_1_discoveryType": (None, "ReverseImageSearch"),
                 "0": (None, '["$K1"]'),
             }
             headers = {"next-action": COPYSEEKER_CONSTANTS["FILE_UPLOAD_TOKEN"]}
             resp = await self._send_request(
                 method="post",
+                endpoint=COPYSEEKER_SEARCH_ENDPOINT,
                 headers=headers,
                 files=files,
             )
