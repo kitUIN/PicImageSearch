@@ -12,13 +12,13 @@ on:
 
 jobs:
   translate:
+    if: github.repository == 'kitUIN/PicImageSearch'
     permissions:
       issues: write
-      discussions: write
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: lizheming/github-translate-action@1.1.2
+      - uses: lizheming/github-translate-action@c55aac477e98562d4faed9f77c54ab8306ae6ebf # 1.1.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
