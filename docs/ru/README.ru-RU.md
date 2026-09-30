@@ -60,4 +60,10 @@
 
 ## История Звёзд
 
-[![История Звёзд](https://starchart.cc/kitUIN/PicImageSearch.svg)](https://starchart.cc/kitUIN/PicImageSearch)
+<a href="https://star-history.dera.page/#kitUIN/PicImageSearch">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=kituin/picimagesearch&amp;theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=kituin/picimagesearch" />
+    <img alt="График истории звёзд PicImageSearch" src="https://star-history.dera.page/svg?repos=kituin/picimagesearch" />
+  </picture>
+</a>
