@@ -19,7 +19,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: tisfeng/issues-translate-action@92f09e4db5411aea294862418b746c52ccb3a653 # v2.9.2
+      - uses: tisfeng/issues-translate-action@c23b39d03d0829323dc719ba0cf34a791675d21a # v2.9.3
         continue-on-error: true
         with:
           BOT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
