@@ -27,6 +27,12 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
         search_type (str): The type of search to perform ('all', 'products', 'visual_matches', 'exact_matches').
         q (Optional[str]): Optional query parameter for search. Not applicable for 'exact_matches' type.
         ai_overview (bool): Whether to load the AI overview for 'all' search type.
+
+    Note:
+        Google Lens returns results only for cookies of a signed-in Google account. Export them from a session
+        that no browser keeps using (e.g. an incognito window closed without signing out), otherwise the browser
+        rotates the cookies and invalidates them. To keep the session alive, periodically send
+        `POST https://accounts.google.com/RotateCookies` with the cookies and save the ones it returns.
     """
 
     def __init__(
