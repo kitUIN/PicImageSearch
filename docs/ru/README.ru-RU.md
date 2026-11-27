@@ -28,22 +28,22 @@
 
 ## Поддерживаемые сервисы
 
-| Поисковик           | Веб-сайт                             |
-| ------------------- | ------------------------------------ |
-| AnimeTrace          | <https://www.animetrace.com/>        |
-| ASCII2D             | <https://ascii2d.net/>               |
-| Baidu               | <https://graph.baidu.com/>           |
-| Bing                | <https://www.bing.com/images/search> |
-| Copyseeker          | <https://copyseeker.net/>            |
-| E-Hentai            | <https://e-hentai.org/>              |
-| Google (deprecated) | <https://www.google.com/imghp>       |
-| Google Lens         | <https://lens.google.com/>           |
-| IQDB                | <https://iqdb.org/>                  |
-| Lenso (deprecated)  | <https://lenso.ai/>                  |
-| SauceNAO            | <https://saucenao.com/>              |
-| Tineye              | <https://tineye.com/search/>         |
-| TraceMoe            | <https://trace.moe/>                 |
-| Yandex              | <https://yandex.com/images/search>   |
+| Поисковик           | Веб-сайт                             | Примечания                                     |
+| ------------------- | ------------------------------------ | ---------------------------------------------- |
+| AnimeTrace          | <https://www.animetrace.com/>        | Также поддерживает base64                      |
+| ASCII2D             | <https://ascii2d.net/>               | Может блокироваться Cloudflare, см. `base_url` |
+| Baidu               | <https://graph.baidu.com/>           |                                                |
+| Bing                | <https://www.bing.com/images/search> | Требуется общий `client`                       |
+| Copyseeker          | <https://copyseeker.net/>            | Требуется общий `client`                       |
+| E-Hentai            | <https://e-hentai.org/>              | Для ExHentai нужны cookies                     |
+| Google (deprecated) | <https://www.google.com/imghp>       |                                                |
+| Google Lens         | <https://lens.google.com/>           | Нужны cookies Google                           |
+| IQDB                | <https://iqdb.org/>                  |                                                |
+| Lenso (deprecated)  | <https://lenso.ai/>                  |                                                |
+| SauceNAO            | <https://saucenao.com/>              | Нужен API-ключ                                 |
+| Tineye              | <https://tineye.com/search/>         | Может блокироваться Cloudflare                 |
+| TraceMoe            | <https://trace.moe/>                 | API-ключ необязателен                          |
+| Yandex              | <https://yandex.com/images/search>   |                                                |
 
 ## Применение
 

@@ -28,22 +28,22 @@
 
 ## サポート
 
-| エンジン            | ウェブサイト                         |
-| ------------------- | ------------------------------------ |
-| AnimeTrace          | <https://www.animetrace.com/>        |
-| ASCII2D             | <https://ascii2d.net/>               |
-| Baidu               | <https://graph.baidu.com/>           |
-| Bing                | <https://www.bing.com/images/search> |
-| Copyseeker          | <https://copyseeker.net/>            |
-| E-Hentai            | <https://e-hentai.org/>              |
-| Google (deprecated) | <https://www.google.com/imghp>       |
-| Google Lens         | <https://lens.google.com/>           |
-| IQDB                | <https://iqdb.org/>                  |
-| Lenso (deprecated)  | <https://lenso.ai/>                  |
-| SauceNAO            | <https://saucenao.com/>              |
-| Tineye              | <https://tineye.com/search/>         |
-| TraceMoe            | <https://trace.moe/>                 |
-| Yandex              | <https://yandex.com/images/search>   |
+| エンジン            | ウェブサイト                         | 備考                                                   |
+| ------------------- | ------------------------------------ | ------------------------------------------------------ |
+| AnimeTrace          | <https://www.animetrace.com/>        | base64 にも対応                                        |
+| ASCII2D             | <https://ascii2d.net/>               | Cloudflare にブロックされる場合あり、`base_url` を参照 |
+| Baidu               | <https://graph.baidu.com/>           |                                                        |
+| Bing                | <https://www.bing.com/images/search> | 共有の `client` が必要                                 |
+| Copyseeker          | <https://copyseeker.net/>            | 共有の `client` が必要                                 |
+| E-Hentai            | <https://e-hentai.org/>              | ExHentai は cookies が必要                             |
+| Google (deprecated) | <https://www.google.com/imghp>       |                                                        |
+| Google Lens         | <https://lens.google.com/>           | Google の cookies が必要                               |
+| IQDB                | <https://iqdb.org/>                  |                                                        |
+| Lenso (deprecated)  | <https://lenso.ai/>                  |                                                        |
+| SauceNAO            | <https://saucenao.com/>              | API キーが必要                                         |
+| Tineye              | <https://tineye.com/search/>         | Cloudflare にブロックされる場合あり                    |
+| TraceMoe            | <https://trace.moe/>                 | API キーは任意                                         |
+| Yandex              | <https://yandex.com/images/search>   |                                                        |
 
 ## 使用方法
 

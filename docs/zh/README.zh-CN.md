@@ -28,22 +28,22 @@
 
 ## 支持的搜索引擎
 
-| 引擎                | 网站                                 |
-| ------------------- | ------------------------------------ |
-| AnimeTrace          | <https://www.animetrace.com/>        |
-| ASCII2D             | <https://ascii2d.net/>               |
-| Baidu               | <https://graph.baidu.com/>           |
-| Bing                | <https://www.bing.com/images/search> |
-| Copyseeker          | <https://copyseeker.net/>            |
-| E-Hentai            | <https://e-hentai.org/>              |
-| Google (deprecated) | <https://www.google.com/imghp>       |
-| Google Lens         | <https://lens.google.com/>           |
-| IQDB                | <https://iqdb.org/>                  |
-| Lenso (deprecated)  | <https://lenso.ai/>                  |
-| SauceNAO            | <https://saucenao.com/>              |
-| Tineye              | <https://tineye.com/search/>         |
-| TraceMoe            | <https://trace.moe/>                 |
-| Yandex              | <https://yandex.com/images/search>   |
+| 引擎                | 网站                                 | 备注                                      |
+| ------------------- | ------------------------------------ | ----------------------------------------- |
+| AnimeTrace          | <https://www.animetrace.com/>        | 也支持 base64                             |
+| ASCII2D             | <https://ascii2d.net/>               | 可能被 Cloudflare 拦截，可使用 `base_url` |
+| Baidu               | <https://graph.baidu.com/>           |                                           |
+| Bing                | <https://www.bing.com/images/search> | 需要共享的 `client`                       |
+| Copyseeker          | <https://copyseeker.net/>            | 需要共享的 `client`                       |
+| E-Hentai            | <https://e-hentai.org/>              | ExHentai 需要 cookies                     |
+| Google (deprecated) | <https://www.google.com/imghp>       |                                           |
+| Google Lens         | <https://lens.google.com/>           | 需要 Google cookies                       |
+| IQDB                | <https://iqdb.org/>                  |                                           |
+| Lenso (deprecated)  | <https://lenso.ai/>                  |                                           |
+| SauceNAO            | <https://saucenao.com/>              | 需要 API key                              |
+| Tineye              | <https://tineye.com/search/>         | 可能被 Cloudflare 拦截                    |
+| TraceMoe            | <https://trace.moe/>                 | API key 可选                              |
+| Yandex              | <https://yandex.com/images/search>   |                                           |
 
 ## 使用方法
 
