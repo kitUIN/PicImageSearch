@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Any, Literal
+from urllib.parse import urlparse
 
 from pyquery import PyQuery
 from typing_extensions import override
@@ -102,6 +103,8 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
                 endpoint="uploadbyurl",
                 params=params,
             )
+            if urlparse(resp.url).hostname == "accounts.google.com":
+                return await self._perform_image_search(file=await self.download(url), q=q)
         else:
             raise ValueError("Either 'url' or 'file' must be provided")
 
