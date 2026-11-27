@@ -309,8 +309,13 @@ class HandOver:
                 data=data,
                 files=files,
                 json=json,
+                follow_redirects=False,
                 **kwargs,
             )
+            if client.follow_redirects and (redirect := resp.next_request):
+                if redirect.method == "GET" and "Content-Type" in redirect.headers:
+                    del redirect.headers["Content-Type"]
+                resp = await client.send(redirect, follow_redirects=True)
             return RESP(resp.text, str(resp.url), resp.status_code)
 
     async def download(self, url: str, headers: dict[str, str] | None = None) -> bytes:
