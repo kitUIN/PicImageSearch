@@ -3,6 +3,7 @@ from typing import Any
 from pyquery import PyQuery
 from typing_extensions import override
 
+from ..exceptions import ParsingError
 from ..utils import parse_html
 from .base import BaseSearchItem, BaseSearchResponse
 
@@ -153,6 +154,8 @@ class IqdbResponse(BaseSearchResponse[IqdbItem]):
         """
         host = "https://iqdb.org" if data('a[href^="//3d.iqdb.org"]') else "https://3d.iqdb.org"
         tables = list(data("#pages > div > table").items())
+        if not tables:
+            raise ParsingError(message=data(".err").text() or "Failed to find search results", engine="iqdb")
         self.url: str = f"{host}/?url=https://iqdb.org{tables[0].find('img').attr('src')}"
         if len(tables) > 1:
             tables = tables[1:]
