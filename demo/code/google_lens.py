@@ -16,6 +16,7 @@ async def demo_async() -> None:
             client=client,
             search_type="all",
             q="anime",
+            ai_overview=True,
         )
         resp_all = await google_lens_all.search(url=url)
         show_result(resp_all, search_type="all")
@@ -73,6 +74,13 @@ def demo_sync() -> None:
 def show_result(resp: GoogleLensResponse | GoogleLensExactMatchesResponse, search_type: str) -> None:
     logger.info(f"Search Type: {search_type}")
     logger.info(f"Search URL: {resp.url}")
+
+    if isinstance(resp, GoogleLensResponse) and (ai_overview := resp.ai_overview):
+        logger.info(f"AI Overview: {ai_overview.text}")
+        for source in ai_overview.sources:
+            logger.info(f"  Title: {source.title}")
+            logger.info(f"  URL: {source.url}")
+            logger.info("-" * 20)
 
     if isinstance(resp, GoogleLensResponse) and resp.related_searches:
         logger.info("Related Searches:")
