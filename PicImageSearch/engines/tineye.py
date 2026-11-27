@@ -6,7 +6,7 @@ from typing_extensions import override
 
 from ..model import TineyeResponse
 from ..types import DomainInfo
-from ..utils import deep_get, read_file
+from ..utils import deep_get, raise_for_cloudflare_challenge, read_file
 from .base import BaseSearchEngine
 
 
@@ -170,6 +170,7 @@ class Tineye(BaseSearchEngine[TineyeResponse]):
             data=params,
             files=files,
         )
+        raise_for_cloudflare_challenge(resp.status_code, resp.text, "tineye")
         resp_json = json_loads(resp.text)
         resp_json["status_code"] = resp.status_code
         result_url = resp.url
