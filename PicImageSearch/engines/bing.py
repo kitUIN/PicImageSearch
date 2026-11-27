@@ -4,16 +4,16 @@ from json import dumps as json_dumps
 from json import loads as json_loads
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote_plus
 
 from typing_extensions import override
 
 from ..model import BingResponse
+from ..network import RESP
 from ..utils import read_file
 from .base import BaseSearchEngine
 
 
-def _decrypt_signature_segment(encrypted_segment: str) -> str:
+def _decrypt_signature_segment(encrypted_segment: str, key: str, offset: int) -> str:
     """Decrypts an encrypted signature segment using XOR cipher with offset.
 
     The decryption process:
@@ -23,14 +23,12 @@ def _decrypt_signature_segment(encrypted_segment: str) -> str:
 
     Args:
         encrypted_segment: Base64-encoded encrypted signature segment.
+        key: Encryption key provided by the Bing search page.
+        offset: Character offset provided by the Bing search page.
 
     Returns:
         Decrypted signature segment, or original value if decryption fails.
     """
-    # Bing's signature encryption key and offset
-    ENCRYPTION_KEY = "AAAAC3NzaC1lZDI1NTE5AAAAIGd3gMN2v1KRLBGmotz7jbQYF8PaB+Jpe6iVf2YIeN5b"
-    CHAR_OFFSET = 3
-
     try:
         decoded_bytes = b64decode(encrypted_segment)
     except Exception:
@@ -38,31 +36,33 @@ def _decrypt_signature_segment(encrypted_segment: str) -> str:
 
     decrypted_chars = []
     for i, cipher_byte in enumerate(decoded_bytes):
-        key_char_code = ord(ENCRYPTION_KEY[i % len(ENCRYPTION_KEY)])
+        key_char_code = ord(key[i % len(key)])
         xor_result = cipher_byte ^ key_char_code
-        original_char_code = xor_result - CHAR_OFFSET
+        original_char_code = xor_result - offset
         decrypted_chars.append(chr(original_char_code))
 
     return "".join(decrypted_chars)
 
 
-def _parse_signature(raw_signature: str) -> str:
+def _parse_signature(raw_signature: str, key: str, offset: int) -> str:
     """Parses and decrypts a raw signature string.
 
     Expected format: "version|encrypted_data|timestamp"
 
     Args:
         raw_signature: Raw signature string from Bing response.
+        key: Encryption key provided by the Bing search page.
+        offset: Character offset provided by the Bing search page.
 
     Returns:
-        Decrypted signature in format "version|decrypted_data|timestamp",
+        Decrypted signature in format "v2u|decrypted_data|timestamp",
         or original signature if format is invalid.
     """
     parts = raw_signature.split("|")
     if len(parts) == 3:
-        version, encrypted_data, timestamp = parts
-        decrypted_data = _decrypt_signature_segment(encrypted_data)
-        return f"{version}|{decrypted_data}|{timestamp}"
+        _, encrypted_data, timestamp = parts
+        decrypted_data = _decrypt_signature_segment(encrypted_data, key, offset)
+        return f"v2u|{decrypted_data}|{timestamp}"
     return raw_signature
 
 
@@ -70,6 +70,9 @@ class Bing(BaseSearchEngine[BingResponse]):
     """API client for the Bing image search engine.
 
     Used for performing reverse image searches using Bing's API.
+
+    Note:
+        Bing keeps the search session in cookies, so pass a shared `client` to keep them between requests.
 
     Attributes:
         base_url (str): The base URL for Bing searches.
@@ -100,7 +103,7 @@ class Bing(BaseSearchEngine[BingResponse]):
                 - The response URL from Bing's search page
 
         Raises:
-            ValueError: If the BCID cannot be found in the response page.
+            ValueError: If the BCID or the image signature cannot be found in the response page.
         """
         endpoint = "images/search?view=detailv2&iss=sbiupload"
         image_base64 = b64encode(read_file(file)).decode("utf-8")
@@ -109,33 +112,39 @@ class Bing(BaseSearchEngine[BingResponse]):
             "imageBin": image_base64,
         }
         resp = await self._send_request(method="post", endpoint=endpoint, files=files)
+        return self._parse_search_page(resp), str(resp.url)
 
-        # Extract session key and image signature from response
-        self._session_key = re.search(r"skey=([^&]+)", resp.text)[1]
-        self._image_signature = re.search(r"imageSignature&quot;:&quot;(.+?)&quot;", resp.text)[1]
-
-        # Extract BCID from response
-        if match := re.search(r"(bcid_[A-Za-z0-9-.]+)", resp.text):
-            return match[1], str(resp.url)
-
-        raise ValueError("BCID not found on page.")
-
-    async def _get_insights(self, bcid: str | None = None, image_url: str | None = None) -> dict[str, Any]:
-        """Retrieves image insights from Bing using either BCID or image URL.
-
-        This method handles two search scenarios:
-        1. Search by image URL directly
-            2. Search by BCID (obtained after uploading an image)
+    def _parse_search_page(self, resp: RESP) -> str:
+        """Extracts the session key and image signature from a search page and returns the BCID.
 
         Args:
-            bcid (Optional[str]): The BCID (Bing Correlation ID) retrieved after uploading an image.
-            image_url (Optional[str]): The URL of the image to search for.
+            resp (RESP): The search page Bing redirects to after an image is submitted.
+
+        Returns:
+            str: The BCID (Bing Correlation ID) associated with the image.
+
+        Raises:
+            ValueError: If the BCID or the image signature cannot be found in the response page.
+        """
+        session_key = re.search(r"skey=([^&]+)", resp.text)
+        signature = re.search(r'data-image-signature="([^"]+)"', resp.text)
+        signature_init = re.search(r'SignatureUtils\.init\("([^"]+)",\s*(\d+)\)', resp.text)
+        bcid = re.search(r"bcid=([^&]+)", resp.url)
+        if not (session_key and signature and signature_init and bcid):
+            raise ValueError("BCID or image signature not found on page.")
+
+        self._session_key = session_key[1]
+        self._image_signature = _parse_signature(signature[1], signature_init[1], int(signature_init[2]))
+        return f"bcid_{bcid[1]}"
+
+    async def _get_insights(self, bcid: str) -> dict[str, Any]:
+        """Retrieves image insights from Bing using BCID.
+
+        Args:
+            bcid (str): The BCID (Bing Correlation ID) retrieved from the search page.
 
         Returns:
             dict: The JSON response containing insights about the image.
-
-        Raises:
-            ValueError: If neither bcid nor image_url is provided.
         """
         endpoint = "images/api/custom/knowledge"
 
@@ -152,30 +161,15 @@ class Bing(BaseSearchEngine[BingResponse]):
             "iss": "SBIUPLOADGET",
             "IID": "idpins",
             "SFX": "1",
+            "insightsToken": bcid,
         }
-
-        # Configure request based on search mode
-        if image_url:
-            referer = (
-                f"{self.base_url}/images/search?"
-                f"view=detailv2&iss=sbi&FORM=SBIHMP&sbisrc=UrlPaste"
-                f"&q=imgurl:{quote_plus(image_url)}&idpbck=1"
-            )
-            image_info = {"imageInfo": {"url": image_url, "source": "Url"}}
-
-        else:
-            params["insightsToken"] = bcid
-            referer = f"{self.base_url}/images/search?insightsToken={bcid}"
-            image_info = {"imageInfo": {"imageInsightsToken": bcid, "source": "Gallery"}}
-
-            # Clear cookies for BCID-based search
-            if self.client:
-                self.client.cookies.clear()
+        referer = f"{self.base_url}/images/search?insightsToken={bcid}"
+        image_info = {"imageInfo": {"imageInsightsToken": bcid, "source": "Gallery"}}
 
         # Build headers with signature if available
         headers = {"Referer": referer}
         if self._image_signature:
-            headers["X-Image-Knowledge-Signature"] = _parse_signature(self._image_signature)
+            headers["X-Image-Knowledge-Signature"] = self._image_signature
 
         files = {
             "knowledgeRequest": (
@@ -211,7 +205,7 @@ class Bing(BaseSearchEngine[BingResponse]):
 
         Raises:
             ValueError: If neither `url` nor `file` is provided.
-            ValueError: If BCID cannot be found when uploading an image.
+            ValueError: If the BCID or the image signature cannot be found on the search page.
 
         Note:
             - Only one of `url` or `file` should be provided.
@@ -225,8 +219,7 @@ class Bing(BaseSearchEngine[BingResponse]):
                 f"&q=imgurl:{url}&idpbck=1"
             )
             resp = await self._send_request(method="GET", url=resp_url)
-            self._image_signature = re.search(r"imageSignature&quot;:&quot;(.+?)&quot;", resp.text)[1]
-            resp_json = await self._get_insights(image_url=url)
+            resp_json = await self._get_insights(bcid=self._parse_search_page(resp))
 
         elif file:
             # Upload image and get insights using BCID

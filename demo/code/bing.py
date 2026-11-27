@@ -20,9 +20,15 @@ async def demo_async() -> None:
 
 @logger.catch()
 def demo_sync() -> None:
-    bing = BingSync(proxies=PROXIES)
+    network = Network(proxies=PROXIES)
+    client = network.start()
+
+    bing = BingSync(client=client)
     resp = bing.search(url=url)
     # resp = bing.search(file=file)
+
+    network.close()  # pyright: ignore[reportUnusedCallResult, reportUnusedCoroutine]
+
     show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
