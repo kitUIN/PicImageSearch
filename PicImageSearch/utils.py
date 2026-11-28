@@ -5,6 +5,8 @@ from typing import Any
 from lxml.html import fromstring
 from pyquery import PyQuery
 
+from .exceptions import ParsingError
+
 
 def deep_get(dictionary: dict[str, Any], keys: str) -> Any | None:
     """Retrieves a value from a nested dictionary using a dot-separated string of keys.
@@ -91,3 +93,22 @@ def parse_html(html: str) -> PyQuery:
         A PyQuery object representing the parsed HTML document.
     """
     return PyQuery(fromstring(html))
+
+
+def raise_for_cloudflare_challenge(status_code: int, text: str, engine: str) -> None:
+    """Raise a ParsingError if the response is a Cloudflare challenge page.
+
+    Args:
+        status_code (int): The HTTP status code of the response.
+        text (str): The response body.
+        engine (str): The engine name used in the error message.
+
+    Raises:
+        ParsingError: If the response is a Cloudflare challenge page.
+    """
+    if status_code in (403, 503) and "challenge-platform" in text:
+        raise ParsingError(
+            message="Blocked by Cloudflare challenge",
+            engine=engine,
+            details="Try another network or proxy, or pass cookies and User-Agent of a browser that passed the check.",
+        )

@@ -5,6 +5,7 @@ from typing import Any
 from typing_extensions import override
 
 from ..constants import COPYSEEKER_CONSTANTS
+from ..exceptions import ParsingError
 from ..model import CopyseekerResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
@@ -119,10 +120,10 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
 
         Returns:
             CopyseekerResponse: An object containing search results and metadata.
-                Returns an empty response if discovery ID cannot be obtained.
 
         Raises:
             ValueError: If neither `url` nor `file` is provided.
+            ParsingError: If Copyseeker does not return a discovery ID.
 
         Note:
             - Only one of `url` or `file` should be provided.
@@ -133,7 +134,7 @@ class Copyseeker(BaseSearchEngine[CopyseekerResponse]):
 
         discovery_id = await self._get_discovery_id(url, file)
         if discovery_id is None:
-            return CopyseekerResponse({}, "")
+            raise ParsingError(message="Failed to get a discovery ID", engine="copyseeker")
 
         data = [{"discoveryId": discovery_id, "hasBlocker": False}]
         headers = {"next-action": COPYSEEKER_CONSTANTS["GET_RESULTS_TOKEN"]}

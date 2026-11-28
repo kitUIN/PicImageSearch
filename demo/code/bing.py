@@ -20,9 +20,15 @@ async def demo_async() -> None:
 
 @logger.catch()
 def demo_sync() -> None:
-    bing = BingSync(proxies=PROXIES)
+    network = Network(proxies=PROXIES)
+    client = network.start()
+
+    bing = BingSync(client=client)
     resp = bing.search(url=url)
     # resp = bing.search(file=file)
+
+    network.close()  # pyright: ignore[reportUnusedCallResult, reportUnusedCoroutine]
+
     show_result(resp)  # pyright: ignore[reportArgumentType]
 
 
@@ -90,6 +96,14 @@ def show_result(resp: BingResponse) -> None:
 
     if resp.best_guess:
         logger.info(f"Best Guess: {resp.best_guess}")
+
+    if ai_overview := resp.ai_overview:
+        logger.info(f"AI Overview: {ai_overview.text}")
+        for citation in ai_overview.citations:
+            logger.info(f"  Title: {citation.title}")
+            logger.info(f"  URL: {citation.url}")
+            logger.info(f"  Snippet: {citation.snippet}")
+            logger.info("-" * 20)
 
 
 if __name__ == "__main__":

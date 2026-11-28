@@ -1,11 +1,15 @@
+import asyncio
 from pathlib import Path
 from typing import Any
 
 from typing_extensions import override
 
+from ..exceptions import ParsingError
 from ..model import EHentaiResponse
 from ..utils import read_file
 from .base import BaseSearchEngine
+
+_RETRY_MESSAGE = "Please wait a bit longer between each file search"
 
 
 class EHentai(BaseSearchEngine[EHentaiResponse]):
@@ -27,6 +31,8 @@ class EHentai(BaseSearchEngine[EHentaiResponse]):
         covers: bool = False,
         similar: bool = True,
         exp: bool = False,
+        retries: int = 2,
+        retry_delay: float = 8,
         **request_kwargs: Any,
     ):
         """Initializes an EHentai API client with specified configurations.
@@ -36,6 +42,10 @@ class EHentai(BaseSearchEngine[EHentaiResponse]):
             covers (bool): If True, search only for covers; otherwise, search all images.
             similar (bool): If True, enable similarity scanning for more results.
             exp (bool): If True, include results from expunged galleries.
+            retries (int): Number of retries when a search is rejected for following the previous one too soon.
+                Defaults to 2.
+            retry_delay (float): Seconds to wait between retries; E-Hentai requires about 5 seconds between
+                searches. Defaults to 8.
             **request_kwargs (Any): Additional arguments for network requests (e.g., cookies, proxies).
 
         Note:
@@ -48,6 +58,8 @@ class EHentai(BaseSearchEngine[EHentaiResponse]):
         self.covers: bool = covers
         self.similar: bool = similar
         self.exp: bool = exp
+        self.retries: int = retries
+        self.retry_delay: float = retry_delay
 
     @override
     async def search(
@@ -77,6 +89,7 @@ class EHentai(BaseSearchEngine[EHentaiResponse]):
         Raises:
             ValueError: If neither `url` nor `file` is provided.
             RuntimeError: If searching on ExHentai without proper authentication.
+            ParsingError: If the search is still rejected for following the previous one too soon after all retries.
 
         Note:
             - Only one of `url` or `file` should be provided.
@@ -100,11 +113,20 @@ class EHentai(BaseSearchEngine[EHentaiResponse]):
         if self.exp:
             data["fs_exp"] = "on"
 
-        resp = await self._send_request(
-            method="post",
-            endpoint=endpoint,
-            data=data,
-            files=files,
-        )
+        attempt = 0
+        while True:
+            resp = await self._send_request(
+                method="post",
+                endpoint=endpoint,
+                data=data,
+                files=files,
+            )
+            if _RETRY_MESSAGE not in resp.text or attempt >= self.retries:
+                break
+            attempt += 1
+            await asyncio.sleep(self.retry_delay)
+
+        if _RETRY_MESSAGE in resp.text:
+            raise ParsingError(message=_RETRY_MESSAGE, engine="ehentai")
 
         return EHentaiResponse(resp.text, resp.url)

@@ -1,5 +1,7 @@
+import re
 from pathlib import Path
 from typing import Any, Literal
+from urllib.parse import urlparse
 
 from pyquery import PyQuery
 from typing_extensions import override
@@ -24,6 +26,13 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
         search_url (str): The base URL for Google search results.
         search_type (str): The type of search to perform ('all', 'products', 'visual_matches', 'exact_matches').
         q (Optional[str]): Optional query parameter for search. Not applicable for 'exact_matches' type.
+        ai_overview (bool): Whether to load the AI overview for 'all' search type.
+
+    Note:
+        Google Lens returns results only for cookies of a signed-in Google account. Export them from a session
+        that no browser keeps using (e.g. an incognito window closed without signing out), otherwise the browser
+        rotates the cookies and invalidates them. To keep the session alive, periodically send
+        `POST https://accounts.google.com/RotateCookies` with the cookies and save the ones it returns.
     """
 
     def __init__(
@@ -32,6 +41,7 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
         search_url: str = "https://www.google.com",
         search_type: Literal["all", "products", "visual_matches", "exact_matches"] = "all",
         q: str | None = None,
+        ai_overview: bool = False,
         **request_kwargs: Any,
     ):
         """Initializes a GoogleLens API client with specified configurations.
@@ -43,6 +53,8 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
                 Defaults to "all".
             q (Optional[str]): Optional query parameter for search. Defaults to None. Not applicable for 'exact_matches'
                 type.
+            ai_overview (bool): If True, load the AI overview with an extra request. Only applies to 'all' search_type.
+                Defaults to False.
             **request_kwargs (Any): Additional arguments for network requests.
 
         Raises:
@@ -60,6 +72,7 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
         self.search_url: str = search_url
         self.search_type: str = search_type
         self.q: str | None = q
+        self.ai_overview: bool = ai_overview
 
     async def _perform_image_search(
         self,
@@ -102,6 +115,8 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
                 endpoint="uploadbyurl",
                 params=params,
             )
+            if urlparse(resp.url).hostname == "accounts.google.com":
+                return await self._perform_image_search(file=await self.download(url), q=q)
         else:
             raise ValueError("Either 'url' or 'file' must be provided")
 
@@ -151,4 +166,9 @@ class GoogleLens(BaseSearchEngine[GoogleLensResponse | GoogleLensExactMatchesRes
         if self.search_type == "exact_matches":
             return GoogleLensExactMatchesResponse(resp.text, resp.url)
 
-        return GoogleLensResponse(resp.text, resp.url)
+        ai_overview = None
+        if self.ai_overview and (match := re.search(r"url:'(/async/folsrch\?[^']+)'", resp.text)):
+            ai_overview_url = match[1].encode().decode("unicode_escape")
+            ai_overview = (await self._send_request(method="get", url=f"{self.search_url}{ai_overview_url}")).text
+
+        return GoogleLensResponse(resp.text, resp.url, ai_overview=ai_overview)

@@ -28,22 +28,22 @@ English | [简体中文](docs/zh/README.zh-CN.md) | [Русский](docs/ru/REA
 
 ## Supported Search Engines
 
-| Engine              | Website                              |
-| ------------------- | ------------------------------------ |
-| AnimeTrace          | <https://www.animetrace.com/>        |
-| ASCII2D             | <https://ascii2d.net/>               |
-| Baidu               | <https://graph.baidu.com/>           |
-| Bing                | <https://www.bing.com/images/search> |
-| Copyseeker          | <https://copyseeker.net/>            |
-| E-Hentai            | <https://e-hentai.org/>              |
-| Google (deprecated) | <https://www.google.com/imghp>       |
-| Google Lens         | <https://lens.google.com/>           |
-| IQDB                | <https://iqdb.org/>                  |
-| Lenso (deprecated)  | <https://lenso.ai/>                  |
-| SauceNAO            | <https://saucenao.com/>              |
-| Tineye              | <https://tineye.com/search/>         |
-| TraceMoe            | <https://trace.moe/>                 |
-| Yandex              | <https://yandex.com/images/search>   |
+| Engine              | Website                              | Notes                                        |
+| ------------------- | ------------------------------------ | -------------------------------------------- |
+| AnimeTrace          | <https://www.animetrace.com/>        | Also supports base64                         |
+| ASCII2D             | <https://ascii2d.net/>               | May be blocked by Cloudflare, see `base_url` |
+| Baidu               | <https://graph.baidu.com/>           |                                              |
+| Bing                | <https://www.bing.com/images/search> | Requires a shared `client`                   |
+| Copyseeker          | <https://copyseeker.net/>            | Requires a shared `client`                   |
+| E-Hentai            | <https://e-hentai.org/>              | ExHentai requires cookies                    |
+| Google (deprecated) | <https://www.google.com/imghp>       |                                              |
+| Google Lens         | <https://lens.google.com/>           | Requires Google cookies                      |
+| IQDB                | <https://iqdb.org/>                  |                                              |
+| Lenso (deprecated)  | <https://lenso.ai/>                  |                                              |
+| SauceNAO            | <https://saucenao.com/>              | Requires an API key                          |
+| Tineye              | <https://tineye.com/search/>         | May be blocked by Cloudflare                 |
+| TraceMoe            | <https://trace.moe/>                 | API key optional                             |
+| Yandex              | <https://yandex.com/images/search>   |                                              |
 
 ## Usage
 

@@ -101,6 +101,46 @@ def extract_image_maps(html: PyQuery) -> tuple[dict[str, str], dict[str, str]]:
     return image_url_map, base64_image_map
 
 
+def parse_streamed_html(stream: str) -> str:
+    """Rebuild the HTML document from a streamed async response.
+
+    The stream is a sequence of hex length-prefixed strings (lengths in UTF-16 code units) that form
+    (command, data) pairs: an empty command appends HTML to the current target, "placeholder" inserts
+    a slot, and "write_to_target_document" switches the target to that slot ("default" is the document itself).
+
+    Args:
+        stream (str): Raw text of the async response.
+
+    Returns:
+        str: The assembled HTML document.
+    """
+    tokens: list[str] = []
+    pos = 0
+    while (sep := stream.find(";", pos)) != -1 and re.fullmatch(r"[0-9a-f]+", stream[pos:sep]):
+        size, end = int(stream[pos:sep], 16), sep + 1
+        while size > 0 and end < len(stream):
+            size -= 2 if ord(stream[end]) > 0xFFFF else 1
+            end += 1
+        tokens.append(stream[sep + 1 : end])
+        pos = end
+
+    targets: dict[str, list[str]] = {"": []}
+    target = ""
+    for command, data in zip(tokens[::2], tokens[1::2]):
+        if command == "":
+            targets.setdefault(target, []).append(data)
+        elif command == "placeholder":
+            targets.setdefault(target, []).append(f'<template data-slot="{data}"></template>')
+        elif command == "write_to_target_document":
+            target = "" if data == "default" else data
+
+    def build(key: str) -> str:
+        html = "".join(targets.pop(key, []))
+        return re.sub(r'<template data-slot="([^"]+)"></template>', lambda m: build(m[1]), html)
+
+    return build("")
+
+
 class GoogleLensBaseItem(BaseSearchItem):
     """Base class for Google Lens items with common image extraction functionality."""
 
@@ -231,6 +271,54 @@ class GoogleLensRelatedSearchItem(GoogleLensBaseItem):
         self.thumbnail: str = self._extract_image_url(image_element)
 
 
+class GoogleLensAIOverviewSource:
+    """Represents a source cited in the Google Lens AI overview.
+
+    Attributes:
+        title (str): Title of the source page.
+        url (str): URL of the source page.
+    """
+
+    def __init__(self, data: PyQuery):
+        texts = [
+            text
+            for el in data[0].iter()
+            if isinstance(el.tag, str) and not len(el) and (text := " ".join(el.text_content().split()))
+        ]
+        self.title: str = texts[-1] if texts else data.attr("aria-label") or ""
+        self.url: str = data.attr("href") or ""
+
+
+class GoogleLensAIOverview:
+    """Represents the AI overview shown with Google Lens results.
+
+    Attributes:
+        text (str): Overview text; paragraphs are separated by newlines and list items start with "- ".
+        sources (list[GoogleLensAIOverviewSource]): Sources cited in the overview.
+    """
+
+    def __init__(self, data: PyQuery):
+        data("script, style, button, div[role='button']").remove()
+        self.sources: list[GoogleLensAIOverviewSource] = [
+            GoogleLensAIOverviewSource(PyQuery(el)) for el in data("[data-thcrc-cc] a[href], [data-src-id] a[href]")
+        ]
+        data("[data-thcrc-cc], [data-src-id]").remove()
+
+        lines: list[str] = []
+        for block in data("[data-container-id]").children().items():
+            if items := block("li"):
+                lines.extend(f"- {text}" for item in items.items() if (text := self._get_text(item)))
+            elif text := self._get_text(block):
+                lines.append(text)
+        self.text: str = "\n".join(lines)
+
+    @staticmethod
+    def _get_text(element: PyQuery) -> str:
+        """Returns the element text with whitespace collapsed and no spaces inside brackets or before punctuation."""
+        text = " ".join(element.text().split())
+        return re.sub(r"([(«])\s+|\s+([),.;:!?»])", lambda m: m[1] or m[2], text)
+
+
 class GoogleLensResponse(BaseSearchResponse[GoogleLensItem]):
     """Represents a complete Google Lens search response (for 'all', 'products', 'visual_matches' types).
 
@@ -238,6 +326,7 @@ class GoogleLensResponse(BaseSearchResponse[GoogleLensItem]):
         origin (PyQuery): The raw PyQuery object of the entire response page.
         raw (list[GoogleLensItem]): List of GoogleLensItem objects representing visual matches.
         related_searches (list[GoogleLensRelatedSearchItem]): List of related search suggestions.
+        ai_overview (Optional[GoogleLensAIOverview]): AI overview of the image, if it was requested and available.
         url (str): URL of the search results page.
     """
 
@@ -286,6 +375,12 @@ class GoogleLensResponse(BaseSearchResponse[GoogleLensItem]):
         image_url_map, base64_image_map = extract_image_maps(html)
         self._parse_search_items(html, image_url_map, base64_image_map)
         self._parse_related_searches(html, image_url_map, base64_image_map)
+
+        self.ai_overview: GoogleLensAIOverview | None = None
+        if (stream := kwargs.get("ai_overview")) and (document := parse_streamed_html(stream)):
+            ai_overview = GoogleLensAIOverview(parse_html(document)('[data-subtree="aimc"]'))
+            if ai_overview.text:
+                self.ai_overview = ai_overview
 
 
 class GoogleLensExactMatchesItem(GoogleLensBaseItem):

@@ -165,6 +165,34 @@ class EntityItem:
         self.short_description: str = data.get("entityPresentationInfo", {}).get("entityTypeDisplayHint", "")
 
 
+class AIOverviewCitation:
+    """Represents a source cited in Bing's AI overview.
+
+    Attributes:
+        title (str): Title of the cited page.
+        url (str): URL of the cited page.
+        snippet (str): Excerpt from the cited page.
+    """
+
+    def __init__(self, data: dict[str, Any]):
+        self.title: str = data.get("title", "")
+        self.url: str = data.get("url", "")
+        self.snippet: str = data.get("snippet", "")
+
+
+class AIOverview:
+    """Represents Bing's AI-generated overview of the image.
+
+    Attributes:
+        text (str): Overview text in Markdown format.
+        citations (list[AIOverviewCitation]): Sources cited in the overview.
+    """
+
+    def __init__(self, data: dict[str, Any]):
+        self.text: str = data.get("text", "")
+        self.citations: list[AIOverviewCitation] = [AIOverviewCitation(x) for x in data.get("citations", [])]
+
+
 class BingResponse(BaseSearchResponse[BingItem]):
     """Encapsulates the complete response from a Bing reverse image search.
 
@@ -180,6 +208,7 @@ class BingResponse(BaseSearchResponse[BingItem]):
         best_guess (Optional[str]): Bing's best guess for what the image represents.
         travel (Optional[TravelInfo]): Travel-related information if applicable.
         entities (list[EntityItem]): Entities identified in the image.
+        ai_overview (Optional[AIOverview]): AI-generated overview of the image if available.
         url (str): URL to the Bing search results page.
 
     Note:
@@ -207,6 +236,7 @@ class BingResponse(BaseSearchResponse[BingItem]):
         self.best_guess: str | None = None
         self.travel: TravelInfo | None = None
         self.entities: list[EntityItem] = []
+        self.ai_overview: AIOverview | None = None
 
         if tags := resp_data.get("tags"):
             for tag in tags:
@@ -223,6 +253,7 @@ class BingResponse(BaseSearchResponse[BingItem]):
             "BestRepresentativeQuery": self._handle_best_query,
             "Travel": self._handle_travel,
             "Entity": self._handle_entity,
+            "AIOverview": self._handle_ai_overview,
         }
 
         if handler := action_handlers.get(action_type):
@@ -249,3 +280,7 @@ class BingResponse(BaseSearchResponse[BingItem]):
     def _handle_entity(self, action: dict[str, Any]) -> None:
         if data := action.get("data"):
             self.entities.append(EntityItem(data))
+
+    def _handle_ai_overview(self, action: dict[str, Any]) -> None:
+        if (data := action.get("data", {})).get("text"):
+            self.ai_overview = AIOverview(data)

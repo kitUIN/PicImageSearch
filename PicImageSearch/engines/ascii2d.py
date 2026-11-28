@@ -4,7 +4,7 @@ from typing import Any
 from typing_extensions import override
 
 from ..model import Ascii2DResponse
-from ..utils import read_file
+from ..utils import raise_for_cloudflare_challenge, read_file
 from .base import BaseSearchEngine
 
 
@@ -99,8 +99,11 @@ class Ascii2D(BaseSearchEngine[Ascii2DResponse]):
             files=files,
         )
 
+        raise_for_cloudflare_challenge(resp.status_code, resp.text, "ascii2d")
+
         # If 'bovw' is enabled, switch to feature search mode.
         if self.bovw:
             resp = await self._send_request(method="get", url=resp.url.replace("/color/", "/bovw/"))
+            raise_for_cloudflare_challenge(resp.status_code, resp.text, "ascii2d")
 
         return Ascii2DResponse(resp.text, resp.url)
