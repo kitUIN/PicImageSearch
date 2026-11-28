@@ -12,7 +12,7 @@ file = get_image_path("test06.jpg")
 @logger.catch()
 async def demo_async() -> None:
     async with Network(proxies=PROXIES) as client:
-        yandex = Yandex(client=client)
+        yandex = Yandex(client=client, ai_overview=True)
         # resp = await yandex.search(url=url)
         resp = await yandex.search(file=file)
         show_result(resp)
@@ -29,6 +29,14 @@ def demo_sync() -> None:
 def show_result(resp: YandexResponse) -> None:
     # logger.info(resp.origin)  # Original data
     logger.info(resp.url)  # Link to search results
+
+    if ai_overview := resp.ai_overview:
+        logger.info(f"AI Overview: {ai_overview.text}")
+        for source in ai_overview.sources:
+            logger.info(f"  Title: {source.title}")
+            logger.info(f"  URL: {source.url}")
+        logger.info("-" * 50)
+
     result = resp.raw[0]
     # logger.info(result.origin)
     logger.info(result.title)
